@@ -64,9 +64,6 @@ void instance_violet_hold::ResetAll()
     SetIntroPortals(false);
     // ToDo: reset the activation crystals when implemented
 
-    // open instance door
-    DoUseDoorOrButton(GO_PRISON_SEAL_DOOR);
-
     for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
         const BossInformation* pData = GetBossInformation((*itr)->uiEntry);
@@ -255,6 +252,7 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                     if (Creature* pController = GetSingleCreatureFromStorage(NPC_EVENT_CONTROLLER))
                         pController->AI()->EnterEvadeMode();
                     // Reset the event (creature cleanup is handled in creature_linking)
+                    DoUseDoorOrButton(GO_PRISON_SEAL_DOOR); // open instance door
                     ResetAll();
                     m_uiEventResetTimer = 20000;            // Timer may not be correct - 20 sec is default reset timer for blizz
                     break;
