@@ -250,7 +250,6 @@ enum
     SPELL_POLYMORPH_BACKFIRE    = 28406,        // summons npc 16479
     QUEST_FRAGMENTED_MAGIC      = 9364,
 
-
     // npc spells
     SPELL_DISARM                = 6713,         // warrior
     SPELL_SCREECH               = 3589,         // screamer

@@ -63,7 +63,6 @@ enum
     SAY_OUTRO_14                = -1631192,
 };
 
-
 enum
 {
     SPELL_BERSERK               = 47008,
@@ -192,7 +191,6 @@ enum
     NPC_WICKED_SPIRIT           = 39190,
     NPC_SPIRIT_BOMB             = 39189,
 };
-
 
 enum Phase
 {
@@ -710,7 +708,6 @@ CreatureAI* GetAI_boss_the_lich_king_icc(Creature* pCreature)
 {
     return new boss_the_lich_king_iccAI(pCreature);
 }
-
 
 void AddSC_boss_the_lich_king()
 {

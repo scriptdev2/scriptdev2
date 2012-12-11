@@ -99,7 +99,6 @@ void ScriptedInstance::DoToggleGameObjectFlags(ObjectGuid guid, uint32 uiGOflags
     }
 }
 
-
 /// Function that respawns a despawned GO that is stored in m_mGoEntryGuidStore
 void ScriptedInstance::DoRespawnGameObject(uint32 uiEntry, uint32 uiTimeToDespawn)
 {

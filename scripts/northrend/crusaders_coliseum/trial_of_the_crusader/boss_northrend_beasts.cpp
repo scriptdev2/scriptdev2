@@ -410,5 +410,4 @@ void AddSC_northrend_beasts()
     pNewScript->Name = "boss_icehowl";
     pNewScript->GetAI = &GetAI_boss_icehowl;
     pNewScript->RegisterSelf();
-
 }

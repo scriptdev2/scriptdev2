@@ -24,7 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "icecrown_citadel.h"
 
-
 enum
 {
     SPELL_BERSERK               = 47008,

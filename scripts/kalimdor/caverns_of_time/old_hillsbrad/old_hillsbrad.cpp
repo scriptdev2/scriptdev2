@@ -31,7 +31,6 @@ EndContentData */
 #include "old_hillsbrad.h"
 #include "escort_ai.h"
 
-
 /*######
 ## npc_erozion
 ######*/

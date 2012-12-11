@@ -81,7 +81,6 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
             case 2: DoScriptText(SAY_SLAY_3, m_creature); break;
         }
-
     }
 
     void JustDied(Unit* /*pKiller*/) override

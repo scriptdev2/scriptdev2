@@ -461,7 +461,6 @@ CreatureAI* GetAI_boss_sindragosa(Creature* pCreature)
     return new boss_sindragosaAI(pCreature);
 }
 
-
 struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
 {
     npc_rimefang_iccAI(Creature* pCreature) : ScriptedAI(pCreature)

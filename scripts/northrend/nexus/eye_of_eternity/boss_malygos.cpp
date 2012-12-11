@@ -550,7 +550,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
             case PHASE_TRANSITION_2:
                 // Nothing here - wait for transition to finish
                 break;
-
         }
     }
 };

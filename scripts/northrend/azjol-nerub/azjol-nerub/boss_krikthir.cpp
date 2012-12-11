@@ -142,7 +142,6 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
         {
             DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_CURSE_OF_FATIGUE : SPELL_CURSE_OF_FATIGUE_H);
             m_uiCurseTimer = 20000;
-
         }
         else
             m_uiCurseTimer -= uiDiff;
@@ -160,7 +159,6 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SWARM_1 : SAY_SWARM_2, m_creature);
             DoCastSpellIfCan(m_creature, SPELL_SWARM);
             m_uiSwarmTimer = 15000;
-
         }
         else
             m_uiSwarmTimer -= uiDiff;

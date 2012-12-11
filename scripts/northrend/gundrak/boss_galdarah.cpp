@@ -214,7 +214,6 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
             }
             else
                 m_uiSpecialAbilityTimer -= uiDiff;
-
         }
         else
         {

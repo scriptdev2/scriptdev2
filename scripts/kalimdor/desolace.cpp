@@ -52,7 +52,6 @@ enum
     SPELL_KODO_KOMBO_PLAYER_BUFF    = 18172,                // spells here have unclear function, but using them at least for visual parts and checks
     SPELL_KODO_KOMBO_DESPAWN_BUFF   = 18377,
     SPELL_KODO_KOMBO_GOSSIP         = 18362
-
 };
 
 struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
@@ -336,7 +335,6 @@ struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private D
                 StartNextDialogueText(POINT_ID_EVENT_COMPLETE);
                 break;
         }
-
     }
 
     void JustDidDialogueStep(int32 iEntry) override

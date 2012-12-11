@@ -371,7 +371,6 @@ CreatureAI* GetAI_npc_crystal_channel_target(Creature* pCreature)
     return new npc_crystal_channel_targetAI(pCreature);
 }
 
-
 // Handling of the dummy auras of Crystal Handler Death spells, on remove the Crystal needs to be opened
 bool EffectAuraDummy_npc_crystal_channel_target(const Aura* pAura, bool bApply)
 {

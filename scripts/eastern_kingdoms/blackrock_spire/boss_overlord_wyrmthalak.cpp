@@ -32,7 +32,6 @@ enum
 
     NPC_SPIRESTONE_WARLORD     = 9216,
     NPC_SMOLDERTHORN_BERSERKER = 9268
-
 };
 
 const float afLocations[2][4] =

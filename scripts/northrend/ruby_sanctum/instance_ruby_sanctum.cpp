@@ -24,7 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "ruby_sanctum.h"
 
-
 instance_ruby_sanctum::instance_ruby_sanctum(Map* pMap) : ScriptedInstance(pMap),
     m_uiHalionSummonTimer(0),
     m_uiHalionSummonStage(0)

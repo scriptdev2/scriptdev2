@@ -121,7 +121,6 @@ struct MANGOS_DLL_DECL npc_willix_the_importerAI : public npc_escortAI
                 SetEscortPaused(true);
                 break;
         }
-
     }
 };
 

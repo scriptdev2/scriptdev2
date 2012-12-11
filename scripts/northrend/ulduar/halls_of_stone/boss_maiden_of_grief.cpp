@@ -124,7 +124,6 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
         else
             m_uiPartingSorrowTimer -= uiDiff;
 
-
         if (m_uiStormTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_STORM_OF_GRIEF : SPELL_STORM_OF_GRIEF_H) == CAST_OK)

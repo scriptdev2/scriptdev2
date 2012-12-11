@@ -393,7 +393,6 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
             default:
                 return NULL;
         }
-
     }
 
     void UpdateEscortAI(const uint32 uiDiff) override

@@ -9,7 +9,6 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 
-
 // return closest GO in grid, with range from pSource
 GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {

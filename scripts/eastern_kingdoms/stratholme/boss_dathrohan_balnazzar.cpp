@@ -101,7 +101,6 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
         if (m_creature->GetEntry() == NPC_BALNAZZAR)
             m_creature->UpdateEntry(NPC_DATHROHAN);
-
     }
 
     void Aggro(Unit* pWho) override

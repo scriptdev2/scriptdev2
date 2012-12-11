@@ -300,7 +300,6 @@ enum
 {
     SPELL_GYMER_LOCK_EXPLOSION      = 55529,
     NPC_GYMER_LOCK_DUMMY            = 29928
-
 };
 
 bool GOUse_go_scourge_enclosure(Player* pPlayer, GameObject* pGo)

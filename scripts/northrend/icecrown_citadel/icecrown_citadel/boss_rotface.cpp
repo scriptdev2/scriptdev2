@@ -192,7 +192,6 @@ CreatureAI* GetAI_boss_rotface(Creature* pCreature)
     return new boss_rotfaceAI(pCreature);
 }
 
-
 struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
 {
     mob_little_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -242,7 +241,6 @@ CreatureAI* GetAI_mob_little_ooze(Creature* pCreature)
 {
     return new mob_little_oozeAI(pCreature);
 }
-
 
 struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
 {

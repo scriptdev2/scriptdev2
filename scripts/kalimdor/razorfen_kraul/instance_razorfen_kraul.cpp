@@ -45,7 +45,6 @@ void instance_razorfen_kraul::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
     }
-
 }
 
 void instance_razorfen_kraul::OnCreatureCreate(Creature* pCreature)

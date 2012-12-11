@@ -155,7 +155,6 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 
             if (!m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
                 DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOOT);
-
         }
         else
             m_uiShootTimer -= uiDiff;

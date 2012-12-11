@@ -209,7 +209,6 @@ struct MANGOS_DLL_DECL boss_muruAI : public Scripted_NoMovementAI
     }
 };
 
-
 struct MANGOS_DLL_DECL boss_entropiusAI : public ScriptedAI
 {
     boss_entropiusAI(Creature* pCreature) : ScriptedAI(pCreature)

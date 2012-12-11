@@ -492,7 +492,6 @@ bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pA
     return false;
 }
 
-
 bool ProcessEventId_event_gameobject_citadel_valve(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
