@@ -454,16 +454,16 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 }
 
 // TODO: implement all hard mode loot here!
-bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pSource, uint32 uiMapId, uint32 uiInstanceConditionId)
+bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
 {
-    if (uiMapId != instance->GetId())
-        return false;
-
     switch (uiInstanceConditionId)
     {
         case TYPE_XT002_HARD:
             break;
     }
+
+    script_error_log("instance_ulduar::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                         uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
     return false;
 }
 

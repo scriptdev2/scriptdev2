@@ -393,6 +393,51 @@ void instance_zulaman::SendNextBearWave(Unit* pTarget)
     m_bIsBearPhaseInProgress = true;
 }
 
+bool instance_zulaman::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
+{
+    switch (uiInstanceConditionId)
+    {
+        case INSTANCE_CONDITION_ID_NORMAL_MODE:             // Not rescued
+        case INSTANCE_CONDITION_ID_HARD_MODE:               // Rescued as first
+        case INSTANCE_CONDITION_ID_HARD_MODE_2:             // Rescued as first
+        case INSTANCE_CONDITION_ID_HARD_MODE_3:             // Rescued as second
+        case INSTANCE_CONDITION_ID_HARD_MODE_4:             // Rescued as third
+        {
+            if (!pConditionSource)
+                break;
+
+            int32 index = -1;
+            switch (pConditionSource->GetEntry())
+            {
+                case NPC_TANZAR:
+                case GO_TANZARS_TRUNK:
+                    index = INDEX_NALORAKK;
+                    break;
+                case NPC_KRAZ:
+                case GO_KRAZS_PACKAGE:
+                    index = INDEX_JANALAI;
+                    break;
+                case NPC_ASHLI:
+                case GO_ASHLIS_BAG:
+                    index = INDEX_HALAZZI;
+                    break;
+                case NPC_HARKOR:
+                case GO_HARKORS_SATCHEL:
+                    index = INDEX_AKILZON;
+                    break;
+            }
+            if (index < 0)
+                break;
+
+            return m_aEventNpcInfo[index].uiSavePosition == uiInstanceConditionId;
+        }
+    }
+
+    script_error_log("instance_zulaman::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                        uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
+    return false;
+}
+
 uint8 instance_zulaman::GetKilledPreBosses()
 {
     return (m_auiEncounter[TYPE_AKILZON] == DONE ? 1 : 0) + (m_auiEncounter[TYPE_NALORAKK] == DONE ? 1 : 0) + (m_auiEncounter[TYPE_JANALAI] == DONE ? 1 : 0) + (m_auiEncounter[TYPE_HALAZZI] == DONE ? 1 : 0);
