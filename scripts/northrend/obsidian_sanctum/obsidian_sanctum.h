@@ -44,6 +44,7 @@ class MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
         uint32 GetData(uint32 uiType) override;
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
+        bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType) override;
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

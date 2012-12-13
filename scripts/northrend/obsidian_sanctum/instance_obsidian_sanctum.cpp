@@ -91,6 +91,21 @@ bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId
     }
 }
 
+bool instance_obsidian_sanctum::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
+{
+    switch (uiInstanceConditionId)
+    {
+        case INSTANCE_CONDITION_ID_HARD_MODE:               // Exactly one dragon alive on event start
+        case INSTANCE_CONDITION_ID_HARD_MODE_2:             // Exactly two dragons alive on event start
+        case INSTANCE_CONDITION_ID_HARD_MODE_3:             // All three dragons alive on event start
+            return m_uiAliveDragons == uiInstanceConditionId;
+    }
+
+    script_error_log("instance_obsidian_sanctum::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                        uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
+    return false;
+}
+
 InstanceData* GetInstanceData_instance_obsidian_sanctum(Map* pMap)
 {
     return new instance_obsidian_sanctum(pMap);
