@@ -161,16 +161,16 @@ class MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         void OnCreatureEvade(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
         bool IsBearPhaseInProgress() { return m_bIsBearPhaseInProgress; }
         void SetBearEventProgress(bool bIsInProgress) { m_bIsBearPhaseInProgress = bIsInProgress; }
         void SendNextBearWave(Unit* pTarget);
 
-        bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType) override;
+        bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
         void Update(uint32 uiDiff) override;
 

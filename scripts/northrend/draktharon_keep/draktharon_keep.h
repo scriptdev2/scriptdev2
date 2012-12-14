@@ -61,7 +61,7 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         void Initialize() override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureEvade(Creature* pCreature);
@@ -73,9 +73,9 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         void GetTrollgoreOutsideTriggers(GuidVector& vTriggers) { vTriggers = m_vTriggerGuids; }
         ObjectGuid GetTrollgoreCornerTrigger() { return m_trollgoreCornerTriggerGuid; }
 
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
         Creature* GetNextCrystalTarget(Creature* pCrystalHandler, uint8& uiIndex);

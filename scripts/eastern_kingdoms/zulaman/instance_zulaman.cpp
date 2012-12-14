@@ -350,7 +350,7 @@ void instance_zulaman::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_zulaman::GetData(uint32 uiType)
+uint32 instance_zulaman::GetData(uint32 uiType) const
 {
     switch (uiType)
     {
@@ -393,7 +393,7 @@ void instance_zulaman::SendNextBearWave(Unit* pTarget)
     m_bIsBearPhaseInProgress = true;
 }
 
-bool instance_zulaman::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
+bool instance_zulaman::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
 {
     switch (uiInstanceConditionId)
     {

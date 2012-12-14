@@ -496,7 +496,7 @@ void instance_naxxramas::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_naxxramas::GetData(uint32 uiType)
+uint32 instance_naxxramas::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -510,7 +510,7 @@ void instance_naxxramas::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMe
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

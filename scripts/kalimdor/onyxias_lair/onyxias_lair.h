@@ -42,7 +42,7 @@ class MANGOS_DLL_DECL instance_onyxias_lair : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData) override;
 
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
     protected:
         uint32 m_uiEncounter;

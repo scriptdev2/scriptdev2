@@ -296,7 +296,7 @@ void instance_culling_of_stratholme::OnPlayerEnter(Player* pPlayer)
     }
 }
 
-uint32 instance_culling_of_stratholme::GetData(uint32 uiType)
+uint32 instance_culling_of_stratholme::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

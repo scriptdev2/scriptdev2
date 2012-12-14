@@ -100,9 +100,9 @@ class MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
         void Update(uint32 uiDiff) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
     protected:

@@ -103,7 +103,7 @@ void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_sethekk_halls::GetData(uint32 uiType)
+uint32 instance_sethekk_halls::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -133,7 +133,7 @@ void instance_sethekk_halls::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-bool instance_sethekk_halls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_sethekk_halls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     if (uiCriteriaId != ACHIEV_CRITA_TURKEY_TIME)
         return false;

@@ -166,7 +166,7 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_halls_of_stone::GetData(uint32 uiType)
+uint32 instance_halls_of_stone::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

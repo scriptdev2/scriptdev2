@@ -65,7 +65,7 @@ void instance_obsidian_sanctum::SetData(uint32 uiType, uint32 uiData)
     // No need to save anything here
 }
 
-uint32 instance_obsidian_sanctum::GetData(uint32 uiType)
+uint32 instance_obsidian_sanctum::GetData(uint32 uiType) const
 {
     if (uiType == TYPE_SARTHARION_EVENT)
         return m_auiEncounter[0];
@@ -73,7 +73,7 @@ uint32 instance_obsidian_sanctum::GetData(uint32 uiType)
     return 0;
 }
 
-bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {
@@ -91,7 +91,7 @@ bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId
     }
 }
 
-bool instance_obsidian_sanctum::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
+bool instance_obsidian_sanctum::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
 {
     switch (uiInstanceConditionId)
     {

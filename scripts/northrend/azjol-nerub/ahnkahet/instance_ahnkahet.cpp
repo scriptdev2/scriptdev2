@@ -221,7 +221,7 @@ ObjectGuid instance_ahnkahet::SelectRandomSwarmerEggGuid()
     return *iter;
 }
 
-bool instance_ahnkahet::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_ahnkahet::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {
@@ -257,7 +257,7 @@ void instance_ahnkahet::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_ahnkahet::GetData(uint32 uiType)
+uint32 instance_ahnkahet::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

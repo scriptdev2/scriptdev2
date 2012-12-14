@@ -167,7 +167,7 @@ void instance_uldaman::SetData64(uint32 uiData, uint64 uiGuid)
     }
 }
 
-uint32 instance_uldaman::GetData(uint32 uiType)
+uint32 instance_uldaman::GetData(uint32 uiType) const
 {
     switch (uiType)
     {
@@ -177,7 +177,7 @@ uint32 instance_uldaman::GetData(uint32 uiType)
     return 0;
 }
 
-uint64 instance_uldaman::GetData64(uint32 uiData)
+uint64 instance_uldaman::GetData64(uint32 uiData) const
 {
     switch (uiData)
     {

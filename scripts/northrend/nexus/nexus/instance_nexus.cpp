@@ -84,7 +84,7 @@ void instance_nexus::OnCreatureCreate(Creature* pCreature)
         m_mNpcEntryGuidStore[NPC_KERISTRASZA] = pCreature->GetObjectGuid();
 }
 
-uint32 instance_nexus::GetData(uint32 uiType)
+uint32 instance_nexus::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -163,7 +163,7 @@ void instance_nexus::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

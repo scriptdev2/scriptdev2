@@ -169,11 +169,11 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
         case TYPE_ROOM_EVENT:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_EMBERSEER_IN);
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_EMBERSEER:
             // Don't set the same data twice
-            if (m_auiEncounter[1] == uiData)
+            if (m_auiEncounter[uiType] == uiData)
                 break;
             // Combat door
             DoUseDoorOrButton(GO_DOORS);
@@ -197,14 +197,14 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
                 DoUseEmberseerRunes();
                 DoUseDoorOrButton(GO_EMBERSEER_OUT);
             }
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_FLAMEWREATH:
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_STADIUM:
             // Don't set the same data twice
-            if (m_auiEncounter[3] == uiData)
+            if (m_auiEncounter[uiType] == uiData)
                 break;
             // Combat door
             DoUseDoorOrButton(GO_GYTH_ENTRY_DOOR);
@@ -227,10 +227,10 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
                 m_uiStadiumMobsAlive = 0;
                 m_uiStadiumWaves = 0;
             }
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_VALTHALAK:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
     }
 
@@ -294,16 +294,11 @@ void instance_blackrock_spire::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_blackrock_spire::GetData(uint32 uiType)
+uint32 instance_blackrock_spire::GetData(uint32 uiType) const
 {
-    switch (uiType)
-    {
-        case TYPE_ROOM_EVENT:   return m_auiEncounter[0];
-        case TYPE_EMBERSEER:    return m_auiEncounter[1];
-        case TYPE_FLAMEWREATH:  return m_auiEncounter[2];
-        case TYPE_STADIUM:      return m_auiEncounter[3];
-        case TYPE_VALTHALAK:    return m_auiEncounter[4];
-    }
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
     return 0;
 }
 

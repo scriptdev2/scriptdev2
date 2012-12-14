@@ -454,7 +454,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 }
 
 // TODO: implement all hard mode loot here!
-bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, ConditionSource conditionSourceType)
+bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
 {
     switch (uiInstanceConditionId)
     {
@@ -467,7 +467,7 @@ bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 u
     return false;
 }
 
-uint32 instance_ulduar::GetData(uint32 uiType)
+uint32 instance_ulduar::GetData(uint32 uiType) const
 {
     switch (uiType)
     {
@@ -589,7 +589,7 @@ void instance_ulduar::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

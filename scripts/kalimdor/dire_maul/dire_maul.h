@@ -94,12 +94,12 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureDeath(Creature* pCreature) override;
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
     protected:

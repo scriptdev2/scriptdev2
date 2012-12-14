@@ -245,26 +245,15 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_karazhan::GetData(uint32 uiType)
+uint32 instance_karazhan::GetData(uint32 uiType) const
 {
-    switch (uiType)
-    {
-        case TYPE_ATTUMEN:              return m_auiEncounter[0];
-        case TYPE_MOROES:               return m_auiEncounter[1];
-        case TYPE_MAIDEN:               return m_auiEncounter[2];
-        case TYPE_OPERA:                return m_auiEncounter[3];
-        case TYPE_CURATOR:              return m_auiEncounter[4];
-        case TYPE_TERESTIAN:            return m_auiEncounter[5];
-        case TYPE_ARAN:                 return m_auiEncounter[6];
-        case TYPE_NETHERSPITE:          return m_auiEncounter[7];
-        case TYPE_CHESS:                return m_auiEncounter[8];
-        case TYPE_MALCHEZZAR:           return m_auiEncounter[9];
-        case TYPE_NIGHTBANE:            return m_auiEncounter[10];
-        case TYPE_OPERA_PERFORMANCE:    return m_uiOperaEvent;
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
-    }
+    if (uiType == TYPE_OPERA_PERFORMANCE)
+        return m_uiOperaEvent;
+
+    return 0;
 }
 
 void instance_karazhan::Load(const char* chrIn)

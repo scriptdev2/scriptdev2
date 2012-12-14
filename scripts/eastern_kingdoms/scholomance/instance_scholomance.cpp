@@ -210,7 +210,7 @@ void instance_scholomance::HandlePortalEvent(uint32 uiEventId, uint32 uiData)
     }
 }
 
-uint32 instance_scholomance::GetData(uint32 uiType)
+uint32 instance_scholomance::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

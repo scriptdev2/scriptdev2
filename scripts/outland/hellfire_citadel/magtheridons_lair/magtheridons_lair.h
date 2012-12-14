@@ -44,7 +44,7 @@ class MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         void Update(uint32 uiDiff) override;
 

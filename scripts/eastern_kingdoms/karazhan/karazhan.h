@@ -119,14 +119,14 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         void OnCreatureDeath(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
         void GetNightbaneTriggers(GuidList& lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
 
         void Load(const char* chrIn) override;
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

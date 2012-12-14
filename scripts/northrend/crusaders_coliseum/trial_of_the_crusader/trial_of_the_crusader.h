@@ -141,13 +141,13 @@ class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, 
         void OnPlayerEnter(Player* pPlayer) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         // Difficulty wrappers
         bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
         void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }

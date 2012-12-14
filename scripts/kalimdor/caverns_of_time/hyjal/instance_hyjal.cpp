@@ -192,7 +192,7 @@ void instance_mount_hyjal::DoSpawnArchimonde()
         pPlayer->SummonCreature(NPC_ARCHIMONDE, aArchimondeSpawnLoc[0], aArchimondeSpawnLoc[1], aArchimondeSpawnLoc[2], aArchimondeSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0);
 }
 
-uint32 instance_mount_hyjal::GetData(uint32 uiType)
+uint32 instance_mount_hyjal::GetData(uint32 uiType) const
 {
     switch (uiType)
     {

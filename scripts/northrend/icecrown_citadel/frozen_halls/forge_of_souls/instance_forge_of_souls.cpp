@@ -105,7 +105,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
     }
 }
 
-bool instance_forge_of_souls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_forge_of_souls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {
@@ -179,7 +179,7 @@ void instance_forge_of_souls::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_forge_of_souls::GetData(uint32 uiType)
+uint32 instance_forge_of_souls::GetData(uint32 uiType) const
 {
     switch (uiType)
     {

@@ -211,7 +211,7 @@ Creature* instance_draktharon_keep::GetSummonDummy()
     return instance->GetCreature(m_vSummonDummyGuids[urand(0, m_vSummonDummyGuids.size() - 1)]);
 }
 
-bool instance_draktharon_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_draktharon_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {
@@ -320,7 +320,7 @@ void instance_draktharon_keep::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_draktharon_keep::GetData(uint32 uiType)
+uint32 instance_draktharon_keep::GetData(uint32 uiType) const
 {
     switch (uiType)
     {

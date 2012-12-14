@@ -75,7 +75,7 @@ void instance_scarlet_monastery::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_scarlet_monastery::GetData(uint32 uiData)
+uint32 instance_scarlet_monastery::GetData(uint32 uiData) const
 {
     if (uiData == TYPE_MOGRAINE_AND_WHITE_EVENT)
         return m_auiEncounter[0];

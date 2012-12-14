@@ -141,7 +141,7 @@ void instance_blackfathom_deeps::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_blackfathom_deeps::GetData(uint32 uiType)
+uint32 instance_blackfathom_deeps::GetData(uint32 uiType) const
 {
     switch (uiType)
     {

@@ -412,7 +412,7 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_icecrown_citadel::GetData(uint32 uiType)
+uint32 instance_icecrown_citadel::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -420,7 +420,7 @@ uint32 instance_icecrown_citadel::GetData(uint32 uiType)
     return 0;
 }
 
-bool instance_icecrown_citadel::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscvalue1)
+bool instance_icecrown_citadel::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscvalue1) const
 {
     // ToDo:
     return false;

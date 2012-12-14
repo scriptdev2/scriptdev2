@@ -200,7 +200,7 @@ void instance_zulgurub::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_zulgurub::GetData(uint32 uiType)
+uint32 instance_zulgurub::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

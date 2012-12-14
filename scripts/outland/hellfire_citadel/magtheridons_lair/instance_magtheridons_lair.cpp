@@ -189,7 +189,7 @@ void instance_magtheridons_lair::SetData(uint32 uiType, uint32 uiData)
     // Instance save isn't needed for this one
 }
 
-uint32 instance_magtheridons_lair::GetData(uint32 uiType)
+uint32 instance_magtheridons_lair::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

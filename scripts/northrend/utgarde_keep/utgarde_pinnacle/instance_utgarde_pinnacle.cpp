@@ -163,7 +163,7 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_pinnacle::GetData(uint32 uiType)
+uint32 instance_pinnacle::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -199,7 +199,7 @@ void instance_pinnacle::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

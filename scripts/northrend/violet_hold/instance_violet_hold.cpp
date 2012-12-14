@@ -360,7 +360,7 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_violet_hold::GetData(uint32 uiType)
+uint32 instance_violet_hold::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -538,7 +538,7 @@ void instance_violet_hold::ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
     // else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
 }
 
-bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

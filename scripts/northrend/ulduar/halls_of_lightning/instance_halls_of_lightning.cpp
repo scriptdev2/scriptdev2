@@ -123,7 +123,7 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_halls_of_lightning::GetData(uint32 uiType)
+uint32 instance_halls_of_lightning::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -131,7 +131,7 @@ uint32 instance_halls_of_lightning::GetData(uint32 uiType)
     return 0;
 }
 
-bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     if (uiCriteriaId == ACHIEV_CRIT_RESISTANT)
         return m_bIsShatterResistant;

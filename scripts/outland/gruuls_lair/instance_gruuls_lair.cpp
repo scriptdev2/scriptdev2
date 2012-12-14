@@ -112,7 +112,7 @@ void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_gruuls_lair::GetData(uint32 uiType)
+uint32 instance_gruuls_lair::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

@@ -241,7 +241,7 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     if (uiCriteriaId == ACHIEV_CRITERIA_WATCH_DIE)
         return m_bWatchHimDie;

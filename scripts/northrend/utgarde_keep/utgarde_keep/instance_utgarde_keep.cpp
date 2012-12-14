@@ -128,7 +128,7 @@ void instance_utgarde_keep::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_utgarde_keep::GetData(uint32 uiType)
+uint32 instance_utgarde_keep::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -158,7 +158,7 @@ void instance_utgarde_keep::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-bool instance_utgarde_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_utgarde_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     if (uiCriteriaId == ACHIEV_CRIT_ON_THE_ROCKS)
         return !m_bKelesethAchievFailed;

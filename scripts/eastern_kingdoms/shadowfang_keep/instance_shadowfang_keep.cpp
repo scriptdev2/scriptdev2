@@ -206,7 +206,7 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_shadowfang_keep::GetData(uint32 uiType)
+uint32 instance_shadowfang_keep::GetData(uint32 uiType) const
 {
     switch (uiType)
     {

@@ -296,7 +296,7 @@ void instance_blood_furnace::Update(uint32 uiDiff)
         m_uiRandYellTimer -= uiDiff;
 }
 
-uint32 instance_blood_furnace::GetData(uint32 uiType)
+uint32 instance_blood_furnace::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

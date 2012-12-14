@@ -96,7 +96,7 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_ramparts::GetData(uint32 uiType)
+uint32 instance_ramparts::GetData(uint32 uiType) const
 {
     if (uiType == TYPE_VAZRUDEN)
         return m_auiEncounter[0];

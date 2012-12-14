@@ -127,7 +127,7 @@ void instance_oculus::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_oculus::GetData(uint32 uiType)
+uint32 instance_oculus::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

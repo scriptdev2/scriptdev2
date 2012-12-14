@@ -48,8 +48,8 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData) override;
         void SetData64(uint32 uiData, uint64 uiGuid) override;
-        uint32 GetData(uint32 uiType) override;
-        uint64 GetData64(uint32 uiData) override;
+        uint32 GetData(uint32 uiType) const override;
+        uint64 GetData64(uint32 uiData) const override;
 
         void StartEvent(uint32 uiEventId, Player* pPlayer);
 
@@ -57,7 +57,7 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
     protected:

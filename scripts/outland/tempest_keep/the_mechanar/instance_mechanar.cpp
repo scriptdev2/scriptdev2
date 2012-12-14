@@ -113,7 +113,7 @@ void instance_mechanar::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_mechanar::GetData(uint32 uiType)
+uint32 instance_mechanar::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

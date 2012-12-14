@@ -48,7 +48,7 @@ class MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
         // No Save or Load needed to current knowledge
 

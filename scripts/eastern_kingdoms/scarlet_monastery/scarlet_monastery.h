@@ -33,7 +33,7 @@ class MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiData) override;
+        uint32 GetData(uint32 uiData) const override;
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

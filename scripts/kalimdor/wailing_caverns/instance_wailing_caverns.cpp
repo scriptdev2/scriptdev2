@@ -134,17 +134,11 @@ void instance_wailing_caverns::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_wailing_caverns::GetData(uint32 uiType)
+uint32 instance_wailing_caverns::GetData(uint32 uiType) const
 {
-    switch (uiType)
-    {
-        case TYPE_ANACONDRA: return m_auiEncounter[0]; break;
-        case TYPE_COBRAHN:   return m_auiEncounter[1]; break;
-        case TYPE_PYTHAS:    return m_auiEncounter[2]; break;
-        case TYPE_SERPENTIS: return m_auiEncounter[3]; break;
-        case TYPE_DISCIPLE:  return m_auiEncounter[4]; break;
-        case TYPE_MUTANUS:   return m_auiEncounter[5]; break;
-    }
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
     return 0;
 }
 

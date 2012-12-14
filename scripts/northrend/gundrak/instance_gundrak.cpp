@@ -261,7 +261,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 instance_gundrak::GetData(uint32 uiType)
+uint32 instance_gundrak::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];
@@ -269,7 +269,7 @@ uint32 instance_gundrak::GetData(uint32 uiType)
     return 0;
 }
 
-bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

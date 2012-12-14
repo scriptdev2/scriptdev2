@@ -10,11 +10,11 @@ enum
     MAX_ENCOUNTER               = 5,
     MAX_ROOMS                   = 7,
 
-    TYPE_ROOM_EVENT             = 1,
-    TYPE_EMBERSEER              = 2,
-    TYPE_FLAMEWREATH            = 3,                        // Only summon once per instance
-    TYPE_STADIUM                = 4,
-    TYPE_VALTHALAK              = 5,                        // Only summon once per instance
+    TYPE_ROOM_EVENT             = 0,
+    TYPE_EMBERSEER              = 1,
+    TYPE_FLAMEWREATH            = 2,                        // Only summon once per instance
+    TYPE_STADIUM                = 3,
+    TYPE_VALTHALAK              = 4,                        // Only summon once per instance
 
     NPC_SCARSHIELD_INFILTRATOR  = 10299,
     NPC_BLACKHAND_SUMMONER      = 9818,
@@ -107,9 +107,9 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance, privat
 
         void SetData(uint32 uiType, uint32 uiData) override;
         void SetData64(uint32 uiType, uint64 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
-        const char* Save() override { return m_strInstData.c_str(); }
+        const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
         void DoUseEmberseerRunes(bool bReset = false);

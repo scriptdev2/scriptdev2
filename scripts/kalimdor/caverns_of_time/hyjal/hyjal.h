@@ -70,9 +70,9 @@ class MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         void OnCreatureDeath(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
-        uint32 GetData(uint32 uiType) override;
+        uint32 GetData(uint32 uiType) const override;
 
-        const char* Save() override { return m_strSaveData.c_str(); }
+        const char* Save() const override { return m_strSaveData.c_str(); }
         void Load(const char* chrIn) override;
 
     private:

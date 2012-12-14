@@ -216,7 +216,7 @@ void instance_blackwing_lair::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-uint32 instance_blackwing_lair::GetData(uint32 uiType)
+uint32 instance_blackwing_lair::GetData(uint32 uiType) const
 {
     if (uiType < MAX_ENCOUNTER)
         return m_auiEncounter[uiType];

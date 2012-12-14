@@ -173,7 +173,7 @@ void world_map_ebon_hold::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-uint32 world_map_ebon_hold::GetData(uint32 uiType)
+uint32 world_map_ebon_hold::GetData(uint32 uiType) const
 {
     if (uiType == TYPE_BATTLE)
         return m_uiBattleEncounter;
