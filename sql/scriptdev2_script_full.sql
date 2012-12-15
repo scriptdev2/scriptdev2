@@ -4211,7 +4211,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1649008,'Tragic... They fought valiantly, but the beasts of Northrend triumphed. Let us observe a moment of silence for our fallen heroes.',16042,1,0,0,'tirion SAY_TIRION_BEAST_WIPE'),
 
 (-1649009,'Grand Warlock Wilfred Fizzlebang will summon forth your next challenge. Stand by for his entry!',16043,1,0,0,'tirion SAY_TIRION_JARAXXUS_INTRO_1'),
-(-1649010,'Thank you, Highlord! Now challengers, I will begin the ritual of summoning! When I am done, a fearsome Doomguard will appear!',16268,1,0,0,'wilfred SAY_WILFRED_JARAXXUS_INTRO_1'),
+(-1649010,'Thank you, Highlord. Now, challengers, I will begin the ritual of summoning. When I am done a fearsome doomguard will appear!',16268,1,0,2,'wilfred SAY_WILFRED_JARAXXUS_INTRO_1'),
 (-1649011,'Prepare for oblivion!',16269,1,0,0,'wilfred SAY_WILFRED_JARAXXUS_INTRO_2'),
 (-1649012,'Ah ha! Behold the absolute power of Wilfred Fizzlebang, master summoner! You are bound to ME, demon!',16270,1,0,0,'wilfred SAY_WILFRED_JARAXXUS_INTRO_3'),
 (-1649013,'Trifling gnome, your arrogance will be your undoing!',16143,1,0,0,'jaraxxus SAY_JARAXXUS_JARAXXAS_INTRO_1'),
@@ -4240,7 +4240,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1649034,'You will have your challenge, Fordring.',16321,1,0,0,'lich_king SAY_LKING_ANUB_INTRO_1'),
 (-1649035,'Arthas! You are hopelessly outnumbered! Lay down Frostmourne and I will grant you a just death.',16052,1,0,0,'tirion SAY_TIRION_ABUN_INTRO_1'),
-(-1649036,'The Nerubians built an empire beneath the frozen wastes of Northrend. An empire that you so foolishly built your structures upon. MY EMPIRE.',16322,1,0,0,'lich_king SAY_LKING_ANUB_INTRO_2'),
+(-1649036,'The Nerubians built an empire beneath the frozen wastes of Northrend. An empire that you so foolishly built your structures upon. MY EMPIRE.',16322,1,0,11,'lich_king SAY_LKING_ANUB_INTRO_2'),
 (-1649037,'The souls of your fallen champions will be mine, Fordring.',16323,1,0,0,'lich_king SAY_LKING_ANUB_INTRO_3'),
 (-1649038,'Ahhh, our guests have arrived, just as the master promised.',16235,1,0,0,'anubarak SAY_ANUB_ANUB_INTRO_1'),
 
