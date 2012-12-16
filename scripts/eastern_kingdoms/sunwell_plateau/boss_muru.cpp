@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL npc_portal_targetAI : public Scripted_NoMovementAI
             {
                 // Alternate the visuals
                 ++m_uiTransformCount;
-                DoCastSpellIfCan(m_creature, m_uiTransformCount % 2 ? SPELL_TRANSFORM_VISUAL_1 : SPELL_TRANSFORM_VISUAL_2, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, (m_uiTransformCount % 2) ? SPELL_TRANSFORM_VISUAL_1 : SPELL_TRANSFORM_VISUAL_2, CAST_TRIGGERED);
 
                 if (m_uiTransformCount < MAX_TRANSFORM_CASTS)
                     m_uiTransformTimer = 1000;

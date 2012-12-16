@@ -123,9 +123,9 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
             return;
 
         // Note: the birds should fly around the room for about 10 seconds before starting to attack the players
-        float fX, fY, fZ;
         if (GameObject* pClaw = m_pInstance->GetSingleGameObjectFromStorage(GO_RAVENS_CLAW))
         {
+            float fX, fY, fZ;
             for (uint8 i = 0; i < MAX_BROODS; ++i)
             {
                 m_creature->GetRandomPoint(pClaw->GetPositionX(), pClaw->GetPositionY(), pClaw->GetPositionZ(), 7.0f, fX, fY, fZ);

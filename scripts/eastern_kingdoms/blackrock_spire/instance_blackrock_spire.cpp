@@ -426,7 +426,7 @@ void instance_blackrock_spire::DoUseEmberseerRunes(bool bReset)
     if (m_lEmberseerRunesGUIDList.empty())
         return;
 
-    for (GuidList::const_iterator itr = m_lEmberseerRunesGUIDList.begin(); itr != m_lEmberseerRunesGUIDList.end(); itr++)
+    for (GuidList::const_iterator itr = m_lEmberseerRunesGUIDList.begin(); itr != m_lEmberseerRunesGUIDList.end(); ++itr)
     {
         if (bReset)
         {
