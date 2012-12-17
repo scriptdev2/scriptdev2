@@ -90,6 +90,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         InitializeDialogueHelper(m_pInstance);
         Reset();
+        m_attackDistance = 25.0f;
     }
 
     ScriptedInstance* m_pInstance;
@@ -122,7 +123,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
             m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
-            DoStartMovement(pWho, 25.0f);
+            HandleMovementOnAttackStart(pWho);
         }
     }
 

@@ -20,14 +20,13 @@ struct TSpellSummary
 }* SpellSummary;
 
 ScriptedAI::ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
-    m_bCombatMovement(true),
     m_uiEvadeCheckCooldown(2500)
 {}
 
 /// This function shows if combat movement is enabled, overwrite for more info
 void ScriptedAI::GetAIInformation(ChatHandler& reader)
 {
-    reader.PSendSysMessage("ScriptedAI, combat movement is %s", reader.GetOnOffStr(m_bCombatMovement));
+    reader.PSendSysMessage("ScriptedAI, combat movement is %s", reader.GetOnOffStr(IsCombatMovement()));
 }
 
 /// Return if the creature can "see" pWho
@@ -84,8 +83,7 @@ void ScriptedAI::AttackStart(Unit* pWho)
         m_creature->SetInCombatWith(pWho);
         pWho->SetInCombatWith(m_creature);
 
-        if (IsCombatMovement())
-            m_creature->GetMotionMaster()->MoveChase(pWho);
+        HandleMovementOnAttackStart(pWho);
     }
 }
 
@@ -493,11 +491,6 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 iMainHand, int32 iOf
 
     if (iRanged >= 0)
         m_creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_2, iRanged);
-}
-
-void ScriptedAI::SetCombatMovement(bool bCombatMove)
-{
-    m_bCombatMovement = bCombatMove;
 }
 
 // Hacklike storage used for misc creatures that are expected to evade of outside of a certain area.
