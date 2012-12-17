@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
                 {
                     uiDamage = 0;                           // Take 0 damage
 
-                    m_creature->RemoveAllAuras();
+                    m_creature->RemoveAllAurasOnDeath();
                     m_creature->DeleteThreatList();
                     m_creature->CombatStop(true);
 

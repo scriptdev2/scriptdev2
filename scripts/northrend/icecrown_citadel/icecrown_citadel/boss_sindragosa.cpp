@@ -548,7 +548,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
     // evade to point on platform
     void EnterEvadeMode() override
     {
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
 
@@ -724,7 +724,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
 
     void EnterEvadeMode() override
     {
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
 

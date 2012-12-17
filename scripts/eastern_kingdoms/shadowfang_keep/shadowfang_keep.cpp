@@ -371,7 +371,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
 
     void EnterEvadeMode() override
     {
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
         m_creature->LoadCreatureAddon(true);

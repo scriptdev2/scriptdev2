@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         if (m_uiEmbraceTimer)
             return;
 
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
         m_creature->LoadCreatureAddon(true);

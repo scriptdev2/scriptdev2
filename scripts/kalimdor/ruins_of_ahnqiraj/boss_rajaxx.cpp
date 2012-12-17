@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         if (!m_pInstance)
             return;
 
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
 
@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL npc_kaldorei_eliteAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
 

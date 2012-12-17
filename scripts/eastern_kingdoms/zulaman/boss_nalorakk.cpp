@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     // Nalorakk evades only after the trash waves are finished
     void EnterEvadeMode() override
     {
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
         m_creature->LoadCreatureAddon(true);

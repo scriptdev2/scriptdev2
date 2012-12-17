@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
 
         if (m_bIsPlatformPhase)
         {
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnEvade();
             m_creature->DeleteThreatList();
             m_creature->CombatStop(true);
 

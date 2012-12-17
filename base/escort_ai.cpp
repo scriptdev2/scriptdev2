@@ -209,7 +209,7 @@ void npc_escortAI::JustRespawned()
 
 void npc_escortAI::EnterEvadeMode()
 {
-    m_creature->RemoveAllAuras();
+    m_creature->RemoveAllAurasOnEvade();
     m_creature->DeleteThreatList();
     m_creature->CombatStop(true);
     m_creature->SetLootRecipient(NULL);

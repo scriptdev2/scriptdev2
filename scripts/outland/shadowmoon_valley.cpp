@@ -1491,7 +1491,7 @@ struct MANGOS_DLL_DECL npc_spawned_oronok_tornheartAI : public ScriptedAI, priva
 
     void EnterEvadeMode() override
     {
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
         m_creature->LoadCreatureAddon(true);

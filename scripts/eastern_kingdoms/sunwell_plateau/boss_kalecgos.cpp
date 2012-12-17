@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         // Check if the boss is uncorrupted when evading
         if (m_bIsUncorrupted)
         {
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnEvade();
             m_creature->DeleteThreatList();
             m_creature->CombatStop(true);
             m_creature->LoadCreatureAddon(true);

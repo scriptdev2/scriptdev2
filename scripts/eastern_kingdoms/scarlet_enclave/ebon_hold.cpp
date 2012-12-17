@@ -2674,7 +2674,7 @@ struct MANGOS_DLL_DECL npc_fellow_death_knightAI : public ScriptedAI
         }
         else if (m_pInstance->GetData(TYPE_BATTLE) == DONE)
         {
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnEvade();
             m_creature->DeleteThreatList();
             m_creature->CombatStop(true);
             m_creature->LoadCreatureAddon(true);
@@ -2806,7 +2806,7 @@ struct MANGOS_DLL_DECL npc_acherus_deathchargerAI : public ScriptedAI
     {
         if (m_bIsRiderDead)
         {
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnEvade();
             m_creature->DeleteThreatList();
             m_creature->CombatStop(true);
             m_creature->LoadCreatureAddon(true);

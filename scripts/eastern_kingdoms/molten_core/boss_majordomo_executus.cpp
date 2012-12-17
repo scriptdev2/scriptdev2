@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         else                                                // Finished the encounter, DONE
         {
             // Exit combat
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnEvade();
             m_creature->DeleteThreatList();
             m_creature->CombatStop(true);
             m_creature->SetLootRecipient(NULL);

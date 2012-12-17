@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
                 m_creature->InterruptNonMeleeSpells(false);
 
             m_creature->ClearComboPointHolders();
-            m_creature->RemoveAllAuras();
+            m_creature->RemoveAllAurasOnDeath();
             m_creature->ClearAllReactives();
 
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);

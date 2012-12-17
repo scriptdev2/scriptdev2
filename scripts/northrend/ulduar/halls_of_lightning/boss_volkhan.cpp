@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
     void EnterEvadeMode() override
     {
         // Evade but keep the current location
-        m_creature->RemoveAllAuras();
+        m_creature->RemoveAllAurasOnEvade();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
         m_creature->LoadCreatureAddon(true);
