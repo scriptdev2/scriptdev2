@@ -116,7 +116,7 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
         case NPC_XEVOZZ:
         case NPC_LAVANTHOR:
         case NPC_ZURAMAT:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
+            m_vRandomBossList.push_back(pCreature->GetEntry());
             break;
 
         case NPC_PORTAL_INTRO:
@@ -456,49 +456,32 @@ BossSpawn* instance_violet_hold::CreateBossSpawnByEntry(uint32 uiEntry)
 
 void instance_violet_hold::SetRandomBosses()
 {
-    if (m_vRandomBosses.empty())
-        for (uint8 i = 0; i < MAX_MINIBOSSES; ++i)
-        {
-            if (m_auiEncounter[aBossInformation[i].uiType] == DONE)
-                m_vRandomBosses.push_back(CreateBossSpawnByEntry(aBossInformation[i].uiEntry));
-        }
-
-    if (m_vRandomBosses.size() >= 2)
-        return;
-
-    while (m_lRandomBossList.size() > 2)
+    // Store bosses that are already done
+    for (uint8 i = 0; i < MAX_MINIBOSSES; ++i)
     {
-        uint32 uiPosition = urand(0, m_lRandomBossList.size() - 1);
-
-        for (std::list<uint32>::iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr, --uiPosition)
-        {
-            if (!*itr)
-                continue;
-
-            if (!uiPosition)
-            {
-                m_lRandomBossList.erase(itr);
-                break;
-            }
-        }
+        if (m_auiEncounter[aBossInformation[i].uiType] == DONE)
+            m_vRandomBosses.push_back(CreateBossSpawnByEntry(aBossInformation[i].uiEntry));
     }
 
-    if (!m_vRandomBosses.empty())
+    if (m_vRandomBosses.size() < 2)                         // Get some new random bosses
     {
-        for (std::list<uint32>::const_iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr)
+        std::random_shuffle(m_vRandomBossList.begin(), m_vRandomBossList.end());
+        // two required, in case the first is already pushed to m_vRandomBosses
+        if (m_vRandomBossList.size() < 2)
+            script_error_log("instance_violet_hold, Mini Bosses are not properly spawned");
+        else
+            m_vRandomBossList.resize(2);
+
+        // Fill up some random bosses
+        for (std::vector<uint32>::const_iterator itr = m_vRandomBossList.begin(); itr != m_vRandomBossList.end(); ++itr)
         {
-            if (m_vRandomBosses.at(0)->uiEntry != *itr)
+            if (m_vRandomBosses.empty() || m_vRandomBosses[0]->uiEntry != *itr)
                 m_vRandomBosses.push_back(CreateBossSpawnByEntry(*itr));
         }
     }
-    else
-    {
-        for (std::list<uint32>::const_iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr)
-            m_vRandomBosses.push_back(CreateBossSpawnByEntry(*itr));
-    }
 
-    for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
-        debug_log("SD2: instance_violet_hold first random boss is entry %u", (*itr)->uiEntry);
+    for (uint8 i = 0; i < m_vRandomBosses.size(); ++i)
+        debug_log("SD2: instance_violet_hold random boss %u is entry %u", i, m_vRandomBosses[i]->uiEntry);
 }
 
 void instance_violet_hold::CallGuards(bool bRespawn)

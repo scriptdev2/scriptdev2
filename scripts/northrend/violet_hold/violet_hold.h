@@ -290,7 +290,7 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         GuidList m_lGuardsList;
         GuidList m_lErekemGuardList;
         GuidList m_lIchoronTargetsList;
-        std::list<uint32> m_lRandomBossList;
+        std::vector<uint32> m_vRandomBossList;
 
         std::vector<BossSpawn*> m_vRandomBosses;
 };
