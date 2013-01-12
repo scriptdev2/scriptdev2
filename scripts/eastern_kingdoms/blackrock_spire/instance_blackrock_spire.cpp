@@ -248,30 +248,6 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-void instance_blackrock_spire::SetData64(uint32 uiType, uint64 uiData)
-{
-    if (uiType == TYPE_ROOM_EVENT && GetData(TYPE_ROOM_EVENT) == IN_PROGRESS)
-    {
-        uint8 uiNotEmptyRoomsCount = 0;
-        for (uint8 i = 0; i < MAX_ROOMS; ++i)
-        {
-            if (m_aRoomRuneGuid[i])                       // This check is used, to ensure which runes still need processing
-            {
-                m_alRoomEventMobGUIDSorted[i].remove(ObjectGuid(uiData));
-                if (m_alRoomEventMobGUIDSorted[i].empty())
-                {
-                    DoUseDoorOrButton(m_aRoomRuneGuid[i]);
-                    m_aRoomRuneGuid[i].Clear();
-                }
-                else
-                    ++uiNotEmptyRoomsCount;                 // found an not empty room
-            }
-        }
-        if (!uiNotEmptyRoomsCount)
-            SetData(TYPE_ROOM_EVENT, DONE);
-    }
-}
-
 void instance_blackrock_spire::Load(const char* chrIn)
 {
     if (!chrIn)
@@ -327,6 +303,30 @@ void instance_blackrock_spire::OnCreatureDeath(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_BLACKHAND_SUMMONER:
+        case NPC_BLACKHAND_VETERAN:
+            // Handle Runes
+            if (m_auiEncounter[TYPE_ROOM_EVENT] == IN_PROGRESS)
+            {
+                uint8 uiNotEmptyRoomsCount = 0;
+                for (uint8 i = 0; i < MAX_ROOMS; ++i)
+                {
+                    if (m_aRoomRuneGuid[i])                 // This check is used, to ensure which runes still need processing
+                    {
+                        m_alRoomEventMobGUIDSorted[i].remove(pCreature->GetObjectGuid());
+                        if (m_alRoomEventMobGUIDSorted[i].empty())
+                        {
+                            DoUseDoorOrButton(m_aRoomRuneGuid[i]);
+                            m_aRoomRuneGuid[i].Clear();
+                        }
+                        else
+                            ++uiNotEmptyRoomsCount;         // found an not empty room
+                    }
+                }
+                if (!uiNotEmptyRoomsCount)
+                    SetData(TYPE_ROOM_EVENT, DONE);
+            }
+            break;
         case NPC_DRAKKISATH:
             // Just open the doors, don't save anything because it's the last boss
             DoUseDoorOrButton(GO_DRAKKISATH_DOOR_1);
