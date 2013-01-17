@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Supremus
 SD%Complete: 90
-SDComment: Fixating the target is hacky, unknown if other speed-changes happen, remove AI for trigger mobs in next step
+SDComment: Unknown if other speed-changes happen, remove AI for trigger mobs in next step
 SDCategory: Black Temple
 EndScriptData */
 
@@ -99,8 +99,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     uint32 m_uiMoltenPunchTimer;
 
-    ObjectGuid m_lastGazeTargetGuid;
-
     bool m_bTankPhase;
 
     GuidList m_lSummonedGUIDs;
@@ -112,8 +110,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         m_uiPhaseSwitchTimer   = 60000;
         m_uiMoltenPunchTimer   = 8000;
         m_uiBerserkTimer       = 15 * MINUTE * IN_MILLISECONDS;
-
-        m_lastGazeTargetGuid.Clear();
 
         m_bTankPhase = true;
     }
@@ -187,7 +183,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void KilledUnit(Unit* pKilled) override
     {
-        if (!m_bTankPhase && pKilled->GetObjectGuid() == m_lastGazeTargetGuid)
+        // The current target is the fixated target - repick a new one
+        if (!m_bTankPhase && pKilled == m_creature->getVictim())
             m_uiSwitchTargetTimer = 0;
     }
 
@@ -222,6 +219,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             {
                 m_bTankPhase = true;
                 m_creature->RemoveAurasDueToSpell(SPELL_SLOW_SELF);
+                m_creature->FixateTarget(NULL);
             }
             else
             {
@@ -233,7 +231,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             }
 
             m_uiPhaseSwitchTimer = MINUTE * IN_MILLISECONDS;
-            DoResetThreat();
         }
         else
             m_uiPhaseSwitchTimer -= uiDiff;
@@ -257,12 +254,9 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
-                    DoResetThreat();
-                    // This way to simulate some fixating is to be considered a hack
-                    m_creature->AddThreat(pTarget, 5000000.0f);
+                    m_creature->FixateTarget(pTarget);
                     DoScriptText(EMOTE_NEW_TARGET, m_creature);
                     m_uiSwitchTargetTimer = 10000;
-                    m_lastGazeTargetGuid = pTarget->GetObjectGuid();
                 }
             }
             else
