@@ -75,6 +75,14 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
         case NPC_SHIELD_GENERATOR:
             m_lShieldGeneratorGUIDList.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_COILFANG_PRIESTESS:
+        case NPC_COILFANG_SHATTERER:
+        case NPC_VASHJIR_HONOR_GUARD:
+        case NPC_GREYHEART_TECHNICIAN:
+            // Filter only the mobs spawned on the platforms
+            if (pCreature->GetPositionZ() > 0)
+                m_sPlatformMobsGUIDSet.insert(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -99,7 +107,7 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_LEOTHERAS_EVENT:
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == FAIL)
             {
                 for (GuidList::const_iterator itr = m_lSpellBindersGUIDList.begin(); itr != m_lSpellBindersGUIDList.end(); ++itr)
@@ -182,6 +190,32 @@ uint32 instance_serpentshrine_cavern::GetData(uint32 uiType) const
     return 0;
 }
 
+void instance_serpentshrine_cavern::SetData64(uint32 uiData, uint64 uiGuid)
+{
+    // Note: this is handled in Acid. The purpose is check which npc from the platform set is alive
+    // The function is triggered by eventAI on generic timer
+    if (uiData == DATA_WATERSTATE_EVENT)
+    {
+        if (m_sPlatformMobsGUIDSet.find(ObjectGuid(uiGuid)) != m_sPlatformMobsGUIDSet.end())
+            m_sPlatformMobsAliveGUIDSet.insert(ObjectGuid(uiGuid));
+    }
+}
+
+bool instance_serpentshrine_cavern::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
+{
+    switch (uiInstanceConditionId)
+    {
+        case INSTANCE_CONDITION_ID_LURKER:
+            return GetData(TYPE_THELURKER_EVENT) != DONE;
+        case INSTANCE_CONDITION_ID_SCALDING_WATER:
+            return m_sPlatformMobsAliveGUIDSet.empty();
+    }
+
+    script_error_log("instance_serpentshrine_cavern::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                         uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
+    return false;
+}
+
 void instance_serpentshrine_cavern::OnCreatureEnterCombat(Creature* pCreature)
 {
     // Interrupt spell casting on aggro
@@ -191,18 +225,27 @@ void instance_serpentshrine_cavern::OnCreatureEnterCombat(Creature* pCreature)
 
 void instance_serpentshrine_cavern::OnCreatureDeath(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_GREYHEART_SPELLBINDER)
+    switch (pCreature->GetEntry())
     {
-        ++m_uiSpellBinderCount;
+        case NPC_GREYHEART_SPELLBINDER:
+            ++m_uiSpellBinderCount;
 
-        if (m_uiSpellBinderCount == MAX_SPELLBINDERS)
-        {
-            if (Creature* pLeotheras = GetSingleCreatureFromStorage(NPC_LEOTHERAS))
+            if (m_uiSpellBinderCount == MAX_SPELLBINDERS)
             {
-                pLeotheras->RemoveAurasDueToSpell(SPELL_LEOTHERAS_BANISH);
-                pLeotheras->SetInCombatWithZone();
+                if (Creature* pLeotheras = GetSingleCreatureFromStorage(NPC_LEOTHERAS))
+                {
+                    pLeotheras->RemoveAurasDueToSpell(SPELL_LEOTHERAS_BANISH);
+                    pLeotheras->SetInCombatWithZone();
+                }
             }
-        }
+            break;
+        case NPC_COILFANG_PRIESTESS:
+        case NPC_COILFANG_SHATTERER:
+        case NPC_VASHJIR_HONOR_GUARD:
+        case NPC_GREYHEART_TECHNICIAN:
+            if (m_sPlatformMobsGUIDSet.find(pCreature->GetObjectGuid()) != m_sPlatformMobsGUIDSet.end())
+                m_sPlatformMobsAliveGUIDSet.erase(pCreature->GetObjectGuid());
+            break;
     }
 }
 
