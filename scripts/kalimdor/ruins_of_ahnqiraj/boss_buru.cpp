@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Buru
-SD%Complete: 50
-SDComment: Timers; Fixate for phase I target NYI; Kill eggs on transform NYI; Egg explode damage and Buru stun are missing
+SD%Complete: 70
+SDComment: Timers; Kill eggs on transform NYI; Egg explode damage and Buru stun are missing
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
@@ -73,6 +73,7 @@ struct MANGOS_DLL_DECL boss_buruAI : public ScriptedAI
     {
         DoScriptText(EMOTE_TARGET, m_creature, pWho);
         DoCastSpellIfCan(m_creature, SPELL_THORNS);
+        m_creature->FixateTarget(pWho);
     }
 
     void KilledUnit(Unit* pVictim) override
@@ -93,8 +94,7 @@ struct MANGOS_DLL_DECL boss_buruAI : public ScriptedAI
 
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER))
         {
-            DoResetThreat();
-            m_creature->AI()->AttackStart(pTarget);
+            m_creature->FixateTarget(pTarget);
             DoScriptText(EMOTE_TARGET, m_creature, pTarget);
         }
 
@@ -145,6 +145,7 @@ struct MANGOS_DLL_DECL boss_buruAI : public ScriptedAI
                         // Not sure of this but the boss should gain full speed in phase II
                         DoCastSpellIfCan(m_creature, SPELL_FULL_SPEED, CAST_TRIGGERED);
                         m_creature->RemoveAurasDueToSpell(SPELL_THORNS);
+                        m_creature->FixateTarget(NULL);
                         m_uiPhase = PHASE_TRANSFORM;
                     }
                 }
