@@ -122,6 +122,10 @@ void instance_ruby_sanctum::SetData(uint32 uiType, uint32 uiData)
             {
                 DoHandleZarithrianDoor();
                 DoUseDoorOrButton(GO_FIRE_FIELD);
+
+                // Start outro event by DB script
+                if (Creature* pXerestrasza = GetSingleCreatureFromStorage(NPC_XERESTRASZA))
+                    pXerestrasza->GetMotionMaster()->MoveWaypoint();
             }
             break;
         case TYPE_ZARITHRIAN:

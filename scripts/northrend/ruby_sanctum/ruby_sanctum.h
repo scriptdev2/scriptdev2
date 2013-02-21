@@ -74,6 +74,10 @@ class MANGOS_DLL_DECL instance_ruby_sanctum : public ScriptedInstance
         const char* Save() const override { return strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
+        // Difficulty wrappers
+        bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
+        bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
+
     protected:
         void DoHandleZarithrianDoor();
 
