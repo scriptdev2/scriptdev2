@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
             for (uint8 i = 0; i < MAX_BROODS; ++i)
             {
                 m_creature->GetRandomPoint(pClaw->GetPositionX(), pClaw->GetPositionY(), pClaw->GetPositionZ(), 7.0f, fX, fY, fZ);
-                m_creature->SummonCreature(NPC_BROOD_OF_ANZU, fX, fY, fZ, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                m_creature->SummonCreature(NPC_BROOD_OF_ANZU, fX, fY, fZ, 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 30000);
             }
         }
     }

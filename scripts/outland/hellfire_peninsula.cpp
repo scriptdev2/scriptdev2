@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
         float fX, fY, fZ;
         m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
 
-        m_creature->SummonCreature(NPC_HELLFIRE_WARDLING, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+        m_creature->SummonCreature(NPC_HELLFIRE_WARDLING, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
     }
 
     void JustSummoned(Creature* pSummoned) override
@@ -387,8 +387,8 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
             case 9:
                 DoScriptText(SAY_ELF_SUMMON1, m_creature, pPlayer);
                 // Spawn two Haal'eshi Talonguard
-                DoSpawnCreature(NPC_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                DoSpawnCreature(NPC_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                DoSpawnCreature(NPC_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
+                DoSpawnCreature(NPC_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
                 break;
             case 13:
                 DoScriptText(SAY_ELF_RESTING, m_creature, pPlayer);
@@ -396,8 +396,8 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
             case 14:
                 DoScriptText(SAY_ELF_SUMMON2, m_creature, pPlayer);
                 // Spawn two Haal'eshi Windwalker
-                DoSpawnCreature(NPC_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                DoSpawnCreature(NPC_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                DoSpawnCreature(NPC_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
+                DoSpawnCreature(NPC_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
                 break;
             case 27:
                 DoScriptText(SAY_ELF_COMPLETE, m_creature, pPlayer);

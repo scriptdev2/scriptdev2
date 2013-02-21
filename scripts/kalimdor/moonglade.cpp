@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
                 DoScriptText(SAY_RELIC2, m_creature, pPlayer);
                 break;
             case 31:
-                m_creature->SummonCreature(NPC_ASPECT_OF_RAVEN, 7465.321f, -3088.515f, 429.006f, 5.550f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                m_creature->SummonCreature(NPC_ASPECT_OF_RAVEN, 7465.321f, -3088.515f, 429.006f, 5.550f, TEMPSUMMON_TIMED_OOC_DESPAWN, 10000);
                 break;
             case 35:
                 m_creature->HandleEmote(EMOTE_STATE_USESTANDING_NOSHEATHE);

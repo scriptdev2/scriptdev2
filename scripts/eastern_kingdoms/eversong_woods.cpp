@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
             if (Creature* pCreature = m_creature->SummonCreature(uiChallengerId[i],
                                       fChallengerLoc[i][0], fChallengerLoc[i][1],
                                       fChallengerLoc[i][2], fChallengerLoc[i][3],
-                                      TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
+                                      TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 600000))
             {
                 m_aChallengerGuids[i] = pCreature->GetObjectGuid();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -490,14 +490,14 @@ struct MANGOS_DLL_DECL npc_infused_crystalAI : public Scripted_NoMovementAI
                 if (m_bFirstWave)
                 {
                     for (uint8 i = 0; i < 3; ++i)
-                        m_creature->SummonCreature(NPC_ENRAGED_WRAITH, aSummonPos[i][0], aSummonPos[i][1], aSummonPos[i][2], aSummonPos[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 5 * MINUTE);
+                        m_creature->SummonCreature(NPC_ENRAGED_WRAITH, aSummonPos[i][0], aSummonPos[i][1], aSummonPos[i][2], aSummonPos[i][3], TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 5 * MINUTE);
                     m_uiWaveTimer = 29000;
                     m_bFirstWave = false;
                 }
                 else
                 {
                     for (uint8 i = 3; i < 6; ++i)
-                        m_creature->SummonCreature(NPC_ENRAGED_WRAITH, aSummonPos[i][0], aSummonPos[i][1], aSummonPos[i][2], aSummonPos[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 5 * MINUTE);
+                        m_creature->SummonCreature(NPC_ENRAGED_WRAITH, aSummonPos[i][0], aSummonPos[i][1], aSummonPos[i][2], aSummonPos[i][3], TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 5 * MINUTE);
                     m_uiWaveTimer = 0;
                 }
             }

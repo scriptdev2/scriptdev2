@@ -220,13 +220,13 @@ struct MANGOS_DLL_DECL npc_rinjiAI : public npc_escortAI
 
         m_creature->SummonCreature(NPC_RANGER,
                                    m_afAmbushSpawn[m_iSpawnId].m_fX, m_afAmbushSpawn[m_iSpawnId].m_fY, m_afAmbushSpawn[m_iSpawnId].m_fZ, 0.0f,
-                                   TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+                                   TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 60000);
 
         for (int i = 0; i < 2; ++i)
         {
             m_creature->SummonCreature(NPC_OUTRUNNER,
                                        m_afAmbushSpawn[m_iSpawnId].m_fX, m_afAmbushSpawn[m_iSpawnId].m_fY, m_afAmbushSpawn[m_iSpawnId].m_fZ, 0.0f,
-                                       TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+                                       TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 60000);
         }
     }
 

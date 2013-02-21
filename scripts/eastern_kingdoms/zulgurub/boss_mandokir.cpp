@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_creature->Unmount();
 
         // And summon his raptor
-        m_creature->SummonCreature(NPC_OHGAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
+        m_creature->SummonCreature(NPC_OHGAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 35000);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_OHGAN, IN_PROGRESS);

@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 
                 // Summon a larva
                 uint8 uiLoc = urand(0, 1);
-                m_creature->SummonCreature(NPC_LARVA, aAyamissSpawnLocs[uiLoc].m_fX, aAyamissSpawnLocs[uiLoc].m_fY, aAyamissSpawnLocs[uiLoc].m_fZ, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                m_creature->SummonCreature(NPC_LARVA, aAyamissSpawnLocs[uiLoc].m_fX, aAyamissSpawnLocs[uiLoc].m_fY, aAyamissSpawnLocs[uiLoc].m_fZ, 0, TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 30000);
             }
         }
         else

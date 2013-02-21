@@ -88,7 +88,7 @@ bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
 
     if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[uiRandom],
                               pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
-                              TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+                              TEMPSUMMON_TIMED_OOC_DESPAWN, 30000))
     {
         if (!pCreature->IsHostileTo(pPlayer))
         {
@@ -132,7 +132,7 @@ bool GOUse_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
 
     pPlayer->SummonCreature(uiNpcStasisEntry[uiRandom],
                             pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
-                            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                            TEMPSUMMON_TIMED_OOC_DESPAWN, 30000);
 
     return false;
 }
@@ -220,7 +220,7 @@ bool GOUse_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
     }
 
     if (uiBirdEntry)
-        pPlayer->SummonCreature(uiBirdEntry, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+        pPlayer->SummonCreature(uiBirdEntry, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OOC_DESPAWN, 60000);
 
     return false;
 }

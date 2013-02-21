@@ -448,7 +448,7 @@ void instance_arcatraz::Update(uint32 uiDiff)
             uint32 uiEntry = urand(0, 10) ? NPC_PROTEAN_HORROR : NPC_PROTEAN_NIGHTMARE;
 
             // Summon and move the intro creatures into combat positions
-            if (Creature* pTemp = pPlayer->SummonCreature(uiEntry, aEntranceSpawnLoc[0], aEntranceSpawnLoc[1], aEntranceSpawnLoc[2], aEntranceSpawnLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000))
+            if (Creature* pTemp = pPlayer->SummonCreature(uiEntry, aEntranceSpawnLoc[0], aEntranceSpawnLoc[1], aEntranceSpawnLoc[2], aEntranceSpawnLoc[3], TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 30000))
             {
                 pTemp->SetWalk(false);
                 pTemp->GetMotionMaster()->MovePoint(0, aEntranceMoveLoc[0], aEntranceMoveLoc[1], aEntranceMoveLoc[2]);

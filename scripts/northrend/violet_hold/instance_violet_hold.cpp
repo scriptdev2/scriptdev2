@@ -78,7 +78,7 @@ void instance_violet_hold::ResetAll()
                 pGhostBoss->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             }
             else if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
-                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
+                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
 
             // Respawn Erekem guards
             if (pData->uiType == TYPE_EREKEM)
@@ -413,7 +413,7 @@ void instance_violet_hold::SpawnPortal()
         {
             uint32 uiPortalEntry = pData->pPortalType == PORTAL_TYPE_NORM ? NPC_PORTAL : NPC_PORTAL_ELITE;
 
-            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800 * IN_MILLISECONDS);
+            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 1800 * IN_MILLISECONDS);
         }
     }
 }
