@@ -913,7 +913,8 @@ enum
     SAY_SKYWING_SUMMON           = -1000801,
     SAY_SKYWING_END              = -1000802,
 
-    // SPELL_TRANSFORM            = ?????,       // ToDo: research the transform spell id
+    SPELL_FEATHERY_CYCLONE_BURST = 39166,           // triggered many times by server side spell - 39167 (channeled for 5 sec)
+    SPELL_RILAK_THE_REDEEMED     = 39179,
 
     NPC_LUANGA_THE_IMPRISONER    = 18533,
 
@@ -926,7 +927,17 @@ struct MANGOS_DLL_DECL npc_skywingAI : public npc_escortAI
 {
     npc_skywingAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void Reset() override {}
+    uint32 m_uiCycloneTimer;
+    uint8 m_uiCycloneCounter;
+
+    void Reset() override
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            m_uiCycloneTimer = 0;
+            m_uiCycloneCounter = 0;
+        }
+    }
 
     void WaypointReached(uint32 uiPointId) override
     {
@@ -950,7 +961,8 @@ struct MANGOS_DLL_DECL npc_skywingAI : public npc_escortAI
                 m_creature->SummonCreature(NPC_LUANGA_THE_IMPRISONER, aLuangaSpawnCoords[0], aLuangaSpawnCoords[1], aLuangaSpawnCoords[2], 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 81:
-                // ToDo: implement transform spell here
+                // Start transformation
+                m_uiCycloneTimer = 100;
                 break;
             case 82:
                 DoScriptText(SAY_SKYWING_END, m_creature);
@@ -963,6 +975,31 @@ struct MANGOS_DLL_DECL npc_skywingAI : public npc_escortAI
     void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff) override
+    {
+        if (m_uiCycloneTimer)
+        {
+            if (m_uiCycloneTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_FEATHERY_CYCLONE_BURST) == CAST_OK)
+                {
+                    ++m_uiCycloneCounter;
+
+                    if (m_uiCycloneCounter == 30)
+                        DoCastSpellIfCan(m_creature, SPELL_RILAK_THE_REDEEMED, CAST_TRIGGERED);
+
+                    // Only cast this spell 50 times
+                    if (m_uiCycloneCounter == 50)
+                        m_uiCycloneTimer = 0;
+                    else
+                        m_uiCycloneTimer = 100;
+                }
+            }
+            else
+                m_uiCycloneTimer -= uiDiff;
+        }
     }
 };
 
