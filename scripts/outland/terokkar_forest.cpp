@@ -1000,6 +1000,9 @@ struct MANGOS_DLL_DECL npc_skywingAI : public npc_escortAI
             else
                 m_uiCycloneTimer -= uiDiff;
         }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
     }
 };
 
