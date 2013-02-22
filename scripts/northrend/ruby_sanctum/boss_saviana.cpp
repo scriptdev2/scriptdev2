@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_saviana
-SD%Complete: 20
-SDComment: only yells
+SD%Complete: 100
+SDComment: Timers
 SDCategory: Ruby Sanctum
 EndScriptData */
 
@@ -31,7 +31,22 @@ enum
     SAY_SLAY_2                  = -1724017,
     SAY_SPECIAL                 = -1724018,
     SOUND_DEATH                 = 17531,                    // On death it has only a screaming sound
+
+    SPELL_ENRAGE                = 78722,
+    SPELL_FLAME_BREATH          = 74403,
+    SPELL_CONFLAGRATION_TARGET  = 74452,                    // sets target for 74453
+    //SPELL_FLAME_BEACON        = 74453,
+    //SPELL_CONFLAGRATION_DUMMY = 74454,                    // unk effect
+
+    PHASE_GROUND                = 1,
+    PHASE_AIR                   = 2,
+    PHASE_TRANSITION            = 3,
+
+    POINT_AIR                   = 1,
+    POINT_GROUND                = 2
 };
+
+static const float aAirPositions[3] = {3155.51f, 683.844f, 90.50f};
 
 struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
 {
@@ -43,8 +58,17 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
 
     instance_ruby_sanctum* m_pInstance;
 
+    uint8 m_uiPhase;
+    uint32 m_uiPhaseSwitchTimer;
+    uint32 m_uiFlameBreathTimer;
+    uint32 m_uiEnrageTimer;
+
     void Reset() override
     {
+        m_uiPhase                   = PHASE_GROUND;
+        m_uiPhaseSwitchTimer        = 28000;
+        m_uiEnrageTimer             = urand(10000, 15000);
+        m_uiFlameBreathTimer        = 10000;
     }
 
     void Aggro(Unit* pWho) override
@@ -74,8 +98,42 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
 
     void JustReachedHome() override
     {
+        SetCombatMovement(true);
+        m_creature->SetLevitate(false);
+        m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, 0);
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SAVIANA, FAIL);
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
+    {
+        if (uiMoveType != POINT_MOTION_TYPE)
+            return;
+
+        switch (uiPointId)
+        {
+            case POINT_AIR:
+                if (DoCastSpellIfCan(m_creature, SPELL_CONFLAGRATION_TARGET) == CAST_OK)
+                {
+                    m_uiPhaseSwitchTimer = 6000;
+                    m_uiPhase = PHASE_AIR;
+                }
+
+                break;
+            case POINT_GROUND:
+                m_uiPhase = PHASE_GROUND;
+                m_uiPhaseSwitchTimer = 38000;
+
+                SetCombatMovement(true);
+                m_creature->SetLevitate(false);
+                m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, 0);
+
+                if (m_creature->getVictim())
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                break;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -83,7 +141,68 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        DoMeleeAttackIfReady();
+        switch (m_uiPhase)
+        {
+            case PHASE_GROUND:
+
+                if (m_uiFlameBreathTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_FLAME_BREATH) == CAST_OK)
+                        m_uiFlameBreathTimer = urand(20000, 25000);
+                }
+                else
+                    m_uiFlameBreathTimer -= uiDiff;
+
+                if (m_uiEnrageTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                    {
+                        DoScriptText(SAY_SPECIAL, m_creature);
+                        m_uiEnrageTimer = urand(20000, 25000);
+                    }
+                }
+                else
+                    m_uiEnrageTimer -= uiDiff;
+
+                if (m_uiPhaseSwitchTimer < uiDiff)
+                {
+                    m_uiPhaseSwitchTimer = 0;
+                    m_uiPhase = PHASE_TRANSITION;
+
+                    SetCombatMovement(false);
+                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+                    m_creature->SetLevitate(true);
+
+                    m_creature->GetMotionMaster()->Clear();
+                    m_creature->GetMotionMaster()->MovePoint(POINT_AIR, aAirPositions[0], aAirPositions[1], aAirPositions[2]);
+                }
+                else
+                    m_uiPhaseSwitchTimer -= uiDiff;
+
+                DoMeleeAttackIfReady();
+
+                break;
+            case PHASE_AIR:
+                if (m_uiPhaseSwitchTimer)
+                {
+                    if (m_uiPhaseSwitchTimer <= uiDiff)
+                    {
+                        m_uiPhase = PHASE_TRANSITION;
+                        m_uiPhaseSwitchTimer = 0;
+
+                        float fX, fY, fZ;
+                        m_creature->GetRespawnCoord(fX, fY, fZ);
+                        m_creature->GetMotionMaster()->Clear();
+                        m_creature->GetMotionMaster()->MovePoint(POINT_GROUND, fX, fY, fZ);
+                    }
+                    else
+                        m_uiPhaseSwitchTimer -= uiDiff;
+                }
+                break;
+            case PHASE_TRANSITION:
+                // nothing here
+                break;
+        }
     }
 };
 
