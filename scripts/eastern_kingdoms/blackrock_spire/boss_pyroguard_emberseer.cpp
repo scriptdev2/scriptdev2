@@ -125,6 +125,12 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
         {
             if (m_uiEncageTimer <= uiDiff)
             {
+                if (!m_pInstance)
+                {
+                    script_error_log("Instance Blackrock Spire: ERROR Failed to load instance data for this instace.");
+                    return;
+                }
+
                 GuidList m_lIncarceratorsGuid;
                 m_pInstance->GetIncarceratorGUIDList(m_lIncarceratorsGuid);
 
