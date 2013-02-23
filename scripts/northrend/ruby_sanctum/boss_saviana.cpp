@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_saviana
 SD%Complete: 100
-SDComment: Timers
+SDComment:
 SDCategory: Ruby Sanctum
 EndScriptData */
 
@@ -31,12 +31,11 @@ enum
     SAY_SLAY_2                  = -1724017,
     SAY_SPECIAL                 = -1724018,
     SOUND_DEATH                 = 17531,                    // On death it has only a screaming sound
+    EMOTE_ENRAGE                = -1000003,
 
     SPELL_ENRAGE                = 78722,
     SPELL_FLAME_BREATH          = 74403,
-    SPELL_CONFLAGRATION_TARGET  = 74452,                    // sets target for 74453
-    //SPELL_FLAME_BEACON        = 74453,
-    //SPELL_CONFLAGRATION_DUMMY = 74454,                    // unk effect
+    SPELL_CONFLAGRATION         = 74452,                    // dummy targeting spell - effect handled in core
 
     PHASE_GROUND                = 1,
     PHASE_AIR                   = 2,
@@ -114,8 +113,9 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
         switch (uiPointId)
         {
             case POINT_AIR:
-                if (DoCastSpellIfCan(m_creature, SPELL_CONFLAGRATION_TARGET) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, SPELL_CONFLAGRATION) == CAST_OK)
                 {
+                    DoScriptText(SAY_SPECIAL, m_creature);
                     m_uiPhaseSwitchTimer = 6000;
                     m_uiPhase = PHASE_AIR;
                 }
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
                     {
-                        DoScriptText(SAY_SPECIAL, m_creature);
+                        DoScriptText(EMOTE_ENRAGE, m_creature);
                         m_uiEnrageTimer = urand(20000, 25000);
                     }
                 }
