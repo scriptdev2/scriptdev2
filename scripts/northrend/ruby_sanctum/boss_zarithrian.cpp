@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_zarithrian
-SD%Complete: 20
-SDComment: only texts
+SD%Complete: 100
+SDComment:
 SDCategory: Ruby Sanctum
 EndScriptData */
 
@@ -31,6 +31,12 @@ enum
     SAY_SLAY_2          = -1724021,
     SAY_DEATH           = -1724022,
     SAY_SUMMON          = -1724023,
+
+    SPELL_SUMMON_FLAMECALLER    = 74398,
+    SPELL_CLEAVE_ARMOR          = 74367,
+    SPELL_INTIMIDATING_ROAR     = 74384,
+
+    NPC_ONYX_FLAMECALLER        = 39814,                // handled in ACID
 };
 
 struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
@@ -43,8 +49,15 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
 
     instance_ruby_sanctum* m_pInstance;
 
+    uint32 m_uiCleaveArmorTimer;
+    uint32 m_uiIntimidatingRoarTimer;
+    uint32 m_uiCallFlamecallerTimer;
+
     void Reset() override
     {
+        m_uiCleaveArmorTimer        = 15000;
+        m_uiIntimidatingRoarTimer   = 14000;
+        m_uiCallFlamecallerTimer    = 15000;
     }
 
     void Aggro(Unit* pWho) override
@@ -78,12 +91,59 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ZARITHRIAN, FAIL);
     }
 
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_ONYX_FLAMECALLER)
+            pSummoned->SetInCombatWithZone();
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiCleaveArmorTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE_ARMOR) == CAST_OK)
+                m_uiCleaveArmorTimer = 15000;
+        }
+        else
+            m_uiCleaveArmorTimer -= uiDiff;
+
+        if (m_uiIntimidatingRoarTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_INTIMIDATING_ROAR) == CAST_OK)
+                m_uiIntimidatingRoarTimer = 32000;
+        }
+        else
+            m_uiIntimidatingRoarTimer -= uiDiff;
+
+        if (m_uiCallFlamecallerTimer < uiDiff)
+        {
+            if (!m_pInstance)
+            {
+                script_error_log("Instance Ruby Sanctum: ERROR Failed to load instance data for this instace.");
+                return;
+            }
+
+            GuidList m_lStalkersGuidList;
+            m_pInstance->GetSpawnStalkersGuidList(m_lStalkersGuidList);
+
+            for (GuidList::const_iterator itr = m_lStalkersGuidList.begin(); itr != m_lStalkersGuidList.end(); ++itr)
+            {
+                if (Creature* pStalker = m_creature->GetMap()->GetCreature(*itr))
+                    pStalker->CastSpell(pStalker, SPELL_SUMMON_FLAMECALLER, true, NULL, NULL, m_creature->GetObjectGuid());
+            }
+
+            DoScriptText(SAY_SUMMON, m_creature);
+            m_uiCallFlamecallerTimer = 45000;
+        }
+        else
+            m_uiCallFlamecallerTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
+
+        EnterEvadeIfOutOfCombatArea(uiDiff);
     }
 };
 

@@ -65,10 +65,17 @@ void instance_ruby_sanctum::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_ZARITHRIAN:
+            if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
+                pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        // no break;
         case NPC_BALTHARUS:
         case NPC_XERESTRASZA:
         case NPC_HALION_CONTROLLER:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+        case NPC_ZARITHRIAN_SPAWN_STALKER:
+            m_lSpawnStalkersGuidList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -104,7 +111,13 @@ void instance_ruby_sanctum::OnObjectCreate(GameObject* pGo)
 void instance_ruby_sanctum::DoHandleZarithrianDoor()
 {
     if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
+    {
         DoUseDoorOrButton(GO_FLAME_WALLS);
+
+        // Also remove not_selectable unit flag
+        if (Creature* pZarithrian = GetSingleCreatureFromStorage(NPC_ZARITHRIAN))
+            pZarithrian->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    }
 }
 
 void instance_ruby_sanctum::SetData(uint32 uiType, uint32 uiData)

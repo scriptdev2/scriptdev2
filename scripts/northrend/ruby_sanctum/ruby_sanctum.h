@@ -71,6 +71,8 @@ class MANGOS_DLL_DECL instance_ruby_sanctum : public ScriptedInstance
 
         void Update(uint32 uiDiff) override;
 
+        void GetSpawnStalkersGuidList(GuidList& lList) { lList = m_lSpawnStalkersGuidList; }
+
         const char* Save() const override { return strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
@@ -86,6 +88,8 @@ class MANGOS_DLL_DECL instance_ruby_sanctum : public ScriptedInstance
 
         uint32 m_uiHalionSummonTimer;
         uint32 m_uiHalionSummonStage;
+
+        GuidList m_lSpawnStalkersGuidList;
 };
 
 #endif

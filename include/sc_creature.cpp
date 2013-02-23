@@ -504,7 +504,8 @@ enum
     NPC_TALON_KING_IKISS        = 18473,
     NPC_KARGATH_BLADEFIST       = 16808,
     NPC_ANUBARAK                = 29120,
-    NPC_SINDRAGOSA              = 36853
+    NPC_SINDRAGOSA              = 36853,
+    NPC_ZARITHRIAN              = 39746,
 };
 
 bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
@@ -560,6 +561,10 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
             break;
         case NPC_SINDRAGOSA:
             if (fX > 4314.0f)
+                return false;
+            break;
+        case NPC_ZARITHRIAN:
+            if (fZ > 87.0f)
                 return false;
             break;
         default:
