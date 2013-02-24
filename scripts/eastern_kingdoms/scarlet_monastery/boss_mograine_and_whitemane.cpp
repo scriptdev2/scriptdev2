@@ -81,15 +81,6 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-
-        if (!m_pInstance)
-            return;
-
-        if (Creature* pWhitemane = m_pInstance->GetSingleCreatureFromStorage(NPC_WHITEMANE))
-        {
-            if (m_creature->isAlive() && !pWhitemane->isAlive())
-                pWhitemane->Respawn();
-        }
     }
 
     void Aggro(Unit* pWho) override
@@ -103,6 +94,16 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_MO_KILL, m_creature);
+    }
+
+    void JustReachedHome() override
+    {
+        if (!m_pInstance)
+            return;
+
+        Creature* pWhitemane = m_pInstance->GetSingleCreatureFromStorage(NPC_WHITEMANE);
+        if (pWhitemane && !pWhitemane->isAlive())
+            pWhitemane->Respawn();
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
