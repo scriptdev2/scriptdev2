@@ -1125,27 +1125,38 @@ enum
 
     // quest 10458, 10480, 10481
     SPELL_ELEMENTAL_SIEVE               = 36035,
+    SPELL_CALL_TO_THE_SPIRITS           = 36206,
+
+    SPELL_EARTH_CAPTURED                = 36025,            // dummies (having visual effects)
+    SPELL_FIERY_CAPTURED                = 36115,
+    SPELL_WATER_CAPTURED                = 36170,
+    SPELL_AIR_CAPTURED                  = 36181,
+
+    SPELL_EARTH_CAPTURED_CREDIT         = 36108,            // event 13513
+    SPELL_FIERY_CAPTURED_CREDIT         = 36117,            // event 13514
+    SPELL_WATER_CAPTURED_CREDIT         = 36171,            // event 13515
+    SPELL_AIR_CAPTURED_CREDIT           = 36182,            // event 13516
+
     NPC_TOTEM_OF_SPIRITS                = 21071,
     NPC_EARTH_SPIRIT                    = 21050,            // to be killed
     NPC_FIERY_SPIRIT                    = 21061,
     NPC_WATER_SPIRIT                    = 21059,
     NPC_AIR_SPIRIT                      = 21060,
-    SPELL_EARTH_CAPTURED                = 36025,            // dummies (having visual effects)
-    SPELL_FIERY_CAPTURED                = 36115,
-    SPELL_WATER_CAPTURED                = 36170,
-    SPELL_AIR_CAPTURED                  = 36181,
-    SPELL_EARTH_CAPTURED_CREDIT         = 36108,            // event 13513
-    SPELL_FIERY_CAPTURED_CREDIT         = 36117,            // event 13514
-    SPELL_WATER_CAPTURED_CREDIT         = 36171,            // event 13515
-    SPELL_AIR_CAPTURED_CREDIT           = 36182,            // event 13516
-    EVENT_EARTH                         = 13513,
-    EVENT_FIERY                         = 13514,
-    EVENT_WATER                         = 13515,
-    EVENT_AIR                           = 13516,
+
+    NPC_EARTHEN_SOUL                    = 21073,            // invisible souls summoned by the totem
+    NPC_FIERY_SOUL                      = 21097,
+    NPC_WATERY_SOUL                     = 21109,
+    NPC_AIRY_SOUL                       = 21116,
+
     NPC_CREDIT_MARKER_EARTH             = 21092,            // quest objective npc's
     NPC_CREDIT_MARKER_FIERY             = 21094,
     NPC_CREDIT_MARKER_WATER             = 21095,
     NPC_CREDIT_MARKER_AIR               = 21096,
+
+    EVENT_EARTH                         = 13513,            // credit events
+    EVENT_FIERY                         = 13514,
+    EVENT_WATER                         = 13515,
+    EVENT_AIR                           = 13516,
 };
 
 struct MANGOS_DLL_DECL npc_totem_of_spiritsAI : public ScriptedPetAI
@@ -1154,9 +1165,42 @@ struct MANGOS_DLL_DECL npc_totem_of_spiritsAI : public ScriptedPetAI
 
     void Reset() override {}
 
-    void MoveInLineOfSight(Unit* pWho) override {}
     void UpdateAI(const uint32 uiDiff) override {}
     void AttackedBy(Unit* pAttacker) override {}
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (pWho->GetTypeId() != TYPEID_UNIT)
+            return;
+
+        // Use the LoS function to check for the souls in range due to the fact that pets do not support SummonedMovementInform()
+        uint32 uiEntry = pWho->GetEntry();
+        if (uiEntry == NPC_EARTHEN_SOUL || uiEntry == NPC_FIERY_SOUL || uiEntry == NPC_WATERY_SOUL || uiEntry == NPC_AIRY_SOUL)
+        {
+            // Only when it's close to the totem
+            if (!pWho->IsWithinDistInMap(m_creature, 1.5f))
+                return;
+
+            switch (uiEntry)
+            {
+                case NPC_EARTHEN_SOUL:
+                    pWho->CastSpell(m_creature, SPELL_EARTH_CAPTURED, true);
+                    break;
+                case NPC_FIERY_SOUL:
+                    pWho->CastSpell(m_creature, SPELL_FIERY_CAPTURED, true);
+                    break;
+                case NPC_WATERY_SOUL:
+                    pWho->CastSpell(m_creature, SPELL_WATER_CAPTURED, true);
+                    break;
+                case NPC_AIRY_SOUL:
+                    pWho->CastSpell(m_creature, SPELL_AIR_CAPTURED, true);
+                    break;
+            }
+
+            // Despawn the spirit soul after it's captured
+            ((Creature*)pWho)->ForcedDespawn();
+        }
+    }
 
     void OwnerKilledUnit(Unit* pVictim) override
     {
@@ -1168,6 +1212,14 @@ struct MANGOS_DLL_DECL npc_totem_of_spiritsAI : public ScriptedPetAI
         // make elementals cast the sieve is only way to make it work properly, due to the spell target modes 22/7
         if (uiEntry == NPC_EARTH_SPIRIT || uiEntry == NPC_FIERY_SPIRIT || uiEntry == NPC_WATER_SPIRIT || uiEntry == NPC_AIR_SPIRIT)
             pVictim->CastSpell(pVictim, SPELL_ELEMENTAL_SIEVE, true);
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        // After summoning the spirit soul, make it move towards the totem
+        float fX, fY, fZ;
+        m_creature->GetContactPoint(pSummoned, fX, fY, fZ);
+        pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
     }
 };
 
@@ -1185,22 +1237,22 @@ bool EffectDummyCreature_npc_totem_of_spirits(Unit* pCaster, uint32 uiSpellId, S
     {
         case SPELL_EARTH_CAPTURED:
         {
-            pCaster->CastSpell(pCaster, SPELL_EARTH_CAPTURED_CREDIT, true);
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_EARTH_CAPTURED_CREDIT, true);
             return true;
         }
         case SPELL_FIERY_CAPTURED:
         {
-            pCaster->CastSpell(pCaster, SPELL_FIERY_CAPTURED_CREDIT, true);
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_FIERY_CAPTURED_CREDIT, true);
             return true;
         }
         case SPELL_WATER_CAPTURED:
         {
-            pCaster->CastSpell(pCaster, SPELL_WATER_CAPTURED_CREDIT, true);
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_WATER_CAPTURED_CREDIT, true);
             return true;
         }
         case SPELL_AIR_CAPTURED:
         {
-            pCaster->CastSpell(pCaster, SPELL_AIR_CAPTURED_CREDIT, true);
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_AIR_CAPTURED_CREDIT, true);
             return true;
         }
     }
@@ -1228,22 +1280,18 @@ bool EffectAuraDummy_npc_totem_of_spirits(const Aura* pAura, bool bApply)
     if (!pCreature || !pCreature->IsPet() || !pCaster)
         return true;
 
-    // Need to expect the enraged elementals to be caster of aura
+    // Summon the soul of the spirit and cast the visual
+    uint32 uiSoulEntry;
     switch (pCaster->GetEntry())
     {
-        case NPC_EARTH_SPIRIT:
-            pCreature->CastSpell(pCreature, SPELL_EARTH_CAPTURED, true);
-            break;
-        case NPC_FIERY_SPIRIT:
-            pCreature->CastSpell(pCreature, SPELL_FIERY_CAPTURED, true);
-            break;
-        case NPC_WATER_SPIRIT:
-            pCreature->CastSpell(pCreature, SPELL_WATER_CAPTURED, true);
-            break;
-        case NPC_AIR_SPIRIT:
-            pCreature->CastSpell(pCreature, SPELL_AIR_CAPTURED, true);
-            break;
+        case NPC_EARTH_SPIRIT: uiSoulEntry = NPC_EARTHEN_SOUL; break;
+        case NPC_FIERY_SPIRIT: uiSoulEntry = NPC_FIERY_SOUL;   break;
+        case NPC_WATER_SPIRIT: uiSoulEntry = NPC_WATERY_SOUL;  break;
+        case NPC_AIR_SPIRIT:   uiSoulEntry = NPC_AIRY_SOUL;    break;
     }
+
+    pCreature->CastSpell(pCreature, SPELL_CALL_TO_THE_SPIRITS, true);
+    pCreature->SummonCreature(uiSoulEntry, pCaster->GetPositionX(), pCaster->GetPositionY(), pCaster->GetPositionZ(), 0, TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 10000);
 
     return true;
 }
