@@ -75,7 +75,7 @@ void instance_ruby_sanctum::OnCreatureCreate(Creature* pCreature)
         case NPC_ZARITHRIAN:
             if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
                 pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        // no break;
+            // no break;
         case NPC_BALTHARUS:
         case NPC_HALION_REAL:
         case NPC_HALION_TWILIGHT:

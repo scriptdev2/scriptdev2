@@ -137,7 +137,7 @@ static const float aRotationFocusPosition[4] = {3113.711f, 533.5382f, 72.96f, 1.
 static const float aOrbCarrierPosition1[3] = {3153.75f, 579.1875f, 70.47f};
 static const float aOrbCarrierPosition2[3] = {3153.75f, 487.1875f, 70.47f};
 
- /*######
+/*######
 ## boss_halion_real
 ######*/
 
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_halion_realAI : public ScriptedAI
         m_uiCleaveTimer             = urand(5000, 10000);
         m_uiFieryCombustionTimer    = 15000;
         m_uiMeteorTimer             = 20000;
-        m_uiBerserkTimer            = 8*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer            = 8 * MINUTE * IN_MILLISECONDS;
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_halion_realAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HALION, DONE);
 
-        DoScriptText(SAY_DEATH,m_creature);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void JustReachedHome() override
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL boss_halion_realAI : public ScriptedAI
 
                 if (m_uiMeteorTimer < uiDiff)
                 {
-                    if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_METEOR_SUMMON) == CAST_OK)
                         {
@@ -333,7 +333,7 @@ struct MANGOS_DLL_DECL boss_halion_realAI : public ScriptedAI
                     if (DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_PHASING, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                     {
                         DoCastSpellIfCan(m_creature, SPELL_SUMMON_PORTAL, CAST_TRIGGERED);
-                        DoScriptText(SAY_PHASE_2,m_creature);
+                        DoScriptText(SAY_PHASE_2, m_creature);
                         DoPrepareTwilightPhase();
                         m_uiPhase = PHASE_TWILIGHT_REALM;
                     }
@@ -406,7 +406,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
     {
         // ToDo: handle the damage sharing!
 
-        DoScriptText(SAY_DEATH,m_creature);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void KilledUnit(Unit* pVictim) override
@@ -458,7 +458,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
 
                 if (m_uiTailLashTimer < uiDiff)
                 {
-                    if(DoCastSpellIfCan(m_creature, SPELL_TAIL_LASH) == CAST_OK)
+                    if (DoCastSpellIfCan(m_creature, SPELL_TAIL_LASH) == CAST_OK)
                         m_uiTailLashTimer = urand(15000, 25000);
                 }
                 else
@@ -466,7 +466,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
 
                 if (m_uiCleaveTimer < uiDiff)
                 {
-                    if(DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                    if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
                         m_uiCleaveTimer = urand(10000, 15000);
                 }
                 else
@@ -474,7 +474,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
 
                 if (m_uiDarkBreathTimer < uiDiff)
                 {
-                    if(DoCastSpellIfCan(m_creature->getVictim(), SPELL_DARK_BREATH) == CAST_OK)
+                    if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DARK_BREATH) == CAST_OK)
                         m_uiDarkBreathTimer = urand(15000, 20000);
                 }
                 else
@@ -482,7 +482,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
 
                 if (m_uiSoulConsumptionTimer < uiDiff)
                 {
-                    if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SOUL_CONSUMPTION, SELECT_FLAG_PLAYER))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SOUL_CONSUMPTION, SELECT_FLAG_PLAYER))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_SOUL_CONSUMPTION) == CAST_OK)
                             m_uiSoulConsumptionTimer = 25000;
@@ -505,7 +505,7 @@ struct MANGOS_DLL_DECL boss_halion_twilightAI : public ScriptedAI
                                 pHalion->SetHealth(m_creature->GetHealth());
                         }
 
-                        DoScriptText(SAY_PHASE_3,m_creature);
+                        DoScriptText(SAY_PHASE_3, m_creature);
                         m_uiPhase = PHASE_BOTH_REALMS;
                     }
                 }
@@ -529,7 +529,7 @@ CreatureAI* GetAI_boss_halion_twilight(Creature* pCreature)
 
 void AddSC_boss_halion()
 {
-    Script *pNewScript;
+    Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_halion_real";

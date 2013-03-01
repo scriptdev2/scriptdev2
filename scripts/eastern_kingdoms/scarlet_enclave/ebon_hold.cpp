@@ -2229,7 +2229,7 @@ struct MANGOS_DLL_DECL npc_highlord_darion_mograineAI : public npc_escortAI
                                     if (Creature* pTemp = m_pInstance->GetSingleCreatureFromStorage(aLightArmySpawnLoc[i].m_uiEntry))
                                     {
                                         pTemp->SetStandState(UNIT_STAND_STATE_DEAD);
-                                        pTemp->KnockBackFrom(pLichKing, 50, float(urand(44, 87))/10);
+                                        pTemp->KnockBackFrom(pLichKing, 50, float(urand(44, 87)) / 10);
                                     }
                                 }
                             }

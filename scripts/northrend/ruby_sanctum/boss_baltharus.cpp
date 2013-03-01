@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_baltharusAI : public ScriptedAI
 
         if (m_uiEnervatingBrandTimer < uiDiff)
         {
-            if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_ENERVATING_BRAND) == CAST_OK)
                     m_uiEnervatingBrandTimer = 25000;
@@ -271,7 +271,7 @@ struct MANGOS_DLL_DECL npc_baltharus_cloneAI : public ScriptedAI
 
         if (m_uiEnervatingBrandTimer < uiDiff)
         {
-            if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_ENERVATING_BRAND) == CAST_OK)
                     m_uiEnervatingBrandTimer = 25000;
