@@ -26,7 +26,8 @@ EndScriptData */
 
 instance_ruby_sanctum::instance_ruby_sanctum(Map* pMap) : ScriptedInstance(pMap),
     m_uiHalionSummonTimer(0),
-    m_uiHalionSummonStage(0)
+    m_uiHalionSummonStage(0),
+    m_uiHalionResetTimer(0)
 {
     Initialize();
 }
@@ -58,19 +59,26 @@ void instance_ruby_sanctum::OnPlayerEnter(Player* pPlayer)
         return;
 
     if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_HALION_CONTROLLER))
-        pSummoner->SummonCreature(NPC_HALION_REAL, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ(), pSummoner->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0);
+        pSummoner->SummonCreature(NPC_HALION_REAL, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ(), 3.159f, TEMPSUMMON_DEAD_DESPAWN, 0);
 }
 
 void instance_ruby_sanctum::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_XERESTRASZA:
+            // Special case for Xerestrasza: she only needs to have questgiver flag if Baltharus is killed
+            if (m_auiEncounter[TYPE_BALTHARUS] != DONE)
+                pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
         case NPC_ZARITHRIAN:
             if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
                 pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         // no break;
         case NPC_BALTHARUS:
-        case NPC_XERESTRASZA:
+        case NPC_HALION_REAL:
+        case NPC_HALION_TWILIGHT:
         case NPC_HALION_CONTROLLER:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
@@ -100,6 +108,10 @@ void instance_ruby_sanctum::OnObjectCreate(GameObject* pGo)
         case GO_BURNING_TREE_4:
             if (m_auiEncounter[TYPE_ZARITHRIAN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_TWILIGHT_PORTAL_ENTER_1:
+        case GO_TWILIGHT_PORTAL_ENTER_2:
+        case GO_TWILIGHT_PORTAL_LEAVE:
             break;
         default:
             return;
@@ -155,8 +167,35 @@ void instance_ruby_sanctum::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_HALION:
+            // Don't set the same data twice
+            if (m_auiEncounter[uiType] == uiData)
+                return;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_FLAME_RING);
+            switch (uiData)
+            {
+                case FAIL:
+                    // Despawn the boss
+                    if (Creature* pHalion = GetSingleCreatureFromStorage(NPC_HALION_REAL))
+                        pHalion->ForcedDespawn();
+                    if (Creature* pHalion = GetSingleCreatureFromStorage(NPC_HALION_TWILIGHT))
+                        pHalion->ForcedDespawn();
+                    // Note: rest of the cleanup is handled by creature_linking
+
+                    m_uiHalionResetTimer = 30000;
+                    // no break;
+                case DONE:
+                    // clear debuffs
+                    if (Creature* pController = GetSingleCreatureFromStorage(NPC_HALION_CONTROLLER))
+                        pController->CastSpell(pController, SPELL_CLEAR_DEBUFFS, true);
+
+                    // Despawn the portals
+                    if (GameObject* pPortal = GetSingleGameObjectFromStorage(GO_TWILIGHT_PORTAL_ENTER_1))
+                        pPortal->SetLootState(GO_JUST_DEACTIVATED);
+
+                    // ToDo: despawn the other portals as well, and disable world state
+                    break;
+            }
             break;
     }
 
@@ -211,7 +250,7 @@ void instance_ruby_sanctum::Update(uint32 uiDiff)
                     // Spawn Halion
                     if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_HALION_CONTROLLER))
                     {
-                        if (Creature* pHalion = pSummoner->SummonCreature(NPC_HALION_REAL, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ(), pSummoner->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0))
+                        if (Creature* pHalion = pSummoner->SummonCreature(NPC_HALION_REAL, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ(), 3.159f, TEMPSUMMON_DEAD_DESPAWN, 0))
                             DoScriptText(SAY_HALION_SPAWN, pHalion);
                     }
                     m_uiHalionSummonTimer = 0;
@@ -221,6 +260,23 @@ void instance_ruby_sanctum::Update(uint32 uiDiff)
         }
         else
             m_uiHalionSummonTimer -= uiDiff;
+    }
+
+    // Resummon Halion if the encounter resets
+    if (m_uiHalionResetTimer)
+    {
+        if (m_uiHalionResetTimer <= uiDiff)
+        {
+            if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_HALION_CONTROLLER))
+                pSummoner->SummonCreature(NPC_HALION_REAL, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ(), 3.159f, TEMPSUMMON_DEAD_DESPAWN, 0);
+
+            if (Creature* pHalion = GetSingleCreatureFromStorage(NPC_HALION_TWILIGHT))
+                pHalion->Respawn();
+
+            m_uiHalionResetTimer = 0;
+        }
+        else
+            m_uiHalionResetTimer -= uiDiff;
     }
 }
 

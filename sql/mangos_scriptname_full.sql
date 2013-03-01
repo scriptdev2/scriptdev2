@@ -912,6 +912,8 @@ UPDATE creature_template SET ScriptName='boss_baltharus' WHERE entry=39751;
 UPDATE creature_template SET ScriptName='boss_saviana' WHERE entry=39747;
 UPDATE creature_template SET ScriptName='boss_zarithrian' WHERE entry=39746;
 UPDATE creature_template SET ScriptName='npc_baltharus_clone' WHERE entry=39899;
+UPDATE creature_template SET ScriptName='boss_halion_real' WHERE entry=39863;
+UPDATE creature_template SET ScriptName='boss_halion_twilight' WHERE entry=40142;
 
 /* RUINS OF AHN'QIRAJ */
 UPDATE instance_template SET ScriptName='instance_ruins_of_ahnqiraj' WHERE map=509;
