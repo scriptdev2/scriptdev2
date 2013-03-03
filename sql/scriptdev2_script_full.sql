@@ -4557,6 +4557,11 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595004,'What was this decision?','chromie GOSSIP_ITEM_INN_2'),
 (-3595005,'So how does the Infinite Dragonflight plan to interfere?','chromie GOSSIP_ITEM_INN_3');
 
+-- -3 599 000 HALLS OF STONE
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3599000,'Brann, it would be our honor!','brann GOSSIP_ITEM_ID_START'),
+(-3599001,'Let\'s move Brann, enough of the history lessons!','brann GOSSIP_ITEM_ID_PROGRESS');
+
 -- -3 603 000 ULDUAR
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3603000,'Teleport to the Expedition Base Camp.','GOSSIP_ITEM_TELE_BASE_CAMP'),

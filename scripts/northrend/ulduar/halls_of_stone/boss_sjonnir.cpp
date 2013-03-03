@@ -62,13 +62,14 @@ enum
     // Cast at 15% hp when Bran repairs the machine
     SPELL_SUMMON_EARTHEN_DWARF      = 50824,                // left/right 50825, 50826
 
-    SPELL_SUMMON_IRON_SLUDGE        = 50747,                // instakill TARGET_SCRIPT
-    SPELL_IRON_SLUDGE_SPAWN_VISUAL  = 50777,
+    // Ooze and Sludge spells
+    SPELL_OOZE_COMBINE              = 50741,                // periodic aura - cast by 27981
+    // SPELL_SUMMON_IRON_SLUDGE        = 50747,             // instakill TARGET_SCRIPT
+    // SPELL_IRON_SLUDGE_SPAWN_VISUAL  = 50777,
 
     NPC_IRON_TROGG                  = 27979,
     NPC_IRON_DWARF                  = 27982,
     NPC_MALFORMED_OOZE              = 27981,
-    NPC_IRON_SLUDGE                 = 28165,
     NPC_EARTHEN_DWARF               = 27980,
 };
 
@@ -134,16 +135,43 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned) override
     {
-        if (pSummoned->GetEntry() == NPC_IRON_TROGG || pSummoned->GetEntry() == NPC_IRON_DWARF || pSummoned->GetEntry() == NPC_MALFORMED_OOZE)
+        switch (pSummoned->GetEntry())
         {
-            float fX, fY, fZ;
-            pSummoned->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+            case NPC_EARTHEN_DWARF:
+                pSummoned->AI()->AttackStart(m_creature);
+                break;
+            case NPC_MALFORMED_OOZE:
+            {
+                pSummoned->CastSpell(pSummoned, SPELL_OOZE_COMBINE, true);
 
-            pSummoned->SetWalk(false);
-            pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+                // Always move to the center of the room
+                float fX, fY, fZ;
+                m_creature->GetRespawnCoord(fX, fY, fZ);
+
+                pSummoned->SetWalk(false);
+                pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                break;
+            }
+            case NPC_IRON_TROGG:
+            case NPC_IRON_DWARF:
+            {
+                // Move to a random point around the room in order to start the attack
+                float fX, fY, fZ;
+                pSummoned->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+
+                pSummoned->SetWalk(false);
+                pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+                break;
+            }
         }
-        else if (pSummoned->GetEntry() == NPC_EARTHEN_DWARF)
-            pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType != POINT_MOTION_TYPE || pSummoned->GetEntry() != NPC_MALFORMED_OOZE || !uiPointId)
+            return;
+
+        pSummoned->GetMotionMaster()->MoveRandomAroundPoint(pSummoned->GetPositionX(), pSummoned->GetPositionY(), pSummoned->GetPositionZ(), 10.0f);
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
@@ -188,6 +216,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
                 case 50:
                     if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SUMMON_MALFORMED_OOZE : SPELL_SUMMON_MALFORMED_OOZE_H, CAST_TRIGGERED) == CAST_OK)
                         m_uiHpCheck = 15;
+                    break;
                 case 15:
                     if (DoFrenzyIfCan())
                         m_uiHpCheck = 0;

@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Halls_of_Stone
-SD%Complete: 10%
+SD%Complete: 50%
 SDComment:
 SDCategory: Halls of Stone
 EndScriptData */
@@ -31,19 +31,17 @@ enum
     SPELL_GLARE_OF_THE_TRIBUNAL_H       = 59870,
 
     // MARNAK
-    SPELL_SUMMON_DARK_MATTER_TARGET     = 51003,
-    SPELL_DARK_MATTER                   = 51012,            // Exact mechanics unknown
-    SPELL_DARK_MATTER_H                 = 59868,
-    // NPC_DARK_MATTER_TARGET           = 28237,
+    // Spells are handled in individual script
 
     // ABEDNEUM
-    SPELL_SUMMON_SEARING_GAZE_TARGET    = 51146,
-    SPELL_SEARING_GAZE                  = 51136,
-    SPELL_SEARING_GAZE_H                = 59867,
-    // NPC_SEARING_GAZE_TARGET          = 28265,
+    SPELL_SUMMON_SEARING_GAZE_TARGET    = 51146,                // The other spells are handled in individual script
+
+    SPELL_KILL_TRIBUNAL_ADD             = 51288,                // Cleanup event on finish
 };
 
-instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap)
+instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap),
+    m_bIsBrannSpankin(false),
+    m_uiIronSludgeKilled(0)
 {
     Initialize();
 }
@@ -62,8 +60,9 @@ void instance_halls_of_stone::OnCreatureCreate(Creature* pCreature)
         case NPC_MARNAK:           m_lMarnakGUIDs.push_back(pCreature->GetObjectGuid());       break;
         case NPC_TRIBUNAL_OF_AGES: m_lTribunalGUIDs.push_back(pCreature->GetObjectGuid());     break;
         case NPC_WORLDTRIGGER:     m_lWorldtriggerGUIDs.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_DARK_MATTER:
         case NPC_SJONNIR:
-            m_mNpcEntryGuidStore[NPC_SJONNIR] = pCreature->GetObjectGuid();
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -111,6 +110,8 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
             {
                 case IN_PROGRESS:
                     SortFaces();
+                    // Uncomment when this achievement is implemented
+                    // m_bIsBrannSpankin = true;
                     break;
                 case DONE:
                     DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H, GO_FLAG_NO_INTERACT, false);
@@ -132,8 +133,13 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
                     {
                         m_aFaces[i].m_bIsActive = false;
                         m_aFaces[i].m_uiTimer = 1000;
-                        // TODO - Kill NPCs
                         // TODO - Check which stay red and how long (also find out how they get red..)
+
+                        // Cleanup when finished
+                        if (Creature* pEye = instance->GetCreature(m_aFaces[i].m_leftEyeGuid))
+                            pEye->CastSpell(pEye, SPELL_KILL_TRIBUNAL_ADD, true);
+                        if (Creature* pEye = instance->GetCreature(m_aFaces[i].m_rightEyeGuid))
+                            pEye->CastSpell(pEye, SPELL_KILL_TRIBUNAL_ADD, true);
                     }
                     break;
             }
@@ -149,6 +155,8 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
         case TYPE_SJONNIR:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_DOOR_SJONNIR);
+            if (uiData == IN_PROGRESS)
+                m_uiIronSludgeKilled = 0;
             break;
     }
 
@@ -172,6 +180,20 @@ uint32 instance_halls_of_stone::GetData(uint32 uiType) const
         return m_auiEncounter[uiType];
 
     return 0;
+}
+
+bool instance_halls_of_stone::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_BRANN:
+            return m_bIsBrannSpankin;
+        case ACHIEV_CRIT_ABUSE_OOZE:
+            return m_uiIronSludgeKilled >= MAX_ACHIEV_SLUDGES;
+
+        default:
+            return false;
+    }
 }
 
 struct SortHelper
@@ -298,6 +320,12 @@ void instance_halls_of_stone::DoFaceSpeak(uint8 uiFace, int32 iTextId)
         DoScriptText(iTextId, pSpeaker);
 }
 
+void instance_halls_of_stone::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_IRON_SLUDGE && GetData(TYPE_SJONNIR) == IN_PROGRESS)
+        ++m_uiIronSludgeKilled;
+}
+
 void instance_halls_of_stone::Update(uint32 uiDiff)
 {
     if (m_auiEncounter[TYPE_TRIBUNAL] == IN_PROGRESS)
@@ -347,15 +375,18 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
                 pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
             if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
                 pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true, NULL, NULL, m_aFaces[uiFace].m_leftEyeGuid);
-            m_aFaces[uiFace].m_uiTimer = 1500;              // TODO, verify
+            m_aFaces[uiFace].m_uiTimer = urand(1000, 2000);
             break;
         case FACE_MARNAK:
-            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
-                pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
+            if (Creature* pDarkMatter = GetSingleCreatureFromStorage(NPC_DARK_MATTER))
+                pDarkMatter->CastSpell(pDarkMatter, SPELL_DARK_MATTER_START, true);
+            // Note: Marnak doesn't cast anything directly. Keep this code for reference only.
+            // if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
+            //    pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
             // One should be enough..
             // if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
-            m_aFaces[uiFace].m_uiTimer = 21000;             // TODO, verify, was 3s+0..1s
+            m_aFaces[uiFace].m_uiTimer = urand(21000, 30000);
             break;
         case FACE_ABEDNEUM:
             if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
@@ -363,7 +394,7 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
             // One should be enough..
             // if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
-            m_aFaces[uiFace].m_uiTimer = 21000;             // TODO, verify, was 3s+0..2s
+            m_aFaces[uiFace].m_uiTimer = urand(15000, 20000);
             break;
         default:
             return;

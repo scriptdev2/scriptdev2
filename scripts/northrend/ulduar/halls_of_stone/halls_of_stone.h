@@ -21,6 +21,9 @@ enum
     NPC_MARNAK              = 30897,
     NPC_TRIBUNAL_OF_AGES    = 28234,
     NPC_WORLDTRIGGER        = 22515,
+    NPC_DARK_MATTER         = 28235,                        // used by the Tribunal event
+    NPC_LIGHTNING_STALKER   = 28130,                        // used by the Tribunal event as spawn point for the dwarfs
+    NPC_IRON_SLUDGE         = 28165,                        // checked in the Sjonnir achiev
     NPC_SJONNIR             = 27978,
 
     GO_DOOR_MAIDEN          = 191292,
@@ -40,12 +43,19 @@ enum
 
     GO_SJONNIR_CONSOLE      = 193906,
 
+    SPELL_DARK_MATTER_START = 51001,                        // Channeled spells used by the Tribunal event
+
     MAX_FACES               = 3,
     FACE_MARNAK             = 0,
     FACE_ABEDNEUM           = 1,
     FACE_KADDRAK            = 2,
 
+    MAX_ACHIEV_SLUDGES      = 5,
+
     ACHIEV_START_MAIDEN_ID  = 20383,
+
+    ACHIEV_CRIT_BRANN       = 7590,                         // Brann, achiev 2154
+    ACHIEV_CRIT_ABUSE_OOZE  = 7593,                         // Snonnir, achiev 2155
 };
 
 struct Face
@@ -69,6 +79,8 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
+        void OnCreatureDeath(Creature* pCreature) override;
+
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
@@ -76,6 +88,8 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         void Load(const char* chrIn) override;
 
         void Update(uint32 uiDiff) override;
+
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
         void ActivateFace(uint8 uiFace, bool bAfterEvent);
         void DoFaceSpeak(uint8 uiFace, int32 iTextId);
@@ -87,6 +101,9 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         Face m_aFaces[MAX_FACES];
         std::string m_strInstData;
+
+        uint8 m_uiIronSludgeKilled;
+        bool m_bIsBrannSpankin;
 
         GuidList m_lKaddrakGUIDs;
         GuidList m_lAbedneumGUIDs;
