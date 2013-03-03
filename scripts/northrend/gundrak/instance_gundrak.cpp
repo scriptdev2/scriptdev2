@@ -69,6 +69,9 @@ void instance_gundrak::OnCreatureCreate(Creature* pCreature)
         case NPC_INVISIBLE_STALKER:
             m_luiStalkerGUIDs.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_SLADRAN_SUMMON_T:
+            m_lSummonTargetsGuids.push_back(pCreature->GetObjectGuid());
+            break;
 
         case NPC_LIVIN_MOJO:
             // Store only the Mojos used to activate the Colossus
@@ -303,6 +306,17 @@ void instance_gundrak::OnCreatureEnterCombat(Creature* pCreature)
                 pMojo->AI()->EnterEvadeMode();
         }
     }
+}
+
+ObjectGuid instance_gundrak::SelectRandomSladranTargetGuid()
+{
+    if (m_lSummonTargetsGuids.empty())
+        return ObjectGuid();
+
+    GuidList::iterator iter = m_lSummonTargetsGuids.begin();
+    advance(iter, urand(0, m_lSummonTargetsGuids.size() - 1));
+
+    return *iter;
 }
 
 static bool sortFromEastToWest(Creature* pFirst, Creature* pSecond)

@@ -34,6 +34,7 @@ enum
     NPC_GALDARAH           = 29306,
     NPC_ECK                = 29932,
     NPC_INVISIBLE_STALKER  = 30298,                         // Caster and Target for visual spells on altar use
+    NPC_SLADRAN_SUMMON_T   = 29682,
 
     GO_ECK_DOOR            = 192632,
     GO_ECK_UNDERWATER_DOOR = 192569,
@@ -88,6 +89,8 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
+        ObjectGuid SelectRandomSladranTargetGuid();
+
         void SetLessRabiAchievementCriteria(bool bIsMet) { m_bLessRabi = bIsMet; }
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
@@ -103,6 +106,7 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         TypeTimerMap m_mKeyInProgress;
 
         GuidList m_luiStalkerGUIDs;
+        GuidList m_lSummonTargetsGuids;
         GuidVector m_vStalkerCasterGuids;
         GuidVector m_vStalkerTargetGuids;
         GuidSet m_sColossusMojosGuids;
