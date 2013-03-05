@@ -1281,7 +1281,7 @@ bool EffectAuraDummy_npc_totem_of_spirits(const Aura* pAura, bool bApply)
         return true;
 
     // Summon the soul of the spirit and cast the visual
-    uint32 uiSoulEntry;
+    uint32 uiSoulEntry = 0;
     switch (pCaster->GetEntry())
     {
         case NPC_EARTH_SPIRIT: uiSoulEntry = NPC_EARTHEN_SOUL; break;
