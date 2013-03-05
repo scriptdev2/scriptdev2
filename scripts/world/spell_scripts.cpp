@@ -28,6 +28,7 @@ spell 21014
 spell 29528
 spell 29866
 spell 34665
+spell 37136
 spell 39246
 spell 43340
 spell 44935
@@ -334,6 +335,10 @@ enum
     SPELL_SUMMON_RAZORTHORN_ROOT        = 44941,
     NPC_RAZORTHORN_RAVAGER              = 24922,
     GO_RAZORTHORN_DIRT_MOUND            = 187073,
+
+    //  for quest 10584
+    SPELL_PROTOVOLTAIC_MAGNETO_COLLECTOR= 37136,
+    NPC_ENCASED_ELECTROMENTAL           = 21731,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -496,6 +501,16 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
                 pCreature->m_AuraFlags |= ~UNIT_AURAFLAG_ALIVE_INVISIBLE;
 
             return false;
+        }
+        case SPELL_PROTOVOLTAIC_MAGNETO_COLLECTOR:
+        {
+            if (pAura->GetEffIndex() != EFFECT_INDEX_0)
+                return true;
+
+            Unit* pTarget = pAura->GetTarget();
+            if (bApply && pTarget->GetTypeId() == TYPEID_UNIT)
+                ((Creature*)pTarget)->UpdateEntry(NPC_ENCASED_ELECTROMENTAL);
+            return true;
         }
     }
 
