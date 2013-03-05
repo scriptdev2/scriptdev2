@@ -187,6 +187,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
     void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_DEATH_SPELL, CAST_TRIGGERED);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_UROM, DONE);
@@ -215,7 +216,12 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
             ResetPlatformVariables();
         }
         else
+        {
+            // Teleport to home position, in order to override the movemaps
+            m_creature->NearTeleportTo(aOculusBossSpawnLocs[0][0], aOculusBossSpawnLocs[0][1], aOculusBossSpawnLocs[0][2], aOculusBossSpawnLocs[0][3]);
+
             ScriptedAI::EnterEvadeMode();
+        }
     }
 
     void JustSummoned(Creature* pSummon) override

@@ -167,20 +167,14 @@ void instance_oculus::SetData64(uint32 uiData, uint64 uiGuid)
 
 void instance_oculus::OnCreatureEnterCombat(Creature* pCreature)
 {
-    switch (pCreature->GetEntry())
-    {
-        case NPC_DRAKOS: SetData(TYPE_DRAKOS, IN_PROGRESS); break;
-        case NPC_VAROS:  SetData(TYPE_VAROS,  IN_PROGRESS); break;
-    }
+    if (pCreature->GetEntry() == NPC_DRAKOS)
+        SetData(TYPE_DRAKOS, IN_PROGRESS);
 }
 
 void instance_oculus::OnCreatureEvade(Creature* pCreature)
 {
-    switch (pCreature->GetEntry())
-    {
-        case NPC_DRAKOS: SetData(TYPE_DRAKOS, FAIL); break;
-        case NPC_VAROS:  SetData(TYPE_VAROS,  FAIL); break;
-    }
+    if (pCreature->GetEntry() == NPC_DRAKOS)
+        SetData(TYPE_DRAKOS, FAIL);
 }
 
 void instance_oculus::OnCreatureDeath(Creature* pCreature)
@@ -188,7 +182,6 @@ void instance_oculus::OnCreatureDeath(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_DRAKOS: SetData(TYPE_DRAKOS, DONE); break;
-        case NPC_VAROS:  SetData(TYPE_VAROS,  DONE); break;
         case NPC_CENTRIFUGE_CONSTRUCT:
             m_sConstructsAliveGUIDSet.erase(pCreature->GetObjectGuid());
             DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, m_sConstructsAliveGUIDSet.size());

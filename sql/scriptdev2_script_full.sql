@@ -2910,13 +2910,18 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1578018,'Enjoy the fall!',13630,1,0,0,'eregos SAY_KILL_3'),
 (-1578019,'Savor this small victory, foolish little creatures. You and your dragon allies have won this battle. But we will win... the Nexus War.',13631,1,0,0,'eregos SAY_DEATH'),
 
-(-1578020,'Intruders, your victory will be short-lived. I am Commander Varos Cloudstrider. My drakes control the skies and protect this conduit. I will see to it personally that the Oculus does not fall into your hands!',13648,6,0,0,'varos SAY_VAROS_INTRO'),
-(-1578021,'Thank you for freeing us, mortals. Beware, the Blue Flight is alerted to your presence. Even now, Malygos sends Varos Cloudstrider and his ring guardians to defend the Oculus. You will need our help to stand a chance.',0,0,0,1,'belgaristrasz SAY_BELGARISTRASZ_GREET'),
-(-1578022,'The trickster Mage-Lord Urom protects the third ring. He will appear alone and defenseless, but do not be fooled by appearances! Urom is a powerful conjurer who commands a menagerie of Phantasmal creatures. Seek him out above.',0,0,0,1,'belgaristrasz SAY_BELGARISTRASZ_UROM'),
-(-1578023,'Your greatest challenge lies ahead. Ley-Guardian Eregos is a Blue dragon of immense power. You will find him flying above the uppermost ring.',0,0,0,1,'belgaristrasz SAY_BELGARISTRASZ_EREGOS'),
+(-1578020,'There will be no mercy!',13649,1,0,0,'varos SAY_AGGRO'),
+(-1578021,'Blast them! Destroy them!',13650,1,0,0,'varos SAY_CALL_CAPTAIN_1'),
+(-1578022,'Take no prisoners! Attack!',13651,1,0,0,'varos SAY_CALL_CAPTAIN_2'),
+(-1578023,'Strike now! Obliterate them!',13652,1,0,0,'varos SAY_CALL_CAPTAIN_3'),
 
 (-1578024,'Anomalies form as %s shifts into the Astral Plane!',0,3,0,0,'eregos EMOTE_ASTRAL_PLANE'),
-(-1578025,'%s begins to cast Empowered Arcane Explosion!',0,3,0,0,'urom EMOTE_EXPLOSION');
+(-1578025,'%s begins to cast Empowered Arcane Explosion!',0,3,0,0,'urom EMOTE_EXPLOSION'),
+
+(-1578026,'You were warned!',13653,1,0,0,'varos SAY_KILL_1'),
+(-1578027,'The Oculus is ours!',13654,1,0,0,'varos SAY_KILL_2'),
+(-1578028,'They are... too strong! Underestimated their... fortitude.',13655,1,0,0,'varos SAY_DEATH'),
+(-1578029,'%s calls an Azure Ring Captain!',0,3,0,0,'varos EMOTE_CAPTAIN');
 
 -- -1 580 000 SUNWELL PLATEAU
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

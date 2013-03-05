@@ -41,11 +41,9 @@ enum
     GO_CACHE_EREGOS                 = 191349,
     GO_CACHE_EREGOS_H               = 193603,
 
+    SPELL_DEATH_SPELL               = 50415,            // summons 28012
+
     // Instance event yells
-    SAY_BELGARISTRASZ_GREET         = -1578021,
-    SAY_VAROS_INTRO                 = -1578020,
-    SAY_BELGARISTRASZ_UROM          = -1578022,
-    SAY_BELGARISTRASZ_EREGOS        = -1578023,
     SAY_EREGOS_SPAWN                = -1578010,
 
     // world states to show how many constructs are still alive
