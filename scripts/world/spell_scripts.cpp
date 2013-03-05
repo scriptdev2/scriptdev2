@@ -498,7 +498,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
             if (bApply)
                 pCreature->m_AuraFlags |= UNIT_AURAFLAG_ALIVE_INVISIBLE;
             else
-                pCreature->m_AuraFlags |= ~UNIT_AURAFLAG_ALIVE_INVISIBLE;
+                pCreature->m_AuraFlags &= ~UNIT_AURAFLAG_ALIVE_INVISIBLE;
 
             return false;
         }
