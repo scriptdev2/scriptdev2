@@ -71,14 +71,14 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
     {
         if (hyjalAI* pJainaAI = dynamic_cast<hyjalAI*>(pCreature->AI()))
         {
-            if (!pJainaAI->m_bIsEventInProgress)
+            if (!pJainaAI->IsEventInProgress())
             {
                 // Should not happen that jaina is here now, but for safe we check
                 if (pInstance->GetData(TYPE_KAZROGAL) != DONE)
                 {
-                    if (pInstance->GetData(TYPE_WINTERCHILL) == NOT_STARTED)
+                    if (pInstance->GetData(TYPE_WINTERCHILL) == NOT_STARTED || pInstance->GetData(TYPE_WINTERCHILL) == FAIL)
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                    else if (pInstance->GetData(TYPE_WINTERCHILL) == DONE && pInstance->GetData(TYPE_ANETHERON) == NOT_STARTED)
+                    else if (pInstance->GetData(TYPE_WINTERCHILL) == DONE && (pInstance->GetData(TYPE_ANETHERON) == NOT_STARTED || pInstance->GetData(TYPE_ANETHERON) == FAIL))
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_ANATHERON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                     else if (pInstance->GetData(TYPE_ANETHERON) == DONE)
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_SUCCCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
@@ -113,7 +113,7 @@ bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uin
                 break;
             case GOSSIP_ACTION_INFO_DEF:
                 pJainaAI->m_bDebugMode = !pJainaAI->m_bDebugMode;
-                debug_log("SD2: HyjalAI - Debug mode has been toggled");
+                debug_log("SD2: HyjalAI - Debug mode has been toggled %s", pJainaAI->m_bDebugMode ? "on" : "off");
                 break;
         }
     }
@@ -143,14 +143,14 @@ bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
     {
         if (hyjalAI* pThrallAI = dynamic_cast<hyjalAI*>(pCreature->AI()))
         {
-            if (!pThrallAI->m_bIsEventInProgress)
+            if (!pThrallAI->IsEventInProgress())
             {
                 // Only let them start the Horde phases if Anetheron is dead.
-                if (pInstance->GetData(TYPE_ANETHERON) == DONE)
+                if (pInstance->GetData(TYPE_ANETHERON) == DONE && pInstance->GetData(TYPE_ARCHIMONDE) != DONE)
                 {
-                    if (pInstance->GetData(TYPE_KAZROGAL) == NOT_STARTED)
+                    if (pInstance->GetData(TYPE_KAZROGAL) == NOT_STARTED || pInstance->GetData(TYPE_KAZROGAL) == FAIL)
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                    else if (pInstance->GetData(TYPE_KAZROGAL) == DONE && pInstance->GetData(TYPE_AZGALOR) == NOT_STARTED)
+                    else if (pInstance->GetData(TYPE_KAZROGAL) == DONE && (pInstance->GetData(TYPE_AZGALOR) == NOT_STARTED || pInstance->GetData(TYPE_AZGALOR) == FAIL))
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_AZGALOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                     else if (pInstance->GetData(TYPE_AZGALOR) == DONE)
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_SUCCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
@@ -185,7 +185,7 @@ bool GossipSelect_npc_thrall(Player* pPlayer, Creature* pCreature, uint32 uiSend
                 break;
             case GOSSIP_ACTION_INFO_DEF:
                 pThrallAI->m_bDebugMode = !pThrallAI->m_bDebugMode;
-                debug_log("SD2: HyjalAI - Debug mode has been toggled");
+                debug_log("SD2: HyjalAI - Debug mode has been toggled %s", pThrallAI->m_bDebugMode ? "on" : "off");
                 break;
         }
     }

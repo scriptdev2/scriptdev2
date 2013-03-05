@@ -82,6 +82,8 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         // Called on death, informs the raid that they have failed.
         void JustDied(Unit* /*pKiller*/) override;
 
+        void JustRespawned() override;
+
         // "Teleport" all friendly creatures away from the base.
         void Retreat();
 
@@ -89,6 +91,8 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         void SpawnCreatureForWave(uint32 uiMobEntry);
 
         void JustSummoned(Creature*) override;
+
+        void SummonedCreatureJustDied(Creature* pSummoned) override;
 
         // Summons the next wave, calls SummonCreature
         void SummonNextWave();
@@ -102,8 +106,9 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         // Used to filter who to despawn after mass teleport
         void SpellHitTarget(Unit*, const SpellEntry*) override;
 
-    public:
+        bool IsEventInProgress() const;
 
+    public:
         ScriptedInstance* m_pInstance;
 
         ObjectGuid m_aBossGuid[2];
@@ -111,7 +116,6 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         uint32 m_uiNextWaveTimer;
         uint32 m_uiWaveCount;
         uint32 m_uiWaveMoveTimer;
-        uint32 m_uiCheckTimer;
         uint32 m_uiEnemyCount;
         uint32 m_uiRetreatTimer;
         uint32 m_uiBase;
