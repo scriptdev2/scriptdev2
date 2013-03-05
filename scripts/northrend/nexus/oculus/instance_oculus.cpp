@@ -17,15 +17,14 @@
 /* ScriptData
 SDName: instance_oculus
 SD%Complete: 50
-SDComment: Spawn instance bosses and handle Varos pre event; Dialogue NYI
+SDComment: Spawn instance bosses and handle Varos pre event; Dialogue handled by DBScripts
 SDCategory: Oculus
 EndScriptData */
 
 #include "precompiled.h"
 #include "oculus.h"
 
-instance_oculus::instance_oculus(Map* pMap) : ScriptedInstance(pMap),
-    m_uiConstructsDead(0)
+instance_oculus::instance_oculus(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -37,7 +36,16 @@ void instance_oculus::Initialize()
 
 void instance_oculus::OnPlayerEnter(Player* pPlayer)
 {
+    if (GetData(TYPE_EREGOS) == DONE)
+        return;
+
     DoSpawnNextBossIfCan();
+
+    if (GetData(TYPE_DRAKOS) == DONE && GetData(TYPE_VAROS) == NOT_STARTED)
+    {
+        pPlayer->SendUpdateWorldState(WORLD_STATE_CONSTRUCTS, 1);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, m_sConstructsAliveGUIDSet.size());
+    }
 }
 
 void instance_oculus::OnCreatureCreate(Creature* pCreature)
@@ -80,12 +88,12 @@ void instance_oculus::SetData(uint32 uiType, uint32 uiData)
                 for (GuidList::const_iterator itr = m_lCageDoorGUIDs.begin(); itr != m_lCageDoorGUIDs.end(); ++itr)
                     DoUseDoorOrButton(*itr);
 
-                // Notes: There should also be a small dialogue here involving Belgaristrasz and Varos
-                // Also the Centrifuge Constructs and the related npcs should be summoned
+                // Notes: The dialogue is handled by DB script
+                // Also the Centrifuge Constructs and the related npcs should be summoned - requires additional research
 
-                // Activate the world state
+                // Activate the world state - the Centrifuge contructs should be loaded by now
                 DoUpdateWorldState(WORLD_STATE_CONSTRUCTS, 1);
-                DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, MAX_CONSTRUCTS);
+                DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, m_sConstructsAliveGUIDSet.size());
 
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_EREGOS_ID);
             }
@@ -94,22 +102,26 @@ void instance_oculus::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[TYPE_VAROS] = uiData;
             if (uiData == DONE)
             {
-                // Note: Image of Belgaristrasz teleports here after the boss is dead and does some dialogue
+                // Note: Image of Belgaristrasz dialogue is handled by DB script
                 DoSpawnNextBossIfCan();
                 DoUpdateWorldState(WORLD_STATE_CONSTRUCTS, 0);
             }
             break;
         case TYPE_UROM:
             m_auiEncounter[TYPE_UROM] = uiData;
-            // Note: Image of Belgaristrasz teleports to this boss after it's killed and does some dialogue; Right after this, Eregos appears
+            // Note: Image of Belgaristrasz dialogue is handled by DB script
             if (uiData == DONE)
                 DoSpawnNextBossIfCan();
             break;
         case TYPE_EREGOS:
             m_auiEncounter[TYPE_EREGOS] = uiData;
-            // Note: Image of Belgaristrasz teleports to the Cache location and does more dialogue
+            // Note: Image of Belgaristrasz teleports to the Cache location and does more dialogue - requires additional research
             if (uiData == DONE)
+            {
+                // The data about the cache isn't consistent, so it's better to handle both cases
                 DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_EREGOS : GO_CACHE_EREGOS_H, GO_FLAG_NO_INTERACT, false);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_EREGOS : GO_CACHE_EREGOS_H, 30 * MINUTE);
+            }
             break;
     }
 
@@ -133,6 +145,24 @@ uint32 instance_oculus::GetData(uint32 uiType) const
         return m_auiEncounter[uiType];
 
     return 0;
+}
+
+void instance_oculus::SetData64(uint32 uiData, uint64 uiGuid)
+{
+    // If Varos already completed, just ignore
+    if (GetData(TYPE_VAROS) == DONE)
+        return;
+
+    // Note: this is handled in Acid. The purpose is check which Centrifuge Construct is alive, in case of server reset
+    // The function is triggered by eventAI on generic timer
+    if (uiData == DATA_CONSTRUCTS_EVENT)
+    {
+        m_sConstructsAliveGUIDSet.insert(ObjectGuid(uiGuid));
+
+        // Update world state in case of server reset
+        if (GetData(TYPE_DRAKOS) == DONE)
+            DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, m_sConstructsAliveGUIDSet.size());
+    }
 }
 
 void instance_oculus::OnCreatureEnterCombat(Creature* pCreature)
@@ -160,10 +190,10 @@ void instance_oculus::OnCreatureDeath(Creature* pCreature)
         case NPC_DRAKOS: SetData(TYPE_DRAKOS, DONE); break;
         case NPC_VAROS:  SetData(TYPE_VAROS,  DONE); break;
         case NPC_CENTRIFUGE_CONSTRUCT:
-            ++m_uiConstructsDead;
-            DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, MAX_CONSTRUCTS - m_uiConstructsDead);
+            m_sConstructsAliveGUIDSet.erase(pCreature->GetObjectGuid());
+            DoUpdateWorldState(WORLD_STATE_CONSTRUCTS_COUNT, m_sConstructsAliveGUIDSet.size());
 
-            if (m_uiConstructsDead == MAX_CONSTRUCTS)
+            if (m_sConstructsAliveGUIDSet.empty())
             {
                 if (Creature* pVaros = GetSingleCreatureFromStorage(NPC_VAROS))
                     pVaros->InterruptNonMeleeSpells(false);

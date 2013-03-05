@@ -15,12 +15,13 @@
 enum
 {
     MAX_ENCOUNTER                   = 4,
-    MAX_CONSTRUCTS                  = 10,
 
     TYPE_DRAKOS                     = 0,
     TYPE_VAROS                      = 1,
     TYPE_UROM                       = 2,
     TYPE_EREGOS                     = 3,
+
+    DATA_CONSTRUCTS_EVENT           = 1,                // DO NOT CHANGE! Used by Acid. - used to check the Centrifuge Constructs alive
 
     NPC_DRAKOS                      = 27654,
     NPC_VAROS                       = 27447,
@@ -78,6 +79,8 @@ class MANGOS_DLL_DECL instance_oculus : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
+        void SetData64(uint32 uiType, uint64 uiGuid) override;
+
         const char* Save() const override { return strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
@@ -87,9 +90,8 @@ class MANGOS_DLL_DECL instance_oculus : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
-        uint8 m_uiConstructsDead;
-
         GuidList m_lCageDoorGUIDs;
+        GuidSet m_sConstructsAliveGUIDSet;
 };
 
 #endif

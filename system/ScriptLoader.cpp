@@ -317,6 +317,7 @@ extern void AddSC_boss_telestra();
 extern void AddSC_instance_nexus();
 extern void AddSC_boss_eregos();                            // nexus, oculus
 extern void AddSC_boss_urom();
+extern void AddSC_boss_varos();
 extern void AddSC_instance_oculus();
 extern void AddSC_boss_sartharion();                        // obsidian_sanctum
 extern void AddSC_instance_obsidian_sanctum();
@@ -778,6 +779,7 @@ void AddScripts()
     AddSC_instance_nexus();
     AddSC_boss_eregos();                                    // nexus, oculus
     AddSC_boss_urom();
+    AddSC_boss_varos();
     AddSC_instance_oculus();
     AddSC_boss_sartharion();                                // obsidian_sanctum
     AddSC_instance_obsidian_sanctum();
