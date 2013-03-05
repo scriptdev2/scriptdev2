@@ -101,7 +101,6 @@ enum
     TEXT_ID_START                       = 13100,
     TEXT_ID_PROGRESS                    = 13101,
 
-    // ToDo: use spells to summon the dwarfs
     SPELL_SUMMON_PROTECTOR              = 51780,                // all spells are casted by stalker npcs 28130
     SPELL_SUMMON_STORMCALLER            = 51050,
     SPELL_SUMMON_CUSTODIAN              = 51051,
@@ -115,17 +114,6 @@ enum
     NPC_IRON_GOLEM_CUSTODIAN            = 27985,
 
     QUEST_HALLS_OF_STONE                = 13207,
-};
-
-struct Location
-{
-    float fX, fY, fZ;
-};
-
-static Location SpawnLoc[] =
-{
-    {946.992f, 397.016f, 208.374f},
-    {960.748f, 382.944f, 208.374f},
 };
 
 /*######
@@ -254,23 +242,43 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
 
     void SpawnDwarf(uint32 uEntry)
     {
+        if (!m_pInstance)
+            return;
+
+        // each case has an individual spawn stalker
         switch (uEntry)
         {
             case NPC_DARK_RUNE_PROTECTOR:
             {
+                Creature* pStalker = m_creature->GetMap()->GetCreature(m_pInstance->GetProtectorStalkerGuid());
+                if (!pStalker)
+                    return;
+
                 uint32 uiSpawnNumber = (m_bIsRegularMode ? 2 : 3);
                 for (uint8 i = 0; i < uiSpawnNumber; ++i)
-                    m_creature->SummonCreature(NPC_DARK_RUNE_PROTECTOR, SpawnLoc[0].fX, SpawnLoc[0].fY, SpawnLoc[0].fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 30000);
-                m_creature->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLoc[0].fX, SpawnLoc[0].fY, SpawnLoc[0].fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 30000);
+                    pStalker->CastSpell(pStalker, SPELL_SUMMON_PROTECTOR, true, NULL, NULL, m_creature->GetObjectGuid());
+                pStalker->CastSpell(pStalker, SPELL_SUMMON_STORMCALLER, true, NULL, NULL, m_creature->GetObjectGuid());
                 break;
             }
             case NPC_DARK_RUNE_STORMCALLER:
+            {
+                Creature* pStalker = m_creature->GetMap()->GetCreature(m_pInstance->GeStormcallerStalkerGuid());
+                if (!pStalker)
+                    return;
+
                 for (uint8 i = 0; i < 2; ++i)
-                    m_creature->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLoc[1].fX, SpawnLoc[1].fY, SpawnLoc[1].fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 30000);
+                    pStalker->CastSpell(pStalker, SPELL_SUMMON_STORMCALLER, true, NULL, NULL, m_creature->GetObjectGuid());
                 break;
+            }
             case NPC_IRON_GOLEM_CUSTODIAN:
-                m_creature->SummonCreature(NPC_IRON_GOLEM_CUSTODIAN, SpawnLoc[1].fX, SpawnLoc[1].fY, SpawnLoc[1].fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 30000);
+            {
+                Creature* pStalker = m_creature->GetMap()->GetCreature(m_pInstance->GetCustodianStalkerGuid());
+                if (!pStalker)
+                    return;
+
+                pStalker->CastSpell(pStalker, SPELL_SUMMON_CUSTODIAN, true, NULL, NULL, m_creature->GetObjectGuid());
                 break;
+            }
         }
     }
 

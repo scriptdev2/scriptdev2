@@ -60,6 +60,15 @@ void instance_halls_of_stone::OnCreatureCreate(Creature* pCreature)
         case NPC_MARNAK:           m_lMarnakGUIDs.push_back(pCreature->GetObjectGuid());       break;
         case NPC_TRIBUNAL_OF_AGES: m_lTribunalGUIDs.push_back(pCreature->GetObjectGuid());     break;
         case NPC_WORLDTRIGGER:     m_lWorldtriggerGUIDs.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_LIGHTNING_STALKER:
+            // Sort the dwarf summoning stalkers
+            if (pCreature->GetPositionY() > 400.0f)
+                m_protectorStalkerGuid = pCreature->GetObjectGuid();
+            else if (pCreature->GetPositionY() > 380.0f)
+                m_stormcallerStalkerGuid = pCreature->GetObjectGuid();
+            else
+                m_custodianStalkerGuid = pCreature->GetObjectGuid();
+            break;
         case NPC_DARK_MATTER:
         case NPC_SJONNIR:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();

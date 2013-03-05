@@ -94,6 +94,10 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         void ActivateFace(uint8 uiFace, bool bAfterEvent);
         void DoFaceSpeak(uint8 uiFace, int32 iTextId);
 
+        ObjectGuid GetProtectorStalkerGuid() { return m_protectorStalkerGuid; }
+        ObjectGuid GeStormcallerStalkerGuid() { return m_stormcallerStalkerGuid; }
+        ObjectGuid GetCustodianStalkerGuid() { return m_custodianStalkerGuid; }
+
     private:
         void SortFaces();
         void ProcessFace(uint8 uiFace);
@@ -104,6 +108,10 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
 
         uint8 m_uiIronSludgeKilled;
         bool m_bIsBrannSpankin;
+
+        ObjectGuid m_protectorStalkerGuid;
+        ObjectGuid m_stormcallerStalkerGuid;
+        ObjectGuid m_custodianStalkerGuid;
 
         GuidList m_lKaddrakGUIDs;
         GuidList m_lAbedneumGUIDs;
