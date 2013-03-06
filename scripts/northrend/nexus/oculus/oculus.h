@@ -82,6 +82,9 @@ class MANGOS_DLL_DECL instance_oculus : public ScriptedInstance
         const char* Save() const override { return strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
+        // Check Varos' shield
+        bool IsShieldBroken() { return m_sConstructsAliveGUIDSet.empty(); }
+
     protected:
         void DoSpawnNextBossIfCan();
 
