@@ -34,6 +34,11 @@ enum
     NPC_BELGARISTRASZ               = 27658,            // ruby
     NPC_IMAGE_OF_BELGARISTRASZ      = 28012,
 
+    // Vehicle entries
+    NPC_EMERALD_DRAKE               = 27692,
+    NPC_AMBER_DRAKE                 = 27755,
+    NPC_RUBY_DRAKE                  = 27756,
+
     // Cages in which the friendly dragons are hold
     GO_DRAGON_CAGE_DOOR             = 193995,
 
