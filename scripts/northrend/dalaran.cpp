@@ -29,11 +29,17 @@ EndContentData */
 
 enum
 {
-    SPELL_TRESPASSER_H      = 54029,
-    SPELL_TRESPASSER_A      = 54028,
+    SPELL_TRESPASSER_H          = 54029,
+    SPELL_TRESPASSER_A          = 54028,
 
-    AREA_ID_SUNREAVER       = 4616,
-    AREA_ID_SILVER_ENCLAVE  = 4740
+    // Exception auras - used for quests 20439 and 24451
+    SPELL_COVENANT_DISGUISE_1   = 70971,
+    SPELL_COVENANT_DISGUISE_2   = 70972,
+    SPELL_SUNREAVER_DISGUISE_1  = 70973,
+    SPELL_SUNREAVER_DISGUISE_2  = 70974,
+
+    AREA_ID_SUNREAVER           = 4616,
+    AREA_ID_SILVER_ENCLAVE      = 4740
 };
 
 struct MANGOS_DLL_DECL npc_dalaran_guardian_mageAI : public ScriptedAI
@@ -47,6 +53,11 @@ struct MANGOS_DLL_DECL npc_dalaran_guardian_mageAI : public ScriptedAI
 
         if (pWho->isTargetableForAttack() && m_creature->IsHostileTo(pWho))
         {
+            // exception for quests 20439 and 24451
+            if (pWho->HasAura(SPELL_COVENANT_DISGUISE_1) || pWho->HasAura(SPELL_COVENANT_DISGUISE_2) ||
+                pWho->HasAura(SPELL_SUNREAVER_DISGUISE_1) || pWho->HasAura(SPELL_SUNREAVER_DISGUISE_2))
+                return;
+
             if (m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
             {
                 if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
