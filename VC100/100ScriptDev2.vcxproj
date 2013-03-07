@@ -514,6 +514,7 @@
     <ClCompile Include="..\scripts\northrend\nexus\oculus\boss_urom.cpp" />
     <ClCompile Include="..\scripts\northrend\nexus\oculus\boss_varos.cpp" />
     <ClCompile Include="..\scripts\northrend\nexus\oculus\instance_oculus.cpp" />
+    <ClCompile Include="..\scripts\northrend\nexus\oculus\oculus.cpp" />
     <ClCompile Include="..\scripts\northrend\obsidian_sanctum\boss_sartharion.cpp" />
     <ClCompile Include="..\scripts\northrend\obsidian_sanctum\instance_obsidian_sanctum.cpp" />
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp" />
