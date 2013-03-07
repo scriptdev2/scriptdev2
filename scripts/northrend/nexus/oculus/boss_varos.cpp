@@ -73,7 +73,7 @@ struct CaptainData
 static const CaptainData aVarosCaptainData[4] =
 {
     {EVENT_ID_CALL_CAPTAIN_1, 1205.74f,  1060.24f,  480.083f, 1.15f, 1239.198f, 1064.537f, 455.587f},
-    {EVENT_ID_CALL_CAPTAIN_2, 1273.78f,  1159.366f, 454.617f, 4.79f, 1278.488f, 1119.482f, 455.634f},       // this one is guesswork
+    {EVENT_ID_CALL_CAPTAIN_2, 1273.78f,  1159.366f, 480.083f, 4.79f, 1278.488f, 1119.482f, 455.634f},       // this one is guesswork
     {EVENT_ID_CALL_CAPTAIN_3, 1356.845f, 1077.118f, 480.083f, 3.28f, 1331.333f, 1076.381f, 455.69f},
     {EVENT_ID_CALL_CAPTAIN_4, 1296.89f,  1002.76f,  480.083f, 1.71f, 1291.95f,  1024.354f, 455.739f},
 };
