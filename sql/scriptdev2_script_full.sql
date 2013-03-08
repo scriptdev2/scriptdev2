@@ -2921,7 +2921,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1578026,'You were warned!',13653,1,0,0,'varos SAY_KILL_1'),
 (-1578027,'The Oculus is ours!',13654,1,0,0,'varos SAY_KILL_2'),
 (-1578028,'They are... too strong! Underestimated their... fortitude.',13655,1,0,0,'varos SAY_DEATH'),
-(-1578029,'%s calls an Azure Ring Captain!',0,3,0,0,'varos EMOTE_CAPTAIN');
+(-1578029,'%s calls an Azure Ring Captain!',0,3,0,0,'varos EMOTE_CAPTAIN'),
+
+(-1578030,'%s flies away.',0,2,0,0,'drakes EMOTE_FLY_AWAY');
 
 -- -1 580 000 SUNWELL PLATEAU
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
