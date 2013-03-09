@@ -80,8 +80,13 @@ void instance_nexus::OnObjectCreate(GameObject* pGo)
 
 void instance_nexus::OnCreatureCreate(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_KERISTRASZA)
-        m_mNpcEntryGuidStore[NPC_KERISTRASZA] = pCreature->GetObjectGuid();
+    switch (pCreature->GetEntry())
+    {
+        case NPC_ORMOROK:
+        case NPC_KERISTRASZA:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+    }
 }
 
 uint32 instance_nexus::GetData(uint32 uiType) const
