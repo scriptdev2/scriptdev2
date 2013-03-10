@@ -2832,7 +2832,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1575017,'An easy task!',13466,1,0,0,'gortok SAY_SLAY_2'),
 (-1575018,' ',13467,1,0,0,'gortok SAY_DEATH'),
 
-(-1575019,'What mongrels dare intrude here? Look alive, my brothers! A feast for the one that brings me their heads!',13497,1,0,0,'skadi SAY_AGGRO'),
+(-1575019,'What mongrels dare intrude here? Look alive, my brothers! A feast for the one that brings me their heads!',13497,1,0,22,'skadi SAY_AGGRO'),
 (-1575020,'Sear them to the bone!',13498,1,0,0,'skadi SAY_DRAKEBREATH_1'),
 (-1575021,'Go now! Leave nothing but ash in your wake!',13499,1,0,0,'skadi SAY_DRAKEBREATH_2'),
 (-1575022,'Cleanse our sacred halls with flame!',13500,1,0,0,'skadi SAY_DRAKEBREATH_3'),

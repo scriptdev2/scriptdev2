@@ -51,11 +51,20 @@ void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
         case NPC_HALDOR:
         case NPC_RANULF:
         case NPC_TORGYN:
+        case NPC_SKADI:
+        case NPC_GRAUF:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_WORLD_TRIGGER:
             if (pCreature->GetPositionX() < 250.0f)
                 m_gortokEventTriggerGuid = pCreature->GetObjectGuid();
+            else if (pCreature->GetPositionX() > 400.0f && pCreature->GetPositionX() < 500.0f)
+                m_skadiMobsTriggerGuid = pCreature->GetObjectGuid();
+            break;
+        case NPC_YMIRJAR_HARPOONER:
+        case NPC_YMIRJAR_WARRIOR:
+        case NPC_YMIRJAR_WITCH_DOCTOR:
+            m_lskadiGauntletMobsList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -99,7 +108,7 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
                     m_uiGortokOrbTimer = 2000;
                 }
             }
-            if (uiData == FAIL)
+            else if (uiData == FAIL)
             {
                 if (Creature* pOrb = instance->GetCreature(m_gortokEventTriggerGuid))
                 {
@@ -129,17 +138,55 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_SKADI:
-            if (uiData == DONE)
-                DoUseDoorOrButton(GO_DOOR_SKADI);
+            // Don't process the event twice
+            if (m_auiEncounter[uiType] == uiData)
+                return;
+            switch (uiData)
+            {
+                case DONE:
+                    DoUseDoorOrButton(GO_DOOR_SKADI);
+                    break;
+                case SPECIAL:
+                    // Prepare achievements
+                    SetSpecialAchievementCriteria(TYPE_ACHIEV_LOVE_SKADI, true);
+                    DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_SKADI_ID);
 
+                    m_auiEncounter[uiType] = uiData;
+                    return;
+                case FAIL:
+                    // Handle Grauf evade - if event is in phase 1
+                    if (Creature* pGrauf = GetSingleCreatureFromStorage(NPC_GRAUF))
+                        pGrauf->AI()->EnterEvadeMode();
+
+                    // no break;
+                case NOT_STARTED:
+                    // Despawn all summons
+                    for (GuidList::const_iterator itr = m_lskadiGauntletMobsList.begin(); itr != m_lskadiGauntletMobsList.end(); ++itr)
+                    {
+                        if (Creature* pYmirjar = instance->GetCreature(*itr))
+                            pYmirjar->ForcedDespawn();
+                    }
+
+                    // Reset position
+                    if (Creature* pGrauf = GetSingleCreatureFromStorage(NPC_GRAUF))
+                        pGrauf->GetMotionMaster()->MoveTargetedHome();
+
+                    // no break;
+                case IN_PROGRESS:
+
+                    // Remove the summon aura on phase 2 or fail
+                    if (Creature* pTrigger = instance->GetCreature(m_skadiMobsTriggerGuid))
+                        pTrigger->RemoveAllAuras();
+                    break;
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_YMIRON:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_DOOR_YMIRON);
-            if (uiData == IN_PROGRESS)
+            else if (uiData == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_KINGS_BANE, true);
-            if (uiData == SPECIAL)
+            else if (uiData == SPECIAL)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_KINGS_BANE, false);
             m_auiEncounter[uiType] = uiData;
             break;
@@ -224,6 +271,12 @@ void instance_pinnacle::OnCreatureEvade(Creature* pCreature)
         case NPC_JORMUNGAR:
         case NPC_RHINO:
             SetData(TYPE_GORTOK, FAIL);
+            break;
+        case NPC_YMIRJAR_WARRIOR:
+        case NPC_YMIRJAR_WITCH_DOCTOR:
+        case NPC_YMIRJAR_HARPOONER:
+            // Handle Skadi gauntlet reset. Used instead of using spell 49308
+            SetData(TYPE_SKADI, FAIL);
             break;
     }
 }

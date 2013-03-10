@@ -343,6 +343,9 @@ CreatureAI* GetAI_boss_svala(Creature* pCreature)
 
 bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
+    if (pPlayer->isGameMaster())
+        return false;
+
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {
         if (pInstance->GetData(TYPE_SVALA) == NOT_STARTED)

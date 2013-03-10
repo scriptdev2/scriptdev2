@@ -25,6 +25,14 @@ enum
 
     NPC_WORLD_TRIGGER               = 22515,
 
+    NPC_GRAUF                       = 26893,
+    NPC_SKADI                       = 26693,
+    NPC_YMIRJAR_WARRIOR             = 26690,
+    NPC_YMIRJAR_WITCH_DOCTOR        = 26691,
+    NPC_YMIRJAR_HARPOONER           = 26692,
+    // NPC_FLAME_BREATH_TRIGGER     = 28351,            // triggers the freezing cloud spell in script
+    // NPC_WORLD_TRIGGER_LARGE      = 23472,            // only one spawn in this instance - casts 49308 during the gauntlet event
+
     NPC_FURBOLG                     = 26684,
     NPC_WORGEN                      = 26683,
     NPC_JORMUNGAR                   = 26685,
@@ -46,6 +54,11 @@ enum
     SPELL_ORB_VISUAL                = 48044,
     SPELL_AWAKEN_SUBBOSS            = 47669,
     SPELL_AWAKEN_GORTOK             = 47670,
+
+    // Skadi event spells
+    // The reset check spell is cast by npc 23472 every 7 seconds during the event
+    // If the spell doesn't hit any player then the event resets
+    // SPELL_GAUNTLET_RESET_CHECK   = 49308,            // for the moment we don't use this because of the lack of core support
 };
 
 static const float aOrbPositions[2][3] =
@@ -77,6 +90,7 @@ class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
 
         void SetGortokEventStarter(ObjectGuid playerGuid) { m_gortokEventStarterGuid = playerGuid; }
         ObjectGuid GetGortokEventStarter() { return m_gortokEventStarterGuid; }
+        ObjectGuid GetSkadiMobsTrigger() { return m_skadiMobsTriggerGuid; }
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
@@ -93,6 +107,9 @@ class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
 
         ObjectGuid m_gortokEventTriggerGuid;
         ObjectGuid m_gortokEventStarterGuid;
+        ObjectGuid m_skadiMobsTriggerGuid;
+
+        GuidList m_lskadiGauntletMobsList;
 };
 
 #endif
