@@ -38,7 +38,7 @@ enum
     SAY_DEATH                       = -1575028,
     SAY_DRAKE_DEATH                 = -1575029,
     EMOTE_HARPOON_RANGE             = -1575030,
-    EMOTE_DEEP_BREATH               = -1249004,             // TODO: replace this ID with a generic one
+    EMOTE_DEEP_BREATH               = -1575041,
 
     // phase 1 spells
     SPELL_RIDE_VEHICLE              = 61791,
@@ -214,7 +214,6 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     void DoPrepareForGauntlet()
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         m_uiMountTimer = 3000;
 
         if (!m_pInstance)
@@ -252,7 +251,11 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
                 if (Creature* pGrauf = m_pInstance->GetSingleCreatureFromStorage(NPC_GRAUF))
                 {
                     if (DoCastSpellIfCan(pGrauf, SPELL_RIDE_VEHICLE) == CAST_OK)
+                    {
+                        // Maybe this flag should be set by the vehicle flags - requires research
+                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         m_uiMountTimer = 0;
+                    }
                 }
             }
             else

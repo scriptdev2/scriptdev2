@@ -2854,7 +2854,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1575037,'You have failed your people!',13615,1,0,0,'ymiron SAY_SLAY_2'),
 (-1575038,'There is a reason I am king!',13616,1,0,0,'ymiron SAY_SLAY_3'),
 (-1575039,'Bleed no more!',13617,1,0,0,'ymiron SAY_SLAY_4'),
-(-1575040,'What... awaits me... now?',13618,1,0,0,'ymiron SAY_DEATH');
+(-1575040,'What... awaits me... now?',13618,1,0,0,'ymiron SAY_DEATH'),
+
+(-1575041,'%s takes a deep breath.',0,3,0,0,'grauf EMOTE_DEEP_BREATH');
 
 -- -1 576 000 NEXUS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3908,7 +3910,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,LANGUAGE,emote,commen
 (-1616031,'This resolution pains me deeply, but the destruction, the monumental loss of life had to end. Regardless of Malygos\' recent transgressions, I will mourn his loss. He was once a guardian, a protector. This day, one of the world\'s mightiest has fallen.',14408,1,0,1,'alextrasza SAY_OUTRO_3'),
 (-1616032,'The red dragonflight will take on the burden of mending the devastation wrought on Azeroth. Return home to your people and rest. Tomorrow will bring you new challenges, and you must be ready to face them. Life...goes on.',14409,1,0,1,'alextrasza SAY_OUTRO_4'),
 (-1616033,'A Power Spark forms from a nearby rift!',0,3,0,0,'malygos SAY_EMOTE_SPARK'),
-(-1616034,'%s takes a deep breath...',0,3,0,0,'malygos SAY_EMOTE_BREATH');
+(-1616034,'%s takes a deep breath.',0,3,0,0,'malygos SAY_EMOTE_BREATH');
 
 -- -1 619 000 AHN'KAHET
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
