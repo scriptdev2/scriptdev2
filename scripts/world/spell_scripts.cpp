@@ -25,6 +25,7 @@ EndScriptData */
 spell 8913
 spell 19512
 spell 21014
+spell 21050
 spell 29528
 spell 29866
 spell 34665
@@ -339,6 +340,12 @@ enum
     //  for quest 10584
     SPELL_PROTOVOLTAIC_MAGNETO_COLLECTOR= 37136,
     NPC_ENCASED_ELECTROMENTAL           = 21731,
+
+    // quest 6661
+    SPELL_MELODIOUS_RAPTURE             = 21050,
+    SPELL_MELODIOUS_RAPTURE_VISUAL      = 21051,
+    NPC_DEEPRUN_RAT                     = 13016,
+    NPC_ENTHRALLED_DEEPRUN_RAT          = 13017,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -1013,6 +1020,21 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                     pCreatureTarget->CastSpell(pCreatureTarget, SPELL_SUMMON_RAZORTHORN_ROOT, true);
                     pMound->SetLootState(GO_JUST_DEACTIVATED);
                 }
+            }
+            return true;
+        }
+        case SPELL_MELODIOUS_RAPTURE:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCaster->GetTypeId() != TYPEID_PLAYER && pCreatureTarget->GetEntry() != NPC_DEEPRUN_RAT)
+                    return true;
+
+                pCreatureTarget->UpdateEntry(NPC_ENTHRALLED_DEEPRUN_RAT);
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_MELODIOUS_RAPTURE_VISUAL, false);
+                pCreatureTarget->GetMotionMaster()->MoveFollow(pCaster, frand(0.5f, 3.0f), frand(M_PI_F * 0.8f, M_PI_F * 1.2f));
+
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_ENTHRALLED_DEEPRUN_RAT);
             }
             return true;
         }
