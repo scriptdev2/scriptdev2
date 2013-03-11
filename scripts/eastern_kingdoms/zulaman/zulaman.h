@@ -155,6 +155,7 @@ class MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         void Initialize() override;
         bool IsEncounterInProgress() const override;
 
+        void OnPlayerEnter(Player* pPlayer) override;
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
         void OnCreatureDeath(Creature* pCreature) override;

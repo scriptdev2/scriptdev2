@@ -118,10 +118,10 @@ enum
     SAY_AT_GONG             = -1568080,
     SAY_OPEN_ENTRANCE       = -1568081,
 
+    GOSSIP_ITEM_ID_BEGIN    = -3568000,
+
     SPELL_BANGING_THE_GONG  = 45225
 };
-
-#define GOSSIP_ITEM_BEGIN   "Thanks for the concern, but we intend to explore Zul'Aman."
 
 struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 {
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
                 m_pInstance->DoToggleGameObjectFlags(GO_STRANGE_GONG, GO_FLAG_NO_INTERACT, false);
 
                 // Start bang gong for 2min
-                m_creature->CastSpell(m_creature, SPELL_BANGING_THE_GONG, false);
+                DoCastSpellIfCan(m_creature, SPELL_BANGING_THE_GONG);
                 SetEscortPaused(true);
                 break;
             case 3:
@@ -185,7 +185,7 @@ bool GossipHello_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature)
         pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pInstance && pInstance->GetData(TYPE_EVENT_RUN) == NOT_STARTED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ID_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;

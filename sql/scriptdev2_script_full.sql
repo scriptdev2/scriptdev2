@@ -4557,6 +4557,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3564001,'I\'m ready, Akama.','akama(illidan) GOSSIP_ITEM_PREPARE'),
 (-3564002,'We\'re ready to face Illidan.','akama(illidan) GOSSIP_ITEM_START_EVENT');
 
+-- -3 568 000 ZUL'AMAN
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3568000,'Thanks for the concern, but we intend to explore Zul\'Aman.','harrison jones GOSSIP_ITEM_BEGIN');
+
 -- -3 595 000 CULLING OF STRATHOLME
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595000,'What do you think they\'re up to?','chromie GOSSIP_ITEM_ENTRANCE_1'),

@@ -51,6 +51,15 @@ bool instance_zulaman::IsEncounterInProgress() const
     return false;
 }
 
+void instance_zulaman::OnPlayerEnter(Player* pPlayer)
+{
+    if (GetData(TYPE_EVENT_RUN) == IN_PROGRESS)
+    {
+        DoUpdateWorldState(WORLD_STATE_ID, 1);
+        DoUpdateWorldState(WORLD_STATE_COUNTER, GetData(TYPE_RUN_EVENT_TIME));
+    }
+}
+
 void instance_zulaman::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
@@ -155,7 +164,8 @@ void instance_zulaman::OnObjectCreate(GameObject* pGo)
         case GO_STRANGE_GONG:
             break;
         case GO_MASSIVE_GATE:
-            if (m_auiEncounter[TYPE_EVENT_RUN] == DONE || m_auiEncounter[TYPE_EVENT_RUN] == FAIL)
+            // The gate needs to be opened even if the event is still in progress
+            if (m_auiEncounter[TYPE_EVENT_RUN] == DONE || m_auiEncounter[TYPE_EVENT_RUN] == FAIL || m_auiEncounter[TYPE_EVENT_RUN] == IN_PROGRESS)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_WIND_DOOR:
