@@ -592,6 +592,17 @@ bool EffectDummyItem(Unit* pCaster, uint32 spellId, SpellEffectIndex effIndex, I
 }
 
 MANGOS_DLL_EXPORT
+bool EffectScriptEffectCreature(Unit* pCaster, uint32 spellId, SpellEffectIndex effIndex, Creature* pTarget)
+{
+    Script* pTempScript = m_scripts[pTarget->GetScriptId()];
+
+    if (!pTempScript || !pTempScript->pEffectScriptEffectNPC)
+        return false;
+
+    return pTempScript->pEffectScriptEffectNPC(pCaster, spellId, effIndex, pTarget);
+}
+
+MANGOS_DLL_EXPORT
 bool AuraDummy(Aura const* pAura, bool bApply)
 {
     Script* pTempScript = m_scripts[((Creature*)pAura->GetTarget())->GetScriptId()];
