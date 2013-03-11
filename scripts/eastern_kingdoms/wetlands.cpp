@@ -75,9 +75,7 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
 
         if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && pPlayer)
         {
-            for (uint8 i = 0; i < 3; ++i)
-                m_creature->CastSpell(m_creature, SPELL_CALL_FRIENDS, true);
-
+            DoCastSpellIfCan(m_creature, SPELL_CALL_FRIENDS);
             m_bFriendSummoned = true;
         }
     }
