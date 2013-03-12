@@ -55,6 +55,11 @@ enum
     SPELL_SUMMON_VENOMANCER         = 53615,        // summons 29217
     SPELL_SUMMON_DARTER             = 53599,        // summons 29213
 
+    // impale spells
+    SPELL_IMPALE_VISUAL             = 53455,
+    SPELL_IMPALE                    = 53454,
+    SPELL_IMPALE_H                  = 59446,
+
     NPC_ANUBAR_DARTER               = 29213,
     NPC_ANUBAR_ASSASSIN             = 29214,
     NPC_ANUBAR_GUARDIAN             = 29216,
@@ -174,6 +179,9 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
                     pSummoned->SetWalk(false);
                     pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
                 }
+                break;
+            case NPC_IMPALE_TARGET:
+                pSummoned->CastSpell(pSummoned, SPELL_IMPALE_VISUAL, true);
                 break;
             default:
                 break;
@@ -313,6 +321,61 @@ CreatureAI* GetAI_boss_anubarak(Creature* pCreature)
     return new boss_anubarakAI(pCreature);
 }
 
+/*######
+## npc_impale_target
+######*/
+
+struct MANGOS_DLL_DECL npc_impale_targetAI : public Scripted_NoMovementAI
+{
+    npc_impale_targetAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsRegularMode;
+
+    uint32 m_uiImpaleTimer;
+
+    void Reset() override
+    {
+        m_uiImpaleTimer = 3000;
+    }
+
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiImpaleTimer)
+        {
+            if (m_uiImpaleTimer <= uiDiff)
+            {
+                if (!m_pInstance)
+                    return;
+
+                m_creature->RemoveAurasDueToSpell(SPELL_IMPALE_VISUAL);
+
+                // The impale is cast by Anub on the impale target
+                if (Creature* pAnub = m_pInstance->GetSingleCreatureFromStorage(NPC_ANUBARAK))
+                    pAnub->CastSpell(m_creature, m_bIsRegularMode ? SPELL_IMPALE : SPELL_IMPALE_H, true);
+
+                m_creature->ForcedDespawn(3000);
+                m_uiImpaleTimer = 0;
+            }
+            else
+                m_uiImpaleTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_impale_target(Creature* pCreature)
+{
+    return new npc_impale_targetAI(pCreature);
+}
+
 void AddSC_boss_anubarak()
 {
     Script* pNewScript;
@@ -320,5 +383,10 @@ void AddSC_boss_anubarak()
     pNewScript = new Script;
     pNewScript->Name = "boss_anubarak";
     pNewScript->GetAI = &GetAI_boss_anubarak;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_impale_target";
+    pNewScript->GetAI = &GetAI_npc_impale_target;
     pNewScript->RegisterSelf();
 }
