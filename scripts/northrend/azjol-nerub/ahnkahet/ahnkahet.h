@@ -22,6 +22,8 @@ enum
     TYPE_VOLAZJ                 = 3,
     TYPE_AMANITAR               = 4,
 
+    DATA_INSANITY_PLAYER        = 1,
+
     GO_DOOR_TALDARAM            = 192236,
     GO_ANCIENT_DEVICE_L         = 193093,
     GO_ANCIENT_DEVICE_R         = 193094,
@@ -34,6 +36,23 @@ enum
     NPC_AHNKAHAR_SWARM_EGG      = 30172,
     NPC_JEDOGA_CONTROLLER       = 30181,
     NPC_TWILIGHT_INITIATE       = 30114,
+
+    NPC_HERALD_VOLAZJ           = 29311,
+    NPC_TWISTED_VISAGE_1        = 30621,
+    NPC_TWISTED_VISAGE_2        = 30622,
+    NPC_TWISTED_VISAGE_3        = 30623,
+    NPC_TWISTED_VISAGE_4        = 30624,
+    NPC_TWISTED_VISAGE_5        = 30625,
+
+    SPELL_TWISTED_VISAGE_DEATH  = 57555,
+    SPELL_INSANITY_SWITCH       = 57538,
+    SPELL_INSANITY_CLEAR        = 57558,
+
+    SPELL_INSANITY_PHASE_16     = 57508,
+    SPELL_INSANITY_PHASE_32     = 57509,
+    SPELL_INSANITY_PHASE_64     = 57510,
+    SPELL_INSANITY_PHASE_128    = 57511,
+    SPELL_INSANITY_PHASE_256    = 57512,
 
     ACHIEV_START_VOLAZJ_ID      = 20382,
 
@@ -54,10 +73,13 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
+        void OnCreatureEvade(Creature* pCreature) override;
         void OnCreatureDeath(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
+
+        void SetData64(uint32 uiType, uint64 uiGuid) override;
 
         ObjectGuid SelectRandomGuardianEggGuid();
         ObjectGuid SelectRandomSwarmerEggGuid();
@@ -72,6 +94,9 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         void Load(const char* chrIn) override;
 
     private:
+        void HandleInsanityClear();
+        void HandleInsanitySwitch(Player* pPlayer);
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
@@ -80,6 +105,7 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
 
         uint8 m_uiDevicesActivated;
         uint8 m_uiInitiatesKilled;
+        uint8 m_uiTwistedVisageCount;
 
         ObjectGuid m_jedogaSacrificeController;
 
@@ -87,6 +113,7 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         GuidList m_SwarmerEggList;
         GuidList m_lJedogaControllersGuidList;
         GuidList m_lJedogaEventControllersGuidList;
+        GuidList m_lInsanityPlayersGuidList;
 };
 
 #endif

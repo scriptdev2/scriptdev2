@@ -23,12 +23,14 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "ahnkahet.h"
+#include "TemporarySummon.h"
 
 instance_ahnkahet::instance_ahnkahet(Map* pMap) : ScriptedInstance(pMap),
     m_bRespectElders(false),
     m_bVolunteerWork(false),
     m_uiDevicesActivated(0),
-    m_uiInitiatesKilled(0)
+    m_uiInitiatesKilled(0),
+    m_uiTwistedVisageCount(0)
 {
     Initialize();
 }
@@ -45,6 +47,7 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
         case NPC_ELDER_NADOX:
         case NPC_TALDARAM:
         case NPC_JEDOGA_SHADOWSEEKER:
+        case NPC_HERALD_VOLAZJ:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_AHNKAHAR_GUARDIAN_EGG:
@@ -64,6 +67,13 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
             else if (pCreature->GetPositionZ() < -16.0f)
                 // Used for Jedoga sacrifice
                 m_jedogaSacrificeController = pCreature->GetObjectGuid();
+            break;
+        case NPC_TWISTED_VISAGE_1:
+        case NPC_TWISTED_VISAGE_2:
+        case NPC_TWISTED_VISAGE_3:
+        case NPC_TWISTED_VISAGE_4:
+        case NPC_TWISTED_VISAGE_5:
+            ++m_uiTwistedVisageCount;
             break;
     }
 }
@@ -103,9 +113,9 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == IN_PROGRESS)
                 m_bRespectElders = true;
-            if (uiData == SPECIAL)
+            else if (uiData == SPECIAL)
                 m_bRespectElders = false;
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 DoToggleGameObjectFlags(GO_ANCIENT_DEVICE_L, GO_FLAG_NO_INTERACT, false);
                 DoToggleGameObjectFlags(GO_ANCIENT_DEVICE_R, GO_FLAG_NO_INTERACT, false);
@@ -133,7 +143,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
                     }
                 }
             }
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 m_auiEncounter[uiType] = uiData;
                 DoUseDoorOrButton(GO_DOOR_TALDARAM);
@@ -143,9 +153,9 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == IN_PROGRESS)
                 m_bVolunteerWork = true;
-            if (uiData == SPECIAL)
+            else if (uiData == SPECIAL)
                 m_bVolunteerWork = false;
-            if (uiData == FAIL)
+            else if (uiData == FAIL)
                 m_uiInitiatesKilled = 0;
             break;
         case TYPE_AMANITAR:
@@ -154,7 +164,10 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
         case TYPE_VOLAZJ:
             m_auiEncounter[uiType] = uiData;
             if (uiData == IN_PROGRESS)
-                DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_VOLAZJ_ID);
+            {
+                m_uiTwistedVisageCount = 0;
+                m_lInsanityPlayersGuidList.clear();
+            }
             break;
 
         default:
@@ -163,7 +176,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
     }
 
     // For some encounters Special data needs to be saved
-    if (uiData == DONE || uiData == SPECIAL)
+    if (uiData == DONE || (uiData == SPECIAL && uiType == TYPE_TALDARAM))
     {
         OUT_SAVE_INST_DATA;
 
@@ -180,22 +193,108 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
 
 void instance_ahnkahet::OnCreatureDeath(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_TWILIGHT_INITIATE)
+    switch (pCreature->GetEntry())
     {
-        ++m_uiInitiatesKilled;
+        case NPC_TWILIGHT_INITIATE:
+            ++m_uiInitiatesKilled;
 
-        // If all initiates are killed, then land Jedoga and stop the channeling
-        if (m_uiInitiatesKilled == MAX_INITIATES)
-        {
-            if (Creature* pJedoga = GetSingleCreatureFromStorage(NPC_JEDOGA_SHADOWSEEKER))
-                pJedoga->GetMotionMaster()->MovePoint(1, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
-
-            for (GuidList::const_iterator itr = m_lJedogaEventControllersGuidList.begin(); itr != m_lJedogaEventControllersGuidList.end(); ++itr)
+            // If all initiates are killed, then land Jedoga and stop the channeling
+            if (m_uiInitiatesKilled == MAX_INITIATES)
             {
-                if (Creature* pTemp = instance->GetCreature(*itr))
-                    pTemp->InterruptNonMeleeSpells(false);
+                if (Creature* pJedoga = GetSingleCreatureFromStorage(NPC_JEDOGA_SHADOWSEEKER))
+                    pJedoga->GetMotionMaster()->MovePoint(1, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
+
+                for (GuidList::const_iterator itr = m_lJedogaEventControllersGuidList.begin(); itr != m_lJedogaEventControllersGuidList.end(); ++itr)
+                {
+                    if (Creature* pTemp = instance->GetCreature(*itr))
+                        pTemp->InterruptNonMeleeSpells(false);
+                }
             }
-        }
+
+            break;
+        case NPC_TWISTED_VISAGE_1:
+        case NPC_TWISTED_VISAGE_2:
+        case NPC_TWISTED_VISAGE_3:
+        case NPC_TWISTED_VISAGE_4:
+        case NPC_TWISTED_VISAGE_5:
+            pCreature->CastSpell(pCreature, SPELL_TWISTED_VISAGE_DEATH, true);
+
+            --m_uiTwistedVisageCount;
+
+            // When all Twisted Visages were killed or despawned switch back to combat phase
+            if (!m_uiTwistedVisageCount)
+            {
+                // Clear Insanity
+                if (Creature* pVolazj = GetSingleCreatureFromStorage(NPC_HERALD_VOLAZJ))
+                {
+                    pVolazj->CastSpell(pVolazj, SPELL_INSANITY_CLEAR, true);
+                    pVolazj->RemoveAllAuras();
+                }
+
+                // Clear insanity manually for now, because the spell won't hit phased players
+                HandleInsanityClear();
+
+                SetData(TYPE_VOLAZJ, IN_PROGRESS);
+            }
+            else
+            {
+                // Switch Insanity
+                if (Creature* pVolazj = GetSingleCreatureFromStorage(NPC_HERALD_VOLAZJ))
+                    pVolazj->CastSpell(pVolazj, SPELL_INSANITY_SWITCH, true);
+
+                // Handle insanity switch manually, because the boss can't hit phased players
+                if (pCreature->IsTemporarySummon())
+                {
+                    TemporarySummon* pTemporary = (TemporarySummon*)pCreature;
+
+                    // Switch insanity phase for the master player
+                    if (Player* pPlayer = instance->GetPlayer(pTemporary->GetSummonerGuid()))
+                        HandleInsanitySwitch(pPlayer);
+                }
+            }
+            break;
+    }
+}
+
+void instance_ahnkahet::OnCreatureEvade(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_TWISTED_VISAGE_1:
+        case NPC_TWISTED_VISAGE_2:
+        case NPC_TWISTED_VISAGE_3:
+        case NPC_TWISTED_VISAGE_4:
+        case NPC_TWISTED_VISAGE_5:
+            --m_uiTwistedVisageCount;
+
+            // When all Twisted Visages were killed or despawned switch back to combat phase
+            if (!m_uiTwistedVisageCount)
+            {
+                // Clear Insanity
+                if (Creature* pVolazj = GetSingleCreatureFromStorage(NPC_HERALD_VOLAZJ))
+                {
+                    pVolazj->CastSpell(pVolazj, SPELL_INSANITY_CLEAR, true);
+                    pVolazj->RemoveAllAuras();
+                }
+
+                // Clear insanity manually for now, because the spell won't hit phased players
+                HandleInsanityClear();
+
+                SetData(TYPE_VOLAZJ, IN_PROGRESS);
+            }
+
+            pCreature->ForcedDespawn();
+            break;
+    }
+}
+
+void instance_ahnkahet::SetData64(uint32 uiData, uint64 uiGuid)
+{
+    // Store all the players hit by the insanity spell in order to use them for the phasing switch / clear
+    if (uiData == DATA_INSANITY_PLAYER)
+    {
+        if (Player* pPlayer = instance->GetPlayer(ObjectGuid(uiGuid)))
+            m_lInsanityPlayersGuidList.push_back(pPlayer->GetObjectGuid());
     }
 }
 
@@ -219,6 +318,59 @@ ObjectGuid instance_ahnkahet::SelectRandomSwarmerEggGuid()
     advance(iter, urand(0, m_SwarmerEggList.size() - 1));
 
     return *iter;
+}
+
+void instance_ahnkahet::HandleInsanityClear()
+{
+    for (GuidList::const_iterator itr = m_lInsanityPlayersGuidList.begin(); itr != m_lInsanityPlayersGuidList.end(); ++itr)
+    {
+        if (Player* pPlayer = instance->GetPlayer(*itr))
+            pPlayer->RemoveSpellsCausingAura(SPELL_AURA_PHASE);
+    }
+}
+
+void instance_ahnkahet::HandleInsanitySwitch(Player* pPhasedPlayer)
+{
+    // Get the phase aura id
+    std::list<Aura*> lAuraList = pPhasedPlayer->GetAurasByType(SPELL_AURA_PHASE);
+    if (lAuraList.empty())
+        return;
+
+    uint32 uiPhaseAura = (*lAuraList.begin())->GetId();
+
+    std::list<Player*> lSamePhasePlayers;
+    std::vector<Player*> vOtherPhasePlayers;
+
+    // Sort the insanity players, into those which have same phase and others
+    for (GuidList::const_iterator itr = m_lInsanityPlayersGuidList.begin(); itr != m_lInsanityPlayersGuidList.end(); ++itr)
+    {
+        if (Player* pTemp = instance->GetPlayer(*itr))
+        {
+            if (pTemp->HasAura(uiPhaseAura))
+                lSamePhasePlayers.push_back(pTemp);
+            // Check only for alive players
+            else if (pTemp->isAlive())
+                vOtherPhasePlayers.push_back(pTemp);
+        }
+    }
+
+    // This shouldn't happen
+    if (vOtherPhasePlayers.empty())
+        return;
+
+    // Get the phase aura of the new selected player
+    Player* pNewPlayer = vOtherPhasePlayers[urand(0, vOtherPhasePlayers.size() - 1)];
+
+    // Get the phase aura id
+    std::list<Aura*> lNewAuraList = pNewPlayer->GetAurasByType(SPELL_AURA_PHASE);
+    if (lNewAuraList.empty())
+        return;
+
+    uint32 uiNewPhaseAura = (*lNewAuraList.begin())->GetId();
+
+    // Move the same phase players to the new phase
+    for (std::list<Player*>::const_iterator itr = lSamePhasePlayers.begin(); itr != lSamePhasePlayers.end(); ++itr)
+        (*itr)->CastSpell((*itr), uiNewPhaseAura, true);
 }
 
 bool instance_ahnkahet::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
