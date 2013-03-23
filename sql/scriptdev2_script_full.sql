@@ -3202,7 +3202,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1601010,'They hunger.',14085,1,0,0,'krikthir SAY_SWARM_1'),
 (-1601011,'Dinner time, my pets.',14086,1,0,0,'krikthir SAY_SWARM_2'),
 (-1601012,'I should be grateful. But I long ago lost the capacity.',14087,1,0,0,'krikthir SAY_DEATH'),
-(-1601013,'REUSE ME',0,0,0,0,'REUSE ME'),
+
+(-1601013,'%s moves up the tunnel!',0,3,0,0,'hadronox EMOTE_MOVE_TUNNEL'),
 
 (-1601014,'I was king of this empire once, long ago. In life I stood as champion. In death I returned as conqueror. Now I protect the kingdom once more. Ironic, yes?',14053,1,0,0,'anubarak SAY_INTRO'),
 (-1601015,'Eternal agony awaits you!',14054,1,0,0,'anubarak SAY_AGGRO'),
@@ -3214,7 +3215,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1601021,'Your armor is useless against my locusts!',14060,1,0,0,'anubarak SAY_LOCUST_1'),
 (-1601022,'The pestilence upon you!',14068,1,0,0,'anubarak SAY_LOCUST_2'),
 (-1601023,'Uunak-hissss tik-k-k-k-k!',14067,1,0,0,'anubarak SAY_LOCUST_3'),
-(-1601024,'Ahhh... RAAAAAGH! Never thought... I would be free of him...',14069,1,0,0,'anubarak SAY_DEATH');
+(-1601024,'Ahhh... RAAAAAGH! Never thought... I would be free of him...',14069,1,0,0,'anubarak SAY_DEATH'),
+
+(-1601025,'The gate has been breached! Quickly, divert forces to deal with these invaders!',0,1,0,0,'anub\'ar crusher SAY_AGGRO'),
+(-1601026,'There\'s no time left! All remaining forces, attack the invaders!',0,1,0,0,'anub\'ar crusher SAY_SPECIAL');
 
 -- -1 602 000 HALLS OF LIGHTNING
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

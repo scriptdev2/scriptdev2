@@ -26,7 +26,10 @@ EndScriptData */
 
 instance_azjol_nerub::instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap),
     m_uiWatcherTimer(0),
-    m_bWatchHimDie(true)
+    m_uiGauntletEndTimer(0),
+    m_bWatchHimDie(true),
+    m_bHadronoxDenied(true),
+    m_bGauntletStarted(false)
 {
     Initialize();
 }
@@ -63,11 +66,15 @@ void instance_azjol_nerub::OnCreatureCreate(Creature* pCreature)
         case NPC_GASHRA:
         case NPC_NARJIL:
         case NPC_SILTHIK:
+        case NPC_HADRONOX:
         case NPC_ANUBARAK:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_WORLD_TRIGGER:
             m_lTriggerGuids.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_WORLD_TRIGGER_LARGE:
+            m_lSpiderTriggersGuids.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -95,6 +102,32 @@ void instance_azjol_nerub::OnCreatureEnterCombat(Creature* pCreature)
         if (!m_playerGuid && pCreature->getVictim())
             m_playerGuid = pCreature->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetObjectGuid();
     }
+    else if (uiEntry == NPC_ANUBAR_CRUSHER)
+    {
+        // Only for the first try
+        if (m_bGauntletStarted)
+            return;
+
+        DoScriptText(SAY_CRUSHER_AGGRO, pCreature);
+
+        // Spawn 2 more crushers - note these are not the exact spawn coords, but we need to use this workaround for better movement
+        if (Creature* pCrusher = pCreature->SummonCreature(NPC_ANUBAR_CRUSHER, 485.25f, 611.46f, 771.42f, 4.74f, TEMPSUMMON_DEAD_DESPAWN, 0))
+        {
+            pCrusher->SetWalk(false);
+            pCrusher->GetMotionMaster()->MovePoint(0, 517.51f, 561.439f, 734.0306f);
+            pCrusher->HandleEmote(EMOTE_STATE_READYUNARMED);
+        }
+        if (Creature* pCrusher = pCreature->SummonCreature(NPC_ANUBAR_CRUSHER, 575.21f, 611.47f, 771.46f, 3.59f, TEMPSUMMON_DEAD_DESPAWN, 0))
+        {
+            pCrusher->SetWalk(false);
+            pCrusher->GetMotionMaster()->MovePoint(0, 543.414f, 551.728f, 732.0522f);
+            pCrusher->HandleEmote(EMOTE_STATE_READYUNARMED);
+        }
+
+        // Spawn 2 more crushers and start the countdown
+        m_uiGauntletEndTimer = 2 * MINUTE * IN_MILLISECONDS;
+        m_bGauntletStarted = true;
+    }
 }
 
 void instance_azjol_nerub::OnCreatureEvade(Creature* pCreature)
@@ -115,6 +148,28 @@ void instance_azjol_nerub::Update(uint32 uiDiff)
         }
         else
             m_uiWatcherTimer -= uiDiff;
+    }
+
+    if (m_uiGauntletEndTimer)
+    {
+        if (m_uiGauntletEndTimer <= uiDiff)
+        {
+            if (GetData(TYPE_HADRONOX) == IN_PROGRESS)
+            {
+                m_uiGauntletEndTimer = 0;
+                return;
+            }
+
+            SetData(TYPE_HADRONOX, SPECIAL);
+
+            // Allow him to evade - this will start the waypoint movement
+            if (Creature* pHadronox = GetSingleCreatureFromStorage(NPC_HADRONOX))
+                pHadronox->AI()->EnterEvadeMode();
+
+            m_uiGauntletEndTimer = 0;
+        }
+        else
+            m_uiGauntletEndTimer -= uiDiff;
     }
 }
 
@@ -202,6 +257,16 @@ ObjectGuid instance_azjol_nerub::GetRandomAssassinTrigger()
         return ObjectGuid();
 }
 
+void instance_azjol_nerub::ResetHadronoxTriggers()
+{
+    // Drop the summon auras from the triggers
+    for (GuidList::const_iterator itr = m_lSpiderTriggersGuids.begin(); itr != m_lSpiderTriggersGuids.end(); ++itr)
+    {
+        if (Creature* pTrigger = instance->GetCreature(*itr))
+            pTrigger->RemoveAllAurasOnEvade();
+    }
+}
+
 void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
@@ -213,6 +278,8 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_HADRONOX:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                ResetHadronoxTriggers();
             break;
         case TYPE_ANUBARAK:
             m_auiEncounter[uiType] = uiData;
@@ -241,12 +308,26 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
+uint32 instance_azjol_nerub::GetData(uint32 uiType) const
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
 bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
 {
-    if (uiCriteriaId == ACHIEV_CRITERIA_WATCH_DIE)
-        return m_bWatchHimDie;
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRITERIA_WATCH_DIE:
+            return m_bWatchHimDie;
+        case ACHIEV_CRITERIA_DENIED:
+            return m_bHadronoxDenied;
 
-    return false;
+        default:
+            return false;
+    }
 }
 
 void instance_azjol_nerub::Load(const char* chrIn)

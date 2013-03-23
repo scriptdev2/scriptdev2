@@ -14,6 +14,7 @@ enum
     TYPE_ANUBARAK               = 2,
 
     NPC_KRIKTHIR                = 28684,
+    NPC_HADRONOX                = 28921,
     NPC_ANUBARAK                = 29120,
 
     SAY_SEND_GROUP_1            = -1601004,
@@ -23,17 +24,23 @@ enum
     NPC_GASHRA                  = 28730,
     NPC_NARJIL                  = 28729,
     NPC_SILTHIK                 = 28731,
+    NPC_ANUBAR_CRUSHER          = 28922,
 
     NPC_WORLD_TRIGGER           = 22515,
+    NPC_WORLD_TRIGGER_LARGE     = 23472,
 
     GO_DOOR_KRIKTHIR            = 192395,
     GO_DOOR_ANUBARAK_1          = 192396,
     GO_DOOR_ANUBARAK_2          = 192397,
     GO_DOOR_ANUBARAK_3          = 192398,
 
+    SAY_CRUSHER_AGGRO           = -1601025,
+    SAY_CRUSHER_SPECIAL         = -1601026,
+
     ACHIEV_START_ANUB_ID        = 20381,
 
     ACHIEV_CRITERIA_WATCH_DIE   = 4240,         // Krikthir, achiev 1296
+    ACHIEV_CRITERIA_DENIED      = 4244,         // Hadronox, achiev 1297
 };
 
 static const uint32 aWatchers[] = {NPC_GASHRA, NPC_NARJIL, NPC_SILTHIK};
@@ -56,6 +63,7 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         void OnCreatureDeath(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) const override;
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
@@ -63,6 +71,11 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         ObjectGuid GetGuardianTrigger() { return m_guardianSummonTarget; }
         ObjectGuid GetDarterTrigger() { return m_darterSummonTarget; }
         ObjectGuid GetAnubTrigger() { return m_anubSummonTarget; }
+
+        void GetHadronoxTriggerList(GuidList& lList) { lList = m_lSpiderTriggersGuids; }
+        void ResetHadronoxTriggers();
+
+        void SetHadronoxDeniedAchievCriteria(bool bIsMet) { m_bHadronoxDenied = bIsMet; }
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
@@ -77,6 +90,11 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         std::string m_strInstData;
 
         ObjectGuid m_playerGuid;
+
+        // Hadronox triggers
+        GuidList m_lSpiderTriggersGuids;
+
+        // Anub triggers
         ObjectGuid m_darterSummonTarget;
         ObjectGuid m_guardianSummonTarget;
         ObjectGuid m_anubSummonTarget;
@@ -84,7 +102,10 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         GuidList m_lTriggerGuids;
 
         uint32 m_uiWatcherTimer;
+        uint32 m_uiGauntletEndTimer;
 
         bool m_bWatchHimDie;
+        bool m_bHadronoxDenied;
+        bool m_bGauntletStarted;
 };
 #endif
