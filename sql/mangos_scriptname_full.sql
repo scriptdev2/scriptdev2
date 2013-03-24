@@ -857,6 +857,7 @@ UPDATE creature_template SET ScriptName='npc_captured_vanguard' WHERE entry=2076
 UPDATE instance_template SET ScriptName='instance_eye_of_eternity' WHERE map=616;
 UPDATE creature_template SET ScriptName='boss_malygos' WHERE entry=28859;
 UPDATE creature_template SET ScriptName='npc_power_spark' WHERE entry=30084;
+UPDATE creature_template SET ScriptName='npc_wyrmrest_skytalon' WHERE entry=30161;
 DELETE FROM scripted_event_id WHERE id=20711;
 INSERT INTO scripted_event_id VALUES
 (20711,'event_go_focusing_iris');

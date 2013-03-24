@@ -16,13 +16,14 @@
 
 /* ScriptData
 SDName: boss_malygos
-SD%Complete: 60
-SDComment: Only the first phase is playable. The rest of the script is disabled until vehicles are supported in core. Timers need adjustments. Movement in Phase 2 NYI.
+SD%Complete: 80
+SDComment: Timers need adjustments; Vortex event NYI; Npc movement in Phase 2 NYI.
 SDCategory: Eye of Eternity
 EndScriptData */
 
 #include "precompiled.h"
 #include "eye_of_eternity.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -69,17 +70,16 @@ enum
     // phase 2 spells
     SPELL_ARCANE_STORM              = 57459,            // related to spell 61693
     SPELL_ARCANE_STORM_H            = 61694,
-    SPELL_SUMMON_ARCANE_BOMB        = 56429,
+    SPELL_SUMMON_ARCANE_BOMB        = 56429,            // summons 30282
     SPELL_ARCANE_BOMB               = 56430,            // triggers 56432 and 56431 on target hit
     SPELL_SURGE_OF_POWER_PULSE      = 56505,            // deep breath spell
-    // SPELL_ARCANE_PULSE            = 57432,            // purpose unk
+    // SPELL_ARCANE_PULSE           = 57432,            // purpose unk
 
     // transition spells
     SPELL_DESTROY_PLATFORM_PRE      = 58842,
     SPELL_DESTROY_PLATFORM_BOOM     = 59084,
     SPELL_DESTROY_PLATFORM_EVENT    = 59099,
     SPELL_SUMMON_RED_DRAGON         = 58846,
-    SPELL_RIDE_RED_DRAGON           = 56072,
 
     // phase 3 spells
     SPELL_STATIC_FIELD_SUMMON       = 57430,            // cast on 1 or 3 targets based on difficulty
@@ -97,17 +97,23 @@ enum
     SPELL_VORTEX_CHANNEL            = 56237,
 
     // arcane overload - handled in core
-    // SPELL_ARCANE_OVERLOAD         = 56432,
-    // SPELL_ARCANE_BOMB_DAMAGE      = 56431,
+    // SPELL_ARCANE_OVERLOAD        = 56432,
+    // SPELL_ARCANE_BOMB_KNOCKBACK  = 56431,
 
     // static field
     SPELL_STATIC_FIELD              = 57428,
+
+    // vehicle related
+    SPELL_SUMMON_DISC               = 56378,            // summons npc 30234 for players
+    SPELL_RIDE_RED_DRAGON           = 56072,
+    SPELL_FLIGHT                    = 60534,            // ToDo: check if id is correct!
 
     // summoned npcs
     NPC_VORTEX                      = 30090,
     NPC_POWER_SPARK                 = 30084,
 
     NPC_NEXUS_LORD                  = 30245,
+    NPC_HOVER_DISK                  = 30248,
     NPC_SCION_OF_ETERNITY           = 30249,
     NPC_ARCANE_OVERLOAD             = 30282,
 
@@ -307,8 +313,12 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
                 break;
             case NPC_NEXUS_LORD:
             case NPC_SCION_OF_ETERNITY:
-                // ToDo: maybe add more code here in order to handle the discs
+                if (Creature* pDisk = GetClosestCreatureWithEntry(pSummoned, NPC_HOVER_DISK, 10.0f))
+                    pSummoned->CastSpell(pDisk, SPELL_RIDE_VEHICLE_HARDCODED, true);
                 pSummoned->SetInCombatWithZone();
+                break;
+            case NPC_HOVER_DISK:
+                pSummoned->CastSpell(pSummoned, SPELL_FLIGHT, true);
                 break;
         }
     }
@@ -317,6 +327,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     {
         if (pSummoned->GetEntry() == NPC_NEXUS_LORD || pSummoned->GetEntry() == NPC_SCION_OF_ETERNITY)
         {
+            pSummoned->CastSpell(pSummoned, SPELL_SUMMON_DISC, true);
             ++m_uiAddsDeadCount;
 
             // When all adds are killed start phase 3
@@ -338,7 +349,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Handle yell on Power Spark hit
-        if (pSpell->Id == SPELL_POWER_SPARK_MALYGOS && pCaster->GetEntry() == NPC_POWER_SPARK)
+        if (pSpell->Id == SPELL_POWER_SPARK_MALYGOS && pCaster->GetEntry() == NPC_POWER_SPARK && m_uiPhase == PHASE_FLOOR)
             DoScriptText(SAY_SPARK_BUFF, m_creature);
     }
 
@@ -367,7 +378,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
                         pPlatform->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK_11);
                 }
 
-                // ToDo: maybe this requires more code after vehicles are implemented in core
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_RED_DRAGON);
                 break;
             case SAY_INTRO_PHASE_3:
@@ -380,18 +390,19 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     // Wrapper to spawn the adds in phase 2
     void DoSpawnAdds()
     {
-        // Note: this might need some adjustments when vehicles are implemented
         float fX, fY, fZ;
         for (uint8 i = 0; i < m_uiMaxNexusLords; ++i)
         {
-            m_creature->GetRandomPoint(aCenterMovePos[0], aCenterMovePos[1], aCenterMovePos[2] + 30.0f, 50.0f, fX, fY, fZ);
-            m_creature->SummonCreature(NPC_NEXUS_LORD, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            m_creature->GetRandomPoint(aCenterMovePos[0], aCenterMovePos[1], aCenterMovePos[2], 50.0f, fX, fY, fZ);
+            m_creature->SummonCreature(NPC_HOVER_DISK, fX, fY, fZ + 30.0f, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+            m_creature->SummonCreature(NPC_NEXUS_LORD, fX, fY, fZ + 30.0f, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
 
         for (uint8 i = 0; i < m_uiMaxScions; ++i)
         {
-            m_creature->GetRandomPoint(aCenterMovePos[0], aCenterMovePos[1], aCenterMovePos[2] + 30.0f, 50.0f, fX, fY, fZ);
-            m_creature->SummonCreature(NPC_SCION_OF_ETERNITY, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            m_creature->GetRandomPoint(aCenterMovePos[0], aCenterMovePos[1], aCenterMovePos[2], 50.0f, fX, fY, fZ);
+            m_creature->SummonCreature(NPC_HOVER_DISK, fX, fY, fZ + 30.0f, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+            m_creature->SummonCreature(NPC_SCION_OF_ETERNITY, fX, fY, fZ + 30.0f, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }
 
@@ -449,7 +460,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
                 else
                     m_uiPowerSparkTimer -= uiDiff;
 
-                /* ToDo: uncomment this when the core will support vehicles
                 if (m_creature->GetHealthPercent() < 50.0f)
                 {
                     SetCombatMovement(false);
@@ -462,7 +472,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
                     StartNextDialogueText(SAY_END_PHASE_1);
                     m_uiPhase = PHASE_TRANSITION_1;
                 }
-                */
 
                 DoMeleeAttackIfReady();
 
@@ -597,6 +606,68 @@ CreatureAI* GetAI_npc_power_spark(Creature* pCreature)
 }
 
 /*######
+## npc_wyrmrest_skytalon
+######*/
+
+struct MANGOS_DLL_DECL npc_wyrmrest_skytalonAI : public ScriptedAI
+{
+    npc_wyrmrest_skytalonAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        SetCombatMovement(false);
+        m_bHasMounted = false;
+        Reset();
+    }
+
+    bool m_bHasMounted;
+
+    void Reset() override { }
+
+    // TODO: Temporary workaround - please remove when the boarding wrappers are implemented in core
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    {
+        if (pCaster->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (pSpell->Id == 56071)
+            DoCastSpellIfCan(m_creature, SPELL_FLIGHT, CAST_TRIGGERED);
+    }
+
+    // TODO: Enable the wrappers below, when they will be properly supported by the core
+    /*
+    void PassengerBoarded(Unit* pPassenger, uint8 uiSeat) override
+    {
+        if (pPassenger->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        // Set vehicle auras
+        DoCastSpellIfCan(m_creature, SPELL_FLIGHT, CAST_TRIGGERED);
+    }
+    */
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_bHasMounted)
+        {
+            if (m_creature->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                // Force player to mount
+                if (Player* pSummoner = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                    pSummoner->CastSpell(m_creature, SPELL_RIDE_RED_DRAGON, true);
+            }
+
+            m_bHasMounted = true;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_wyrmrest_skytalon(Creature* pCreature)
+{
+    return new npc_wyrmrest_skytalonAI(pCreature);
+}
+
+/*######
 ## event_go_focusing_iris
 ######*/
 
@@ -617,9 +688,12 @@ bool ProcessEventId_event_go_focusing_iris(uint32 uiEventId, Object* pSource, Ob
 
         // Enter combat area - Move to ground point first, then start chasing target
         float fX, fY, fZ;
-        pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 30.0f, pTrigger->GetAngle(pMalygos));
-        pMalygos->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ);
         pMalygos->AI()->AttackStart((Player*)pSource);
+        pMalygos->GetMotionMaster()->MoveIdle();
+        pMalygos->GetMotionMaster()->Clear();
+
+        pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 30.0f, pTrigger->GetAngle(pMalygos));
+        pMalygos->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ, false);
 
         return true;
     }
@@ -638,6 +712,11 @@ void AddSC_boss_malygos()
     pNewScript = new Script;
     pNewScript->Name = "npc_power_spark";
     pNewScript->GetAI = &GetAI_npc_power_spark;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_wyrmrest_skytalon";
+    pNewScript->GetAI = &GetAI_npc_wyrmrest_skytalon;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
