@@ -37,7 +37,7 @@ enum
     SPELL_EXPLODING_BREAKER     = 30925,
     SPELL_EXPLODING_BREAKER_H   = 40059,
     SPELL_KNOCKDOWN             = 20276,
-    SPELL_DOMINATION            = 25772                     // ???
+    SPELL_DOMINATION            = 30923
 };
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
