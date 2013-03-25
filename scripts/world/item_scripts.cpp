@@ -129,25 +129,17 @@ bool ItemUse_item_petrov_cluster_bombs(Player* pPlayer, Item* pItem, const Spell
 
 void AddSC_item_scripts()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "item_arcane_charges";
-    pNewScript->pItemUse = &ItemUse_item_arcane_charges;
-    pNewScript->RegisterSelf();
+    s.newScript("item_arcane_charges");
+    s->pItemUse = &ItemUse_item_arcane_charges;
 
-    pNewScript = new Script;
-    pNewScript->Name = "item_flying_machine";
-    pNewScript->pItemUse = &ItemUse_item_flying_machine;
-    pNewScript->RegisterSelf();
+    s.newScript("item_flying_machine");
+    s->pItemUse = &ItemUse_item_flying_machine;
 
-    pNewScript = new Script;
-    pNewScript->Name = "item_gor_dreks_ointment";
-    pNewScript->pItemUse = &ItemUse_item_gor_dreks_ointment;
-    pNewScript->RegisterSelf();
+    s.newScript("item_gor_dreks_ointment");
+    s->pItemUse = &ItemUse_item_gor_dreks_ointment;
 
-    pNewScript = new Script;
-    pNewScript->Name = "item_petrov_cluster_bombs";
-    pNewScript->pItemUse = &ItemUse_item_petrov_cluster_bombs;
-    pNewScript->RegisterSelf();
+    s.newScript("item_petrov_cluster_bombs");
+    s->pItemUse = &ItemUse_item_petrov_cluster_bombs;
 }

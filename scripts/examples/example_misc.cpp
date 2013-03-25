@@ -49,20 +49,14 @@ bool GOUse_example_go_teleporter(Player* pPlayer, GameObject* /*pGo*/)
 
 void AddSC_example_misc()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_example";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_example;
-    pNewScript->RegisterSelf(false);
+    s.newScript("at_example", false);
+    s->pAreaTrigger = &AreaTrigger_at_example;
 
-    pNewScript = new Script;
-    pNewScript->Name = "example_item";
-    pNewScript->pItemUse = &ItemUse_example_item;
-    pNewScript->RegisterSelf(false);
+    s.newScript("example_item", false);
+    s->pItemUse = &ItemUse_example_item;
 
-    pNewScript = new Script;
-    pNewScript->Name = "example_go_teleporter";
-    pNewScript->pGOUse = &GOUse_example_go_teleporter;
-    pNewScript->RegisterSelf(false);
+    s.newScript("example_go_teleporter", false);
+    s->pGOUse = &GOUse_example_go_teleporter;
 }

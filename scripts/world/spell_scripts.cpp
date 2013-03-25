@@ -1045,16 +1045,12 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
 
 void AddSC_spell_scripts()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "spell_dummy_go";
-    pNewScript->pEffectDummyGO = &EffectDummyGameObj_spell_dummy_go;
-    pNewScript->RegisterSelf();
+    s.newScript("spell_dummy_go");
+    s->pEffectDummyGO = &EffectDummyGameObj_spell_dummy_go;
 
-    pNewScript = new Script;
-    pNewScript->Name = "spell_dummy_npc";
-    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_dummy_npc;
-    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc;
-    pNewScript->RegisterSelf();
+    s.newScript("spell_dummy_npc");
+    s->pEffectDummyNPC = &EffectDummyCreature_spell_dummy_npc;
+    s->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc;
 }

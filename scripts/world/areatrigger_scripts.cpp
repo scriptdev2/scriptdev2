@@ -325,60 +325,38 @@ bool AreaTrigger_at_murkdeep(Player* pPlayer, AreaTriggerEntry const* pAt)
 
 void AddSC_areatrigger_scripts()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_childrens_week_spot";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_childrens_week_spot;
-    pNewScript->RegisterSelf();
+    s.newScript("at_childrens_week_spot");
+    s->pAreaTrigger = &AreaTrigger_at_childrens_week_spot;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_aldurthar_gate";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_aldurthar_gate;
-    pNewScript->RegisterSelf();
+    s.newScript("at_aldurthar_gate");
+    s->pAreaTrigger = &AreaTrigger_at_aldurthar_gate;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_coilfang_waterfall";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
-    pNewScript->RegisterSelf();
+    s.newScript("at_coilfang_waterfall");
+    s->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_legion_teleporter";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
-    pNewScript->RegisterSelf();
+    s.newScript("at_legion_teleporter");
+    s->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_ravenholdt";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_ravenholdt;
-    pNewScript->RegisterSelf();
+    s.newScript("at_ravenholdt");
+    s->pAreaTrigger = &AreaTrigger_at_ravenholdt;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_spearborn_encampment";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_spearborn_encampment;
-    pNewScript->RegisterSelf();
+    s.newScript("at_spearborn_encampment");
+    s->pAreaTrigger = &AreaTrigger_at_spearborn_encampment;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_warsong_farms";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_warsong_farms;
-    pNewScript->RegisterSelf();
+    s.newScript("at_warsong_farms");
+    s->pAreaTrigger = &AreaTrigger_at_warsong_farms;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_waygate";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_waygate;
-    pNewScript->RegisterSelf();
+    s.newScript("at_waygate");
+    s->pAreaTrigger = &AreaTrigger_at_waygate;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_stormwright_shelf";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_stormwright_shelf;
-    pNewScript->RegisterSelf();
+    s.newScript("at_stormwright_shelf");
+    s->pAreaTrigger = &AreaTrigger_at_stormwright_shelf;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_scent_larkorwi";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_scent_larkorwi;
-    pNewScript->RegisterSelf();
+    s.newScript("at_scent_larkorwi");
+    s->pAreaTrigger = &AreaTrigger_at_scent_larkorwi;
 
-    pNewScript = new Script;
-    pNewScript->Name = "at_murkdeep";
-    pNewScript->pAreaTrigger = &AreaTrigger_at_murkdeep;
-    pNewScript->RegisterSelf();
+    s.newScript("at_murkdeep");
+    s->pAreaTrigger = &AreaTrigger_at_murkdeep;
 }
