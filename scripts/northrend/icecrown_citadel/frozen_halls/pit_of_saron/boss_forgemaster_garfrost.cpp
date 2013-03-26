@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_forgemaster_garfrost
-SD%Complete: 70
-SDComment: TODO movement to the forges currently workaround (need core support for Jump-MMGen)
+SD%Complete: 90
+SDComment: Tyrannus outro event NYI.
 SDCategory: Pit of Saron
 EndScriptData */
 
@@ -54,8 +54,8 @@ enum
 
 static const float aGarfrostMoveLocs[2][3] =
 {
-    {719.785f, -230.227f, 527.033f},
     {657.539f, -203.564f, 526.691f},
+    {719.785f, -230.227f, 527.033f},
 };
 
 struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
@@ -101,8 +101,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
-        // TODO Change to jump movement type when proper implemented
-        if (uiMotionType != POINT_MOTION_TYPE)
+        if (uiMotionType != EFFECT_MOTION_TYPE)
             return;
 
         if (uiPointId != PHASE_BLADE_ENCHANTMENT && uiPointId != PHASE_MACE_ENCHANTMENT)
@@ -157,8 +156,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
                     DoCastSpellIfCan(m_creature, SPELL_THUNDERING_STOMP, CAST_INTERRUPT_PREVIOUS);
                     SetCombatMovement(false);
 
-                    // TODO This should actually be jump movement
-                    m_creature->GetMotionMaster()->MovePoint(PHASE_BLADE_ENCHANTMENT, aGarfrostMoveLocs[0][0], aGarfrostMoveLocs[0][1], aGarfrostMoveLocs[0][2]);
+                    m_creature->GetMotionMaster()->MoveJump(aGarfrostMoveLocs[0][0], aGarfrostMoveLocs[0][1], aGarfrostMoveLocs[0][2], 3 * m_creature->GetSpeed(MOVE_RUN), 10.0f, PHASE_BLADE_ENCHANTMENT);
                     m_uiPhase = PHASE_MOVEMENT;
 
                     // Stop further action
@@ -173,8 +171,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
                     DoCastSpellIfCan(m_creature, SPELL_THUNDERING_STOMP, CAST_INTERRUPT_PREVIOUS);
                     SetCombatMovement(false);
 
-                    // TODO This should actually be jump movement
-                    m_creature->GetMotionMaster()->MovePoint(PHASE_MACE_ENCHANTMENT, aGarfrostMoveLocs[1][0], aGarfrostMoveLocs[1][1], aGarfrostMoveLocs[1][2]);
+                    m_creature->GetMotionMaster()->MoveJump(aGarfrostMoveLocs[1][0], aGarfrostMoveLocs[1][1], aGarfrostMoveLocs[1][2], 3 * m_creature->GetSpeed(MOVE_RUN), 10.0f, PHASE_MACE_ENCHANTMENT);
                     m_uiPhase = PHASE_MOVEMENT;
 
                     // Stop further action
