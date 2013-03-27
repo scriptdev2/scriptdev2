@@ -66,100 +66,6 @@ enum
 const float afCenterPos[3] = { -1399.401f, 1736.365f, 87.008f}; // moves here to drop off nazan
 const float afCombatPos[3] = { -1413.848f, 1754.019f, 83.146f}; // moves here when decending
 
-// This is the summoned boss ("dismounted") that starts attacking the players
-struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
-{
-    boss_vazrudenAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    uint32 m_uiRevengeTimer;
-    bool m_bHealthBelow;
-
-    void Reset() override
-    {
-        m_bHealthBelow = false;
-        m_uiRevengeTimer = urand(5500, 8400);
-    }
-
-    void Aggro(Unit* pWho) override
-    {
-        switch (urand(0, 2))
-        {
-            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
-            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
-            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
-        }
-    }
-
-    void JustDied(Unit* /*pKiller*/) override
-    {
-        DoScriptText(SAY_DEATH, m_creature);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_VAZRUDEN, DONE);
-    }
-
-    void JustReachedHome() override
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_VAZRUDEN, FAIL);
-    }
-
-    void KilledUnit(Unit* /*pVictim*/) override
-    {
-        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
-    }
-
-    void PrepareAndDescendMount(Creature* pHerald)
-    {
-        if (pHerald && pHerald->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
-        {
-            pHerald->SetWalk(false);
-            pHerald->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
-            DoScriptText(EMOTE_DESCEND, pHerald);
-        }
-    }
-
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
-    {
-        if (!m_bHealthBelow && (float(m_creature->GetHealth() - uiDamage) / m_creature->GetMaxHealth()) < 0.30f)
-        {
-            if (m_pInstance)
-                PrepareAndDescendMount(m_pInstance->GetSingleCreatureFromStorage(NPC_VAZRUDEN_HERALD));
-
-            m_bHealthBelow = true;
-        }
-    }
-
-    void UpdateAI(const uint32 uiDiff) override
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiRevengeTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_REVENGE : SPELL_REVENGE_H) == CAST_OK)
-                m_uiRevengeTimer = urand(11400, 14300);
-        }
-        else
-            m_uiRevengeTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_vazruden(Creature* pCreature)
-{
-    return new boss_vazrudenAI(pCreature);
-}
-
 // This is the flying mob ("mounted" on dragon) spawned initially
 // This npc will morph into the "unmounted" dragon (nazan) after vazruden is summoned and continue flying
 // Descent after Vazruden reach 30% HP
@@ -316,11 +222,14 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
 
     void DoMoveToCombat()
     {
-        m_bIsDescending = true;
-        if (m_pInstance && m_pInstance->GetData(TYPE_NAZAN) == IN_PROGRESS)
+        if (m_bIsDescending || !m_pInstance || m_pInstance->GetData(TYPE_NAZAN) == IN_PROGRESS)
             return;
 
-        // TODO, replace function in vazruden's AI
+        m_bIsDescending = true;
+
+        m_creature->SetWalk(false);
+        m_creature->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
+        DoScriptText(EMOTE_DESCEND, m_creature);
     }
 
     void JustSummoned(Creature* pSummoned) override
@@ -401,7 +310,7 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
                     m_uiFireballBTimer -= uiDiff;
             }
 
-            if (!m_bIsDescending && m_creature->GetHealthPercent() < 20.0f)
+            if (m_creature->GetHealthPercent() < 20.0f)
                 DoMoveToCombat();
 
             return;
@@ -445,6 +354,91 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
 CreatureAI* GetAI_boss_vazruden_herald(Creature* pCreature)
 {
     return new boss_vazruden_heraldAI(pCreature);
+}
+
+// This is the summoned boss ("dismounted") that starts attacking the players
+struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
+{
+    boss_vazrudenAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsRegularMode;
+
+    uint32 m_uiRevengeTimer;
+    bool m_bHealthBelow;
+
+    void Reset() override
+    {
+        m_bHealthBelow = false;
+        m_uiRevengeTimer = urand(5500, 8400);
+    }
+
+    void Aggro(Unit* pWho) override
+    {
+        switch (urand(0, 2))
+        {
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
+        }
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAZRUDEN, DONE);
+    }
+
+    void JustReachedHome() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAZRUDEN, FAIL);
+    }
+
+    void KilledUnit(Unit* /*pVictim*/) override
+    {
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
+    }
+
+    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    {
+        if (!m_bHealthBelow && m_pInstance && (float(m_creature->GetHealth() - uiDamage) / m_creature->GetMaxHealth()) < 0.30f)
+        {
+            if (Creature* pNazan = m_pInstance->GetSingleCreatureFromStorage(NPC_VAZRUDEN_HERALD))
+                if (boss_vazruden_heraldAI* pNazanAI = dynamic_cast<boss_vazruden_heraldAI*>(pNazan->AI()))
+                    pNazanAI->DoMoveToCombat();
+
+            m_bHealthBelow = true;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiRevengeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_REVENGE : SPELL_REVENGE_H) == CAST_OK)
+                m_uiRevengeTimer = urand(11400, 14300);
+        }
+        else
+            m_uiRevengeTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_vazruden(Creature* pCreature)
+{
+    return new boss_vazrudenAI(pCreature);
 }
 
 void AddSC_boss_nazan_and_vazruden()
