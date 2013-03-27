@@ -67,6 +67,8 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_VAZRUDEN:
+            if (m_auiEncounter[0] == uiData)
+                return;
             if (uiData == DONE && m_auiEncounter[1] == DONE)
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_FEL_IRON_CHEST : GO_FEL_IRON_CHEST_H, HOUR);
             if (uiData == FAIL && m_auiEncounter[0] != FAIL)
@@ -74,7 +76,9 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_NAZAN:
-            if (uiData == SPECIAL)
+            if (m_auiEncounter[1] == uiData)
+                return;
+            if (uiData == SPECIAL)                          // SPECIAL set via ACID
             {
                 ++m_uiSentryCounter;
 
@@ -129,7 +133,7 @@ void instance_ramparts::DoFailVazruden()
         else
         {
             if (ScriptedAI* pVazrudenAI = dynamic_cast<ScriptedAI*>(pVazruden->AI()))
-                pVazrudenAI->Reset();
+                pVazrudenAI->EnterEvadeMode();
         }
     }
 
