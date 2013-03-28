@@ -39,7 +39,6 @@ enum
     EMOTE_DEEP_FREEZE                   = -1658023,
 
     SPELL_PERMAFROST                    = 70326,
-    SPELL_PERMAFROST_AURA               = 68786,
     SPELL_PERMAFROST_AURA_H             = 70336,
     SPELL_THROW_SARONITE                = 68788,
     SPELL_THUNDERING_STOMP              = 68771,
@@ -146,7 +145,8 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiCheckPermafrostTimer)
+        // This needs to be checked only on heroic
+        if (!m_bIsRegularMode && m_uiCheckPermafrostTimer)
         {
             if (m_uiCheckPermafrostTimer <= uiDiff)
             {
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
                 {
                     if (Player* pTarget = m_creature->GetMap()->GetPlayer((*itr)->getUnitGuid()))
                     {
-                        Aura* pAuraIntenseCold = pTarget->GetAura(m_bIsRegularMode ? SPELL_PERMAFROST_AURA : SPELL_PERMAFROST_AURA_H, EFFECT_INDEX_2);
+                        Aura* pAuraIntenseCold = pTarget->GetAura(SPELL_PERMAFROST_AURA_H, EFFECT_INDEX_2);
 
                         if (pAuraIntenseCold)
                         {

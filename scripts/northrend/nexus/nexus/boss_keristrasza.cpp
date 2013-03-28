@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Keristrasza
-SD%Complete: 65%
-SDComment: timers tuning, add achievement
+SD%Complete: 95%
+SDComment: timers tuning
 SDCategory: Nexus
 EndScriptData */
 
@@ -122,29 +122,33 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (uiCheckIntenseColdTimer < uiDiff)
+        // This needs to be checked only on heroic
+        if (!m_bIsRegularMode)
         {
-            ThreatList playerList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+            if (uiCheckIntenseColdTimer < uiDiff)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer((*itr)->getUnitGuid()))
+                ThreatList playerList = m_creature->getThreatManager().getThreatList();
+                for (ThreatList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
                 {
-                    Aura* pAuraIntenseCold = pTarget->GetAura(SPELL_INTENSE_COLD_AURA, EFFECT_INDEX_0);
-
-                    if (pAuraIntenseCold)
+                    if (Player* pTarget = m_creature->GetMap()->GetPlayer((*itr)->getUnitGuid()))
                     {
-                        if (pAuraIntenseCold->GetStackAmount() > MAX_INTENSE_COLD_STACK)
+                        Aura* pAuraIntenseCold = pTarget->GetAura(SPELL_INTENSE_COLD_AURA, EFFECT_INDEX_0);
+
+                        if (pAuraIntenseCold)
                         {
-                            if (m_pInstance)
-                                m_pInstance->SetData(TYPE_INTENSE_COLD_FAILED, pTarget->GetGUIDLow());
+                            if (pAuraIntenseCold->GetStackAmount() > MAX_INTENSE_COLD_STACK)
+                            {
+                                if (m_pInstance)
+                                    m_pInstance->SetData(TYPE_INTENSE_COLD_FAILED, pTarget->GetGUIDLow());
+                            }
                         }
                     }
                 }
+                uiCheckIntenseColdTimer = 1000;
             }
-            uiCheckIntenseColdTimer = 1000;
+            else
+                uiCheckIntenseColdTimer -= uiDiff;
         }
-        else
-            uiCheckIntenseColdTimer -= uiDiff;
 
         if (!m_bIsEnraged && m_creature->GetHealthPercent() < 25.0f)
         {
