@@ -39,12 +39,16 @@ enum
     EMOTE_DEEP_FREEZE                   = -1658023,
 
     SPELL_PERMAFROST                    = 70326,
+    SPELL_PERMAFROST_AURA               = 68786,
+    SPELL_PERMAFROST_AURA_H             = 70336,
     SPELL_THROW_SARONITE                = 68788,
     SPELL_THUNDERING_STOMP              = 68771,
     SPELL_FORGE_FROZEN_BLADE            = 68774,
     SPELL_CHILLING_WAVE                 = 68778,
     SPELL_FORGE_FROSTBORN_MACE          = 68785,
     SPELL_DEEP_FREEZE                   = 70381,
+
+    MAX_PERMAFROST_STACK                = 10,               // the max allowed stacks for the achiev to pass
 
     PHASE_NO_ENCHANTMENT                = 1,
     PHASE_BLADE_ENCHANTMENT             = 2,
@@ -62,19 +66,23 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
 {
     boss_forgemaster_garfrostAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_pit_of_saron* m_pInstance;
+    bool m_bIsRegularMode;
 
     uint32 m_uiThrowSaroniteTimer;
     uint32 m_uiPhase;
     uint32 m_uiChillingWaveTimer;
     uint32 m_uiDeepFreezeTimer;
+    uint32 m_uiCheckPermafrostTimer;
 
     void Reset() override
     {
+        m_uiCheckPermafrostTimer = 2000;
         m_uiThrowSaroniteTimer = 13000;
         m_uiChillingWaveTimer = 10000;
         m_uiDeepFreezeTimer = 10000;
@@ -86,16 +94,28 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature, pWho);
         DoCastSpellIfCan(m_creature, SPELL_PERMAFROST);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GARFROST, IN_PROGRESS);
     }
 
     void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature, pKiller);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GARFROST, DONE);
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_SLAY_1, m_creature);
+    }
+
+    void JustReachedHome() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GARFROST, FAIL);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
@@ -125,6 +145,36 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiCheckPermafrostTimer)
+        {
+            if (m_uiCheckPermafrostTimer <= uiDiff)
+            {
+                ThreatList playerList = m_creature->getThreatManager().getThreatList();
+                for (ThreatList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+                {
+                    if (Player* pTarget = m_creature->GetMap()->GetPlayer((*itr)->getUnitGuid()))
+                    {
+                        Aura* pAuraIntenseCold = pTarget->GetAura(m_bIsRegularMode ? SPELL_PERMAFROST_AURA : SPELL_PERMAFROST_AURA_H, EFFECT_INDEX_2);
+
+                        if (pAuraIntenseCold)
+                        {
+                            if (pAuraIntenseCold->GetStackAmount() > MAX_PERMAFROST_STACK)
+                            {
+                                if (m_pInstance)
+                                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DOESNT_GO_ELEVEN, false);
+
+                                m_uiCheckPermafrostTimer = 0;
+                                return;
+                            }
+                        }
+                    }
+                }
+                m_uiCheckPermafrostTimer = 1000;
+            }
+            else
+                m_uiCheckPermafrostTimer -= uiDiff;
+        }
 
         // Do nothing more while moving
         if (m_uiPhase == PHASE_MOVEMENT)

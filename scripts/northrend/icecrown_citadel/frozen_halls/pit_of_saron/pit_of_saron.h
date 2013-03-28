@@ -8,10 +8,14 @@
 enum
 {
     MAX_ENCOUNTER                   = 3,
+    MAX_SPECIAL_ACHIEV_CRITS        = 2,
 
     TYPE_GARFROST                   = 0,
     TYPE_KRICK                      = 1,
     TYPE_TYRANNUS                   = 2,
+
+    TYPE_ACHIEV_DOESNT_GO_ELEVEN    = 0,
+    TYPE_ACHIEV_DONT_LOOK_UP        = 1,
 
     NPC_TYRANNUS_INTRO              = 36794,
     NPC_GARFROST                    = 36494,
@@ -59,6 +63,9 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
         uint32 GetPlayerTeam() { return m_uiTeam; }
 
+        void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
+
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
@@ -69,6 +76,8 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
         uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
 };
