@@ -47,8 +47,12 @@ enum
 
     // Emberseer event
     EMOTE_BEGIN                 = -1229000,
-
     SPELL_EMBERSEER_GROWING     = 16048,
+
+    // Solakar Flamewreath Event
+    SAY_ROOKERY_EVENT_START     = -1229020,
+    NPC_ROOKERY_GUARDIAN        = 10258,
+    NPC_ROOKERY_HATCHER         = 10683,
 };
 
 /* Areatrigger
@@ -79,7 +83,11 @@ static const DialogueEntry aStadiumDialogue[] =
     {0, 0, 0},
 };
 
+static const float rookeryEventSpawnPos[3] = {43.7685f, -259.82f, 91.6483f};
+
 instance_blackrock_spire::instance_blackrock_spire(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aStadiumDialogue),
+    m_uiFlamewreathEventTimer(0),
+    m_uiFlamewreathWaveCount(0),
     m_uiStadiumEventTimer(0),
     m_uiStadiumWaves(0),
     m_uiStadiumMobsAlive(0)
@@ -108,6 +116,7 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
             if (GetData(TYPE_EMBERSEER) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        case GO_FATHER_FLAME:
         case GO_GYTH_ENTRY_DOOR:
         case GO_GYTH_COMBAT_DOOR:
         case GO_DRAKKISATH_DOOR_1:
@@ -125,8 +134,6 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
         case GO_ROOM_5_RUNE: m_aRoomRuneGuid[4] = pGo->GetObjectGuid(); return;
         case GO_ROOM_6_RUNE: m_aRoomRuneGuid[5] = pGo->GetObjectGuid(); return;
         case GO_ROOM_7_RUNE: m_aRoomRuneGuid[6] = pGo->GetObjectGuid(); return;
-
-        case GO_ROOKERY_EGG: m_lRookeryEggGUIDList.push_back(pGo->GetObjectGuid());   return;
 
         case GO_EMBERSEER_RUNE_1:
         case GO_EMBERSEER_RUNE_2:
@@ -149,6 +156,7 @@ void instance_blackrock_spire::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_PYROGUARD_EMBERSEER:
+        case NPC_SOLAKAR_FLAMEWREATH:
         case NPC_LORD_VICTOR_NEFARIUS:
         case NPC_GYTH:
         case NPC_REND_BLACKHAND:
@@ -200,6 +208,11 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_FLAMEWREATH:
+            if (uiData == FAIL)
+            {
+                m_uiFlamewreathEventTimer = 0;
+                m_uiFlamewreathWaveCount = 0;
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_STADIUM:
@@ -229,6 +242,7 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
             }
             m_auiEncounter[uiType] = uiData;
             break;
+        case TYPE_DRAKKISATH:
         case TYPE_VALTHALAK:
             m_auiEncounter[uiType] = uiData;
             break;
@@ -239,7 +253,7 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
         OUT_SAVE_INST_DATA;
 
         std::ostringstream saveStream;
-        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
         m_strInstData = saveStream.str();
 
@@ -259,7 +273,7 @@ void instance_blackrock_spire::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -327,8 +341,11 @@ void instance_blackrock_spire::OnCreatureDeath(Creature* pCreature)
                     SetData(TYPE_ROOM_EVENT, DONE);
             }
             break;
+        case NPC_SOLAKAR_FLAMEWREATH:
+            SetData(TYPE_FLAMEWREATH, DONE);
+            break;
         case NPC_DRAKKISATH:
-            // Just open the doors, don't save anything because it's the last boss
+            SetData(TYPE_DRAKKISATH, DONE);
             DoUseDoorOrButton(GO_DRAKKISATH_DOOR_1);
             DoUseDoorOrButton(GO_DRAKKISATH_DOOR_2);
             break;
@@ -359,6 +376,11 @@ void instance_blackrock_spire::OnCreatureEvade(Creature* pCreature)
         case NPC_BLACKHAND_INCARCERATOR:
             if (Creature* pEmberseer = GetSingleCreatureFromStorage(NPC_PYROGUARD_EMBERSEER))
                 pEmberseer->AI()->EnterEvadeMode();
+            break;
+        case NPC_SOLAKAR_FLAMEWREATH:
+        case NPC_ROOKERY_GUARDIAN:
+        case NPC_ROOKERY_HATCHER:
+            SetData(TYPE_FLAMEWREATH, FAIL);
             break;
         case NPC_CHROMATIC_WHELP:
         case NPC_CHROMATIC_DRAGON:
@@ -530,6 +552,50 @@ void instance_blackrock_spire::DoSendNextStadiumWave()
         m_uiStadiumEventTimer = 60000;
 }
 
+void instance_blackrock_spire::DoSendNextFlamewreathWave()
+{
+    GameObject* pSummoner = GetSingleGameObjectFromStorage(GO_FATHER_FLAME);
+    if (!pSummoner)
+        return;
+
+    // TODO - The npcs would move nicer if they had DB waypoints, so i suggest to change their default movement to DB waypoints, and random movement when they reached their goal
+
+    if (m_uiFlamewreathWaveCount < 6)                       // Send two adds (6 waves, then boss)
+    {
+        Creature* pSummoned = NULL;
+        for (uint8 i = 0; i < 2; ++i)
+        {
+            float fX, fY, fZ;
+            pSummoner->GetRandomPoint(rookeryEventSpawnPos[0], rookeryEventSpawnPos[1], rookeryEventSpawnPos[2], 2.5f, fX, fY, fZ);
+            // Summon Rookery Hatchers in first wave, else random
+            if (pSummoned = pSummoner->SummonCreature(urand(0, 1) && m_uiFlamewreathWaveCount ? NPC_ROOKERY_GUARDIAN : NPC_ROOKERY_HATCHER,
+                                                      fX, fY, fZ, 0.0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 300000))
+            {
+                pSummoner->GetContactPoint(pSummoned, fX, fY, fZ);
+                pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, pSummoner->GetPositionZ());
+            }
+        }
+        if (pSummoned && m_uiFlamewreathWaveCount == 0)
+            DoScriptText(SAY_ROOKERY_EVENT_START, pSummoned);
+
+        if (m_uiFlamewreathWaveCount < 4)
+            m_uiFlamewreathEventTimer = 30000;
+        else if (m_uiFlamewreathWaveCount < 6)
+            m_uiFlamewreathEventTimer = 40000;
+        else
+            m_uiFlamewreathEventTimer = 10000;
+
+        ++m_uiFlamewreathWaveCount;
+    }
+    else                                                    // Send Flamewreath
+    {
+        if (Creature* pSolakar = pSummoner->SummonCreature(NPC_SOLAKAR_FLAMEWREATH, rookeryEventSpawnPos[0], rookeryEventSpawnPos[1], rookeryEventSpawnPos[2], 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, HOUR * IN_MILLISECONDS))
+            pSolakar->GetMotionMaster()->MovePoint(1, pSummoner->GetPositionX(), pSummoner->GetPositionY(), pSummoner->GetPositionZ());
+        SetData(TYPE_FLAMEWREATH, SPECIAL);
+        m_uiFlamewreathEventTimer = 0;
+    }
+}
+
 void instance_blackrock_spire::Update(uint32 uiDiff)
 {
     DialogueUpdate(uiDiff);
@@ -541,6 +607,29 @@ void instance_blackrock_spire::Update(uint32 uiDiff)
         else
             m_uiStadiumEventTimer -= uiDiff;
     }
+
+    if (m_uiFlamewreathEventTimer)
+    {
+        if (m_uiFlamewreathEventTimer <= uiDiff)
+            DoSendNextFlamewreathWave();
+        else
+            m_uiFlamewreathEventTimer -= uiDiff;
+    }
+}
+
+void instance_blackrock_spire::StartflamewreathEventIfCan()
+{
+    // Already done or currently in progress - or endboss done
+    if (m_auiEncounter[TYPE_FLAMEWREATH] == DONE || m_auiEncounter[TYPE_FLAMEWREATH] == IN_PROGRESS || m_auiEncounter[TYPE_DRAKKISATH] == DONE)
+        return;
+
+    // Boss still around
+    if (GetSingleCreatureFromStorage(NPC_SOLAKAR_FLAMEWREATH, true))
+        return;
+
+    // Start summoning of mobs
+    m_uiFlamewreathEventTimer = 1;
+    m_uiFlamewreathWaveCount = 0;
 }
 
 InstanceData* GetInstanceData_instance_blackrock_spire(Map* pMap)
@@ -592,6 +681,14 @@ bool ProcessEventId_event_spell_altar_emberseer(uint32 uiEventId, Object* pSourc
     return false;
 }
 
+bool GOUse_go_father_flame(Player* pPlayer, GameObject* pGo)
+{
+    if (instance_blackrock_spire* pInstance = (instance_blackrock_spire*)pGo->GetInstanceData())
+        pInstance->StartflamewreathEventIfCan();
+
+    return true;
+}
+
 void AddSC_instance_blackrock_spire()
 {
     Script* pNewScript;
@@ -609,5 +706,10 @@ void AddSC_instance_blackrock_spire()
     pNewScript = new Script;
     pNewScript->Name = "event_spell_altar_emberseer";
     pNewScript->pProcessEventId = &ProcessEventId_event_spell_altar_emberseer;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_father_flame";
+    pNewScript->pGOUse = &GOUse_go_father_flame;
     pNewScript->RegisterSelf();
 }
