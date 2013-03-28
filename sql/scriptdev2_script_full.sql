@@ -4344,18 +4344,18 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1658033,'%s begins to unleash a toxic poison cloud!',0,3,0,0,'ick EMOTE_ICK_POISON'),
 (-1658034,'%s is chasing you!',0,5,0,0,'ick EMOTE_ICK_CHASING'), -- TODO emote type?
 
-(-1658035,'Wait! Stop! Don\'t kill me, please! I\'ll tell you everything!',16934,1,0,0,'krick SAY_OUTRO_1'),
+(-1658035,'Wait! Stop! Don\'t kill me, please! I\'ll tell you everything!',16934,1,0,431,'krick SAY_OUTRO_1'),
 (-1658036,'I\'m not so naive as to believe your appeal for clemency, but I will listen.',16611,1,0,0,'jaina SAY_JAINA_KRICK_1'),
-(-1658037,'Why should the Banshee Queen spare your miserable life?',17033,1,0,0,'sylvanas SAY_SYLVANAS_KRICK_1'),
+(-1658037,'Why should the Banshee Queen spare your miserable life?',17033,1,0,396,'sylvanas SAY_SYLVANAS_KRICK_1'),
 (-1658038,'What you seek is in the master\'s lair, but you must destroy Tyrannus to gain entry. Within the Halls of Reflection you will find Frostmourne. It... it holds the truth.',16935,1,0,0,'krick SAY_OUTRO_2'),
 (-1658039,'Frostmourne lies unguarded? Impossible!',16612,1,0,0,'jaina SAY_JAINA_KRICK_2'),
-(-1658040,'Frostmourne? The Lich King is never without his blade! If you are lying to me...',17034,1,0,0,'sylvanas SAY_SYLVANAS_KRICK_2'),
+(-1658040,'Frostmourne? The Lich King is never without his blade! If you are lying to me...',17034,1,0,15,'sylvanas SAY_SYLVANAS_KRICK_2'),
 (-1658041,'I swear it is true! Please, don\'t kill me!!',16936,1,0,0,'krick SAY_OUTRO_3'),
 (-1658042,'Worthless gnat! Death is all that awaits you!',16753,1,0,0,'tyrannus SAY_TYRANNUS_KRICK_1'),
 (-1658043,'Urg... no!!',16937,1,0,0,'krick SAY_OUTRO_4'),
 (-1658044,'Do not think that I shall permit you entry into my master\'s sanctum so easily. Pursue me if you dare.',16754,1,0,0,'tyrannus SAY_TYRANNUS_KRICK_2'),
 (-1658045,'What a cruel end. Come, heroes. We must see if the gnome\'s story is true. If we can separate Arthas from Frostmourne, we might have a chance at stopping him.',16613,1,0,0,'jaina SAY_JAINA_KRICK_3'),
-(-1658046,'A fitting end for a traitor. Come, we must free the slaves and see what is within the Lich King\'s chamber for ourselves.',17035,1,0,0,'sylvanas SAY_SYLVANAS_KRICK_3'),
+(-1658046,'A fitting end for a traitor. Come, we must free the slaves and see what is within the Lich King\'s chamber for ourselves.',17035,1,0,396,'sylvanas SAY_SYLVANAS_KRICK_3'),
 
 (-1658047,'Your pursuit shall be in vain, adventurers, for the Lich King has placed an army of undead at my command! Behold!',16755,1,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_1'),
 (-1658048,'Persistent whelps! You will not reach the entrance of my lord\'s lair! Soldiers, destroy them!',16756,1,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_2'),

@@ -710,6 +710,9 @@ UPDATE instance_template SET ScriptName='instance_forge_of_souls' WHERE map=632;
 /* PIT OF SARON */
 UPDATE instance_template SET ScriptName='instance_pit_of_saron' WHERE map=658;
 UPDATE creature_template SET ScriptName='boss_forgemaster_garfrost' WHERE entry=36494;
+UPDATE creature_template SET ScriptName='boss_krick' WHERE entry=36477;
+UPDATE creature_template SET ScriptName='boss_ick' WHERE entry=36476;
+UPDATE creature_template SET ScriptName='npc_exploding_orb' WHERE entry=36610;
 
 /* ICECROWN */
 

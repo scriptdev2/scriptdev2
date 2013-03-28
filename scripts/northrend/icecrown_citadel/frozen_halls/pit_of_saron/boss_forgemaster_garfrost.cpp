@@ -59,7 +59,6 @@ static const float aGarfrostMoveLocs[2][3] =
 };
 
 struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
-
 {
     boss_forgemaster_garfrostAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

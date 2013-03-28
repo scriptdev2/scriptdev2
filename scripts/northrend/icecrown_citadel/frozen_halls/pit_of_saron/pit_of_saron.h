@@ -36,9 +36,12 @@ enum
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
+
+    ACHIEV_CRIT_DOESNT_GO_ELEVEN    = 12993,                // Garfrost, achiev 4524
+    ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
 };
 
-class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance
+class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_pit_of_saron(Map* pMap);
@@ -49,15 +52,25 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
+        void OnPlayerEnter(Player* pPlayer) override;
+
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
+
+        uint32 GetPlayerTeam() { return m_uiTeam; }
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
+        void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }
+
     protected:
+        void JustDidDialogueStep(int32 iEntry) override;
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
 };
 
 #endif
