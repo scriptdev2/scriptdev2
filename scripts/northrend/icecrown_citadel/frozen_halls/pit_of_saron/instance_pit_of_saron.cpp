@@ -26,6 +26,26 @@ EndScriptData */
 
 enum
 {
+    // Intro
+    SAY_TYRANNUS_INTRO_1            = -1658001,
+    SAY_JAINA_INTRO_1               = -1658002,
+    SAY_SYLVANAS_INTRO_1            = -1658003,
+    SAY_TYRANNUS_INTRO_2            = -1658004,
+    SAY_TYRANNUS_INTRO_3            = -1658005,
+    SAY_JAINA_INTRO_2               = -1658006,
+    SAY_SYLVANAS_INTRO_2            = -1658007,
+    SAY_TYRANNUS_INTRO_4            = -1658008,
+    SAY_JAINA_INTRO_3               = -1658009,
+    SAY_JAINA_INTRO_4               = -1658010,
+    SAY_SYLVANAS_INTRO_3            = -1658011,
+    SAY_JAINA_INTRO_5               = -1658012,
+    SAY_SYLVANAS_INTRO_4            = -1658013,
+
+    // Intro spells
+    SPELL_NECROMATIC_POWER          = 69347,
+    SPELL_FEIGN_DEATH               = 28728,
+    SPELL_RAISE_DEAD                = 69350,
+
     // Ick and Krick outro
     SAY_JAINA_KRICK_1               = -1658036,
     SAY_SYLVANAS_KRICK_1            = -1658037,
@@ -47,6 +67,19 @@ enum
 
 static const DialogueEntryTwoSide aPoSDialogues[] =
 {
+    // Instance intro
+    {NPC_TYRANNUS_INTRO,   0,                  0,                    0,                  4000},
+    {SAY_TYRANNUS_INTRO_1, NPC_TYRANNUS_INTRO, 0,                    0,                  6000},
+    {SAY_TYRANNUS_INTRO_2, NPC_TYRANNUS_INTRO, 0,                    0,                  12000},
+    {SAY_JAINA_INTRO_1,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_1, NPC_SYLVANAS_PART1, 5000},         // ToDo: move the soldiers to attack position
+    {SAY_TYRANNUS_INTRO_3, NPC_TYRANNUS_INTRO, 0,                    0,                  5000},
+    {SPELL_NECROMATIC_POWER, 0,                0,                    0,                  3000},
+    {SAY_JAINA_INTRO_2,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_2, NPC_SYLVANAS_PART1, 4000},
+    {SAY_TYRANNUS_INTRO_4, NPC_TYRANNUS_INTRO, 0,                    0,                  4000},         // ToDo: send the solderis back to fight as zombies
+    {SAY_JAINA_INTRO_3,    NPC_JAINA_PART1,    0,                    0,                  6000},
+    {SAY_JAINA_INTRO_4,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_3, NPC_SYLVANAS_PART1, 5000},
+    {SAY_JAINA_INTRO_5,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_4, NPC_SYLVANAS_PART1, 0},
+
     // Ick and Krick outro
     {SAY_JAINA_KRICK_1,    NPC_JAINA_PART1,    SAY_SYLVANAS_KRICK_1, NPC_SYLVANAS_PART1, 6000},
     {SAY_OUTRO_2,          NPC_KRICK,          0,                    0,                  16000},
@@ -81,6 +114,29 @@ void instance_pit_of_saron::OnPlayerEnter(Player* pPlayer)
     {
         m_uiTeam = pPlayer->GetTeam();
         SetDialogueSide(m_uiTeam == ALLIANCE);
+        ProcessIntroEventNpcs(pPlayer);
+        StartNextDialogueText(NPC_TYRANNUS_INTRO);
+    }
+}
+
+void instance_pit_of_saron::ProcessIntroEventNpcs(Player* pPlayer)
+{
+    if (!pPlayer)
+        return;
+
+    if (m_auiEncounter[0] != DONE && m_auiEncounter[1] != DONE)
+    {
+        // Spawn Begin Mobs
+        for (uint8 i = 0; i < countof(aEventBeginLocations); ++i)
+        {
+            // ToDo: maybe despawn the intro npcs when the other events occur
+            if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventBeginLocations[i].uiEntryHorde : aEventBeginLocations[i].uiEntryAlliance,
+                    aEventBeginLocations[i].fX, aEventBeginLocations[i].fY, aEventBeginLocations[i].fZ, aEventBeginLocations[i].fO, TEMPSUMMON_TIMED_DESPAWN, 24 * HOUR * IN_MILLISECONDS))
+            {
+                pSummon->SetWalk(false);
+                pSummon->GetMotionMaster()->MovePoint(0, aEventBeginLocations[i].fMoveX, aEventBeginLocations[i].fMoveY, aEventBeginLocations[i].fMoveZ);
+            }
+        }
     }
 }
 
@@ -215,6 +271,10 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
     {
+        case SPELL_NECROMATIC_POWER:
+            if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
+                pTyrannus->CastSpell(pTyrannus, SPELL_NECROMATIC_POWER, true);
+            break;
         case SAY_OUTRO_3:
             // Move Tyrannus into position
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
@@ -238,10 +298,11 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
                 pKrick->CastSpell(pKrick, SPELL_SUICIDE, true);
             }
             break;
+        case SAY_JAINA_INTRO_3:
         case SAY_JAINA_KRICK_3:
             // Note: location needs to be confirmed
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
-                pTyrannus->GetMotionMaster()->MovePoint(0, 948.649f, 152.921f, 672.42f);
+                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusHidePos[0], afTyrannusHidePos[1], afTyrannusHidePos[2]);
             break;
     }
 }

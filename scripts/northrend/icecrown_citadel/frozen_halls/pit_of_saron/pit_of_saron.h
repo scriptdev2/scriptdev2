@@ -31,12 +31,15 @@ enum
     NPC_JAINA_PART2                 = 38188,
     NPC_KILARA                      = 37583,
     NPC_ELANDRA                     = 37774,
-    NPC_KORALEN                     = 37779,
-    NPC_KORLAEN                     = 37582,
+    NPC_LORALEN                     = 37779,
+    NPC_KORELN                      = 37582,
     NPC_CHAMPION_1_HORDE            = 37584,
     NPC_CHAMPION_2_HORDE            = 37587,
+    NPC_CHAMPION_3_HORDE            = 37588,
     NPC_CHAMPION_1_ALLIANCE         = 37496,
     NPC_CHAMPION_2_ALLIANCE         = 37497,
+    NPC_CHAMPION_3_ALLIANCE         = 37498,
+    NPC_CORRUPTED_CHAMPION          = 36796,
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
@@ -44,6 +47,24 @@ enum
     ACHIEV_CRIT_DOESNT_GO_ELEVEN    = 12993,                // Garfrost, achiev 4524
     ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
 };
+
+struct EventNpcLocations
+{
+    uint32 uiEntryHorde, uiEntryAlliance;
+    float fX, fY, fZ, fO;
+    float fMoveX, fMoveY, fMoveZ;
+};
+
+const EventNpcLocations aEventBeginLocations[3] =
+{
+    {NPC_SYLVANAS_PART1, NPC_JAINA_PART1,   430.3012f, 212.204f,  530.1146f, 0.042f, 440.7882f, 213.7587f, 528.7103f},
+    {NPC_KILARA,         NPC_ELANDRA,       429.7142f, 212.3021f, 530.2822f, 0.14f,  438.9462f, 215.4271f, 528.7087f},
+    {NPC_LORALEN,        NPC_KORELN,        429.5675f, 211.7748f, 530.3246f, 5.972f, 438.5052f, 211.5399f, 528.7085f},
+    // ToDo: add the soldiers here when proper waypoint movement is supported
+};
+
+// Note: this location needs to be confirmed
+static const float afTyrannusHidePos[3] = {948.649f, 152.921f, 672.42f};
 
 class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private DialogueHelper
 {
@@ -73,6 +94,7 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
+        void ProcessIntroEventNpcs(Player* pPlayer);
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
