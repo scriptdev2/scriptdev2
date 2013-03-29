@@ -40,12 +40,23 @@ enum
     NPC_CHAMPION_2_ALLIANCE         = 37497,
     NPC_CHAMPION_3_ALLIANCE         = 37498,
     NPC_CORRUPTED_CHAMPION          = 36796,
+    NPC_IRONSKULL_PART1             = 37592,
+    NPC_IRONSKULL_PART2             = 37592,
+    NPC_VICTUS_PART1                = 37591,
+    NPC_VICTUS_PART2                = 37580,
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
 
     ACHIEV_CRIT_DOESNT_GO_ELEVEN    = 12993,                // Garfrost, achiev 4524
     ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
+};
+
+static const float afTyrannusMovePos[3][3] =
+{
+    {922.6365f, 145.877f, 643.2216f},                       // Hide position
+    {835.5887f, 139.4345f, 530.9526f},                      // Ick position
+    {906.9048f, -49.03813f, 618.8016f},                     // Tunnel position
 };
 
 struct EventNpcLocations
@@ -62,9 +73,6 @@ const EventNpcLocations aEventBeginLocations[3] =
     {NPC_LORALEN,        NPC_KORELN,        429.5675f, 211.7748f, 530.3246f, 5.972f, 438.5052f, 211.5399f, 528.7085f},
     // ToDo: add the soldiers here when proper waypoint movement is supported
 };
-
-// Note: this location needs to be confirmed
-static const float afTyrannusHidePos[3] = {948.649f, 152.921f, 672.42f};
 
 class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private DialogueHelper
 {

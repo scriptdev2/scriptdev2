@@ -4327,7 +4327,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1658017,'Garfrost hope giant underpants clean. Save boss great shame. For later.',16915,1,0,0,'garfrost SAY_DEATH'),
 (-1658018,'Axe too weak. Garfrost make better and CRUSH YOU!',16916,1,0,0,'garfrost SAY_FORGE_1'),
 (-1658019,'That one maybe not so good to eat now. Stupid Garfrost! BAD! BAD!',16917,1,0,0,'garfrost SAY_FORGE_2'),
-(-1658020,'Another shall take his place. You waste your time.',16752,1,0,0,'tyrannus SAY_TYRANNUS_GARFROST'),
+(-1658020,'Another shall take his place. You waste your time.',16752,6,0,0,'tyrannus SAY_TYRANNUS_GARFROST'),
 (-1658021,'The forgemaster is dead! Get geared up men, we have a Scourgelord to kill.',0,1,0,0,'victus_or_ironskull SAY_GENERAL_GARFROST'),
 (-1658022,'%s hurls a massive saronite boulder at you!',0,5,0,0,'garfrost EMOTE_THROW_SARONITE'), -- TODO emote only displayed to target
 (-1658023,'%s casts Deep Freeze at $N.',0,3,0,0,'garfrost EMOTE_DEEP_FREEZE'),
@@ -4357,7 +4357,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1658045,'What a cruel end. Come, heroes. We must see if the gnome\'s story is true. If we can separate Arthas from Frostmourne, we might have a chance at stopping him.',16613,1,0,0,'jaina SAY_JAINA_KRICK_3'),
 (-1658046,'A fitting end for a traitor. Come, we must free the slaves and see what is within the Lich King\'s chamber for ourselves.',17035,1,0,396,'sylvanas SAY_SYLVANAS_KRICK_3'),
 
-(-1658047,'Your pursuit shall be in vain, adventurers, for the Lich King has placed an army of undead at my command! Behold!',16755,1,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_1'),
+(-1658047,'Your pursuit shall be in vain, adventurers, for the Lich King has placed an army of undead at my command! Behold!',16755,6,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_1'),
 (-1658048,'Persistent whelps! You will not reach the entrance of my lord\'s lair! Soldiers, destroy them!',16756,1,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_2'),
 (-1658049,'Rimefang! Trap them within the tunnel! Bury them alive!',16757,1,0,0,'tyrannus SAY_GAUNTLET'),
 

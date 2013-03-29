@@ -32,8 +32,6 @@ enum
     SAY_DEATH                           = -1658017,
     SAY_FORGE_1                         = -1658018,
     SAY_FORGE_2                         = -1658019,
-    SAY_TYRANNUS_GARFROST               = -1658020,
-    SAY_GENERAL_GARFROST                = -1658021,
 
     EMOTE_THROW_SARONITE                = -1658022,
     EMOTE_DEEP_FREEZE                   = -1658023,
@@ -60,6 +58,8 @@ static const float aGarfrostMoveLocs[2][3] =
     {657.539f, -203.564f, 526.691f},
     {719.785f, -230.227f, 527.033f},
 };
+
+static const float afOutroNpcSpawnLoc[4] = {695.0146f, -123.7532f, 515.3067f, 4.59f};
 
 struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
 {
@@ -103,7 +103,15 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature, pKiller);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_GARFROST, DONE);
+
+            // Summon Ironskull or Victus for outro
+            m_creature->SummonCreature(m_pInstance->GetPlayerTeam() == HORDE ? NPC_IRONSKULL_PART1 : NPC_VICTUS_PART1,
+                afOutroNpcSpawnLoc[0], afOutroNpcSpawnLoc[1], afOutroNpcSpawnLoc[2], afOutroNpcSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 2 * MINUTE * IN_MILLISECONDS);
+
+            // ToDo: handle the other npcs movement
+        }
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
@@ -115,6 +123,22 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARFROST, FAIL);
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_IRONSKULL_PART1:
+            case NPC_VICTUS_PART1:
+            {
+                float fX, fY, fZ;
+                pSummoned->SetWalk(false);
+                m_creature->GetContactPoint(pSummoned, fX, fY, fZ, 4 * INTERACTION_DISTANCE);
+                pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                break;
+            }
+        }
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override

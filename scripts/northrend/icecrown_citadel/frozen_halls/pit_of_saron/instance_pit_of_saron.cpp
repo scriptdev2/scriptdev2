@@ -46,6 +46,10 @@ enum
     SPELL_FEIGN_DEATH               = 28728,
     SPELL_RAISE_DEAD                = 69350,
 
+    // Garfrost outro
+    SAY_TYRANNUS_GARFROST           = -1658020,
+    SAY_GENERAL_GARFROST            = -1658021,
+
     // Ick and Krick outro
     SAY_JAINA_KRICK_1               = -1658036,
     SAY_SYLVANAS_KRICK_1            = -1658037,
@@ -79,6 +83,11 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
     {SAY_JAINA_INTRO_3,    NPC_JAINA_PART1,    0,                    0,                  6000},
     {SAY_JAINA_INTRO_4,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_3, NPC_SYLVANAS_PART1, 5000},
     {SAY_JAINA_INTRO_5,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_4, NPC_SYLVANAS_PART1, 0},
+
+    // Garfrost outro
+    {NPC_GARFROST,         0,                  0,                    0,                  4000},
+    {SAY_GENERAL_GARFROST, NPC_VICTUS_PART1,   SAY_GENERAL_GARFROST, NPC_IRONSKULL_PART1, 2000},
+    {SAY_TYRANNUS_GARFROST, NPC_TYRANNUS_INTRO, 0,                   0,                  0},
 
     // Ick and Krick outro
     {SAY_JAINA_KRICK_1,    NPC_JAINA_PART1,    SAY_SYLVANAS_KRICK_1, NPC_SYLVANAS_PART1, 6000},
@@ -152,6 +161,8 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
         case NPC_ICK:
         case NPC_TYRANNUS:
         case NPC_RIMEFANG:
+        case NPC_IRONSKULL_PART1:
+        case NPC_VICTUS_PART1:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -183,6 +194,8 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_ICEWALL);
             if (uiData == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_DOESNT_GO_ELEVEN, true);
+            else if (uiData == DONE)
+                StartNextDialogueText(NPC_GARFROST);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_KRICK:
@@ -280,7 +293,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
             {
                 pTyrannus->SetWalk(false);
-                pTyrannus->GetMotionMaster()->MovePoint(0, 835.5887f, 139.4345f, 530.9526f);
+                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[1][0], afTyrannusMovePos[1][1], afTyrannusMovePos[1][2]);
             }
             break;
         case SPELL_STRANGULATING:
@@ -300,9 +313,8 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             break;
         case SAY_JAINA_INTRO_3:
         case SAY_JAINA_KRICK_3:
-            // Note: location needs to be confirmed
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
-                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusHidePos[0], afTyrannusHidePos[1], afTyrannusHidePos[2]);
+                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
             break;
     }
 }
