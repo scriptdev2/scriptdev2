@@ -45,8 +45,18 @@ enum
     NPC_VICTUS_PART1                = 37591,
     NPC_VICTUS_PART2                = 37580,
 
+    // ambush npcs
+    NPC_YMIRJAR_DEATHBRINGER        = 36892,
+    NPC_YMIRJAR_WRATHBRINGER        = 36840,
+    NPC_YMIRJAR_FLAMEBEARER         = 36893,
+    NPC_FALLEN_WARRIOR              = 36841,
+    NPC_COLDWRAITH                  = 36842,
+    NPC_STALKER                     = 32780,
+
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
+
+    AREATRIGGER_ID_TUNNEL           = 5578,
 
     ACHIEV_CRIT_DOESNT_GO_ELEVEN    = 12993,                // Garfrost, achiev 4524
     ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
@@ -74,6 +84,26 @@ const EventNpcLocations aEventBeginLocations[3] =
     // ToDo: add the soldiers here when proper waypoint movement is supported
 };
 
+const EventNpcLocations aEventFirstAmbushLocations[2] =
+{
+    {NPC_YMIRJAR_DEATHBRINGER, 0, 951.6696f, 53.06405f, 567.5153f, 1.51f, 914.7256f, 76.66406f, 553.8029f},
+    {NPC_YMIRJAR_DEATHBRINGER, 0, 950.9911f, 60.26712f, 566.7658f, 1.79f, 883.1805f, 52.69792f, 527.6385f},
+};
+
+const EventNpcLocations aEventSecondAmbushLocations[] =
+{
+    {NPC_FALLEN_WARRIOR, 0, 916.658f, -55.94097f, 591.6827f, 1.85f, 950.5694f, 31.85649f, 572.2693f},
+    {NPC_FALLEN_WARRIOR, 0, 923.8055f, -55.63195f, 591.8663f, 1.85f, 941.3954f, 35.83769f, 571.4308f},
+    {NPC_FALLEN_WARRIOR, 0, 936.0625f, -53.52778f, 592.0226f, 1.85f, 934.8011f, 8.024931f, 577.3419f},
+    {NPC_FALLEN_WARRIOR, 0, 919.7518f, -68.39236f, 592.2916f, 1.85f, 932.5734f, -22.54153f, 587.403f},
+    {NPC_FALLEN_WARRIOR, 0, 926.8993f, -68.08334f, 592.0798f, 1.85f, 922.6043f, -22.07627f, 585.6684f},
+    {NPC_FALLEN_WARRIOR, 0, 939.1563f, -65.97916f, 592.2205f, 1.85f, 927.0928f, -32.97949f, 589.3028f},
+    {NPC_COLDWRAITH, 0, 924.0261f, -62.3316f, 592.0191f, 2.01f, 929.4673f, 9.722589f, 577.4904f},
+    {NPC_COLDWRAITH, 0, 936.4531f, -60.45486f, 592.1215f, 1.63f, 936.1395f, -4.003471f, 581.3139f},
+    {NPC_COLDWRAITH, 0, 935.8055f, -72.76736f, 592.077f, 1.66f, 933.8441f, -47.83234f, 591.7538f},
+    {NPC_COLDWRAITH, 0, 923.3785f, -74.6441f, 592.368f, 2.37f, 920.726f, -42.32272f, 589.9808f}
+};
+
 class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private DialogueHelper
 {
     public:
@@ -86,11 +116,15 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
         void OnObjectCreate(GameObject* pGo) override;
 
         void OnPlayerEnter(Player* pPlayer) override;
+        void OnCreatureEnterCombat(Creature* pCreature) override;
+        void OnCreatureDeath(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
         uint32 GetPlayerTeam() { return m_uiTeam; }
+
+        void DoStartAmbushEvent();
 
         void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
@@ -109,7 +143,13 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
+        bool m_bIsAmbushStarted;
+
+        uint8 m_uiAmbushAggroCount;
         uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
+
+        GuidList m_lTunnelStalkersGuidList;
+        GuidList m_lAmbushNpcsGuidList;
 };
 
 #endif

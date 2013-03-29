@@ -67,6 +67,11 @@ enum
     SPELL_STRANGULATING             = 69413,
     SPELL_KRICK_KILL_CREDIT         = 71308,
     SPELL_SUICIDE                   = 7,
+
+    // Ambush and Gauntlet
+    SAY_TYRANNUS_AMBUSH_1           = -1658047,
+    SAY_TYRANNUS_AMBUSH_2           = -1658048,
+    SAY_GAUNTLET                    = -1658049,
 };
 
 static const DialogueEntryTwoSide aPoSDialogues[] =
@@ -103,6 +108,8 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
 };
 
 instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aPoSDialogues),
+    m_bIsAmbushStarted(false),
+    m_uiAmbushAggroCount(0),
     m_uiTeam(TEAM_NONE)
 {
     Initialize();
@@ -124,7 +131,6 @@ void instance_pit_of_saron::OnPlayerEnter(Player* pPlayer)
         m_uiTeam = pPlayer->GetTeam();
         SetDialogueSide(m_uiTeam == ALLIANCE);
         ProcessIntroEventNpcs(pPlayer);
-        StartNextDialogueText(NPC_TYRANNUS_INTRO);
     }
 }
 
@@ -133,18 +139,21 @@ void instance_pit_of_saron::ProcessIntroEventNpcs(Player* pPlayer)
     if (!pPlayer)
         return;
 
-    if (m_auiEncounter[0] != DONE && m_auiEncounter[1] != DONE)
+    // Not if the bosses are already killed
+    if (GetData(TYPE_GARFROST) == DONE || GetData(TYPE_KRICK) == DONE)
+        return;
+
+    StartNextDialogueText(NPC_TYRANNUS_INTRO);
+
+    // Spawn Begin Mobs
+    for (uint8 i = 0; i < countof(aEventBeginLocations); ++i)
     {
-        // Spawn Begin Mobs
-        for (uint8 i = 0; i < countof(aEventBeginLocations); ++i)
+        // ToDo: maybe despawn the intro npcs when the other events occur
+        if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventBeginLocations[i].uiEntryHorde : aEventBeginLocations[i].uiEntryAlliance,
+            aEventBeginLocations[i].fX, aEventBeginLocations[i].fY, aEventBeginLocations[i].fZ, aEventBeginLocations[i].fO, TEMPSUMMON_TIMED_DESPAWN, 24 * HOUR * IN_MILLISECONDS))
         {
-            // ToDo: maybe despawn the intro npcs when the other events occur
-            if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventBeginLocations[i].uiEntryHorde : aEventBeginLocations[i].uiEntryAlliance,
-                    aEventBeginLocations[i].fX, aEventBeginLocations[i].fY, aEventBeginLocations[i].fZ, aEventBeginLocations[i].fO, TEMPSUMMON_TIMED_DESPAWN, 24 * HOUR * IN_MILLISECONDS))
-            {
-                pSummon->SetWalk(false);
-                pSummon->GetMotionMaster()->MovePoint(0, aEventBeginLocations[i].fMoveX, aEventBeginLocations[i].fMoveY, aEventBeginLocations[i].fMoveZ);
-            }
+            pSummon->SetWalk(false);
+            pSummon->GetMotionMaster()->MovePoint(0, aEventBeginLocations[i].fMoveX, aEventBeginLocations[i].fMoveY, aEventBeginLocations[i].fMoveZ);
         }
     }
 }
@@ -164,6 +173,17 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
         case NPC_IRONSKULL_PART1:
         case NPC_VICTUS_PART1:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+        case NPC_STALKER:
+            m_lTunnelStalkersGuidList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_YMIRJAR_DEATHBRINGER:
+        case NPC_YMIRJAR_WRATHBRINGER:
+        case NPC_YMIRJAR_FLAMEBEARER:
+        case NPC_FALLEN_WARRIOR:
+        case NPC_COLDWRAITH:
+            if (pCreature->IsTemporarySummon())
+                m_lAmbushNpcsGuidList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -260,6 +280,70 @@ uint32 instance_pit_of_saron::GetData(uint32 uiType) const
     return 0;
 }
 
+void instance_pit_of_saron::OnCreatureEnterCombat(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_YMIRJAR_DEATHBRINGER)
+    {
+        ++m_uiAmbushAggroCount;
+
+        // Summon the rest of the mobs at the 2nd ambush
+        if (m_uiAmbushAggroCount == 2)
+        {
+            Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
+            if (!pTyrannus)
+                return;
+
+            DoScriptText(SAY_TYRANNUS_AMBUSH_2, pTyrannus);
+            pTyrannus->SetWalk(false);
+            pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[2][0], afTyrannusMovePos[2][1], afTyrannusMovePos[2][2]);
+
+            // Spawn Mobs
+            for (uint8 i = 0; i < countof(aEventSecondAmbushLocations); ++i)
+            {
+                if (Creature* pSummon = pTyrannus->SummonCreature(aEventSecondAmbushLocations[i].uiEntryHorde, aEventSecondAmbushLocations[i].fX, aEventSecondAmbushLocations[i].fY,
+                    aEventSecondAmbushLocations[i].fZ, aEventSecondAmbushLocations[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    pSummon->SetWalk(false);
+                    pSummon->GetMotionMaster()->MovePoint(1, aEventSecondAmbushLocations[i].fMoveX, aEventSecondAmbushLocations[i].fMoveY, aEventSecondAmbushLocations[i].fMoveZ);
+                }
+            }
+        }
+    }
+}
+
+void instance_pit_of_saron::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_YMIRJAR_DEATHBRINGER:
+        case NPC_YMIRJAR_WRATHBRINGER:
+        case NPC_YMIRJAR_FLAMEBEARER:
+        case NPC_FALLEN_WARRIOR:
+        case NPC_COLDWRAITH:
+            // Count only the summons
+            if (!pCreature->IsTemporarySummon())
+                return;
+
+            m_lAmbushNpcsGuidList.remove(pCreature->GetObjectGuid());
+
+            // If empty start tunnel event
+            if (m_lAmbushNpcsGuidList.empty())
+            {
+                Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
+                if (!pTyrannus)
+                    return;
+
+                DoScriptText(SAY_GAUNTLET, pTyrannus);
+                pTyrannus->SetWalk(false);
+                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
+                pTyrannus->ForcedDespawn(20000);
+
+                // ToDo: start tunnel event
+            }
+            break;
+    }
+}
+
 void instance_pit_of_saron::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
 {
     if (uiType < MAX_SPECIAL_ACHIEV_CRITS)
@@ -317,6 +401,32 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
                 pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
             break;
     }
+}
+
+void instance_pit_of_saron::DoStartAmbushEvent()
+{
+    // This is started only once per instance
+    if (m_bIsAmbushStarted)
+        return;
+
+    Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
+    if (!pTyrannus)
+        return;
+
+    DoScriptText(SAY_TYRANNUS_AMBUSH_1, pTyrannus);
+
+    // Spawn Mobs
+    for (uint8 i = 0; i < countof(aEventFirstAmbushLocations); ++i)
+    {
+        if (Creature* pSummon = pTyrannus->SummonCreature(aEventFirstAmbushLocations[i].uiEntryHorde, aEventFirstAmbushLocations[i].fX, aEventFirstAmbushLocations[i].fY,
+                aEventFirstAmbushLocations[i].fZ, aEventFirstAmbushLocations[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+        {
+            pSummon->SetWalk(false);
+            pSummon->GetMotionMaster()->MovePoint(1, aEventFirstAmbushLocations[i].fMoveX, aEventFirstAmbushLocations[i].fMoveY, aEventFirstAmbushLocations[i].fMoveZ);
+        }
+    }
+
+    m_bIsAmbushStarted = true;
 }
 
 InstanceData* GetInstanceData_instance_pit_of_saron(Map* pMap)

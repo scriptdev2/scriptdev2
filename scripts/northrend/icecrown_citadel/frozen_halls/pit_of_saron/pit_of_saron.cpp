@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: pit_of_saron
-SD%Complete: 0
+SD%Complete: 100
 SDComment:
 SDCategory: Pit of Saron
 EndScriptData */
@@ -29,11 +29,6 @@ EndContentData */
 
 enum
 {
-    // Ambush and Gauntlet
-    SAY_TYRANNUS_AMBUSH_1               = -1658047,
-    SAY_TYRANNUS_AMBUSH_2               = -1658048,
-    SAY_GAUNTLET                        = -1658049,
-
     // Sindragosa outro
     SAY_GENERAL_OUTRO_1                 = -1658061,
     SAY_GENERAL_OUTRO_2                 = -1658062,
@@ -42,9 +37,120 @@ enum
     SAY_JAINA_OUTRO_2                   = -1658065,
     SAY_JAINA_OUTRO_3                   = -1658066,
     SAY_SYLVANAS_OUTRO_2                = -1658067,
+
+    // Ambush event
+    SPELL_EMPOWERED_SHADOW_BOLT         = 69528,
+    SPELL_SUMMON_UNDEAD                 = 69516,
 };
+
+/*######
+## npc_ymirjar_deathbringer
+######*/
+
+struct MANGOS_DLL_DECL npc_ymirjar_deathbringerAI : public ScriptedAI
+{
+    npc_ymirjar_deathbringerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiShadowBoltTimer;
+
+    void Reset() override
+    {
+        m_uiShadowBoltTimer = urand(1000, 3000);
+    }
+
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
+    {
+        if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_UNDEAD);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiShadowBoltTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_EMPOWERED_SHADOW_BOLT) == CAST_OK)
+                    m_uiShadowBoltTimer = urand(2000, 3000);
+            }
+        }
+        else
+            m_uiShadowBoltTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_ymirjar_deathbringer(Creature* pCreature)
+{
+    return new npc_ymirjar_deathbringerAI(pCreature);
+}
+
+bool EffectDummyCreature_spell_summon_undead(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    // always check spellid and effectindex
+    if (uiSpellId == SPELL_SUMMON_UNDEAD && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (pCreatureTarget->GetEntry() != NPC_YMIRJAR_DEATHBRINGER)
+            return true;
+
+        float fX, fY, fZ;
+        for (uint8 i = 0; i < 4; ++i)
+        {
+            pCreatureTarget->GetNearPoint(pCreatureTarget, fX, fY, fZ, 0, frand(8.0f, 12.0f), M_PI_F * 0.5f * i);
+            pCreatureTarget->SummonCreature(i % 2 ? NPC_YMIRJAR_WRATHBRINGER : NPC_YMIRJAR_FLAMEBEARER, fX, fY, fZ, 3.75f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        }
+
+        // always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## at_pit_of_saron
+######*/
+
+bool AreaTrigger_at_pit_of_saron(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_ID_TUNNEL)
+    {
+        if (pPlayer->isGameMaster() || !pPlayer->isAlive())
+            return false;
+
+        instance_pit_of_saron* pInstance = (instance_pit_of_saron*)pPlayer->GetInstanceData();
+        if (!pInstance)
+            return false;
+
+        if (pInstance->GetData(TYPE_GARFROST) != DONE || pInstance->GetData(TYPE_KRICK) != DONE ||
+            pInstance->GetData(TYPE_TYRANNUS) != NOT_STARTED)
+            return false;
+
+        pInstance->DoStartAmbushEvent();
+        return true;
+    }
+
+    return false;
+}
 
 void AddSC_pit_of_saron()
 {
+    Script* pNewScript;
 
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ymirjar_deathbringer";
+    pNewScript->GetAI = &GetAI_npc_ymirjar_deathbringer;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_summon_undead;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_pit_of_saron";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_pit_of_saron;
+    pNewScript->RegisterSelf();
 }

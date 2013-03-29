@@ -4358,8 +4358,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1658046,'A fitting end for a traitor. Come, we must free the slaves and see what is within the Lich King\'s chamber for ourselves.',17035,1,0,396,'sylvanas SAY_SYLVANAS_KRICK_3'),
 
 (-1658047,'Your pursuit shall be in vain, adventurers, for the Lich King has placed an army of undead at my command! Behold!',16755,6,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_1'),
-(-1658048,'Persistent whelps! You will not reach the entrance of my lord\'s lair! Soldiers, destroy them!',16756,1,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_2'),
-(-1658049,'Rimefang! Trap them within the tunnel! Bury them alive!',16757,1,0,0,'tyrannus SAY_GAUNTLET'),
+(-1658048,'Persistent whelps! You will not reach the entrance of my lord\'s lair! Soldiers, destroy them!',16756,6,0,0,'tyrannus SAY_TYRANNUS_AMBUSH_2'),
+(-1658049,'Rimefang! Trap them within the tunnel! Bury them alive!',16757,6,0,0,'tyrannus SAY_GAUNTLET'),
 
 (-1658050,'Alas, brave, brave adventurers, your meddling has reached its end. Do you hear the clatter of bone and steel coming up the tunnel behind you? That is the sound of your impending demise.',16758,1,0,0,'tyrannus SAY_PREFIGHT_1'),
 (-1658051,'Heroes! We will hold off the undead as long as we can, even to our dying breath. Deal with the Scourgelord!',0,1,0,0,'victus_or_ironskull SAY_GENERAL_TRASH'),

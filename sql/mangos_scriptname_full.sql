@@ -713,6 +713,9 @@ UPDATE creature_template SET ScriptName='boss_forgemaster_garfrost' WHERE entry=
 UPDATE creature_template SET ScriptName='boss_krick' WHERE entry=36477;
 UPDATE creature_template SET ScriptName='boss_ick' WHERE entry=36476;
 UPDATE creature_template SET ScriptName='npc_exploding_orb' WHERE entry=36610;
+UPDATE creature_template SET ScriptName='npc_ymirjar_deathbringer' WHERE entry=36892;
+DELETE FROM scripted_areatrigger WHERE entry=5578;
+INSERT INTO scripted_areatrigger VALUES (5578,'at_pit_of_saron');
 
 /* ICECROWN */
 
