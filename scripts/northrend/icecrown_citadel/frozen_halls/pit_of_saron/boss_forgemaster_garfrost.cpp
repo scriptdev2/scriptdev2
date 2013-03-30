@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
                 float fX, fY, fZ;
                 pSummoned->SetWalk(false);
                 m_creature->GetContactPoint(pSummoned, fX, fY, fZ, 4 * INTERACTION_DISTANCE);
-                pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
                 break;
             }
         }

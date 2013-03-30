@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_pit_of_saron
-SD%Complete: 50%
+SD%Complete: 80%
 SDComment:
 SDCategory: Pit of Saron
 EndScriptData */
@@ -75,7 +75,33 @@ enum
 
     // Gauntlet spells
     SPELL_ICICLE_SUMMON             = 69424,
-    SPELL_ACHIEVEMENT_CHECK         = 72845
+    SPELL_ACHIEVEMENT_CHECK         = 72845,
+
+    // Tyrannus intro
+    SAY_PREFIGHT_1                  = -1658050,
+    SAY_VICTUS_TRASH                = -1658051,
+    SAY_IRONSKULL_TRASH             = -1658068,
+    SAY_PREFIGHT_2                  = -1658052,
+
+    SPELL_EJECT_ALL_PASSENGERS      = 50630,
+    // SPELL_CSA_DUMMY_EFFECT_1     = 56685,                // What is this?
+
+    // Sindragosa outro
+    SAY_VICTUS_OUTRO_1              = -1658061,
+    SAY_IRONSKULL_OUTRO_2           = -1658069,
+    SAY_GENERAL_OUTRO_2             = -1658062,
+    SAY_JAINA_OUTRO_1               = -1658063,
+    SAY_SYLVANAS_OUTRO_1            = -1658064,
+    SAY_JAINA_OUTRO_2               = -1658065,
+    SAY_JAINA_OUTRO_3               = -1658066,
+    SAY_SYLVANAS_OUTRO_2            = -1658067,
+
+    SPELL_FROST_BOMB                = 70521,
+    SPELL_CALL_OF_SYLVANAS_1        = 70636,                // triggers 70639
+    SPELL_CALL_OF_SYLVANAS_2        = 70638,
+    // SPELL_CALL_OF_SYLVANAS_3     = 70642,
+    SPELL_JAINAS_CALL_1             = 70527,                // triggers 70525
+    SPELL_JAINAS_CALL_2             = 70623,
 };
 
 static const DialogueEntryTwoSide aPoSDialogues[] =
@@ -94,7 +120,7 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
     {SAY_JAINA_INTRO_5,    NPC_JAINA_PART1,    SAY_SYLVANAS_INTRO_4, NPC_SYLVANAS_PART1, 0},
 
     // Garfrost outro
-    {NPC_GARFROST,         0,                  0,                    0,                  4000},
+    {NPC_GARFROST,         0,                  0,                    0,                  4000},         // ToDo: move the freed slaves to position
     {SAY_GENERAL_GARFROST, NPC_VICTUS_PART1,   SAY_GENERAL_GARFROST, NPC_IRONSKULL_PART1, 2000},
     {SAY_TYRANNUS_GARFROST, NPC_TYRANNUS_INTRO, 0,                   0,                  0},
 
@@ -108,6 +134,23 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
     {SAY_OUTRO_4,          NPC_KRICK,          0,                    0,                  3000},
     {SAY_TYRANNUS_KRICK_2, NPC_TYRANNUS_INTRO, 0,                    0,                  11000},
     {SAY_JAINA_KRICK_3,    NPC_JAINA_PART1,    SAY_SYLVANAS_KRICK_3, NPC_SYLVANAS_PART1, 0},
+
+    // Tyrannus intro
+    {NPC_TYRANNUS,         0,                  0,                    0,                  10000},        // ToDo: move the freed slaves to position
+    {SAY_PREFIGHT_1,       NPC_TYRANNUS,       0,                    0,                  13000},
+    {SAY_VICTUS_TRASH,     NPC_VICTUS_PART2,   SAY_IRONSKULL_TRASH,  NPC_IRONSKULL_PART2, 9000},
+    {SAY_PREFIGHT_2,       NPC_TYRANNUS,       0,                    0,                  10000},
+    {NPC_RIMEFANG,         0,                  0,                    0,                  0},
+
+    // Tyrannus outro
+    {NPC_SINDRAGOSA,       0,                  0,                    0,                  30000},
+    {SAY_VICTUS_OUTRO_1,   NPC_VICTUS_PART2,   SAY_IRONSKULL_OUTRO_2, NPC_IRONSKULL_PART2, 17000},
+    {SAY_GENERAL_OUTRO_2,  NPC_VICTUS_PART2,   SAY_GENERAL_OUTRO_2,  NPC_IRONSKULL_PART2, 14000},
+    {SAY_JAINA_OUTRO_1,    NPC_JAINA_PART2,    SAY_SYLVANAS_OUTRO_1, NPC_SYLVANAS_PART2,  1000},
+    {SPELL_FROST_BOMB,     0,                  0,                    0,                   7000},
+    {NPC_JAINA_PART2,      0,                  0,                    0,                   8000},
+    {SAY_JAINA_OUTRO_2,    NPC_JAINA_PART2,    SAY_SYLVANAS_OUTRO_2, NPC_SYLVANAS_PART2,  15000},
+    {SAY_JAINA_OUTRO_3,    NPC_JAINA_PART2,    0,                    0,                   0},
     {0, 0, 0},
 };
 
@@ -177,6 +220,11 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
         case NPC_RIMEFANG:
         case NPC_IRONSKULL_PART1:
         case NPC_VICTUS_PART1:
+        case NPC_IRONSKULL_PART2:
+        case NPC_VICTUS_PART2:
+        case NPC_JAINA_PART2:
+        case NPC_SYLVANAS_PART2:
+        case NPC_SINDRAGOSA:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_STALKER:
@@ -241,6 +289,8 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_TYRANNUS:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                StartNextDialogueText(NPC_SINDRAGOSA);
             break;
         default:
             return;
@@ -342,7 +392,9 @@ void instance_pit_of_saron::OnCreatureDeath(Creature* pCreature)
                 {
                     pCreature->CastSpell(pCreature, SPELL_ACHIEVEMENT_CHECK, true);
                     m_uiIciclesTimer = 0;
-                    // ToDo: start tyrannus intro event
+
+                    // Start Tyrannus intro
+                    StartNextDialogueText(NPC_TYRANNUS);
                 }
             }
             // Check for the ambush event
@@ -425,6 +477,82 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
         case SAY_JAINA_KRICK_3:
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
                 pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
+            break;
+        case NPC_TYRANNUS:
+        {
+            Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS);
+            if (!pTyrannus)
+                return;
+
+            // Spawn tunnel end event mobs
+            for (uint8 i = 0; i < countof(aEventTunnelEndLocations); ++i)
+            {
+                if (Creature* pSummon = pTyrannus->SummonCreature(m_uiTeam == HORDE ? aEventTunnelEndLocations[i].uiEntryHorde : aEventTunnelEndLocations[i].uiEntryAlliance,
+                    aEventTunnelEndLocations[i].fX, aEventTunnelEndLocations[i].fY, aEventTunnelEndLocations[i].fZ, aEventTunnelEndLocations[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    pSummon->SetWalk(false);
+                    pSummon->GetMotionMaster()->MovePoint(0, aEventTunnelEndLocations[i].fMoveX, aEventTunnelEndLocations[i].fMoveY, aEventTunnelEndLocations[i].fMoveZ);
+                }
+            }
+            break;
+        }
+        case NPC_RIMEFANG:
+            if (Creature* pRimefang = GetSingleCreatureFromStorage(NPC_RIMEFANG))
+            {
+                pRimefang->CastSpell(pRimefang, SPELL_EJECT_ALL_PASSENGERS, true);
+                pRimefang->SetWalk(false);
+                pRimefang->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[3][0], afTyrannusMovePos[3][1], afTyrannusMovePos[3][2]);
+            }
+            break;
+        case SAY_VICTUS_OUTRO_1:
+        {
+            Player* pPlayer = GetPlayerInMap();
+            if (!pPlayer)
+                return;
+
+            // Spawn Sindragosa
+            if (Creature* pSummon = pPlayer->SummonCreature(aEventOutroLocations[0].uiEntryHorde, aEventOutroLocations[0].fX, aEventOutroLocations[0].fY,
+                    aEventOutroLocations[0].fZ, aEventOutroLocations[0].fO, TEMPSUMMON_TIMED_DESPAWN, 2 * MINUTE * IN_MILLISECONDS))
+            {
+                pSummon->SetWalk(false);
+                pSummon->GetMotionMaster()->MovePoint(0, aEventOutroLocations[0].fMoveX, aEventOutroLocations[0].fMoveY, aEventOutroLocations[0].fMoveZ);
+            }
+            // Spawn Jaina or Sylvanas
+            if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventOutroLocations[1].uiEntryHorde : aEventOutroLocations[1].uiEntryAlliance,
+                    aEventOutroLocations[1].fX, aEventOutroLocations[1].fY, aEventOutroLocations[1].fZ, aEventOutroLocations[1].fO, TEMPSUMMON_TIMED_DESPAWN, 24 * HOUR * IN_MILLISECONDS))
+            {
+                pSummon->SetWalk(false);
+                pSummon->GetMotionMaster()->MovePoint(0, aEventOutroLocations[1].fMoveX, aEventOutroLocations[1].fMoveY, aEventOutroLocations[1].fMoveZ);
+            }
+            break;
+        }
+        case SAY_JAINA_OUTRO_1:
+            if (Creature* pTemp = GetSingleCreatureFromStorage(m_uiTeam == HORDE ? NPC_SYLVANAS_PART2 : NPC_JAINA_PART2))
+            {
+                pTemp->CastSpell(pTemp, m_uiTeam == HORDE ? SPELL_CALL_OF_SYLVANAS_2 : SPELL_JAINAS_CALL_2, true);
+                pTemp->CastSpell(pTemp, m_uiTeam == HORDE ? SPELL_CALL_OF_SYLVANAS_2 : SPELL_JAINAS_CALL_2, true);
+            }
+            break;
+        case SPELL_FROST_BOMB:
+            if (Creature* pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
+                pSindragosa->CastSpell(pSindragosa, SPELL_FROST_BOMB, true);
+            break;
+        case NPC_JAINA_PART2:
+            if (Creature* pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
+                pSindragosa->GetMotionMaster()->MovePoint(0, 759.148f, 199.955f, 720.857f);
+            // Move in front
+            if (Creature* pTemp = GetSingleCreatureFromStorage(m_uiTeam == HORDE ? NPC_SYLVANAS_PART2 : NPC_JAINA_PART2))
+            {
+                pTemp->SetWalk(true);
+                pTemp->GetMotionMaster()->MovePoint(0, 1057.76f, 111.927f, 628.4123f);
+            }
+            break;
+        case SAY_JAINA_OUTRO_2:
+            if (Creature* pTemp = GetSingleCreatureFromStorage(m_uiTeam == HORDE ? NPC_SYLVANAS_PART2 : NPC_JAINA_PART2))
+                pTemp->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+
+            // ToDo: Jaina / Sylvanas should have some waypoint movement here and the door should be opened only when they get in front of it.
+            DoUseDoorOrButton(GO_HALLS_OF_REFLECT_PORT);
             break;
     }
 }

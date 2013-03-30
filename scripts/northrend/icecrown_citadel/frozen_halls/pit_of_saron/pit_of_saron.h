@@ -17,6 +17,7 @@ enum
     TYPE_ACHIEV_DOESNT_GO_ELEVEN    = 0,
     TYPE_ACHIEV_DONT_LOOK_UP        = 1,
 
+    // Bosses
     NPC_TYRANNUS_INTRO              = 36794,
     NPC_GARFROST                    = 36494,
     NPC_KRICK                       = 36477,
@@ -25,6 +26,7 @@ enum
     NPC_RIMEFANG                    = 36661,
     NPC_SINDRAGOSA                  = 37755,
 
+    // Intro part npcs
     NPC_SYLVANAS_PART1              = 36990,
     NPC_SYLVANAS_PART2              = 38189,
     NPC_JAINA_PART1                 = 36993,
@@ -40,12 +42,20 @@ enum
     NPC_CHAMPION_2_ALLIANCE         = 37497,
     NPC_CHAMPION_3_ALLIANCE         = 37498,
     NPC_CORRUPTED_CHAMPION          = 36796,
+
+    // Enslaved npcs
     NPC_IRONSKULL_PART1             = 37592,
-    NPC_IRONSKULL_PART2             = 37592,
+    NPC_IRONSKULL_PART2             = 37581,
     NPC_VICTUS_PART1                = 37591,
     NPC_VICTUS_PART2                = 37580,
+    NPC_FREE_HORDE_SLAVE_1          = 37577,
+    NPC_FREE_HORDE_SLAVE_2          = 37578,
+    NPC_FREE_HORDE_SLAVE_3          = 37579,
+    NPC_FREE_ALLIANCE_SLAVE_1       = 37572,
+    NPC_FREE_ALLIANCE_SLAVE_2       = 37575,
+    NPC_FREE_ALLIANCE_SLAVE_3       = 37576,
 
-    // ambush npcs
+    // Ambush npcs
     NPC_YMIRJAR_DEATHBRINGER        = 36892,
     NPC_YMIRJAR_WRATHBRINGER        = 36840,
     NPC_YMIRJAR_FLAMEBEARER         = 36893,
@@ -64,11 +74,12 @@ enum
     ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
 };
 
-static const float afTyrannusMovePos[3][3] =
+static const float afTyrannusMovePos[4][3] =
 {
     {922.6365f, 145.877f, 643.2216f},                       // Hide position
     {835.5887f, 139.4345f, 530.9526f},                      // Ick position
     {906.9048f, -49.03813f, 618.8016f},                     // Tunnel position
+    {966.3345f, 159.2058f, 665.0453f},                      // Rimefang position
 };
 
 struct EventNpcLocations
@@ -105,6 +116,18 @@ const EventNpcLocations aEventSecondAmbushLocations[] =
     {NPC_COLDWRAITH, 0, 935.8055f, -72.76736f, 592.077f, 1.66f, 933.8441f, -47.83234f, 591.7538f},
     {NPC_COLDWRAITH, 0, 923.3785f, -74.6441f, 592.368f, 2.37f, 920.726f, -42.32272f, 589.9808f}
 };
+
+const EventNpcLocations aEventTunnelEndLocations[] =
+{
+    {NPC_IRONSKULL_PART2, NPC_VICTUS_PART2, 1071.45f, 48.23907f, 630.4871f, 1.68f, 1046.361f, 124.7031f, 628.2811f},
+    // ToDo: add the freed slaves here when proper waypoint movement is supported
+};
+const EventNpcLocations aEventOutroLocations[] =
+{
+    {NPC_SINDRAGOSA, 0, 842.8611f, 194.5556f, 531.6536f, 6.108f, 900.106f, 181.677f, 659.374f},
+    {NPC_SYLVANAS_PART2, NPC_JAINA_PART2, 1062.85f, 100.075f, 631.0021f, 1.77f, 1062.85f, 100.075f, 631.0021f},
+};
+
 
 class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private DialogueHelper
 {

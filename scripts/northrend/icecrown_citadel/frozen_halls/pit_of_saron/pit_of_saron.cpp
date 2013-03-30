@@ -29,15 +29,6 @@ EndContentData */
 
 enum
 {
-    // Sindragosa outro
-    SAY_GENERAL_OUTRO_1                 = -1658061,
-    SAY_GENERAL_OUTRO_2                 = -1658062,
-    SAY_JAINA_OUTRO_1                   = -1658063,
-    SAY_SYLVANAS_OUTRO_1                = -1658064,
-    SAY_JAINA_OUTRO_2                   = -1658065,
-    SAY_JAINA_OUTRO_3                   = -1658066,
-    SAY_SYLVANAS_OUTRO_2                = -1658067,
-
     // Ambush event
     SPELL_EMPOWERED_SHADOW_BOLT         = 69528,
     SPELL_SUMMON_UNDEAD                 = 69516,
