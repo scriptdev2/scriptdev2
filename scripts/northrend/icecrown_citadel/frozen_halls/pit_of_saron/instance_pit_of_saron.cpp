@@ -72,6 +72,10 @@ enum
     SAY_TYRANNUS_AMBUSH_1           = -1658047,
     SAY_TYRANNUS_AMBUSH_2           = -1658048,
     SAY_GAUNTLET                    = -1658049,
+
+    // Gauntlet spells
+    SPELL_ICICLE_SUMMON             = 69424,
+    SPELL_ACHIEVEMENT_CHECK         = 72845
 };
 
 static const DialogueEntryTwoSide aPoSDialogues[] =
@@ -110,7 +114,8 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
 instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aPoSDialogues),
     m_bIsAmbushStarted(false),
     m_uiAmbushAggroCount(0),
-    m_uiTeam(TEAM_NONE)
+    m_uiTeam(TEAM_NONE),
+    m_uiIciclesTimer(0)
 {
     Initialize();
 }
@@ -182,8 +187,13 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
         case NPC_YMIRJAR_FLAMEBEARER:
         case NPC_FALLEN_WARRIOR:
         case NPC_COLDWRAITH:
+        case NPC_DISTURBED_REVENANT:
+        case NPC_SKELETON:
+            // Sort the ambush and the tunnel mobs
             if (pCreature->IsTemporarySummon())
                 m_lAmbushNpcsGuidList.push_back(pCreature->GetObjectGuid());
+            else
+                m_lTunnelNpcGuidList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -320,25 +330,41 @@ void instance_pit_of_saron::OnCreatureDeath(Creature* pCreature)
         case NPC_YMIRJAR_FLAMEBEARER:
         case NPC_FALLEN_WARRIOR:
         case NPC_COLDWRAITH:
-            // Count only the summons
+        case NPC_DISTURBED_REVENANT:
+        case NPC_SKELETON:
+            // Check for tunnel event end - these mobs are not summoned
             if (!pCreature->IsTemporarySummon())
-                return;
-
-            m_lAmbushNpcsGuidList.remove(pCreature->GetObjectGuid());
-
-            // If empty start tunnel event
-            if (m_lAmbushNpcsGuidList.empty())
             {
-                Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
-                if (!pTyrannus)
-                    return;
+                m_lTunnelNpcGuidList.remove(pCreature->GetObjectGuid());
 
-                DoScriptText(SAY_GAUNTLET, pTyrannus);
-                pTyrannus->SetWalk(false);
-                pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
-                pTyrannus->ForcedDespawn(20000);
+                // If all mobs in the tunnel are clearned cast the achiev spell
+                if (m_lTunnelNpcGuidList.empty())
+                {
+                    pCreature->CastSpell(pCreature, SPELL_ACHIEVEMENT_CHECK, true);
+                    m_uiIciclesTimer = 0;
+                    // ToDo: start tyrannus intro event
+                }
+            }
+            // Check for the ambush event
+            else
+            {
+                m_lAmbushNpcsGuidList.remove(pCreature->GetObjectGuid());
 
-                // ToDo: start tunnel event
+                // If empty start tunnel event
+                if (m_lAmbushNpcsGuidList.empty())
+                {
+                    Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
+                    if (!pTyrannus)
+                        return;
+
+                    DoScriptText(SAY_GAUNTLET, pTyrannus);
+                    pTyrannus->SetWalk(false);
+                    pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
+                    pTyrannus->ForcedDespawn(20000);
+
+                    m_uiIciclesTimer = urand(3000, 5000);
+                    SetSpecialAchievementCriteria(TYPE_ACHIEV_DONT_LOOK_UP, true);
+                }
             }
             break;
     }
@@ -427,6 +453,30 @@ void instance_pit_of_saron::DoStartAmbushEvent()
     }
 
     m_bIsAmbushStarted = true;
+}
+
+void instance_pit_of_saron::Update(uint32 uiDiff)
+{
+    DialogueUpdate(uiDiff);
+
+    if (m_uiIciclesTimer)
+    {
+        if (m_uiIciclesTimer <= uiDiff)
+        {
+            for (GuidList::const_iterator itr = m_lTunnelStalkersGuidList.begin(); itr != m_lTunnelStalkersGuidList.end(); ++itr)
+            {
+                // Only 5% of the stalkers will actually spawn an icicle
+                if (roll_chance_i(95))
+                    continue;
+
+                if (Creature* pStalker = instance->GetCreature(*itr))
+                    pStalker->CastSpell(pStalker, SPELL_ICICLE_SUMMON, true);
+            }
+            m_uiIciclesTimer = urand(3000, 5000);
+        }
+        else
+            m_uiIciclesTimer -= uiDiff;
+    }
 }
 
 InstanceData* GetInstanceData_instance_pit_of_saron(Map* pMap)

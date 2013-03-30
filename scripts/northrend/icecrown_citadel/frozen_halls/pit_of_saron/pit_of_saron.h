@@ -51,6 +51,8 @@ enum
     NPC_YMIRJAR_FLAMEBEARER         = 36893,
     NPC_FALLEN_WARRIOR              = 36841,
     NPC_COLDWRAITH                  = 36842,
+    NPC_SKELETON                    = 36877,
+    NPC_DISTURBED_REVENANT          = 36874,
     NPC_STALKER                     = 32780,
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
@@ -132,7 +134,7 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
-        void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }
+        void Update(uint32 uiDiff);
 
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
@@ -147,8 +149,10 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
         uint8 m_uiAmbushAggroCount;
         uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
+        uint32 m_uiIciclesTimer;
 
         GuidList m_lTunnelStalkersGuidList;
+        GuidList m_lTunnelNpcGuidList;
         GuidList m_lAmbushNpcsGuidList;
 };
 

@@ -41,6 +41,11 @@ enum
     // Ambush event
     SPELL_EMPOWERED_SHADOW_BOLT         = 69528,
     SPELL_SUMMON_UNDEAD                 = 69516,
+
+    // Icicles
+    SPELL_ICICLE                        = 69426,
+    SPELL_ICICLE_DUMMY                  = 69428,
+    SPELL_ICE_SHARDS                    = 69425,
 };
 
 /*######
@@ -114,6 +119,43 @@ bool EffectDummyCreature_spell_summon_undead(Unit* pCaster, uint32 uiSpellId, Sp
 }
 
 /*######
+## npc_collapsing_icicle
+######*/
+
+struct MANGOS_DLL_DECL npc_collapsing_icicleAI : public ScriptedAI
+{
+    npc_collapsing_icicleAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_pit_of_saron* m_pInstance;
+
+    void Reset() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_ICICLE_DUMMY, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_ICICLE, CAST_TRIGGERED);
+    }
+
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    {
+        // Mark the achiev failed
+        if (pSpell->Id == SPELL_ICE_SHARDS && pTarget->GetTypeId() == TYPEID_PLAYER && m_pInstance)
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DONT_LOOK_UP, false);
+    }
+
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
+};
+
+CreatureAI* GetAI_npc_collapsing_icicle(Creature* pCreature)
+{
+    return new npc_collapsing_icicleAI(pCreature);
+}
+
+/*######
 ## at_pit_of_saron
 ######*/
 
@@ -147,6 +189,11 @@ void AddSC_pit_of_saron()
     pNewScript->Name = "npc_ymirjar_deathbringer";
     pNewScript->GetAI = &GetAI_npc_ymirjar_deathbringer;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_summon_undead;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_collapsing_icicle";
+    pNewScript->GetAI = &GetAI_npc_collapsing_icicle;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

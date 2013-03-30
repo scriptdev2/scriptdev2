@@ -714,6 +714,7 @@ UPDATE creature_template SET ScriptName='boss_krick' WHERE entry=36477;
 UPDATE creature_template SET ScriptName='boss_ick' WHERE entry=36476;
 UPDATE creature_template SET ScriptName='npc_exploding_orb' WHERE entry=36610;
 UPDATE creature_template SET ScriptName='npc_ymirjar_deathbringer' WHERE entry=36892;
+UPDATE creature_template SET ScriptName='npc_collapsing_icicle' WHERE entry=36847;
 DELETE FROM scripted_areatrigger WHERE entry=5578;
 INSERT INTO scripted_areatrigger VALUES (5578,'at_pit_of_saron');
 
