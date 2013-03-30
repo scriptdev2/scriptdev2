@@ -61,7 +61,7 @@ enum EscortFaction
 
 struct Script
 {
-    Script() :
+    Script(const char* scriptName = NULL) : Name(scriptName),
         pGossipHello(NULL), pGossipHelloGO(NULL), pGossipSelect(NULL), pGossipSelectGO(NULL),
         pGossipSelectWithCode(NULL), pGossipSelectGOWithCode(NULL),
         pDialogStatusNPC(NULL), pDialogStatusGO(NULL),
@@ -72,35 +72,60 @@ struct Script
         pEffectAuraDummy(NULL), GetAI(NULL), GetInstanceData(NULL)
     {}
 
-    std::string Name;
+    const char* Name;
 
-    bool (*pGossipHello)(Player*, Creature*);
-    bool (*pGossipHelloGO)(Player*, GameObject*);
-    bool (*pGossipSelect)(Player*, Creature*, uint32, uint32);
-    bool (*pGossipSelectGO)(Player*, GameObject*, uint32, uint32);
-    bool (*pGossipSelectWithCode)(Player*, Creature*, uint32, uint32, const char*);
-    bool (*pGossipSelectGOWithCode)(Player*, GameObject*, uint32, uint32, const char*);
-    uint32(*pDialogStatusNPC)(Player*, Creature*);
-    uint32(*pDialogStatusGO)(Player*, GameObject*);
-    bool (*pQuestAcceptNPC)(Player*, Creature*, Quest const*);
-    bool (*pQuestAcceptGO)(Player*, GameObject*, Quest const*);
-    bool (*pQuestAcceptItem)(Player*, Item*, Quest const*);
-    bool (*pQuestRewardedNPC)(Player*, Creature*, Quest const*);
-    bool (*pQuestRewardedGO)(Player*, GameObject*, Quest const*);
-    bool (*pGOUse)(Player*, GameObject*);
-    bool (*pItemUse)(Player*, Item*, SpellCastTargets const&);
-    bool (*pAreaTrigger)(Player*, AreaTriggerEntry const*);
-    bool (*pProcessEventId)(uint32, Object*, Object*, bool);
-    bool (*pEffectDummyNPC)(Unit*, uint32, SpellEffectIndex, Creature*);
-    bool (*pEffectDummyGO)(Unit*, uint32, SpellEffectIndex, GameObject*);
-    bool (*pEffectDummyItem)(Unit*, uint32, SpellEffectIndex, Item*);
-    bool (*pEffectScriptEffectNPC)(Unit*, uint32, SpellEffectIndex, Creature*);
-    bool (*pEffectAuraDummy)(const Aura*, bool);
+    bool (*pGossipHello             )(Player*, Creature*);
+    bool (*pGossipHelloGO           )(Player*, GameObject*);
+    bool (*pGossipSelect            )(Player*, Creature*, uint32, uint32);
+    bool (*pGossipSelectGO          )(Player*, GameObject*, uint32, uint32);
+    bool (*pGossipSelectWithCode    )(Player*, Creature*, uint32, uint32, const char*);
+    bool (*pGossipSelectGOWithCode  )(Player*, GameObject*, uint32, uint32, const char*);
+    uint32 (*pDialogStatusNPC       )(Player*, Creature*);
+    uint32 (*pDialogStatusGO        )(Player*, GameObject*);
+    bool (*pQuestAcceptNPC          )(Player*, Creature*, Quest const*);
+    bool (*pQuestAcceptGO           )(Player*, GameObject*, Quest const*);
+    bool (*pQuestAcceptItem         )(Player*, Item*, Quest const*);
+    bool (*pQuestRewardedNPC        )(Player*, Creature*, Quest const*);
+    bool (*pQuestRewardedGO         )(Player*, GameObject*, Quest const*);
+    bool (*pGOUse                   )(Player*, GameObject*);
+    bool (*pItemUse                 )(Player*, Item*, SpellCastTargets const&);
+    bool (*pAreaTrigger             )(Player*, AreaTriggerEntry const*);
+    bool (*pProcessEventId          )(uint32, Object*, Object*, bool);
+    bool (*pEffectDummyNPC          )(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectDummyGO           )(Unit*, uint32, SpellEffectIndex, GameObject*);
+    bool (*pEffectDummyItem         )(Unit*, uint32, SpellEffectIndex, Item*);
+    bool (*pEffectScriptEffectNPC   )(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectAuraDummy         )(const Aura*, bool);
 
-    CreatureAI* (*GetAI)(Creature*);
-    InstanceData* (*GetInstanceData)(Map*);
+    CreatureAI* (*GetAI             )(Creature*);
+    InstanceData* (*GetInstanceData )(Map*);
 
     void RegisterSelf(bool bReportError = true);
+};
+
+// *********************************************************
+// ******************* AutoScript **************************
+
+class AutoScript
+{
+    private:
+        Script* m_script;
+        bool m_reportError;
+
+        void Register();
+
+    public:
+        AutoScript() : m_script(NULL), m_reportError(true) {}
+        AutoScript(const char* scriptName, bool reportError = true) : m_script(NULL) { newScript(scriptName, reportError); }
+        ~AutoScript() { Register(); }
+
+        Script* newScript(const char* scriptName, bool reportError = true);
+
+        Script* operator -> ()
+        {
+            MANGOS_ASSERT(m_script != NULL && "AutoScript: use newScript() before!");
+            return m_script;
+        }
 };
 
 // *********************************************************

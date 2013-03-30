@@ -358,60 +358,38 @@ bool GOUse_go_lab_work_reagents(Player* pPlayer, GameObject* pGo)
 
 void AddSC_go_scripts()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_barov_journal";
-    pNewScript->pGOUse =          &GOUse_go_barov_journal;
-    pNewScript->RegisterSelf();
+    s.newScript("go_barov_journal");
+    s->pGOUse = &GOUse_go_barov_journal;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_ethereum_prison";
-    pNewScript->pGOUse =          &GOUse_go_ethereum_prison;
-    pNewScript->RegisterSelf();
+    s.newScript("go_ethereum_prison");
+    s->pGOUse = &GOUse_go_ethereum_prison;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_ethereum_stasis";
-    pNewScript->pGOUse =          &GOUse_go_ethereum_stasis;
-    pNewScript->RegisterSelf();
+    s.newScript("go_ethereum_stasis");
+    s->pGOUse = &GOUse_go_ethereum_stasis;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_jump_a_tron";
-    pNewScript->pGOUse =          &GOUse_go_jump_a_tron;
-    pNewScript->RegisterSelf();
+    s.newScript("go_jump_a_tron");
+    s->pGOUse = &GOUse_go_jump_a_tron;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_mysterious_snow_mound";
-    pNewScript->pGOUse =          &GOUse_go_mysterious_snow_mound;
-    pNewScript->RegisterSelf();
+    s.newScript("go_mysterious_snow_mound");
+    s->pGOUse = &GOUse_go_mysterious_snow_mound;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_shrine_of_the_birds";
-    pNewScript->pGOUse =          &GOUse_go_shrine_of_the_birds;
-    pNewScript->RegisterSelf();
+    s.newScript("go_shrine_of_the_birds");
+    s->pGOUse = &GOUse_go_shrine_of_the_birds;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_tele_to_dalaran_crystal";
-    pNewScript->pGOUse =          &GOUse_go_tele_to_dalaran_crystal;
-    pNewScript->RegisterSelf();
+    s.newScript("go_tele_to_dalaran_crystal");
+    s->pGOUse = &GOUse_go_tele_to_dalaran_crystal;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_tele_to_violet_stand";
-    pNewScript->pGOUse =          &GOUse_go_tele_to_violet_stand;
-    pNewScript->RegisterSelf();
+    s.newScript("go_tele_to_violet_stand");
+    s->pGOUse = &GOUse_go_tele_to_violet_stand;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_andorhal_tower";
-    pNewScript->pGOUse =          &GOUse_go_andorhal_tower;
-    pNewScript->RegisterSelf();
+    s.newScript("go_andorhal_tower");
+    s->pGOUse = &GOUse_go_andorhal_tower;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_scourge_enclosure";
-    pNewScript->pGOUse =          &GOUse_go_scourge_enclosure;
-    pNewScript->RegisterSelf();
+    s.newScript("go_scourge_enclosure");
+    s->pGOUse = &GOUse_go_scourge_enclosure;
 
-    pNewScript = new Script;
-    pNewScript->Name = "go_lab_work_reagents";
-    pNewScript->pGOUse =          &GOUse_go_lab_work_reagents;
-    pNewScript->RegisterSelf();
+    s.newScript("go_lab_work_reagents");
+    s->pGOUse = &GOUse_go_lab_work_reagents;
 }

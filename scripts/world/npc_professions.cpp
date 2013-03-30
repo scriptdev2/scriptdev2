@@ -1199,35 +1199,25 @@ bool GossipSelect_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32 u
 
 void AddSC_npc_professions()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "npc_prof_alchemy";
-    pNewScript->pGossipHello =  &GossipHello_npc_prof_alchemy;
-    pNewScript->pGossipSelect = &GossipSelect_npc_prof_alchemy;
-    pNewScript->RegisterSelf();
+    s.newScript("npc_prof_alchemy");
+    s->pGossipHello =  &GossipHello_npc_prof_alchemy;
+    s->pGossipSelect = &GossipSelect_npc_prof_alchemy;
 
-    pNewScript = new Script;
-    pNewScript->Name = "npc_prof_blacksmith";
-    pNewScript->pGossipHello =  &GossipHello_npc_prof_blacksmith;
-    pNewScript->pGossipSelect = &GossipSelect_npc_prof_blacksmith;
-    pNewScript->RegisterSelf();
+    s.newScript("npc_prof_blacksmith");
+    s->pGossipHello =  &GossipHello_npc_prof_blacksmith;
+    s->pGossipSelect = &GossipSelect_npc_prof_blacksmith;
 
-    pNewScript = new Script;
-    pNewScript->Name = "npc_prof_leather";
-    pNewScript->pGossipHello =  &GossipHello_npc_prof_leather;
-    pNewScript->pGossipSelect = &GossipSelect_npc_prof_leather;
-    pNewScript->RegisterSelf();
+    s.newScript("npc_prof_leather");
+    s->pGossipHello =  &GossipHello_npc_prof_leather;
+    s->pGossipSelect = &GossipSelect_npc_prof_leather;
 
-    pNewScript = new Script;
-    pNewScript->Name = "npc_prof_tailor";
-    pNewScript->pGossipHello =  &GossipHello_npc_prof_tailor;
-    pNewScript->pGossipSelect = &GossipSelect_npc_prof_tailor;
-    pNewScript->RegisterSelf();
+    s.newScript("npc_prof_tailor");
+    s->pGossipHello =  &GossipHello_npc_prof_tailor;
+    s->pGossipSelect = &GossipSelect_npc_prof_tailor;
 
-    /*pNewScript = new Script;
-    pNewScript->Name = "go_soothsaying_for_dummies";
-    pNewScript->pGOUse =  &GOUse_go_soothsaying_for_dummies;
-    // pNewScript->pGossipSelect = &GossipSelect_go_soothsaying_for_dummies;
-    pNewScript->RegisterSelf();*/
+    /*s.newScript("go_soothsaying_for_dummies");
+    s->pGOUse =  &GOUse_go_soothsaying_for_dummies;
+    // s->pGossipSelect = &GossipSelect_go_soothsaying_for_dummies;*/
 }

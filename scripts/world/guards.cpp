@@ -273,105 +273,65 @@ CreatureAI* GetAI_guard_undercity(Creature* pCreature)
 
 void AddSC_guards()
 {
-    Script* pNewScript;
+    AutoScript s;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_azuremyst";
-    pNewScript->GetAI = &GetAI_guard_azuremyst;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_azuremyst");
+    s->GetAI = &GetAI_guard_azuremyst;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_bluffwatcher";
-    pNewScript->GetAI = &GetAI_guard_bluffwatcher;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_bluffwatcher");
+    s->GetAI = &GetAI_guard_bluffwatcher;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_contested";
-    pNewScript->GetAI = &GetAI_guard_contested;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_contested");
+    s->GetAI = &GetAI_guard_contested;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_darnassus";
-    pNewScript->GetAI = &GetAI_guard_darnassus;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_darnassus");
+    s->GetAI = &GetAI_guard_darnassus;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_dunmorogh";
-    pNewScript->GetAI = &GetAI_guard_dunmorogh;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_dunmorogh");
+    s->GetAI = &GetAI_guard_dunmorogh;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_durotar";
-    pNewScript->GetAI = &GetAI_guard_durotar;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_durotar");
+    s->GetAI = &GetAI_guard_durotar;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_elwynnforest";
-    pNewScript->GetAI = &GetAI_guard_elwynnforest;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_elwynnforest");
+    s->GetAI = &GetAI_guard_elwynnforest;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_eversong";
-    pNewScript->GetAI = &GetAI_guard_eversong;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_eversong");
+    s->GetAI = &GetAI_guard_eversong;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_exodar";
-    pNewScript->GetAI = &GetAI_guard_exodar;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_exodar");
+    s->GetAI = &GetAI_guard_exodar;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_ironforge";
-    pNewScript->GetAI = &GetAI_guard_ironforge;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_ironforge");
+    s->GetAI = &GetAI_guard_ironforge;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_mulgore";
-    pNewScript->GetAI = &GetAI_guard_mulgore;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_mulgore");
+    s->GetAI = &GetAI_guard_mulgore;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_orgrimmar";
-    pNewScript->GetAI = &GetAI_guard_orgrimmar;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_orgrimmar");
+    s->GetAI = &GetAI_guard_orgrimmar;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_shattrath";
-    pNewScript->GetAI = &GetAI_guard_shattrath;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_shattrath");
+    s->GetAI = &GetAI_guard_shattrath;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_shattrath_aldor";
-    pNewScript->GetAI = &GetAI_guard_shattrath_aldor;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_shattrath_aldor");
+    s->GetAI = &GetAI_guard_shattrath_aldor;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_shattrath_scryer";
-    pNewScript->GetAI = &GetAI_guard_shattrath_scryer;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_shattrath_scryer");
+    s->GetAI = &GetAI_guard_shattrath_scryer;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_silvermoon";
-    pNewScript->GetAI = &GetAI_guard_silvermoon;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_silvermoon");
+    s->GetAI = &GetAI_guard_silvermoon;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_stormwind";
-    pNewScript->GetAI = &GetAI_guard_stormwind;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_stormwind");
+    s->GetAI = &GetAI_guard_stormwind;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_teldrassil";
-    pNewScript->GetAI = &GetAI_guard_teldrassil;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_teldrassil");
+    s->GetAI = &GetAI_guard_teldrassil;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_tirisfal";
-    pNewScript->GetAI = &GetAI_guard_tirisfal;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_tirisfal");
+    s->GetAI = &GetAI_guard_tirisfal;
 
-    pNewScript = new Script;
-    pNewScript->Name = "guard_undercity";
-    pNewScript->GetAI = &GetAI_guard_undercity;
-    pNewScript->RegisterSelf();
+    s.newScript("guard_undercity");
+    s->GetAI = &GetAI_guard_undercity;
 }

@@ -224,12 +224,8 @@ bool GossipSelect_example_escort(Player* pPlayer, Creature* pCreature, uint32 /*
 
 void AddSC_example_escort()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "example_escort";
-    pNewScript->GetAI = &GetAI_example_escort;
-    pNewScript->pGossipHello = &GossipHello_example_escort;
-    pNewScript->pGossipSelect = &GossipSelect_example_escort;
-    pNewScript->RegisterSelf(false);
+    AutoScript s("example_escort", false);
+    s->GetAI = &GetAI_example_escort;
+    s->pGossipHello = &GossipHello_example_escort;
+    s->pGossipSelect = &GossipSelect_example_escort;
 }
