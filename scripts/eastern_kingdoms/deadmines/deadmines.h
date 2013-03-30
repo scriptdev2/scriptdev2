@@ -64,6 +64,7 @@ class MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         std::string m_strInstData;
 
         uint32 m_uiIronDoorTimer;
+        uint32 m_uiDoorStep;
 };
 
 #endif

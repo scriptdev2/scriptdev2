@@ -25,7 +25,8 @@ EndScriptData */
 #include "deadmines.h"
 
 instance_deadmines::instance_deadmines(Map* pMap) : ScriptedInstance(pMap),
-    m_uiIronDoorTimer(0)
+    m_uiIronDoorTimer(0),
+    m_uiDoorStep(0)
 {
     Initialize();
 }
@@ -125,30 +126,9 @@ void instance_deadmines::SetData(uint32 uiType, uint32 uiData)
         }
         case TYPE_IRON_CLAD_DOOR:
         {
+            // delayed door animation to sync with Defias Cannon animation
             if (uiData == DONE)
-            {
-                DoUseDoorOrButton(GO_IRON_CLAD_DOOR, 0, true);
-                m_uiIronDoorTimer = 15000;
-
-                if (Creature* pMrSmite = GetSingleCreatureFromStorage(NPC_MR_SMITE))
-                    DoScriptText(INST_SAY_ALARM1, pMrSmite);
-
-                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_IRON_CLAD_DOOR))
-                {
-                    // should be static spawns, fetch the closest ones at the pier
-                    if (Creature* pi1 = GetClosestCreatureWithEntry(pDoor, NPC_PIRATE, 40.0f))
-                    {
-                        pi1->SetWalk(false);
-                        pi1->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
-                    }
-
-                    if (Creature* pi2 = GetClosestCreatureWithEntry(pDoor, NPC_SQUALLSHAPER, 40.0f))
-                    {
-                        pi2->SetWalk(false);
-                        pi2->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
-                    }
-                }
-            }
+                m_uiIronDoorTimer = 500;
 
             m_auiEncounter[uiType] = uiData;
             break;
@@ -205,10 +185,41 @@ void instance_deadmines::Update(uint32 uiDiff)
     {
         if (m_uiIronDoorTimer <= uiDiff)
         {
-            if (Creature* pMrSmite = GetSingleCreatureFromStorage(NPC_MR_SMITE))
-                DoScriptText(INST_SAY_ALARM2, pMrSmite);
+            switch (m_uiDoorStep)
+            {
+                case 0:
+                    DoUseDoorOrButton(GO_IRON_CLAD_DOOR, 0, true);
 
-            m_uiIronDoorTimer = 0;
+                    if (Creature* pMrSmite = GetSingleCreatureFromStorage(NPC_MR_SMITE))
+                        DoScriptText(INST_SAY_ALARM1, pMrSmite);
+
+                    if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_IRON_CLAD_DOOR))
+                    {
+                        // should be static spawns, fetch the closest ones at the pier
+                        if (Creature* pi1 = GetClosestCreatureWithEntry(pDoor, NPC_PIRATE, 40.0f))
+                        {
+                            pi1->SetWalk(false);
+                            pi1->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
+                        }
+
+                        if (Creature* pi2 = GetClosestCreatureWithEntry(pDoor, NPC_SQUALLSHAPER, 40.0f))
+                        {
+                            pi2->SetWalk(false);
+                            pi2->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
+                        }
+                    }
+
+                    ++m_uiDoorStep;
+                    m_uiIronDoorTimer = 15000;
+                    break;
+                case 1:
+                    if (Creature* pMrSmite = GetSingleCreatureFromStorage(NPC_MR_SMITE))
+                        DoScriptText(INST_SAY_ALARM2, pMrSmite);
+
+                    m_uiDoorStep = 0;
+                    m_uiIronDoorTimer = 0;
+                    break;
+            }
         }
         else
             m_uiIronDoorTimer -= uiDiff;

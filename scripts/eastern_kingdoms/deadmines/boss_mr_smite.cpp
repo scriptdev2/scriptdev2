@@ -34,10 +34,10 @@ enum
     EQUIP_ID_HAMMER                 = 10756,
 
     SPELL_NIBLE_REFLEXES            = 6433,                 // removed after phase 1
-    SPELL_SMITE_SLAM                = 6435,
+    SPELL_SMITE_SLAM                = 6435,                 // only casted in phase 3
     SPELL_SMITE_STOMP               = 6432,
-    SPELL_SMITE_HAMMER              = 6436,
-    SPELL_THRASH                    = 12787,                // unclear, possible 3417 (only 10% proc chance)
+    SPELL_SMITE_HAMMER              = 6436,                 // unclear, not casted in sniff
+    SPELL_THRASH                    = 12787,                // only casted in phase 2; unclear, 3391 directly casted in sniff
 
     PHASE_1                         = 1,
     PHASE_2                         = 2,
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_SMITE_STOMP) == CAST_OK)
                     {
-                        DoScriptText(SAY_PHASE_2, m_creature);
+                        DoScriptText(m_creature->GetHealthPercent() < 33.0f ? SAY_PHASE_3 : SAY_PHASE_2, m_creature);
                         m_uiPhase = PHASE_EQUIP_START;
                         m_uiEquipTimer = 2500;
 
