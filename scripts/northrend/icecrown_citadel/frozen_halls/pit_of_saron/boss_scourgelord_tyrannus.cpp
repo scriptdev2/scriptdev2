@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_scourgelord_tyrannus
-SD%Complete: 20
-SDComment: Basic script
+SD%Complete: 80
+SDComment: Icy Blast not fully implemented.
 SDCategory: Pit of Saron
 EndScriptData */
 
@@ -35,6 +35,21 @@ enum
 
     EMOTE_RIMEFANG_ICEBOLT              = -1658059,
     EMOTE_SMASH                         = -1658060,
+
+    // Tyrannus spells
+    SPELL_FORCEFUL_SMASH                = 69155,
+    SPELL_OVERLORDS_BRAND               = 69172,                // triggers 69189 and 69190 from target
+    SPELL_UNHOLY_POWER                  = 69167,
+    SPELL_MARK_OF_RIMEFANG              = 69275,
+
+    // Rimefang spells
+    SPELL_HOARFROST                     = 69246,
+    SPELL_ICY_BLAST                     = 69232,
+    SPELL_KILLING_ICE                   = 72531,
+
+    // Icy blast
+    SPELL_ICY_BLAST_AURA                = 69238,
+    NPC_ICY_BLAST                       = 36731,
 };
 
 static const float afRimefangExitPos[3] = {1248.29f, 145.924f, 733.914f};
@@ -45,16 +60,26 @@ static const float afRimefangExitPos[3] = {1248.29f, 145.924f, 733.914f};
 
 struct MANGOS_DLL_DECL boss_tyrannusAI : public ScriptedAI
 {
-    boss_tyrannusAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_tyrannusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
+        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         Reset();
     }
 
     instance_pit_of_saron* m_pInstance;
 
+    uint32 m_uiForcefulSmashTimer;
+    uint32 m_uiOverlordsBrandTimer;
+    uint32 m_uiUnholyPowerTimer;
+    uint32 m_uiMarkOfRimefangTimer;
+
     void Reset() override
     {
+        m_uiForcefulSmashTimer  = 10000;
+        m_uiOverlordsBrandTimer = 9000;
+        m_uiUnholyPowerTimer    = urand(30000, 35000);
+        m_uiMarkOfRimefangTimer = 20000;
     }
 
     void Aggro(Unit* pWho) override
@@ -65,7 +90,7 @@ struct MANGOS_DLL_DECL boss_tyrannusAI : public ScriptedAI
         {
             m_pInstance->SetData(TYPE_TYRANNUS, IN_PROGRESS);
 
-            // Set Rimefang in combat
+            // Set Rimefang in combat - ToDo: research if it has some wp movement during combat
             if (Creature* pRimefang = m_pInstance->GetSingleCreatureFromStorage(NPC_RIMEFANG))
                 pRimefang->AI()->AttackStart(pWho);
         }
@@ -115,6 +140,60 @@ struct MANGOS_DLL_DECL boss_tyrannusAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiForcefulSmashTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FORCEFUL_SMASH) == CAST_OK)
+                m_uiForcefulSmashTimer = 50000;
+        }
+        else
+            m_uiForcefulSmashTimer -= uiDiff;
+
+        if (m_uiOverlordsBrandTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_OVERLORDS_BRAND) == CAST_OK)
+                    m_uiOverlordsBrandTimer = urand(10000, 13000);
+            }
+        }
+        else
+            m_uiOverlordsBrandTimer -= uiDiff;
+
+        if (m_uiUnholyPowerTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_UNHOLY_POWER) == CAST_OK)
+            {
+                DoScriptText(SAY_SMASH, m_creature);
+                DoScriptText(EMOTE_SMASH, m_creature);
+                m_uiUnholyPowerTimer = 60000;
+            }
+        }
+        else
+            m_uiUnholyPowerTimer -= uiDiff;
+
+        if (m_uiMarkOfRimefangTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_MARK_OF_RIMEFANG) == CAST_OK)
+                {
+                    DoScriptText(SAY_MARK, m_creature);
+                    if (m_pInstance)
+                    {
+                        if (Creature* pRimefang = m_pInstance->GetSingleCreatureFromStorage(NPC_RIMEFANG))
+                        {
+                            pRimefang->InterruptNonMeleeSpells(true);
+                            pRimefang->CastSpell(pTarget, SPELL_HOARFROST, false);
+                            DoScriptText(EMOTE_RIMEFANG_ICEBOLT, pRimefang, pTarget);
+                        }
+                    }
+                    m_uiMarkOfRimefangTimer = urand(20000, 25000);
+                }
+            }
+        }
+        else
+            m_uiMarkOfRimefangTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -132,16 +211,23 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
 {
     boss_rimefang_posAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
         SetCombatMovement(false);
+        m_bHasDoneIntro = false;
         m_uiMountTimer = 1000;
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_pit_of_saron* m_pInstance;
     uint32 m_uiMountTimer;
 
-    void Reset() override { }
+    uint32 m_uiIcyBlastTimer;
+    bool m_bHasDoneIntro;
+
+    void Reset() override
+    {
+        m_uiIcyBlastTimer = 8000;
+    }
 
     void EnterEvadeMode() override
     {
@@ -155,6 +241,37 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
         Reset();
 
         // Don't handle movement.
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        // Don't attack unless Tyrannus is in combat
+        if (m_pInstance && m_pInstance->GetData(TYPE_TYRANNUS) != IN_PROGRESS)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_pInstance)
+            return;
+
+        // Check if ambush is done
+        if (m_pInstance->GetData(TYPE_AMBUSH) != DONE)
+            return;
+
+        // Start the intro when possible
+        if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 85.0f) && m_creature->IsWithinLOSInMap(pWho))
+        {
+            m_pInstance->SetData(TYPE_TYRANNUS, SPECIAL);
+            m_bHasDoneIntro = true;
+            return;
+        }
+
+        // Check for out of range players - ToDo: confirm the distance
+        if (m_pInstance->GetData(TYPE_TYRANNUS) == IN_PROGRESS && pWho->GetTypeId() == TYPEID_PLAYER && !m_creature->IsWithinDistInMap(pWho, DEFAULT_VISIBILITY_INSTANCE))
+            DoCastSpellIfCan(pWho, SPELL_KILLING_ICE);
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -178,6 +295,18 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiIcyBlastTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                // ToDo: research how to summon the Icy Blast npc and apply the slow aura
+                if (DoCastSpellIfCan(pTarget, SPELL_ICY_BLAST) == CAST_OK)
+                    m_uiIcyBlastTimer = 8000;
+            }
+        }
+        else
+            m_uiIcyBlastTimer -= uiDiff;
     }
 };
 

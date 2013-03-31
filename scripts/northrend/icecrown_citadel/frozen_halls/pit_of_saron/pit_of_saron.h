@@ -7,12 +7,13 @@
 
 enum
 {
-    MAX_ENCOUNTER                   = 3,
+    MAX_ENCOUNTER                   = 4,
     MAX_SPECIAL_ACHIEV_CRITS        = 2,
 
     TYPE_GARFROST                   = 0,
     TYPE_KRICK                      = 1,
     TYPE_TYRANNUS                   = 2,
+    TYPE_AMBUSH                     = 3,
 
     TYPE_ACHIEV_DOESNT_GO_ELEVEN    = 0,
     TYPE_ACHIEV_DONT_LOOK_UP        = 1,
@@ -61,15 +62,14 @@ enum
     NPC_YMIRJAR_FLAMEBEARER         = 36893,
     NPC_FALLEN_WARRIOR              = 36841,
     NPC_COLDWRAITH                  = 36842,
-    NPC_SKELETON                    = 36877,
-    NPC_DISTURBED_REVENANT          = 36874,
     NPC_STALKER                     = 32780,
     NPC_GENERAL_BUNNY               = 24110,
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
 
-    AREATRIGGER_ID_TUNNEL           = 5578,
+    AREATRIGGER_ID_TUNNEL_START     = 5578,
+    AREATRIGGER_ID_TUNNEL_END       = 5581,
 
     ACHIEV_CRIT_DOESNT_GO_ELEVEN    = 12993,                // Garfrost, achiev 4524
     ACHIEV_CRIT_DONT_LOOK_UP        = 12994,                // Gauntlet, achiev 4525
@@ -169,14 +169,11 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
 
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
-        bool m_bIsAmbushStarted;
-
         uint8 m_uiAmbushAggroCount;
         uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
         uint32 m_uiIciclesTimer;
 
         GuidList m_lTunnelStalkersGuidList;
-        GuidList m_lTunnelNpcGuidList;
         GuidList m_lAmbushNpcsGuidList;
         GuidList m_lArcaneShieldBunniesGuidList;
         GuidList m_lFrozenAftermathBunniesGuidList;

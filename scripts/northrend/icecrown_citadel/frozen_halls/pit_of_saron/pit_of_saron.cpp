@@ -152,20 +152,29 @@ CreatureAI* GetAI_npc_collapsing_icicle(Creature* pCreature)
 
 bool AreaTrigger_at_pit_of_saron(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
-    if (pAt->id == AREATRIGGER_ID_TUNNEL)
+    if (pPlayer->isGameMaster() || !pPlayer->isAlive())
+        return false;
+
+    instance_pit_of_saron* pInstance = (instance_pit_of_saron*)pPlayer->GetInstanceData();
+    if (!pInstance)
+        return false;
+
+    if (pAt->id == AREATRIGGER_ID_TUNNEL_START)
     {
-        if (pPlayer->isGameMaster() || !pPlayer->isAlive())
-            return false;
-
-        instance_pit_of_saron* pInstance = (instance_pit_of_saron*)pPlayer->GetInstanceData();
-        if (!pInstance)
-            return false;
-
         if (pInstance->GetData(TYPE_GARFROST) != DONE || pInstance->GetData(TYPE_KRICK) != DONE ||
-            pInstance->GetData(TYPE_TYRANNUS) != NOT_STARTED)
+            pInstance->GetData(TYPE_AMBUSH) != NOT_STARTED)
             return false;
 
         pInstance->DoStartAmbushEvent();
+        pInstance->SetData(TYPE_AMBUSH, IN_PROGRESS);
+        return true;
+    }
+    else if (pAt->id == AREATRIGGER_ID_TUNNEL_END)
+    {
+        if (pInstance->GetData(TYPE_AMBUSH) != IN_PROGRESS)
+            return false;
+
+        pInstance->SetData(TYPE_AMBUSH, DONE);
         return true;
     }
 

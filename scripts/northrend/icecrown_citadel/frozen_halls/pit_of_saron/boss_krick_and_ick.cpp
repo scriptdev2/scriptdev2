@@ -72,7 +72,7 @@ static const float afTyrannusTeleLoc[4] = {841.01f, 196.245f, 573.964f, 4.46f};
 
 struct MANGOS_DLL_DECL boss_ickAI : public ScriptedAI
 {
-    boss_ickAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_ickAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
         m_uiMountTimer = 1000;

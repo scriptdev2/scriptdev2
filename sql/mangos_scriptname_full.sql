@@ -717,8 +717,10 @@ UPDATE creature_template SET ScriptName='npc_ymirjar_deathbringer' WHERE entry=3
 UPDATE creature_template SET ScriptName='npc_collapsing_icicle' WHERE entry=36847;
 UPDATE creature_template SET ScriptName='boss_tyrannus' WHERE entry=36658;
 UPDATE creature_template SET ScriptName='boss_rimefang_pos' WHERE entry=36661;
-DELETE FROM scripted_areatrigger WHERE entry=5578;
-INSERT INTO scripted_areatrigger VALUES (5578,'at_pit_of_saron');
+DELETE FROM scripted_areatrigger WHERE entry IN (5578,5581);
+INSERT INTO scripted_areatrigger VALUES
+(5578,'at_pit_of_saron'),
+(5581,'at_pit_of_saron');
 
 /* ICECROWN */
 

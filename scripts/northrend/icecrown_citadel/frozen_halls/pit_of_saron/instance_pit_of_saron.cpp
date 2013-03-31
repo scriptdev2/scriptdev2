@@ -157,7 +157,6 @@ static const DialogueEntryTwoSide aPoSDialogues[] =
 };
 
 instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aPoSDialogues),
-    m_bIsAmbushStarted(false),
     m_uiAmbushAggroCount(0),
     m_uiTeam(TEAM_NONE),
     m_uiIciclesTimer(0)
@@ -237,13 +236,9 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
         case NPC_YMIRJAR_FLAMEBEARER:
         case NPC_FALLEN_WARRIOR:
         case NPC_COLDWRAITH:
-        case NPC_DISTURBED_REVENANT:
-        case NPC_SKELETON:
-            // Sort the ambush and the tunnel mobs
+            // Sort only the temporary summons
             if (pCreature->IsTemporarySummon())
                 m_lAmbushNpcsGuidList.push_back(pCreature->GetObjectGuid());
-            else
-                m_lTunnelNpcGuidList.push_back(pCreature->GetObjectGuid());
             break;
         case NPC_GENERAL_BUNNY:
             if (pCreature->GetPositionY() < 130.0f)
@@ -299,9 +294,28 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TYRANNUS:
-            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 StartNextDialogueText(NPC_SINDRAGOSA);
+            else if (uiData == SPECIAL)
+            {
+                // Used just to start the intro
+                StartNextDialogueText(NPC_TYRANNUS);
+                return;
+            }
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_AMBUSH:
+            if (uiData == DONE)
+            {
+                Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS);
+                if (!pTyrannus)
+                    return;
+
+                // ToDo: enable this when the achiev check spells are implemented
+                // pTyrannus->CastSpell(pTyrannus, SPELL_ACHIEVEMENT_CHECK, true);
+                m_uiIciclesTimer = 0;
+            }
+            m_auiEncounter[uiType] = uiData;
             break;
         default:
             return;
@@ -312,7 +326,7 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
         OUT_SAVE_INST_DATA;
 
         std::ostringstream saveStream;
-        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
 
         m_strInstData = saveStream.str();
 
@@ -332,7 +346,7 @@ void instance_pit_of_saron::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -391,25 +405,8 @@ void instance_pit_of_saron::OnCreatureDeath(Creature* pCreature)
         case NPC_YMIRJAR_FLAMEBEARER:
         case NPC_FALLEN_WARRIOR:
         case NPC_COLDWRAITH:
-        case NPC_DISTURBED_REVENANT:
-        case NPC_SKELETON:
             // Check for tunnel event end - these mobs are not summoned
-            if (!pCreature->IsTemporarySummon())
-            {
-                m_lTunnelNpcGuidList.remove(pCreature->GetObjectGuid());
-
-                // If all mobs in the tunnel are clearned cast the achiev spell
-                if (m_lTunnelNpcGuidList.empty())
-                {
-                    pCreature->CastSpell(pCreature, SPELL_ACHIEVEMENT_CHECK, true);
-                    m_uiIciclesTimer = 0;
-
-                    // Start Tyrannus intro
-                    StartNextDialogueText(NPC_TYRANNUS);
-                }
-            }
-            // Check for the ambush event
-            else
+            if (pCreature->IsTemporarySummon())
             {
                 m_lAmbushNpcsGuidList.remove(pCreature->GetObjectGuid());
 
@@ -519,6 +516,8 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
                 pRimefang->SetWalk(false);
                 pRimefang->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[3][0], afTyrannusMovePos[3][1], afTyrannusMovePos[3][2]);
             }
+            if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS))
+                pTyrannus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             break;
         case SAY_VICTUS_OUTRO_1:
         {
@@ -596,10 +595,6 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
 
 void instance_pit_of_saron::DoStartAmbushEvent()
 {
-    // This is started only once per instance
-    if (m_bIsAmbushStarted)
-        return;
-
     Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO);
     if (!pTyrannus)
         return;
@@ -616,8 +611,6 @@ void instance_pit_of_saron::DoStartAmbushEvent()
             pSummon->GetMotionMaster()->MovePoint(1, aEventFirstAmbushLocations[i].fMoveX, aEventFirstAmbushLocations[i].fMoveY, aEventFirstAmbushLocations[i].fMoveZ);
         }
     }
-
-    m_bIsAmbushStarted = true;
 }
 
 void instance_pit_of_saron::Update(uint32 uiDiff)
