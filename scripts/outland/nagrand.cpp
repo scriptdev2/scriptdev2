@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
     {
         if (m_creature->GetHealth() < uiDamage || (m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 30)
         {
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
         m_uiFrostShockTimer = 6000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         m_creature->CastSpell(m_creature, SPELL_EARTHBIND_TOTEM, false);
     }
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
         pSummoned->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    void SpellHitTarget(Unit* /*pTarget*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_CHAIN_LIGHTNING)
         {

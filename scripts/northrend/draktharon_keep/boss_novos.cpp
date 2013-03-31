@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -330,9 +330,9 @@ struct MANGOS_DLL_DECL npc_crystal_channel_targetAI : public ScriptedAI
     instance_draktharon_keep* m_pInstance;
 
     void Reset() override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
-    void AttackStart(Unit* pWho) override {}
-    void UpdateAI(const uint32 uiDiff) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
+    void UpdateAI(const uint32 /*uiDiff*/) override {}
 
     void JustSummoned(Creature* pSummoned) override
     {

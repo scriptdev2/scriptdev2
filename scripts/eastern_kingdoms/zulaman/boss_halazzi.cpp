@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HALAZZI, FAIL);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFIGURE_TRANSFORM)
         {

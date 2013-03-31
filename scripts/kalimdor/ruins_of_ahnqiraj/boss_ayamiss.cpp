@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         SetCombatMovement(false);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         m_creature->SetLevitate(true);
         m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 15.0f);
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
+    void SummonedMovementInform(Creature* pSummoned, uint32 /*uiMotionType*/, uint32 uiPointId) override
     {
         if (uiPointId != 1 || pSummoned->GetEntry() != NPC_LARVA)
             return;
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL npc_hive_zara_larvaAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (m_pInstance)
         {

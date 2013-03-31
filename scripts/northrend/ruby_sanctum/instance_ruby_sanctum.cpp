@@ -48,7 +48,7 @@ bool instance_ruby_sanctum::IsEncounterInProgress() const
     return false;
 }
 
-void instance_ruby_sanctum::OnPlayerEnter(Player* pPlayer)
+void instance_ruby_sanctum::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // Return if Halion already dead, or Zarithrian alive
     if (m_auiEncounter[TYPE_ZARITHRIAN] != DONE || m_auiEncounter[TYPE_HALION] == DONE)

@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
         m_creature->ForcedDespawn();
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_THELURKER_EVENT, DONE);

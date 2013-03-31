@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             m_vPortalEntryList[i] = auiPortals[i];
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NETHERSPITE, IN_PROGRESS);

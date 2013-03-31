@@ -227,7 +227,7 @@ void hyjalAI::JustReachedHome()
     m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) == DONE : m_pInstance->GetData(TYPE_ANETHERON) == DONE;
 }
 
-void hyjalAI::Aggro(Unit* who)
+void hyjalAI::Aggro(Unit* /*who*/)
 {
     for (uint8 i = 0; i < MAX_SPELL; ++i)
         if (m_aSpells[i].m_uiCooldown)
@@ -441,7 +441,7 @@ void hyjalAI::DoTalk(YellType pYellType)
         DoScriptText(pYell->m_iTextId, m_creature);
 }
 
-void hyjalAI::SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+void hyjalAI::SpellHitTarget(Unit* /*pTarget*/, const SpellEntry* /*pSpell*/)
 {
     // TODO: this spell should cause misc mobs to despawn
     // if (pSpell->Id == SPELL_MASS_TELEPORT && pTarget->GetTypeId() != TYPEID_PLAYER)
@@ -461,7 +461,7 @@ void hyjalAI::Retreat()
     m_bIsRetreating = true;
 }
 
-void hyjalAI::JustDied(Unit* pKiller)
+void hyjalAI::JustDied(Unit* /*pKiller*/)
 {
     DoTalk(DEATH);
     m_creature->SetActiveObjectState(false);

@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
         m_bIsFrenzy              = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         m_uiAspectOfArlokkTimer    = 18000;
     }
 
-    void Aggro(Unit* who) override
+    void Aggro(Unit* /*who*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

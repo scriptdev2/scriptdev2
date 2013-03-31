@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
             pSpirit->CastSpell(m_creature, SPELL_SPIRIT_DRAIN, false);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_SPIRIT_DRAIN)
         {

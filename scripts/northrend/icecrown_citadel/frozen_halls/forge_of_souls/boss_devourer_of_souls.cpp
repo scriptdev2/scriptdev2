@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
         m_uiEndPhaseTimer = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(aTexts[0][m_uiFace], m_creature);
         if (m_pInstance)
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
         }
     }
 
-    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    void SpellHitTarget(Unit* /*pTarget*/, SpellEntry const* pSpellEntry) override
     {
         switch (pSpellEntry->Id)
         {

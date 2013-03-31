@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_DEATH_1 : SAY_BRUNDIR_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_BRUNDIR_AGGRO, m_creature);
 
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)
@@ -466,7 +466,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_DEATH_1 : SAY_MOLGEIM_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_MOLGEIM_AGGRO, m_creature);
 
@@ -503,7 +503,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)
@@ -644,7 +644,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_STEEL_DEATH_1 : SAY_STEEL_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_STEEL_AGGRO, m_creature);
 
@@ -666,7 +666,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)

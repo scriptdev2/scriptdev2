@@ -420,7 +420,7 @@ uint32 instance_icecrown_citadel::GetData(uint32 uiType) const
     return 0;
 }
 
-bool instance_icecrown_citadel::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscvalue1) const
+bool instance_icecrown_citadel::CheckAchievementCriteriaMeet(uint32 /*uiCriteriaId*/, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscvalue1*/) const
 {
     // ToDo:
     return false;
@@ -492,7 +492,7 @@ bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pA
     return false;
 }
 
-bool ProcessEventId_event_gameobject_citadel_valve(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_gameobject_citadel_valve(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

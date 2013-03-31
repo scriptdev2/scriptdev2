@@ -239,7 +239,7 @@ void instance_naxxramas::OnObjectCreate(GameObject* pGo)
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
-void instance_naxxramas::OnPlayerDeath(Player* pPlayer)
+void instance_naxxramas::OnPlayerDeath(Player* /*pPlayer*/)
 {
     if (IsEncounterInProgress())
         SetData(TYPE_UNDYING_FAILED, DONE);
@@ -510,7 +510,7 @@ void instance_naxxramas::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMe
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

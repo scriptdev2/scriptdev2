@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         // DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAHRAZ, IN_PROGRESS);

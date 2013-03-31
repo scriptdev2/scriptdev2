@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
@@ -224,7 +224,7 @@ CreatureAI* GetAI_npc_muglash(Creature* pCreature)
     return new npc_muglashAI(pCreature);
 }
 
-bool GOUse_go_naga_brazier(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_naga_brazier(Player* /*pPlayer*/, GameObject* pGo)
 {
     if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE * 2))
     {

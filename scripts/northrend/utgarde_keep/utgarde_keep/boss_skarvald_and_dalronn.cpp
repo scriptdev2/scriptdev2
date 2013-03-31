@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
         m_uiStoneStrikeTimer = 8000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(m_aYell[0].m_iTextId, m_creature);
         m_uiYellDelayTimer = 5000;

@@ -225,7 +225,7 @@ CreatureAI* GetAI_npc_kelerun_bloodmourn(Creature* pCreature)
 }
 
 // easiest way is to expect database to respawn GO at quest accept (quest_start_script)
-bool QuestAccept_npc_kelerun_bloodmourn(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_kelerun_bloodmourn(Player* /*pPlayer*/, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SECOND_TRIAL)
     {
@@ -314,7 +314,7 @@ bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
         ++m_uiMobCount;
     }
 
-    void SummonedCreatureJustDied(Creature* pKilled) override
+    void SummonedCreatureJustDied(Creature* /*pKilled*/) override
     {
         --m_uiMobCount;
 
@@ -477,7 +477,7 @@ struct MANGOS_DLL_DECL npc_infused_crystalAI : public Scripted_NoMovementAI
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned) override
+    void SummonedCreatureJustDied(Creature* /*pSummoned*/) override
     {
         ++m_uiKilledCount;
 

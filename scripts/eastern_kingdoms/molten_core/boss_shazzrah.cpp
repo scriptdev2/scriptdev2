@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         m_uiBlinkTimer = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAZZRAH, IN_PROGRESS);

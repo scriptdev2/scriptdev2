@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         // instance data set when sindragosa lands
@@ -511,7 +511,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_RIMEFANG_FROST_AURA, CAST_TRIGGERED);
     }
@@ -816,7 +816,7 @@ struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
         m_uiFrostBombTimer = 6000;
     }
 
-    void AttackStart(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
     void UpdateAI(const uint32 uiDiff) override
     {

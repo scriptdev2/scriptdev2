@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         m_bIsEnraged = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

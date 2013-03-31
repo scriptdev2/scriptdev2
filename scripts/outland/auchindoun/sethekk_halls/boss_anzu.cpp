@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
         m_fHealthCheck      = 75.0f;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // Note: this should be moved to the intro event when implemented!
         DoSummonBirdHelpers();

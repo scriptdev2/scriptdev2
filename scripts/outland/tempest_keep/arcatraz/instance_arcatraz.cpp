@@ -100,7 +100,7 @@ void instance_arcatraz::Initialize()
     InitializeDialogueHelper(this);
 }
 
-void instance_arcatraz::OnPlayerEnter(Player* pPlayer)
+void instance_arcatraz::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // Check encounter states
     if (GetData(TYPE_ENTRANCE) == DONE || GetData(TYPE_ENTRANCE) == IN_PROGRESS)

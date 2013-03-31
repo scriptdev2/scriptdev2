@@ -183,12 +183,12 @@ there is no difference here (except that default text is chosen with `gameobject
 # formulas to calculate unlearning cost
 ###*/
 
-int32 GetLearningCost(Player* pPlayer)                      // tailor, alchemy
+int32 GetLearningCost(Player* /*pPlayer*/)                      // tailor, alchemy
 {
     return 200000;
 }
 
-int32 GetUnlearnCostHigh(Player* pPlayer)                   // tailor, alchemy
+int32 GetUnlearnCostHigh(Player* /*pPlayer*/)                   // tailor, alchemy
 {
     return 1500000;
 }

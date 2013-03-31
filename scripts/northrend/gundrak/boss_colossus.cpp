@@ -77,12 +77,12 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
         m_uiSurgeTimer   = urand(9000, 13000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MOJO_VOLLEY : SPELL_MOJO_VOLLEY_H);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& /*uiDamage*/) override
     {
         if (!m_bIsFirstEmerge)
             return;
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MORTAL_STRIKES : SPELL_MORTAL_STRIKES_H);
 
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (m_bFirstEmerge && m_creature->GetHealthPercent() < 50.0f)
             DoEmergeElemental();

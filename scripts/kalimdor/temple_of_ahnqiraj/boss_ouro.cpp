@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public Scripted_NoMovementAI
         m_bSubmerged          = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_OURO, IN_PROGRESS);

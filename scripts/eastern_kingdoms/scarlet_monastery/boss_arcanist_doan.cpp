@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         bShielded                = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }

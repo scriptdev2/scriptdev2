@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_muruAI : public Scripted_NoMovementAI
         m_bIsTransition            = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MURU, IN_PROGRESS);
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_muruAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_MURU, FAIL);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (uiDamage > m_creature->GetHealth())
         {
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_entropiusAI : public ScriptedAI
         m_uiDarknessTimer = 20000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_NEGATIVE_ENERGY_ENT);
     }
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL npc_portal_targetAI : public Scripted_NoMovementAI
             DoCastSpellIfCan(pSummoned, SPELL_SENTINEL_SUMMONER_VISUAL, CAST_TRIGGERED);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // These spells are dummies, but are used only to init the timers
         // They could use the EffectDummyCreature to handle this, but this makes code easier
@@ -420,7 +420,7 @@ struct MANGOS_DLL_DECL npc_void_sentinel_summonerAI : public Scripted_NoMovement
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_boss_muru(Creature* pCreature)

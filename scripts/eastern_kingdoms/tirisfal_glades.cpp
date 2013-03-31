@@ -42,7 +42,7 @@ enum
     GO_DOOR         = 176594
 };
 
-bool GOUse_go_mausoleum_door(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_mausoleum_door(Player* pPlayer, GameObject* /*pGo*/)
 {
     if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;

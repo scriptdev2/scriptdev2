@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         m_uiPreviousTimer       = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_MOJO_FRENZY);

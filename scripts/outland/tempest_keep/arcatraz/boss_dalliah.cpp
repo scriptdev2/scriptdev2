@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
         m_bHasTaunted           = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pWho) override
+    void JustDied(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

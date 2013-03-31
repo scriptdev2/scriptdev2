@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
         pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
     }
 
-    void SummonedCreatureJustDied(Creature* pKilled) override
+    void SummonedCreatureJustDied(Creature* /*pKilled*/) override
     {
         --m_uiSummonCount;
 

@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         m_uiCommandSoundTimer      = 40000;                 // 40 seconds
     }
 
-    void KilledUnit(Unit* Victim) override
+    void KilledUnit(Unit* /*Victim*/) override
     {
         if (urand(0, 3))
             return;
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
             m_pInstance->SetData(TYPE_RAZUVIOUS, DONE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {

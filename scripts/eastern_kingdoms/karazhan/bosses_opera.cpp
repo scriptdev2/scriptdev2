@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_CONFLAG_PROC);
         DoScriptText(SAY_STRAWMAN_AGGRO, m_creature);
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
         m_uiRustTimer   = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_TINHEAD_AGGRO, m_creature);
     }
@@ -458,7 +458,7 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_ROAR_AGGRO, m_creature);
     }
@@ -553,7 +553,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_CRONE_AGGRO : SAY_CRONE_AGGRO2, m_creature);
 
@@ -653,7 +653,7 @@ bool GossipHello_npc_grandmother(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
@@ -687,7 +687,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         m_uiSwipeTimer         = 5000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_WOLF_AGGRO, m_creature);
     }
@@ -831,7 +831,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         m_bIsFakingDeath            = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_JULIANNE_AGGRO, m_creature);
     }
@@ -844,7 +844,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -1030,7 +1030,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
     }
 };
 
-bool EffectDummyCreature_spell_drink_poison(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_drink_poison(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_DRINK_POISON && uiEffIndex == EFFECT_INDEX_0)
@@ -1091,7 +1091,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -1113,7 +1113,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_ROMULO_AGGRO, m_creature);
     }

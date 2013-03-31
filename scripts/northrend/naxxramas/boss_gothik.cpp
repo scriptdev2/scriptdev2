@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         m_lRiderSummonPosGuids.clear();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (!m_pInstance)
             return;
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         }
     }
 
-    void SummonAdds(bool bRightSide, uint32 uiSummonEntry)
+    void SummonAdds(bool /*bRightSide*/, uint32 uiSummonEntry)
     {
         GuidList* plSummonPosGuids;
         switch (uiSummonEntry)
@@ -449,7 +449,7 @@ CreatureAI* GetAI_boss_gothik(Creature* pCreature)
     return new boss_gothikAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_anchor(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiEffIndex != EFFECT_INDEX_0 || pCreatureTarget->GetEntry() != NPC_SUB_BOSS_TRIGGER)
         return true;

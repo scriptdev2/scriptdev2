@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         m_uiMagmaShacklesTimer = 15000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARR, IN_PROGRESS);

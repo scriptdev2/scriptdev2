@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ATTUMEN, IN_PROGRESS);
@@ -224,13 +224,13 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void SpellHit(Unit* pSource, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pSource*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Mechanic == MECHANIC_DISARM)
             DoScriptText(SAY_DISARMED, m_creature);
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

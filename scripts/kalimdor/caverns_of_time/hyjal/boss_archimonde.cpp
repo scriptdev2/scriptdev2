@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_bStartEpilogue         = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }

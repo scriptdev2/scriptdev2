@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         m_uiSpikeCount        = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -207,7 +207,7 @@ CreatureAI* GetAI_boss_ormorok(Creature* pCreature)
     return new boss_ormorokAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_crystal_spike_trigger(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_crystal_spike_trigger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_CRYSTAL_SPIKE_AURA && uiEffIndex == EFFECT_INDEX_0)

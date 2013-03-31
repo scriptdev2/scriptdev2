@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "nexus.h"
 
-bool GOUse_go_containment_sphere(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_containment_sphere(Player* /*pPlayer*/, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
@@ -168,7 +168,7 @@ void instance_nexus::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

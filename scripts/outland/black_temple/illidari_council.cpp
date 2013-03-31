@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
         {

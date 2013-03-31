@@ -131,7 +131,7 @@ uint32 instance_halls_of_lightning::GetData(uint32 uiType) const
     return 0;
 }
 
-bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     if (uiCriteriaId == ACHIEV_CRIT_RESISTANT)
         return m_bIsShatterResistant;

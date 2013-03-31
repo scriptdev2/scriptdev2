@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
     }
 
     void Reset() override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void JustDied(Unit* pKiller) override
     {
@@ -736,7 +736,7 @@ struct MANGOS_DLL_DECL npc_captive_child : public ScriptedAI
 
     void Reset() override {}
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
+    void MovementInform(uint32 uiMotionType, uint32 /*uiPointId*/) override
     {
         if (uiMotionType == POINT_MOTION_TYPE)
             m_creature->ForcedDespawn();                    // we only have one waypoint

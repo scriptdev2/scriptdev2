@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_GREEN_CHANNELING);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_TRASH);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // Don't attack if is summoned by Jeklik - the npc gets aggro because of the Liquid Fire
         if (m_bIsSummon)

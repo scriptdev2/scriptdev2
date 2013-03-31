@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MAULGAR_EVENT, SPECIAL);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         if (!m_pInstance)
             return;

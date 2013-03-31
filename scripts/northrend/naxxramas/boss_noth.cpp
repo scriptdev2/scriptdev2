@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         m_uiSummonTimer = 12000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {

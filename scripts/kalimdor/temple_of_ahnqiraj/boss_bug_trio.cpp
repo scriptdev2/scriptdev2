@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         m_uiFearTimer = urand(12000, 24000);
     }
 
-    void JustDied(Unit* Killer) override
+    void JustDied(Unit* /*Killer*/) override
     {
         // Spawn 10 yauj brood on death
         float fX, fY, fZ;

@@ -67,13 +67,13 @@ struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
             m_pInstance->SetData(0, NOT_STARTED);*/
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         /*if (m_pInstance)
             m_pInstance->SetData(0, IN_PROGRESS);*/
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         /*if (m_pInstance)
             m_pInstance->SetData(0, DONE);*/
@@ -124,7 +124,7 @@ bool GossipHello_npc_sergeant_bly(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_sergeant_bly(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_sergeant_bly(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -165,19 +165,19 @@ struct MANGOS_DLL_DECL npc_weegli_blastfuseAI : public ScriptedAI
             m_pInstance->SetData(0, NOT_STARTED);*/
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         /*if (m_pInstance)
             m_pInstance->SetData(0, IN_PROGRESS);*/
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         /*if (m_pInstance)
             m_pInstance->SetData(0, DONE);*/
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -206,7 +206,7 @@ bool GossipHello_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -216,7 +216,7 @@ bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature, uin
     return true;
 }
 
-bool ProcessEventId_event_go_zulfarrak_gong(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_go_zulfarrak_gong(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

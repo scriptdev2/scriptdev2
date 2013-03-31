@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
-    void AttackStart(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
     void Aggro(Unit* pWho) override
     {

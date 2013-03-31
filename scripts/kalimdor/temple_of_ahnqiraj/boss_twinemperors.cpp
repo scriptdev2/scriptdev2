@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
     }
 
     // Workaround for the shared health pool
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (!m_pInstance)
             return;
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TWINS, IN_PROGRESS);
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TWINS, FAIL);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TWIN_TELEPORT)
         {
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
     virtual bool DoHandleBerserk() = 0;
 
     // Return true to handle shared timers and MeleeAttack
-    virtual bool UpdateEmperorAI(const uint32 uiDiff) { return true; }
+    virtual bool UpdateEmperorAI(const uint32 /*uiDiff*/) { return true; }
 
     void UpdateAI(const uint32 uiDiff) override
     {

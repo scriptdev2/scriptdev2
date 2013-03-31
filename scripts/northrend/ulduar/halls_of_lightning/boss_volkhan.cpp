@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         m_uiTemperTimer = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         m_creature->UpdateEntry(NPC_BRITTLE_GOLEM);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         // Transform intro Brittle when damaged to 0 HP
         if (uiDamage >= m_creature->GetHealth())
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // This is the dummy effect of the spells - Note: should be handled as a dummy effect in core
         if (pSpell->Id == SPELL_SHATTER || pSpell->Id == SPELL_SHATTER_H)

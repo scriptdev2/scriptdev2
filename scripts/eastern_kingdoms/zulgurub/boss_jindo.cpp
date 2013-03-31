@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         m_uiTeleportTimer           = 5000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -179,8 +179,8 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
         m_uiHealTimer = 3000;                               // Timer unknown, sources go over 1s, per tick to 3s, keep 3s as in original script
     }
 
-    void AttackStart(Unit* pWho) override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
 
     void UpdateAI(const uint32 uiDiff) override
     {

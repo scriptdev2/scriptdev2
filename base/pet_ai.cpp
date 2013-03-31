@@ -79,7 +79,7 @@ void ScriptedPetAI::ResetPetCombat()
     Reset();
 }
 
-void ScriptedPetAI::UpdatePetAI(const uint32 uiDiff)
+void ScriptedPetAI::UpdatePetAI(const uint32 /*uiDiff*/)
 {
     DoMeleeAttackIfReady();
 }

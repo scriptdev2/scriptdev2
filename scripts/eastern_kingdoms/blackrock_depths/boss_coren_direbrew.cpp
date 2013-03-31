@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_coren_direbrewAI : public ScriptedAI
         m_uiPhase           = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // Spawn 3 minions on aggro
         for (uint8 i = 0; i < MAX_DIREBREW_MINIONS; ++i)

@@ -212,7 +212,7 @@ void instance_violet_hold::UpdateWorldState(bool bEnable)
     DoUpdateWorldState(WORLD_STATE_PORTALS, m_uiWorldStatePortalCount);
 }
 
-void instance_violet_hold::OnPlayerEnter(Player* pPlayer)
+void instance_violet_hold::OnPlayerEnter(Player* /*pPlayer*/)
 {
     UpdateWorldState(m_auiEncounter[TYPE_MAIN] == IN_PROGRESS ? true : false);
 
@@ -521,7 +521,7 @@ void instance_violet_hold::ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
     // else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
 }
 
-bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

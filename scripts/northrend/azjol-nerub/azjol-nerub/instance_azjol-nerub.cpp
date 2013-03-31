@@ -316,7 +316,7 @@ uint32 instance_azjol_nerub::GetData(uint32 uiType) const
     return 0;
 }
 
-bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1*/ /* = 0*/) const
 {
     switch (uiCriteriaId)
     {

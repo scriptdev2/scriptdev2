@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -268,7 +268,7 @@ CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
     return new boss_arlokkAI(pCreature);
 }
 
-bool GOUse_go_gong_of_bethekk(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_gong_of_bethekk(Player* /*pPlayer*/, GameObject* pGo)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
     {

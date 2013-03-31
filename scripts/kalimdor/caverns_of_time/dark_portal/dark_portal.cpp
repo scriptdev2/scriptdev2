@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
 
     void Reset() override { }
 
-    void AttackStart(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
 
     void JustSummoned(Creature* pSummoned) override
     {
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_medivh_black_morass(Creature* pCreature)
@@ -90,7 +90,7 @@ CreatureAI* GetAI_npc_medivh_black_morass(Creature* pCreature)
     return new npc_medivh_black_morassAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_medivh_black_morass(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_medivh_black_morass(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if ((uiSpellId == SPELL_CORRUPT && uiEffIndex == EFFECT_INDEX_0) || (uiSpellId == SPELL_CORRUPT_AEONUS && uiEffIndex == EFFECT_INDEX_0))
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_CORRUPT_AEONUS, false);
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
@@ -333,7 +333,7 @@ CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
     return new npc_time_riftAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_time_rift_channel(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_time_rift_channel(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_RIFT_PERIODIC && uiEffIndex == EFFECT_INDEX_0)

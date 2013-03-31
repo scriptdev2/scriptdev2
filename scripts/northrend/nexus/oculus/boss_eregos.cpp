@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         m_uiAnomalyTargetIndex  = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL npc_planar_anomalyAI : public ScriptedAI
         m_bHasBlastCasted = false;
     }
 
-    void AttackStart(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
 
     void MoveInLineOfSight(Unit* pWho) override
     {

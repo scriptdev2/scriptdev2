@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         m_bEnraged          = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CHROMAGGUS, IN_PROGRESS);

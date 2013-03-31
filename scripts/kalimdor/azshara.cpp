@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
 
     void Reset() override { }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_SURRENDER)
         {
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
     }
 
     // this may be wrong
-    void JustSummoned(Creature* pSummoned) override
+    void JustSummoned(Creature* /*pSummoned*/) override
     {
         // pSummoned->CastSpell(pSummoned,SPELL_PERIODIC_GRENADE,false,NULL,NULL,m_creature->GetObjectGuid());
     }
@@ -194,7 +194,7 @@ bool GossipHello_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_rizzle_sprysprocket(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -230,7 +230,7 @@ CreatureAI* GetAI_npc_depth_charge(Creature* pCreature)
 ## go_southfury_moonstone
 ######*/
 
-bool GOUse_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_southfury_moonstone(Player* pPlayer, GameObject* /*pGo*/)
 {
     // implicitTarget=48 not implemented as of writing this code, and manual summon may be just ok for our purpose
     // pPlayer->CastSpell(pPlayer,SPELL_SUMMON_RIZZLE,false);
@@ -419,7 +419,7 @@ bool GossipHello_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {

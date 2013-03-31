@@ -564,7 +564,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (m_bIsDuelInProgress && uiDamage > m_creature->GetHealth())
         {
@@ -619,7 +619,7 @@ bool GossipHello_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature)
     return false;
 }
 
-bool GossipSelect_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -1139,9 +1139,9 @@ struct MANGOS_DLL_DECL npc_eye_of_acherusAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_EYE_FLIGHT, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (m_bIsInitialized)
             return;
@@ -1519,7 +1519,7 @@ struct MANGOS_DLL_DECL npc_highlord_darion_mograineAI : public npc_escortAI
         reader.PSendSysMessage("Event-processing is %s, Fighting is %s", reader.GetOnOffStr(m_uiEventTimer), reader.GetOnOffStr(m_uiFightTimer));
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // cast aggro aura
         DoCastSpellIfCan(m_creature, SPELL_HERO_AGGRO_AURA);
@@ -2591,7 +2591,7 @@ bool GossipHello_npc_highlord_darion_mograine(Player* pPlayer, Creature* pCreatu
     return true;
 }
 
-bool GossipSelect_npc_highlord_darion_mograine(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_highlord_darion_mograine(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction ==  GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2635,7 +2635,7 @@ struct MANGOS_DLL_DECL npc_fellow_death_knightAI : public ScriptedAI
         m_uiPlagueStrikeTimer   = urand(5000, 10000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_HERO_AGGRO_AURA);
     }
@@ -2754,9 +2754,9 @@ struct MANGOS_DLL_DECL npc_lich_king_light_dawnAI : public ScriptedAI
     npc_lich_king_light_dawnAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset() override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void AttackStart(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_lich_king_light_dawn(Creature* pCreature)
@@ -2890,7 +2890,7 @@ CreatureAI* GetAI_npc_acherus_deathcharger(Creature* pCreature)
     return new npc_acherus_deathchargerAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_acherus_deathcharger(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_acherus_deathcharger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_HORSEMAN_SLAIN && uiEffIndex == EFFECT_INDEX_0)

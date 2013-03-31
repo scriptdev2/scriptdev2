@@ -243,7 +243,7 @@ InstanceData* GetInstanceData_instance_blackfathom_deeps(Map* pMap)
     return new instance_blackfathom_deeps(pMap);
 }
 
-bool GOUse_go_fire_of_akumai(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_fire_of_akumai(Player* /*pPlayer*/, GameObject* pGo)
 {
     instance_blackfathom_deeps* pInstance = (instance_blackfathom_deeps*)pGo->GetInstanceData();
 

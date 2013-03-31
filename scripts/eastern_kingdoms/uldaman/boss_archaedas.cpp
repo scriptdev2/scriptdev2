@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHAEDAS, IN_PROGRESS);
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARCHAEDAS, FAIL);
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* /*pSpell*/) override
     {
         if (pTarget->GetTypeId() != TYPEID_PLAYER)
         {
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL npc_archaeras_addAI : public ScriptedAI
     {
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

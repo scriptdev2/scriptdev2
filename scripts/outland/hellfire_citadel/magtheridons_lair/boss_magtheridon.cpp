@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(EMOTE_FREED, m_creature);
         DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, FAIL);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // When banished by the cubes
         if (pSpell->Id == SPELL_SHADOW_CAGE)
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         m_uiInfernalTimer           = urand(10000, 50000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         m_creature->InterruptNonMeleeSpells(false);
 
@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     }
 
     // Don't attack on LoS check
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void JustDied(Unit* /*pKiller*/) override
     {
@@ -470,10 +470,10 @@ struct MANGOS_DLL_DECL npc_target_triggerAI : public Scripted_NoMovementAI
         m_uiDebrisTimer = 0;
     }
 
-    void AttackStart(Unit* pWho) override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // Workaround for missing core support for this type of dummy aura
         if (pSpell->Id == SPELL_QUAKE_EFFECT)

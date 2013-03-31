@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
         m_uiVaporsGathered       = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
         {
@@ -289,7 +289,7 @@ CreatureAI* GetAI_boss_general_vezax(Creature* pCreature)
     return new boss_general_vezaxAI(pCreature);
 }
 
-bool ProcessEventId_event_spell_saronite_barrier(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_saronite_barrier(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (pSource->GetTypeId() == TYPEID_UNIT && ((Creature*)pSource)->GetEntry() == NPC_VEZAX)
     {

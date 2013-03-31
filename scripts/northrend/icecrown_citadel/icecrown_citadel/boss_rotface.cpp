@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         m_uiInfectionsRate              = 1;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, IN_PROGRESS);

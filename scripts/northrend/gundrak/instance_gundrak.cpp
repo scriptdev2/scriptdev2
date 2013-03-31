@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "gundrak.h"
 
-bool GOUse_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_gundrak_altar(Player* /*pPlayer*/, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
@@ -272,7 +272,7 @@ uint32 instance_gundrak::GetData(uint32 uiType) const
     return 0;
 }
 
-bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

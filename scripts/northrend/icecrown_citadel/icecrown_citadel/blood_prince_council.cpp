@@ -267,9 +267,9 @@ struct MANGOS_DLL_DECL npc_ball_of_flameAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_ball_of_flame(Creature* pCreature)
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL npc_kinetic_bombAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_KINETIC_BOMB_VISUAL, CAST_TRIGGERED);
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
     {
         // Note: this npc shouldn't take any damage - however this has an issue in the core, because the Unstanble spell doesn't proc on 0 damage
         uiDamage = 0;
@@ -306,11 +306,11 @@ struct MANGOS_DLL_DECL npc_kinetic_bombAI : public ScriptedAI
         m_creature->ForcedDespawn(1000);
     }
 
-    void AttackStart(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
 
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_kinetic_bomb(Creature* pCreature)
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL npc_dark_nucleusAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    void DamageTaken(Unit* pDealer, uint32& /*uiDamage*/) override
     {
         if (m_creature->getVictim() && pDealer != m_creature->getVictim())
         {
@@ -401,7 +401,7 @@ struct MANGOS_DLL_DECL npc_blood_orb_controlAI : public Scripted_NoMovementAI
         m_uiInvocationTimer = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BLOOD_PRINCE_COUNCIL, IN_PROGRESS);
@@ -518,7 +518,7 @@ struct MANGOS_DLL_DECL blood_prince_council_baseAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
     {
         // Damage is shared by the Blood Orb Control npc
         if (!m_uiEmpowermentTimer)

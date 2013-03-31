@@ -989,7 +989,7 @@ struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovement
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pCreature) override
+    void SummonedCreatureDespawn(Creature* /*pCreature*/) override
     {
         // decrement mob count
         --m_uiMobCount;
@@ -1102,7 +1102,7 @@ CreatureAI* GetAI_npc_lord_illidan_stormrage(Creature * (pCreature))
 /*#####
 # go_crystal_prison : GameObject that begins the event and hands out quest
 ######*/
-bool GOQuestAccept_GO_crystal_prison(Player* pPlayer, GameObject* pGo, Quest const* pQuest)
+bool GOQuestAccept_GO_crystal_prison(Player* pPlayer, GameObject* /*pGo*/, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_BATTLE_OF_THE_CRIMSON_WATCH)
         if (Creature* pLordIllidan = GetClosestCreatureWithEntry(pPlayer, NPC_LORD_ILLIDAN, 50.0))
@@ -1165,8 +1165,8 @@ struct MANGOS_DLL_DECL npc_totem_of_spiritsAI : public ScriptedPetAI
 
     void Reset() override {}
 
-    void UpdateAI(const uint32 uiDiff) override {}
-    void AttackedBy(Unit* pAttacker) override {}
+    void UpdateAI(const uint32 /*uiDiff*/) override {}
+    void AttackedBy(Unit* /*pAttacker*/) override {}
 
     void MoveInLineOfSight(Unit* pWho) override
     {
@@ -1228,7 +1228,7 @@ CreatureAI* GetAI_npc_totem_of_spirits(Creature* pCreature)
     return new npc_totem_of_spiritsAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_totem_of_spirits(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_totem_of_spirits(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiEffIndex != EFFECT_INDEX_0)
         return false;
@@ -1296,7 +1296,7 @@ bool EffectAuraDummy_npc_totem_of_spirits(const Aura* pAura, bool bApply)
     return true;
 }
 
-bool ProcessEventId_event_spell_soul_captured_credit(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_soul_captured_credit(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_UNIT)
     {
@@ -1653,7 +1653,7 @@ bool GossipHello_npc_spawned_oronok_tornheart(Player* pPlayer, Creature* pCreatu
     return true;
 }
 
-bool GossipSelect_npc_spawned_oronok_tornheart(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_spawned_oronok_tornheart(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {

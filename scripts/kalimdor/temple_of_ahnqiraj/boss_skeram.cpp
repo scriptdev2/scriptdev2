@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_bIsImage)
             return;
@@ -242,7 +242,7 @@ CreatureAI* GetAI_boss_skeram(Creature* pCreature)
     return new boss_skeramAI(pCreature);
 }
 
-bool EffectDummyCreature_prophet_skeram(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_prophet_skeram(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_INITIALIZE_IMAGE && uiEffIndex == EFFECT_INDEX_0)

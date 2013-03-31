@@ -668,7 +668,7 @@ bool AreaTrigger_at_blackrock_spire(Player* pPlayer, AreaTriggerEntry const* pAt
     return false;
 }
 
-bool ProcessEventId_event_spell_altar_emberseer(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_altar_emberseer(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {
@@ -681,7 +681,7 @@ bool ProcessEventId_event_spell_altar_emberseer(uint32 uiEventId, Object* pSourc
     return false;
 }
 
-bool GOUse_go_father_flame(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_father_flame(Player* /*pPlayer*/, GameObject* pGo)
 {
     if (instance_blackrock_spire* pInstance = (instance_blackrock_spire*)pGo->GetInstanceData())
         pInstance->StartflamewreathEventIfCan();

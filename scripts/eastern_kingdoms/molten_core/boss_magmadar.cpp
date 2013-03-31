@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         m_uiLavabombTimer = 12000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_MAGMASPIT, true);
 

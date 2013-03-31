@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         m_uiSupremeTimer = 45000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_SUPREME, CAST_TRIGGERED);
         DoScriptText(SAY_AGGRO, m_creature);
@@ -243,7 +243,7 @@ CreatureAI* GetAI_boss_ossirian(Creature* pCreature)
 }
 
 // This is actually a hack for a server-side spell
-bool GOUse_go_ossirian_crystal(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_ossirian_crystal(Player* /*pPlayer*/, GameObject* pGo)
 {
     if (Creature* pOssirianTrigger = GetClosestCreatureWithEntry(pGo, NPC_OSSIRIAN_TRIGGER, 10.0f))
         pOssirianTrigger->CastSpell(pOssirianTrigger, aWeaknessSpell[urand(0, 4)], false);

@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
         m_bCanSummonEmber       = true;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ALAR, IN_PROGRESS);
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pKiller, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pKiller*/, uint32& uiDamage) override
     {
         // Only init fake in phase one
         if (m_uiPhase != PHASE_ONE)

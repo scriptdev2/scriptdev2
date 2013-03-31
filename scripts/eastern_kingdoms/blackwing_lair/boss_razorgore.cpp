@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         m_uiFireballVolleyTimer = 7000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // TODO Temporarily add this InstData setting, must be started with Phase 1 which is not yet implemented
         if (m_pInstance)

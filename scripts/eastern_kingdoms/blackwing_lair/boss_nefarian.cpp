@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

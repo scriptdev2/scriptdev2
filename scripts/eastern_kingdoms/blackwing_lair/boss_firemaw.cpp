@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         m_uiFlameBuffetTimer = 5000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FIREMAW, IN_PROGRESS);

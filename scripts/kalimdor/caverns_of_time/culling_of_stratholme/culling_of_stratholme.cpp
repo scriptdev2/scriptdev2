@@ -81,7 +81,7 @@ bool GossipHello_npc_chromie(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 uiAction)
+bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 /*sender*/, uint32 uiAction)
 {
     switch (pCreature->GetEntry())
     {
@@ -138,7 +138,7 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sende
     return true;
 }
 
-bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_chromie(Player* /*pPlayer*/, Creature* pCreature, const Quest* pQuest)
 {
     switch (pQuest->GetQuestId())
     {

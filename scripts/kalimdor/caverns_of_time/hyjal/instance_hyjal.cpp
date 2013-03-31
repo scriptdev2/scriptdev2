@@ -51,7 +51,7 @@ bool instance_mount_hyjal::IsEncounterInProgress() const
     return false;
 }
 
-void instance_mount_hyjal::OnPlayerEnter(Player* pPlayer)
+void instance_mount_hyjal::OnPlayerEnter(Player* /*pPlayer*/)
 {
     if (GetData(TYPE_AZGALOR) == DONE)
         DoSpawnArchimonde();

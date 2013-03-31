@@ -133,7 +133,7 @@ void instance_sethekk_halls::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-bool instance_sethekk_halls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_sethekk_halls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     if (uiCriteriaId != ACHIEV_CRITA_TURKEY_TIME)
         return false;
@@ -150,7 +150,7 @@ InstanceData* GetInstanceData_instance_sethekk_halls(Map* pMap)
     return new instance_sethekk_halls(pMap);
 }
 
-bool ProcessEventId_event_spell_summon_raven_god(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_summon_raven_god(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

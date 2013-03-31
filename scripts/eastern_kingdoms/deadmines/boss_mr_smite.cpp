@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
+    void MovementInform(uint32 uiMotionType, uint32 /*uiPointId*/) override
     {
         if (uiMotionType != POINT_MOTION_TYPE)
             return;

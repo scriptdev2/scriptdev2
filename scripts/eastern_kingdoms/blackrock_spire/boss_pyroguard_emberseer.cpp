@@ -189,7 +189,7 @@ CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
     return new boss_pyroguard_emberseerAI(pCreature);
 }
 
-bool EffectDummyCreature_pyroguard_emberseer(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_pyroguard_emberseer(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_GROWING && uiEffIndex == EFFECT_INDEX_0)

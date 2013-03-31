@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             pVictim->CastSpell(pVictim, SPELL_MARK_OF_FROST_PLAYER, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // Boss aura which triggers the stun effect on dead players who resurrect
         DoCastSpellIfCan(m_creature, SPELL_MARK_OF_FROST_AURA);

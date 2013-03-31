@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         m_bPerformingGroundSlam     = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

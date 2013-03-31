@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
         m_uiCallFlamecallerTimer    = 15000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

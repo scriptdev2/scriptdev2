@@ -269,7 +269,7 @@ void instance_culling_of_stratholme::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-void instance_culling_of_stratholme::OnPlayerEnter(Player* pPlayer)
+void instance_culling_of_stratholme::OnPlayerEnter(Player* /*pPlayer*/)
 {
     if (instance->GetPlayersCountExceptGMs() == 0)
     {

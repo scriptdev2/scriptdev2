@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         m_fHpCheck              = 90.0f;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {

@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NEFARIAN, IN_PROGRESS);
@@ -377,7 +377,7 @@ bool GossipHello_boss_victor_nefarius(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (pCreature->GetMapId() != MAP_ID_BWL)
         return true;

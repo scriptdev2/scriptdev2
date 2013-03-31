@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_AURIAYA, DONE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_AURIAYA, IN_PROGRESS);
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_NINE_LIVES, true);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         // If we don't have the feral essence anymore then ignore this
         if (m_uiKilledCount >= 8)                           // 9-1 == 8

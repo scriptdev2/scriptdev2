@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         m_creature->SetLevitate(false);
         DoScriptText(SAY_AGGRO, m_creature);
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
             pArthas = NULL;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFORMING)
         {
@@ -341,7 +341,7 @@ CreatureAI* GetAI_boss_svala(Creature* pCreature)
     return new boss_svalaAI(pCreature);
 }
 
-bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
     if (pPlayer->isGameMaster())
         return false;

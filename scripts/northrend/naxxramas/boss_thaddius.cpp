@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {
@@ -246,7 +246,7 @@ CreatureAI* GetAI_boss_thaddius(Creature* pCreature)
     return new boss_thaddiusAI(pCreature);
 }
 
-bool EffectDummyNPC_spell_thaddius_encounter(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyNPC_spell_thaddius_encounter(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     switch (uiSpellId)
     {
@@ -298,9 +298,9 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
     uint32 m_uiOverloadTimer;
 
     void Reset() override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(EMOTE_LOSING_LINK, m_creature);
     }
@@ -535,7 +535,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAddsAI : public ScriptedAI
         m_uiHoldTimer = 1500;
     }
 
-    virtual void UpdateAddAI(const uint32 uiDiff) {}        // Used for Add-specific spells
+    virtual void UpdateAddAI(const uint32 /*uiDiff*/) {}        // Used for Add-specific spells
 
     void UpdateAI(const uint32 uiDiff) override
     {

@@ -38,7 +38,7 @@ void instance_scholomance::Initialize()
         m_mGandlingData[aGandlingEvents[i]] = GandlingEventData();
 }
 
-void instance_scholomance::OnPlayerEnter(Player* pPlayer)
+void instance_scholomance::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // Summon Gandling if can
     DoSpawnGandlingIfCan(true);
@@ -349,7 +349,7 @@ InstanceData* GetInstanceData_instance_scholomance(Map* pMap)
     return new instance_scholomance(pMap);
 }
 
-bool ProcessEventId_event_spell_gandling_shadow_portal(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_gandling_shadow_portal(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (pSource->GetTypeId() == TYPEID_UNIT)
     {

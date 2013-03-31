@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_ickAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* /*pVictim*/)
     {
         if (m_pInstance)
         {
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_ickAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
         {
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL boss_krickAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
+    void SummonedMovementInform(Creature* /*pSummoned*/, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL boss_krickAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KRICK, SPECIAL);
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -371,10 +371,10 @@ struct MANGOS_DLL_DECL npc_exploding_orbAI : public Scripted_NoMovementAI
         m_uiGrowCount = 0;
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_HASTY_GROW)
         {
@@ -391,7 +391,7 @@ struct MANGOS_DLL_DECL npc_exploding_orbAI : public Scripted_NoMovementAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_exploding_orb(Creature* pCreature)

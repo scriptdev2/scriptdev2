@@ -191,7 +191,7 @@ bool GossipHello_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -213,7 +213,7 @@ CreatureAI* GetAI_npc_harrison_jones_za(Creature* pCreature)
 ######*/
 
 // Unsure how this Gong must work. Here we always return false to allow Mangos always process further.
-bool GOUse_go_strange_gong(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_strange_gong(Player* /*pPlayer*/, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 

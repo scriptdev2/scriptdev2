@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         m_uiArcaneVolleyTimer   = urand(12000, 14500);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -156,8 +156,8 @@ struct MANGOS_DLL_DECL npc_saplingAI  : public ScriptedAI
         // m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
     }
 
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

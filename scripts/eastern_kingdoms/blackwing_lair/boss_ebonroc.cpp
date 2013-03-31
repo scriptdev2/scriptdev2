@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         m_uiShadowOfEbonrocTimer    = 45000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_EBONROC, IN_PROGRESS);

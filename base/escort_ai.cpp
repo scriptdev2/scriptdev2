@@ -345,7 +345,7 @@ void npc_escortAI::UpdateAI(const uint32 uiDiff)
     UpdateEscortAI(uiDiff);
 }
 
-void npc_escortAI::UpdateEscortAI(const uint32 uiDiff)
+void npc_escortAI::UpdateEscortAI(const uint32 /*uiDiff*/)
 {
     // Check if we have a current target
     if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

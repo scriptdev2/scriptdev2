@@ -64,8 +64,8 @@ struct MANGOS_DLL_DECL mob_ahnkahar_eggAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     void Reset() override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
-    void AttackStart(Unit* pWho) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
     void JustSummoned(Creature* pSummoned) override
     {
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         m_uiBroodRageTimer = 20000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

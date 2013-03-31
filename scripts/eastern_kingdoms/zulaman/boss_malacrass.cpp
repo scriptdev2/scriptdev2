@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MALACRASS, DONE);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned) override
+    void SummonedCreatureJustDied(Creature* /*pSummoned*/) override
     {
         switch (urand(0, 2))
         {

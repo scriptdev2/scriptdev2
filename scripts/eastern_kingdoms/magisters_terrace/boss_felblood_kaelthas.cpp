@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI, private Dia
             m_pInstance->SetData(TYPE_KAELTHAS, DONE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KAELTHAS, IN_PROGRESS);
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI, private Dia
     }
 
     // Boss has an interesting speech before killed, so we need to fake death (without stand state) and allow him to finish his theatre
-    void DamageTaken(Unit* pKiller, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pKiller*/, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -451,7 +451,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         m_bFakeDeath = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_PHOENIX_BURN);
     }
@@ -465,7 +465,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void DamageTaken(Unit* pKiller, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pKiller*/, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -505,7 +505,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         m_creature->SummonCreature(NPC_PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 10000);
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned) override
+    void SummonedCreatureDespawn(Creature* /*pSummoned*/) override
     {
         m_creature->RemoveAurasDueToSpell(SPELL_EMBER_BLAST);
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
@@ -523,7 +523,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned) override
+    void SummonedCreatureJustDied(Creature* /*pSummoned*/) override
     {
         // Self kill if the egg is killed
         if (m_bFakeDeath)
@@ -567,9 +567,9 @@ struct MANGOS_DLL_DECL mob_felkael_phoenix_eggAI : public Scripted_NoMovementAI
     mob_felkael_phoenix_eggAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
     void Reset() override {}
-    void MoveInLineOfSight(Unit* pWho) override {}
-    void AttackStart(Unit* pWho) override {}
-    void UpdateAI(const uint32 uiDiff) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
+    void UpdateAI(const uint32 /*uiDiff*/) override {}
 };
 
 /*######
@@ -597,8 +597,8 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_ARCANE_SPHERE_PASSIVE);
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void UpdateAI(const uint32 uiDiff) override
     {

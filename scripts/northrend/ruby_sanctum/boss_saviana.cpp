@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
         m_uiFlameBreathTimer        = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

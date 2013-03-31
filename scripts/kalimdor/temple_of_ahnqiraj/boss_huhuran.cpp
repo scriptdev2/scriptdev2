@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         m_bIsBerserk            = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HUHURAN, IN_PROGRESS);

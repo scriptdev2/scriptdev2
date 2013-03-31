@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    void MovementInform(uint32 /*uiType*/, uint32 /*uiPointId*/) override
     {
         m_creature->HandleEmote(EMOTE_ONESHOT_LOOT);
         m_uiPhaseTimer = 2000;

@@ -126,8 +126,8 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_PUTRID_MUSHROOM);
     }
 
-    void MoveInLineOfSight(Unit* pWho) override { return; }
-    void AttackStart(Unit* pWho) override { return; }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { return; }
+    void AttackStart(Unit* /*pWho*/) override { return; }
 
     void UpdateAI(const uint32 uiDiff) override
     {

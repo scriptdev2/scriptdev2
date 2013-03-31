@@ -64,7 +64,7 @@ void instance_dark_portal::UpdateWorldState(bool bEnable)
     DoUpdateWorldState(WORLD_STATE_RIFT,   m_uiWorldStateRiftCount);
 }
 
-void instance_dark_portal::OnPlayerEnter(Player* pPlayer)
+void instance_dark_portal::OnPlayerEnter(Player* /*pPlayer*/)
 {
     UpdateWorldState(m_auiEncounter[TYPE_MEDIVH] == IN_PROGRESS ? true : false);
 }

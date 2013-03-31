@@ -223,8 +223,8 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
     void Reset() override {}
 
     // we don't want anything to happen when attacked
-    void AttackedBy(Unit* pEnemy) override {}
-    void AttackStart(Unit* pEnemy) override {}
+    void AttackedBy(Unit* /*pEnemy*/) override {}
+    void AttackStart(Unit* /*pEnemy*/) override {}
 
     void DoSpawnButtress()
     {
@@ -338,7 +338,7 @@ bool GossipHello_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -409,7 +409,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
 
     void Reset() override { }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
             DoScriptText(SAY_ELF_AGGRO, m_creature);

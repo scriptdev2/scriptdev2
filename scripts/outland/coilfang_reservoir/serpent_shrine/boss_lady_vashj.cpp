@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         m_uiSummonSporebatStaticTimer = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 3))
         {
@@ -463,11 +463,11 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
             DoCastSpellIfCan(m_creature, SPELL_SURGE, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
-bool GOUse_go_shield_generator(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_shield_generator(Player* /*pPlayer*/, GameObject* pGo)
 {
     // Interrupt Magic barrier spell casting, inform the boss and make the GO unusable
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())

@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SKADI, NOT_STARTED);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SKADI, IN_PROGRESS);
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SKADI, DONE);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_SKADI_TELEPORT)
         {
@@ -323,8 +323,8 @@ struct MANGOS_DLL_DECL npc_graufAI : public ScriptedAI
         m_uiFlightDelayTimer = 0;
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void JustReachedHome() override
     {
@@ -473,7 +473,7 @@ CreatureAI* GetAI_npc_grauf(Creature* pCreature)
 ## at_skadi
 ######*/
 
-bool AreaTrigger_at_skadi(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_skadi(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
     if (pPlayer->isGameMaster())
         return false;

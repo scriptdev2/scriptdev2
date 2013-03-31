@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (m_bIsShielded && pSpell->Id == SPELL_HURL_SPINE)
         {
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NAJENTUS, IN_PROGRESS);

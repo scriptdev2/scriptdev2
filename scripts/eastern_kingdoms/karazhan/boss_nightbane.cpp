@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         m_uiFireballBarrageTimer    = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -354,7 +354,7 @@ CreatureAI* GetAI_boss_nightbane(Creature* pCreature)
     return new boss_nightbaneAI(pCreature);
 }
 
-bool ProcessEventId_event_spell_summon_nightbane(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_summon_nightbane(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

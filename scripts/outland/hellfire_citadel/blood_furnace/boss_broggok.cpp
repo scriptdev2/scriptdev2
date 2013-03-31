@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         m_uiPoisonBoltTimer = 7000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_POISON, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void JustDied(Unit* pWho) override
+    void JustDied(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BROGGOK_EVENT, DONE);
@@ -159,8 +159,8 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
     mob_broggok_poisoncloudAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() override { }
-    void MoveInLineOfSight(Unit* who) override { }
-    void AttackStart(Unit* who) override { }
+    void MoveInLineOfSight(Unit* /*who*/) override { }
+    void AttackStart(Unit* /*who*/) override { }
 };
 
 CreatureAI* GetAI_boss_broggok(Creature* pCreature)

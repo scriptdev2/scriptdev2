@@ -157,7 +157,7 @@ bool GossipHello_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
     if (!pInstance)

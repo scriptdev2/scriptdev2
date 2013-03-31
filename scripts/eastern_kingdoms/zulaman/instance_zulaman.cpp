@@ -51,7 +51,7 @@ bool instance_zulaman::IsEncounterInProgress() const
     return false;
 }
 
-void instance_zulaman::OnPlayerEnter(Player* pPlayer)
+void instance_zulaman::OnPlayerEnter(Player* /*pPlayer*/)
 {
     if (GetData(TYPE_EVENT_RUN) == IN_PROGRESS)
     {

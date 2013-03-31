@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
         ResetPhase();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {

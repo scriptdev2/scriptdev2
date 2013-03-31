@@ -332,7 +332,7 @@ InstanceData* GetInstanceData_instance_old_hillsbrad(Map* pMap)
     return new instance_old_hillsbrad(pMap);
 }
 
-bool ProcessEventId_event_go_barrel_old_hillsbrad(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_go_barrel_old_hillsbrad(uint32 /*uiEventId*/, Object* pSource, Object* pTarget, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

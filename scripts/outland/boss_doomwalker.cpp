@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_MARK_OF_DEATH_AURA, CAST_TRIGGERED);
         DoScriptText(SAY_AGGRO, m_creature);

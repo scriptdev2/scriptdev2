@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         m_uiVileGasTimer = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

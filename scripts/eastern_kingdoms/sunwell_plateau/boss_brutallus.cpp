@@ -470,7 +470,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud(const Aura* pAura, boo
     return true;
 }
 
-bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {

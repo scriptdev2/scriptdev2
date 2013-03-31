@@ -57,7 +57,7 @@ bool instance_molten_core::IsEncounterInProgress() const
     return false;
 }
 
-void instance_molten_core::OnPlayerEnter(Player* pPlayer)
+void instance_molten_core::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // Summon Majordomo if can
     DoSpawnMajordomoIfCan(true);

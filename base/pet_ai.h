@@ -30,7 +30,7 @@ class MANGOS_DLL_DECL ScriptedPetAI : public CreatureAI
 
         virtual void UpdatePetAI(const uint32 uiDiff);      // while in combat
 
-        virtual void UpdatePetOOCAI(const uint32 uiDiff) {} // when not in combat
+        virtual void UpdatePetOOCAI(const uint32 /*uiDiff*/) {} // when not in combat
 
     protected:
         void ResetPetCombat();

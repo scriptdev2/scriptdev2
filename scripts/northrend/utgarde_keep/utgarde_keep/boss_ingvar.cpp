@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         DoScriptText(SAY_AGGRO_FIRST, m_creature);
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
     {
         if (m_bIsResurrected)
             return;
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFORM)
         {

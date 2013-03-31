@@ -436,7 +436,7 @@ void instance_pit_of_saron::SetSpecialAchievementCriteria(uint32 uiType, bool bI
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_pit_of_saron::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_pit_of_saron::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

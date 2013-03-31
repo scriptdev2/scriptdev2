@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         m_uiNecroticAuraCount = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LOATHEB, IN_PROGRESS);

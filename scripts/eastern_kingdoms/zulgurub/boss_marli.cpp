@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         m_bIsInPhaseTwo         = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

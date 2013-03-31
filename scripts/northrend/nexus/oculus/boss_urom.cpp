@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         m_uiArcaneShieldTimer   = 1000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_UROM, IN_PROGRESS);
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 30000);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         switch (pSpell->Id)
         {

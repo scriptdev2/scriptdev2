@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         m_uiFrenzyTimer = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FLAMEGOR, IN_PROGRESS);

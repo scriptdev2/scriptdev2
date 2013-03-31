@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         m_uiCleaveTimer     = urand(5000, 9000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }

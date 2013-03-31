@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL npc_buru_eggAI : public Scripted_NoMovementAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_buru_egg(Creature* pCreature)

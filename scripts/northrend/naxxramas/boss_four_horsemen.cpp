@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         m_bIsCornerMovement = true;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_BLAU_AGGRO, m_creature);
 
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
         m_bIsCornerMovement   = true;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {
@@ -349,7 +349,7 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         m_bIsCornerMovement = true;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_KORT_AGGRO, m_creature);
 
@@ -452,7 +452,7 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
         m_bIsCornerMovement = true;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_ZELI_AGGRO, m_creature);
 

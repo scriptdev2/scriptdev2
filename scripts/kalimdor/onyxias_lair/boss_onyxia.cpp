@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_bIsSummoningWhelps = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_BREATH_EAST_TO_WEST ||
                 pSpell->Id == SPELL_BREATH_WEST_TO_EAST ||
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         return NULL;
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
+    void MovementInform(uint32 uiMoveType, uint32 /*uiPointId*/) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !m_pInstance)
             return;

@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IMMOLATION : SPELL_IMMOLATION_H);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pWho) override
+    void JustDied(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

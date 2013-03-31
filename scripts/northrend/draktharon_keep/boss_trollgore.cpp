@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         m_uiConsumeStacks       = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TROLLGORE, FAIL);
     }
 
-    void SpellHit(Unit* pTarget, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pTarget*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_CONSUME_BUFF || pSpell->Id == SPELL_CONSUME_BUFF_H)
         {

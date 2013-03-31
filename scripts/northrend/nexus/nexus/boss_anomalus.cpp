@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         m_uiChaoticRiftCount = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
         m_uiChargedRemoveTimer = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // Auras are applied on aggro because there are many npcs with this entry in the instance
         DoCastSpellIfCan(m_creature, SPELL_RIFT_AURA, CAST_TRIGGERED);
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         // When hit with Charge Rift cast the Charged Rift spells
         if (pSpell->Id == SPELL_CHARGE_RIFT)

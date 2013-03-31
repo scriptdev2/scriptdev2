@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
         m_uiVenomBoltTimer    = 15000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

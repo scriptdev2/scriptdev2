@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, FAIL);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_SARTHARION_AGGRO, m_creature);
 
@@ -732,7 +732,7 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
         m_uiHatchEggTimer = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_TENEBRON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_TENEBRON);
@@ -807,7 +807,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
             m_creature->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SHA);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_SHADRON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_SHADRON);
@@ -876,7 +876,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
         m_uiAcolyteVesperonTimer = 60000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_VESPERON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_VESPERON);
@@ -952,7 +952,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* killer) override
+    void JustDied(Unit* /*killer*/) override
     {
         if (m_pInstance)
         {
@@ -977,7 +977,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1022,7 +1022,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_vesperonAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1048,8 +1048,8 @@ struct MANGOS_DLL_DECL mob_twilight_eggsAI : public ScriptedAI
     {
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 };
 
 CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)

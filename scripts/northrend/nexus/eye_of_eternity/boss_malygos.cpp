@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         SetCombatMovement(false);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -595,9 +595,9 @@ struct MANGOS_DLL_DECL npc_power_sparkAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_POWER_SPARK_PLAYERS, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_power_spark(Creature* pCreature)
@@ -644,7 +644,7 @@ struct MANGOS_DLL_DECL npc_wyrmrest_skytalonAI : public ScriptedAI
     }
     */
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_bHasMounted)
         {
@@ -671,7 +671,7 @@ CreatureAI* GetAI_npc_wyrmrest_skytalon(Creature* pCreature)
 ## event_go_focusing_iris
 ######*/
 
-bool ProcessEventId_event_go_focusing_iris(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_go_focusing_iris(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (instance_eye_of_eternity* pInstance = (instance_eye_of_eternity*)((Creature*)pSource)->GetInstanceData())
     {

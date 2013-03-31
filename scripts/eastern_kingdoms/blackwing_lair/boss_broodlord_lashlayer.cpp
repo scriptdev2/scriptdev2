@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         m_uiKnockAwayTimer      = 30000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LASHLAYER, IN_PROGRESS);

@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 
     void Reset() override { }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -124,7 +124,7 @@ CreatureAI* GetAI_npc_ancient_male_vrykul(Creature* pCreature)
     return new npc_ancient_male_vrykulAI(pCreature);
 }
 
-bool AreaTrigger_at_ancient_male_vrykul(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_ancient_male_vrykul(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
     if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_ECHO_OF_YMIRON) == QUEST_STATUS_INCOMPLETE &&
             pPlayer->HasAura(SPELL_ECHO_OF_YMIRON))
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 20 * IN_MILLISECONDS);
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
+    void SummonedMovementInform(Creature* pSummoned, uint32 /*uiMotionType*/, uint32 /*uiPointId*/) override
     {
         Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
@@ -390,7 +390,7 @@ bool GossipHello_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {

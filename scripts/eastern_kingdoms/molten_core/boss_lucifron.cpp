@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
         m_uiShadowShockTimer   = 6000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LUCIFRON, IN_PROGRESS);

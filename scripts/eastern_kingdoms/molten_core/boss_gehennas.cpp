@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         m_uiGehennasCurseTimer = 12000;
     }
 
-    void Aggro(Unit* pwho) override
+    void Aggro(Unit* /*pwho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEHENNAS, IN_PROGRESS);

@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         DoScriptText(SAY_KILLTARGET, m_creature, pVictim);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, IN_PROGRESS);
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     }
 };
 
-bool GossipSelect_boss_vaelastrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_boss_vaelastrasz(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {

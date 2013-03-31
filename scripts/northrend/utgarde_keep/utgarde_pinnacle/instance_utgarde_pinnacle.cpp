@@ -246,7 +246,7 @@ void instance_pinnacle::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet
         m_abAchievCriteria[uiType] = bIsMet;
 }
 
-bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const
+bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {

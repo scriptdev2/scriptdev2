@@ -46,7 +46,7 @@ void instance_black_temple::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
-void instance_black_temple::OnPlayerEnter(Player* pPlayer)
+void instance_black_temple::OnPlayerEnter(Player* /*pPlayer*/)
 {
     DoSpawnAkamaIfCan();
 }

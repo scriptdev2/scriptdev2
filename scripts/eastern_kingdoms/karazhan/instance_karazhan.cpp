@@ -61,7 +61,7 @@ bool instance_karazhan::IsEncounterInProgress() const
     return false;
 }
 
-void instance_karazhan::OnPlayerEnter(Player* pPlayer)
+void instance_karazhan::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // If the opera event is already set, return
     if (GetData(TYPE_OPERA_PERFORMANCE) != 0)

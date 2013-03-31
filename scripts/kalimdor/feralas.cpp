@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL npc_oox22feAI : public npc_escortAI
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
 
-    void Aggro(Unit* who) override
+    void Aggro(Unit* /*who*/) override
     {
         // For an small probability the npc says something when he get aggro
         switch (urand(0, 9))

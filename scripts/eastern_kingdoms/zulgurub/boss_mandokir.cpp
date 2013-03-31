@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_fTargetThreat         = 0.0f;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

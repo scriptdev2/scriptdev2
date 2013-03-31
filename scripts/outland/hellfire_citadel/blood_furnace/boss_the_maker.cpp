@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         m_uiKnockdownTimer          = 10000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 2))
         {

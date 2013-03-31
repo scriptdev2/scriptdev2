@@ -439,7 +439,7 @@ bool QuestAccept_npc_ranshalla(Player* pPlayer, Creature* pCreature, const Quest
     return false;
 }
 
-bool GOUse_go_elune_fire(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_elune_fire(Player* /*pPlayer*/, GameObject* pGo)
 {
     // Check if we are using the torches or the altar
     bool bIsAltar = false;

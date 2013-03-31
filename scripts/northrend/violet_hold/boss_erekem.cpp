@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
         m_uiGuardiansDead       = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }

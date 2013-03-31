@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 
     void Reset() override { }
 
-    void Aggro(Unit* who) override
+    void Aggro(Unit* /*who*/) override
     {
         // For an small probability he say something when it aggros
         switch (urand(0, 9))
@@ -347,7 +347,7 @@ bool GossipHello_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCrea
     return true;
 }
 
-bool GossipSelect_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {

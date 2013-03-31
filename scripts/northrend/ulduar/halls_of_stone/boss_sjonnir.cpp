@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
         m_uiHpCheck                 = 75;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

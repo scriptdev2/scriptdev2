@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         m_uiWhirlwindTimer = 14500;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_RUSHINGCHARGE);

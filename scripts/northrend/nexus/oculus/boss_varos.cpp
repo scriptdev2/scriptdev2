@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_varosAI : public ScriptedAI
         m_uiCallCaptainTimer    = urand(10000, 15000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -224,7 +224,7 @@ CreatureAI* GetAI_boss_varos(Creature* pCreature)
 ## event_spell_call_captain
 ######*/
 
-bool ProcessEventId_event_spell_call_captain(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_call_captain(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_UNIT)
     {
@@ -266,8 +266,8 @@ struct MANGOS_DLL_DECL npc_azure_ring_captainAI : public ScriptedAI
     ObjectGuid m_arcaneBeamGuid;
 
     void Reset() override { }
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void JustSummoned(Creature* pSummoned) override
     {
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL npc_azure_ring_captainAI : public ScriptedAI
             m_creature->ForcedDespawn(11000);
     }
 
-    void UpdateAI(const uint32 uiDiff) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_azure_ring_captain(Creature* pCreature)
@@ -327,9 +327,9 @@ struct MANGOS_DLL_DECL npc_arcane_beamAI : public ScriptedAI
         m_creature->ForcedDespawn(10000);
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_arcane_beam(Creature* pCreature)
@@ -348,9 +348,9 @@ struct MANGOS_DLL_DECL npc_centrifuge_coreAI : public Scripted_NoMovementAI
 
     // Note: visual already handled in creature_template_addon
     void Reset() override { }
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_centrifuge_core(Creature* pCreature)

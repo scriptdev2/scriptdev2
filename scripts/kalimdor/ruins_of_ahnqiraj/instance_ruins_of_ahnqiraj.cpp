@@ -36,7 +36,7 @@ void instance_ruins_of_ahnqiraj::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
-void instance_ruins_of_ahnqiraj::OnPlayerEnter(Player* pPlayer)
+void instance_ruins_of_ahnqiraj::OnPlayerEnter(Player* /*pPlayer*/)
 {
     // Spawn andorov if necessary
     if (m_auiEncounter[TYPE_KURINNAXX] == DONE)

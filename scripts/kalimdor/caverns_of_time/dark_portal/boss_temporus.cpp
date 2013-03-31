@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         m_uiWingBuffetTimer      = urand(25000, 35000);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }

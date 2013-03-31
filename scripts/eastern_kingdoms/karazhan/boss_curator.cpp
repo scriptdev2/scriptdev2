@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             m_pInstance->SetData(TYPE_CURATOR, DONE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 

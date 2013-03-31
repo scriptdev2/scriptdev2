@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL npc_spirit_guideAI : public ScriptedAI
 
     void Reset() override {}
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateAI(const uint32 /*uiDiff*/) override
     {
         // auto cast the whole time this spell
         if (!m_creature->GetCurrentSpell(CURRENT_CHANNELED_SPELL))
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL npc_spirit_guideAI : public ScriptedAI
     }
 };
 
-bool GossipHello_npc_spirit_guide(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_spirit_guide(Player* pPlayer, Creature* /*pCreature*/)
 {
     pPlayer->CastSpell(pPlayer, SPELL_WAITING_TO_RESURRECT, true);
     return true;

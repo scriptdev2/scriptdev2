@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         DoSpawnGuests();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MOROES, FAIL);
     }
 
-    void JustDied(Unit* pVictim) override
+    void JustDied(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         DoRemoveGarroteAura();

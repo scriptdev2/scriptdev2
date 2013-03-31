@@ -139,7 +139,7 @@ CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* pCreature)
     return new npc_lady_sylvanas_windrunnerAI(pCreature);
 }
 
-bool QuestRewarded_npc_lady_sylvanas_windrunner(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestRewarded_npc_lady_sylvanas_windrunner(Player* /*pPlayer*/, Creature* pCreature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ID_JOURNEY_UNDERCITY)
     {

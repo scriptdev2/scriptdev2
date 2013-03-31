@@ -76,8 +76,8 @@ struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
         m_uiWebWrapTimer = 0;
     }
 
-    void MoveInLineOfSight(Unit* pWho) override {}
-    void AttackStart(Unit* pWho) override {}
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
     void SetVictim(Unit* pVictim)
     {
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         m_bEnraged                  = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MAEXXNA, IN_PROGRESS);

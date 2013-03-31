@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         m_bIsEnraged    = false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // spell reflection
         DoCastSpellIfCan(m_creature, m_uiSpell3);
@@ -95,12 +95,12 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         ++m_uiSummonCount;
     }
 
-    void SummonedCreatureDespawn(Creature* pDespawned) override
+    void SummonedCreatureDespawn(Creature* /*pDespawned*/) override
     {
         --m_uiSummonCount;
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& /*uiDamage*/) override
     {
         // when we reach 10% of HP explode or enrage
         if (!m_bIsEnraged && m_creature->GetHealthPercent() < 10.0f)

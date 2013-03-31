@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -137,7 +137,7 @@ CreatureAI* GetAI_boss_gortok(Creature* pCreature)
     return new boss_gortokAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_awaken_gortok(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_awaken_gortok(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_AWAKEN_GORTOK && uiEffIndex == EFFECT_INDEX_0)
@@ -180,7 +180,7 @@ bool EffectAuraDummy_spell_aura_dummy_awaken_subboss(const Aura* pAura, bool bAp
     return true;
 }
 
-bool ProcessEventId_event_spell_gortok_event(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_spell_gortok_event(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (instance_pinnacle* pInstance = (instance_pinnacle*)((Creature*)pSource)->GetInstanceData())
     {

@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         return *iter;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCallVolunteers();
@@ -429,9 +429,9 @@ struct MANGOS_DLL_DECL npc_twilight_volunteerAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_JEDOGA, SPECIAL);
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_twilight_volunteer(Creature* pCreature)

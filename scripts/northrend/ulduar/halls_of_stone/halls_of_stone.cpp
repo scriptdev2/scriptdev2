@@ -631,7 +631,7 @@ bool GossipHello_npc_brann_hos(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_brann_hos(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_brann_hos(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
@@ -687,10 +687,10 @@ struct MANGOS_DLL_DECL npc_dark_matterAI : public ScriptedAI
         m_uiSummonTimer = 0;
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_DARK_MATTER_START)
             m_uiSummonTimer = 5000;
@@ -757,9 +757,9 @@ struct MANGOS_DLL_DECL npc_searing_gazeAI : public Scripted_NoMovementAI
         m_creature->ForcedDespawn(30000);
     }
 
-    void AttackStart(Unit* pWho) override { }
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void UpdateAI(const uint32 uiDiff) override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_searing_gaze(Creature* pCreature)

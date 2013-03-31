@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         m_uiLivingBombTimer = 35000;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEDDON, IN_PROGRESS);

@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->CastSpell(m_creature, SPELL_MAGMA_SPLASH, true);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, IN_PROGRESS);
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         m_uiMangleTimer = 7 * IN_MILLISECONDS;              // These times are probably wrong
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (m_creature->GetHealthPercent() < 50.0f)
         {
