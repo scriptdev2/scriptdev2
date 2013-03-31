@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_ickAI : public ScriptedAI
     boss_ickAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_pit_of_saron*)pCreature->GetInstanceData();
-        m_uiMountTimer = 3000;
+        m_uiMountTimer = 1000;
         Reset();
     }
 

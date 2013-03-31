@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
             return;
 
         // He needs to be mounted manually, not by vehicle_accessories
-        /*if (m_uiMountTimer)
+        if (m_uiMountTimer)
         {
             if (m_uiMountTimer <= uiDiff)
             {
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
             }
             else
                 m_uiMountTimer -= uiDiff;
-        }*/
+        }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

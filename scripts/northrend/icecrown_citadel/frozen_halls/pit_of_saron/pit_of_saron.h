@@ -64,6 +64,7 @@ enum
     NPC_SKELETON                    = 36877,
     NPC_DISTURBED_REVENANT          = 36874,
     NPC_STALKER                     = 32780,
+    NPC_GENERAL_BUNNY               = 24110,
 
     GO_ICEWALL                      = 201885,               // open after gafrost/krick
     GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
@@ -177,6 +178,8 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance, private D
         GuidList m_lTunnelStalkersGuidList;
         GuidList m_lTunnelNpcGuidList;
         GuidList m_lAmbushNpcsGuidList;
+        GuidList m_lArcaneShieldBunniesGuidList;
+        GuidList m_lFrozenAftermathBunniesGuidList;
 };
 
 #endif

@@ -97,6 +97,8 @@ enum
     SAY_SYLVANAS_OUTRO_2            = -1658067,
 
     SPELL_FROST_BOMB                = 70521,
+    SPELL_FROZEN_AFTERMATH          = 70518,
+    SPELL_ARCANE_FORM               = 70573,
     SPELL_CALL_OF_SYLVANAS_1        = 70636,                // triggers 70639
     SPELL_CALL_OF_SYLVANAS_2        = 70638,
     // SPELL_CALL_OF_SYLVANAS_3     = 70642,
@@ -242,6 +244,15 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
                 m_lAmbushNpcsGuidList.push_back(pCreature->GetObjectGuid());
             else
                 m_lTunnelNpcGuidList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_GENERAL_BUNNY:
+            if (pCreature->GetPositionY() < 130.0f)
+            {
+                if (pCreature->GetOrientation() != 0)
+                    m_lArcaneShieldBunniesGuidList.push_back(pCreature->GetObjectGuid());
+                else
+                    m_lFrozenAftermathBunniesGuidList.push_back(pCreature->GetObjectGuid());
+            }
             break;
     }
 }
@@ -447,6 +458,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
     switch (iEntry)
     {
         case SPELL_NECROMATIC_POWER:
+            // Transfor all soldiers into undead
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
                 pTyrannus->CastSpell(pTyrannus, SPELL_NECROMATIC_POWER, true);
             break;
@@ -459,6 +471,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             }
             break;
         case SPELL_STRANGULATING:
+            // Strangulate Krick
             if (Creature* pKrick = GetSingleCreatureFromStorage(NPC_KRICK))
             {
                 pKrick->CastSpell(pKrick, SPELL_STRANGULATING, true);
@@ -467,6 +480,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             }
             break;
         case SAY_TYRANNUS_KRICK_2:
+            // Kill Krick
             if (Creature* pKrick = GetSingleCreatureFromStorage(NPC_KRICK))
             {
                 pKrick->CastSpell(pKrick, SPELL_KRICK_KILL_CREDIT, true);
@@ -475,6 +489,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             break;
         case SAY_JAINA_INTRO_3:
         case SAY_JAINA_KRICK_3:
+            // Move Tyrannus to a safe position
             if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS_INTRO))
                 pTyrannus->GetMotionMaster()->MovePoint(0, afTyrannusMovePos[0][0], afTyrannusMovePos[0][1], afTyrannusMovePos[0][2]);
             break;
@@ -497,6 +512,7 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             break;
         }
         case NPC_RIMEFANG:
+            // Eject Tyrannus and prepare for combat
             if (Creature* pRimefang = GetSingleCreatureFromStorage(NPC_RIMEFANG))
             {
                 pRimefang->CastSpell(pRimefang, SPELL_EJECT_ALL_PASSENGERS, true);
@@ -527,6 +543,13 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             break;
         }
         case SAY_JAINA_OUTRO_1:
+            // Visual effect
+            for (GuidList::const_iterator itr = m_lArcaneShieldBunniesGuidList.begin(); itr != m_lArcaneShieldBunniesGuidList.end(); ++itr)
+            {
+                if (Creature* pBunny = instance->GetCreature(*itr))
+                    pBunny->CastSpell(pBunny, SPELL_ARCANE_FORM, true);
+            }
+            // Teleport players
             if (Creature* pTemp = GetSingleCreatureFromStorage(m_uiTeam == HORDE ? NPC_SYLVANAS_PART2 : NPC_JAINA_PART2))
             {
                 pTemp->CastSpell(pTemp, m_uiTeam == HORDE ? SPELL_CALL_OF_SYLVANAS_2 : SPELL_JAINAS_CALL_2, true);
@@ -534,13 +557,27 @@ void instance_pit_of_saron::JustDidDialogueStep(int32 iEntry)
             }
             break;
         case SPELL_FROST_BOMB:
+            // Frost bomb on the platform
             if (Creature* pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
                 pSindragosa->CastSpell(pSindragosa, SPELL_FROST_BOMB, true);
+            // Visual effect
+            for (GuidList::const_iterator itr = m_lFrozenAftermathBunniesGuidList.begin(); itr != m_lFrozenAftermathBunniesGuidList.end(); ++itr)
+            {
+                if (Creature* pBunny = instance->GetCreature(*itr))
+                    pBunny->CastSpell(pBunny, SPELL_FROZEN_AFTERMATH, true);
+            }
             break;
         case NPC_JAINA_PART2:
+            // Visual effect remove
+            for (GuidList::const_iterator itr = m_lArcaneShieldBunniesGuidList.begin(); itr != m_lArcaneShieldBunniesGuidList.end(); ++itr)
+            {
+                if (Creature* pBunny = instance->GetCreature(*itr))
+                    pBunny->RemoveAurasDueToSpell(SPELL_ARCANE_FORM);
+            }
+            // Sindragosa exit
             if (Creature* pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
                 pSindragosa->GetMotionMaster()->MovePoint(0, 759.148f, 199.955f, 720.857f);
-            // Move in front
+            // Jaina / Sylvanas starts moving (should use wp)
             if (Creature* pTemp = GetSingleCreatureFromStorage(m_uiTeam == HORDE ? NPC_SYLVANAS_PART2 : NPC_JAINA_PART2))
             {
                 pTemp->SetWalk(true);
