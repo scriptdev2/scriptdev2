@@ -32,6 +32,7 @@ EndScriptData */
 */
 
 instance_halls_of_lightning::instance_halls_of_lightning(Map* pMap) : ScriptedInstance(pMap),
+    m_bLightningStruck(false),
     m_bIsShatterResistant(false)
 {
     Initialize();
@@ -80,14 +81,18 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_BJARNGRIM:
+            if (uiData == SPECIAL)
+                m_bLightningStruck = true;
+            else if (uiData == FAIL)
+                m_bLightningStruck = false;
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_VOLKHAN:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_VOLKHAN_DOOR);
-            if (uiData == IN_PROGRESS)
+            else if (uiData == IN_PROGRESS)
                 m_bIsShatterResistant = true;
-            if (uiData == SPECIAL)
+            else if (uiData == SPECIAL)
                 m_bIsShatterResistant = false;
             m_auiEncounter[uiType] = uiData;
             break;
@@ -99,7 +104,7 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
         case TYPE_LOKEN:
             if (uiData == IN_PROGRESS)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_LOKEN_ID);
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 // Appears to be type 5 GO with animation. Need to figure out how this work, code below only placeholder
                 if (GameObject* pGlobe = GetSingleGameObjectFromStorage(GO_LOKEN_THRONE))
@@ -133,8 +138,13 @@ uint32 instance_halls_of_lightning::GetData(uint32 uiType) const
 
 bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
-    if (uiCriteriaId == ACHIEV_CRIT_RESISTANT)
-        return m_bIsShatterResistant;
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_LIGHTNING:
+            return m_bLightningStruck;
+        case ACHIEV_CRIT_RESISTANT:
+            return m_bIsShatterResistant;
+    }
 
     return false;
 }

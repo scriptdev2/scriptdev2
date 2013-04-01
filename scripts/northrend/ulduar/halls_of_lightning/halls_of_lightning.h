@@ -27,6 +27,7 @@ enum
 
     ACHIEV_START_LOKEN_ID   = 20384,
 
+    ACHIEV_CRIT_LIGHTNING   = 6835,                         // Bjarngrim, achiev 1834
     ACHIEV_CRIT_RESISTANT   = 7321,                         // Volkhan, achiev 2042
 };
 
@@ -52,6 +53,7 @@ class MANGOS_DLL_DECL instance_halls_of_lightning : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
+        bool m_bLightningStruck;
         bool m_bIsShatterResistant;
 };
 

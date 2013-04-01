@@ -388,16 +388,16 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
 
         if (m_uiBlastTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE);
-            m_uiBlastTimer = 20000;
+            if (DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE) == CAST_OK)
+                m_uiBlastTimer = 20000;
         }
         else
             m_uiBlastTimer -= uiDiff;
 
         if (m_uiImmolationTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_IMMOLATION_STRIKE : SPELL_IMMOLATION_STRIKE_H);
-            m_uiImmolationTimer = 5000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_IMMOLATION_STRIKE : SPELL_IMMOLATION_STRIKE_H) == CAST_OK)
+                m_uiImmolationTimer = 5000;
         }
         else
             m_uiImmolationTimer -= uiDiff;
