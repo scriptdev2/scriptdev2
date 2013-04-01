@@ -121,6 +121,9 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
 
         // ToDo: it shouldn't yell this aggro text after removing the feign death aura
         DoScriptText(SAY_AGGRO_FIRST, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_INGVAR, IN_PROGRESS);
     }
 
     void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
@@ -187,12 +190,23 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
     void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH_SECOND, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_INGVAR, DONE);
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
     {
         if (urand(0, 1))
             DoScriptText(m_bIsResurrected ? SAY_KILL_SECOND : SAY_KILL_FIRST, m_creature);
+    }
+
+    void JustReachedHome() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_INGVAR, FAIL);
+
+        m_creature->UpdateEntry(NPC_INGVAR);
     }
 
     void UpdateAI(const uint32 uiDiff) override
