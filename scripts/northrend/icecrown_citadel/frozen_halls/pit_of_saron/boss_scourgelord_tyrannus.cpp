@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_scourgelord_tyrannus
-SD%Complete: 80
-SDComment: Icy Blast not fully implemented.
+SD%Complete: 90
+SDComment: Small adjustments may be required
 SDCategory: Pit of Saron
 EndScriptData */
 
@@ -48,8 +48,8 @@ enum
     SPELL_KILLING_ICE                   = 72531,
 
     // Icy blast
-    SPELL_ICY_BLAST_AURA                = 69238,
-    NPC_ICY_BLAST                       = 36731,
+    // SPELL_ICY_BLAST_AURA             = 69238,
+    NPC_ICY_BLAST                       = 36731,                // handled in eventAI
 };
 
 static const float afRimefangExitPos[3] = {1248.29f, 145.924f, 733.914f};
@@ -300,9 +300,11 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                // ToDo: research how to summon the Icy Blast npc and apply the slow aura
                 if (DoCastSpellIfCan(pTarget, SPELL_ICY_BLAST) == CAST_OK)
+                {
+                    m_creature->SummonCreature(NPC_ICY_BLAST, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 90000);
                     m_uiIcyBlastTimer = 8000;
+                }
             }
         }
         else
