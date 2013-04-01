@@ -69,26 +69,39 @@ void instance_violet_hold::ResetAll()
         const BossInformation* pData = GetBossInformation((*itr)->uiEntry);
         if (pData && m_auiEncounter[pData->uiType] == DONE)
         {
+            // Despawn ghost boss
             if (Creature* pGhostBoss = GetSingleCreatureFromStorage(pData->uiGhostEntry))
-            {
-                if (!pGhostBoss->isAlive())
-                    pGhostBoss->Respawn();
+                pGhostBoss->ForcedDespawn();
 
-                // Reset passive flags
-                pGhostBoss->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-            }
-            else if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
-                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
+            // Spawn new boss replacement
+            if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
+                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 
-            // Respawn Erekem guards
+            // Replace Erekem guards
             if (pData->uiType == TYPE_EREKEM)
             {
+                // Despawn ghost guards
+                for (GuidList::const_iterator itr = m_lArakkoaGuardList.begin(); itr != m_lArakkoaGuardList.end(); ++itr)
+                {
+                    if (Creature* pGhostGuard = instance->GetCreature(*itr))
+                        pGhostGuard->ForcedDespawn();
+                }
+
+                m_lArakkoaGuardList.clear();
+
+                // Spawn new guards replacement
+                float fX, fY, fZ, fO;
                 for (GuidList::const_iterator itr = m_lErekemGuardList.begin(); itr != m_lErekemGuardList.end(); ++itr)
                 {
                     if (Creature* pGuard = instance->GetCreature(*itr))
                     {
-                        pGuard->Respawn();
-                        pGuard->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                        // Don't allow alive original guards while the boss is dead
+                        if (!pGuard->isDead())
+                            pGuard->ForcedDespawn();
+
+                        // Spawn a ghost guard for each original guard
+                        pGuard->GetRespawnCoord(fX, fY, fZ, &fO);
+                        pGuard->SummonCreature(NPC_ARAKKOA_GUARD, fX, fY, fZ, fO, TEMPSUMMON_DEAD_DESPAWN, 0);
                     }
                 }
             }
@@ -127,6 +140,9 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
             return;
         case NPC_EREKEM_GUARD:
             m_lErekemGuardList.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_ARAKKOA_GUARD:
+            m_lArakkoaGuardList.push_back(pCreature->GetObjectGuid());
             return;
         case NPC_ICHORON_SUMMON_TARGET:
             m_lIchoronTargetsList.push_back(pCreature->GetObjectGuid());

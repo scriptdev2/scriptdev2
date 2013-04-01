@@ -86,6 +86,7 @@ enum
 
     // 'Ghosts' for Killed mobs after Wipe
     NPC_ARAKKOA                 = 32226,
+    NPC_ARAKKOA_GUARD           = 32228,
     NPC_VOID_LORD               = 32230,
     NPC_ETHERAL                 = 32231,
     NPC_SWIRLING                = 32234,
@@ -223,7 +224,7 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         void ProcessActivationCrystal(Unit* pUser, bool bIsIntro = false);
 
-        void GetErekemGuardList(GuidList& lList) { lList = m_lErekemGuardList; }
+        void GetErekemGuardList(GuidList& lGuardList) { lGuardList = GetData(TYPE_EREKEM) != DONE ? m_lErekemGuardList : m_lArakkoaGuardList; }
         void GetIchoronTriggerList(GuidList& lList) { lList = m_lIchoronTargetsList; }
 
         void OnPlayerEnter(Player* pPlayer) override;
@@ -289,6 +290,7 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         GuidList m_lIntroPortalList;
         GuidList m_lGuardsList;
         GuidList m_lErekemGuardList;
+        GuidList m_lArakkoaGuardList;
         GuidList m_lIchoronTargetsList;
         std::vector<uint32> m_vRandomBossList;
 
