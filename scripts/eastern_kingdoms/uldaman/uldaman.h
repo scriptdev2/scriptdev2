@@ -16,6 +16,7 @@ enum
     GO_TEMPLE_DOOR_UPPER        = 124367,
     GO_TEMPLE_DOOR_LOWER        = 141869,
     GO_ANCIENT_VAULT            = 124369,
+    GO_ANCIENT_TREASURE         = 141979,
 
     NPC_CUSTODIAN               = 7309,
     NPC_HALLSHAPER              = 7077,
@@ -28,6 +29,7 @@ enum
     PHASE_ARCHA_3               = 3,
 
     SPELL_STONED                = 10255,
+    SPELL_FREEZE_ANIM           = 16245,
 
     EVENT_ID_ALTAR_KEEPER       = 2228,                     // spell 11568
     EVENT_ID_ALTAR_ARCHAEDAS    = 2268                      // spell 10340
