@@ -36,7 +36,7 @@ enum
     // Icicles
     SPELL_ICICLE                        = 69426,
     SPELL_ICICLE_DUMMY                  = 69428,
-    SPELL_ICE_SHARDS                    = 69425,
+    SPELL_ICE_SHARDS_H                  = 70827,            // used to check the tunnel achievement
 };
 
 /*######
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL npc_collapsing_icicleAI : public ScriptedAI
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         // Mark the achiev failed
-        if (pSpell->Id == SPELL_ICE_SHARDS && pTarget->GetTypeId() == TYPEID_PLAYER && m_pInstance)
+        if (pSpell->Id == SPELL_ICE_SHARDS_H && pTarget->GetTypeId() == TYPEID_PLAYER && m_pInstance)
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DONT_LOOK_UP, false);
     }
 

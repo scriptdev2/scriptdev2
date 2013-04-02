@@ -37,11 +37,12 @@ enum
     SPELL_SUMMON_SEARING_GAZE_TARGET    = 51146,                // The other spells are handled in individual script
 
     SPELL_KILL_TRIBUNAL_ADD             = 51288,                // Cleanup event on finish
+    SPELL_ACHIEVEMENT_CHECK             = 59046,                // Doesn't exist in client dbc - added in spell_template
 };
 
 instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap),
-    m_bIsBrannSpankin(false),
-    m_uiIronSludgeKilled(0)
+    m_uiIronSludgeKilled(0),
+    m_bIsBrannSpankin(false)
 {
     Initialize();
 }
@@ -119,10 +120,13 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
             {
                 case IN_PROGRESS:
                     SortFaces();
-                    // Uncomment when this achievement is implemented
-                    // m_bIsBrannSpankin = true;
                     break;
                 case DONE:
+                    // Cast achiev check spell - Note: it's not clear who casts this spell, but for the moment we'll use Abedneum
+                    if (Creature* pEye = instance->GetCreature(m_aFaces[1].m_leftEyeGuid))
+                        pEye->CastSpell(pEye, SPELL_ACHIEVEMENT_CHECK, true);
+                    // Spawn the loot
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H, 30 * MINUTE);
                     DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H, GO_FLAG_NO_INTERACT, false);
                     // Door workaround because of the missing Bran event
                     DoUseDoorOrButton(GO_DOOR_SJONNIR);

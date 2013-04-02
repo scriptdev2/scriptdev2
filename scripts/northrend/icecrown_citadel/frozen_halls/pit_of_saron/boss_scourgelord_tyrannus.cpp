@@ -245,8 +245,8 @@ struct MANGOS_DLL_DECL boss_rimefang_posAI : public ScriptedAI
 
     void AttackStart(Unit* pWho) override
     {
-        // Don't attack unless Tyrannus is in combat
-        if (m_pInstance && m_pInstance->GetData(TYPE_TYRANNUS) != IN_PROGRESS)
+        // Don't attack unless Tyrannus is in combat or Ambush is completed
+        if (m_pInstance && (m_pInstance->GetData(TYPE_AMBUSH) != DONE || m_pInstance->GetData(TYPE_TYRANNUS) != IN_PROGRESS))
             return;
 
         ScriptedAI::AttackStart(pWho);

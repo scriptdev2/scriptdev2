@@ -107,8 +107,6 @@ enum
 
     SPELL_STEALTH                       = 58506,
 
-    SPELL_ACHIEVEMENT_CHECK             = 59046,                // Doesn't exist in client dbc
-
     NPC_DARK_RUNE_PROTECTOR             = 27983,
     NPC_DARK_RUNE_STORMCALLER           = 27984,
     NPC_IRON_GOLEM_CUSTODIAN            = 27985,
@@ -195,10 +193,20 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         npc_escortAI::AttackStart(pWho);
     }
 
+    void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
+    {
+        // If Brann takes damage, mark the achiev as failed
+        if (uiDamage && m_pInstance)
+            m_pInstance->SetBrannSpankin(false);
+    }
+
     void ContinueEvent()
     {
         if (!m_pInstance || m_pInstance->GetData(TYPE_TRIBUNAL) != IN_PROGRESS)
             return;
+
+        // Set the achiev in progress
+        m_pInstance->SetBrannSpankin(true);
 
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         SetRun(true);
@@ -444,6 +452,12 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     m_creature->SetStandState(UNIT_STAND_STATE_STAND);// TODO TODO
                     if (m_pInstance)
                         m_pInstance->SetData(TYPE_TRIBUNAL, SPECIAL); // Kill remaining npcs
+
+                    // ToDo: the loot and the achiev should be triggered at this point
+                    // Brann should get the gossip option "There will be plenty of time for this later Brann, we need to get moving!"
+                    // This will allow Brann to continue the escort to the last encounter
+                    // When reaching the last door he has the gossip "We're with you Brann! Open it!"
+
                     SetEscortPaused(false);
                     m_uiPhaseTimer = 3000;
                     // break;
@@ -549,8 +563,6 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                         m_pInstance->DoUseDoorOrButton(GO_TRIBUNAL_FLOOR);
                         m_pInstance->SetData(TYPE_TRIBUNAL, DONE);
                     }
-
-                    // Should cast spell 59046 (doesn't exist in client dbc), criterias are ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET
 
                     Player* pPlayer = GetPlayerForEscort();
                     if (pPlayer)

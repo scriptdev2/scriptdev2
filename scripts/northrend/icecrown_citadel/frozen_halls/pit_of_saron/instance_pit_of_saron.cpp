@@ -307,12 +307,10 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
         case TYPE_AMBUSH:
             if (uiData == DONE)
             {
-                Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS);
-                if (!pTyrannus)
-                    return;
+                // Complete tunnel achievement
+                if (Creature* pTyrannus = GetSingleCreatureFromStorage(NPC_TYRANNUS))
+                    pTyrannus->CastSpell(pTyrannus, SPELL_ACHIEVEMENT_CHECK, true);
 
-                // ToDo: enable this when the achiev check spells are implemented
-                // pTyrannus->CastSpell(pTyrannus, SPELL_ACHIEVEMENT_CHECK, true);
                 m_uiIciclesTimer = 0;
             }
             m_auiEncounter[uiType] = uiData;

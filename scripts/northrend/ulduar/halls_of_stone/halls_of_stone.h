@@ -93,6 +93,7 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
 
         void ActivateFace(uint8 uiFace, bool bAfterEvent);
         void DoFaceSpeak(uint8 uiFace, int32 iTextId);
+        void SetBrannSpankin(bool bIsMet) { m_bIsBrannSpankin = bIsMet; }
 
         ObjectGuid GetProtectorStalkerGuid() { return m_protectorStalkerGuid; }
         ObjectGuid GeStormcallerStalkerGuid() { return m_stormcallerStalkerGuid; }
