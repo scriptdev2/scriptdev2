@@ -57,7 +57,7 @@ enum
     SPELL_SUPERCHARGE                   = 61920,
     SPELL_LIGHTNING_CHANNEL_PREFIGHT    = 61942,        // cast by Brundir on Steelbreaker
     SPELL_RUNE_OF_POWER_PREFIGHT        = 61975,        // cast by Molgeim on Stellbreaker
-    // SPELL_COUNCIL_KILL_CREDIT         = 65195,        // currently missing from DBC
+    SPELL_COUNCIL_KILL_CREDIT           = 65195,        // currently missing from DBC
 
     // Steelbreaker
     SPELL_HIGH_VOLTAGE                  = 61890,        // phase 1 spells
@@ -164,7 +164,10 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_BRUNDIR, false);
         }
         else
+        {
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+            m_creature->CastSpell(m_creature, SPELL_COUNCIL_KILL_CREDIT, true);
+        }
 
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_DEATH_1 : SAY_BRUNDIR_DEATH_2, m_creature);
     }
@@ -461,7 +464,10 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_MOLGEIM, false);
         }
         else
+        {
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+            m_creature->CastSpell(m_creature, SPELL_COUNCIL_KILL_CREDIT, true);
+        }
 
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_DEATH_1 : SAY_MOLGEIM_DEATH_2, m_creature);
     }
@@ -639,7 +645,10 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_STEELBREAKER, false);
         }
         else
+        {
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+            m_creature->CastSpell(m_creature, SPELL_COUNCIL_KILL_CREDIT, true);
+        }
 
         DoScriptText(urand(0, 1) ? SAY_STEEL_DEATH_1 : SAY_STEEL_DEATH_2, m_creature);
     }

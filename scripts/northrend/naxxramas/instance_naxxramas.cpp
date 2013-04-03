@@ -49,6 +49,7 @@ instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_fChamberCenterY(0.0f),
     m_fChamberCenterZ(0.0f),
     m_uiTauntTimer(0),
+    m_uiHorsemenAchievTimer(0),
     m_uiHorseMenKilled(0),
     m_dialogueHelper(aNaxxDialogue)
 {
@@ -286,7 +287,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_ARAC_FAER_WEB);
             if (uiData == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_KNOCK_YOU_OUT, true);
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_ARAC_FAER_DOOR);
                 DoUseDoorOrButton(GO_ARAC_MAEX_OUTER_DOOR);
@@ -319,7 +320,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_PLAG_HEIG_ENTRY_DOOR);
             if (uiData == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_SAFETY_DANCE, true);
-            if (uiData == DONE)
+            else if (uiData == DONE)
                 DoUseDoorOrButton(GO_PLAG_HEIG_EXIT_DOOR);
             break;
         case TYPE_LOATHEB:
@@ -327,7 +328,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_PLAG_LOAT_DOOR);
             if (uiData == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_SPORE_LOSER, true);
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_PLAG_EYE_RAMP);
                 DoUseDoorOrButton(GO_PLAG_EYE_BOSS);
@@ -369,21 +370,24 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             // Skip if already set
             if (m_auiEncounter[uiType] == uiData)
                 return;
+
             if (uiData == SPECIAL)
             {
+                // Start the achiev countdown
+                if (!m_uiHorseMenKilled)
+                    m_uiHorsemenAchievTimer = 15000;
+
                 ++m_uiHorseMenKilled;
 
                 if (m_uiHorseMenKilled == 4)
                     SetData(TYPE_FOUR_HORSEMEN, DONE);
 
                 // Don't store special data
-                break;
+                return;
             }
-            if (uiData == FAIL)
+            else if (uiData == FAIL)
                 m_uiHorseMenKilled = 0;
-            m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(GO_MILI_HORSEMEN_DOOR);
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_MILI_EYE_RAMP);
                 DoUseDoorOrButton(GO_MILI_EYE_BOSS);
@@ -392,12 +396,14 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CHEST_HORSEMEN_NORM : GO_CHEST_HORSEMEN_HERO, 30 * MINUTE);
                 m_uiTauntTimer = 5000;
             }
+            DoUseDoorOrButton(GO_MILI_HORSEMEN_DOOR);
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_PATCHWERK:
             m_auiEncounter[uiType] = uiData;
             if (uiData == IN_PROGRESS)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_PATCHWERK_ID);
-            if (uiData == DONE)
+            else if (uiData == DONE)
                 DoUseDoorOrButton(GO_CONS_PATH_EXIT_DOOR);
             break;
         case TYPE_GROBBULUS:
@@ -532,6 +538,9 @@ bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Playe
         case ACHIEV_CRIT_GET_ENOUGH_N:
         case ACHIEV_CRIT_GET_ENOUGH_H:
             return m_abAchievCriteria[TYPE_ACHIEV_GET_ENOUGH];
+        case ACHIEV_CRIT_TOGETHER_N:
+        case ACHIEV_CRIT_TOGETHER_H:
+            return m_uiHorsemenAchievTimer > 0;
             // 'The Immortal'(25m) or 'Undying'(10m) - (achievs 2186, 2187)
         case ACHIEV_CRIT_IMMORTAL_KEL:
         case ACHIEV_CRIT_IMMOORTAL_LOA:
@@ -568,6 +577,14 @@ void instance_naxxramas::Update(uint32 uiDiff)
         }
         else
             m_uiTauntTimer -= uiDiff;
+    }
+
+    if (m_uiHorsemenAchievTimer)
+    {
+        if (m_uiHorsemenAchievTimer <= uiDiff)
+            m_uiHorsemenAchievTimer = 0;
+        else
+            m_uiHorsemenAchievTimer -= uiDiff;
     }
 
     m_dialogueHelper.DialogueUpdate(uiDiff);

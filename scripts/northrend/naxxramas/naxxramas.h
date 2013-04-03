@@ -172,6 +172,8 @@ enum
     ACHIEV_CRIT_KNOCK_YOU_OUT_H = 7549,
     ACHIEV_CRIT_HUNDRED_CLUB_N  = 7567,                     // Sapphiron, achievs 2146, 2147
     ACHIEV_CRIT_HUNDRED_CLUB_H  = 7568,
+    ACHIEV_CRIT_TOGETHER_N      = 7600,                     // Four Horsemen, achievs 2176, 2177
+    ACHIEV_CRIT_TOGETHER_H      = 7601,
     ACHIEV_CRIT_SHOCKING_N      = 7604,                     // Thaddius, achievs 2178, 2179
     ACHIEV_CRIT_SHOCKING_H      = 7605,
     ACHIEV_CRIT_SPORE_LOSER_N   = 7612,                     // Loatheb, achievs 2182, 2183
@@ -262,6 +264,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         float m_fChamberCenterZ;
 
         uint32 m_uiTauntTimer;
+        uint32 m_uiHorsemenAchievTimer;
         uint8 m_uiHorseMenKilled;
 
         DialogueHelper m_dialogueHelper;

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Four_Horsemen
 SD%Complete: 90
-SDComment: Lady Blaumeux, Thane Korthazz, Sir Zeliek, Baron Rivendare; Berserk NYI; Achievements NYI.
+SDComment: Lady Blaumeux, Thane Korthazz, Sir Zeliek, Baron Rivendare; Berserk NYI.
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -58,10 +58,10 @@ enum
 
     // ***** Spells *****
     // all horsemen
-    // SPELL_SHIELDWALL      = 29061,            // not used in 3.x.x
+    // SPELL_SHIELDWALL     = 29061,            // not used in 3.x.x
     SPELL_BESERK            = 26662,
+    SPELL_ACHIEV_CHECK      = 59450,
     // Note: Berserk should be applied once 100 marks are casted.
-    // Also spell 59450, which is missing from DBC, is required for the achiev
 
     // lady blaumeux
     SPELL_MARK_OF_BLAUMEUX  = 28833,
@@ -151,7 +151,13 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         DoScriptText(SAY_BLAU_DEATH, m_creature);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_FOUR_HORSEMEN, SPECIAL);
+
+            // Cast achiev check for last boss killed
+            if (m_pInstance->GetData(TYPE_FOUR_HORSEMEN) == DONE)
+                m_creature->CastSpell(m_creature, SPELL_ACHIEV_CHECK, true);
+        }
     }
 
     void JustReachedHome() override
@@ -270,7 +276,13 @@ struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
         DoScriptText(SAY_RIVE_DEATH, m_creature);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_FOUR_HORSEMEN, SPECIAL);
+
+            // Cast achiev check for last boss killed
+            if (m_pInstance->GetData(TYPE_FOUR_HORSEMEN) == DONE)
+                m_creature->CastSpell(m_creature, SPELL_ACHIEV_CHECK, true);
+        }
     }
 
     void JustReachedHome() override
@@ -371,7 +383,13 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         DoScriptText(SAY_KORT_DEATH, m_creature);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_FOUR_HORSEMEN, SPECIAL);
+
+            // Cast achiev check for last boss killed
+            if (m_pInstance->GetData(TYPE_FOUR_HORSEMEN) == DONE)
+                m_creature->CastSpell(m_creature, SPELL_ACHIEV_CHECK, true);
+        }
     }
 
     void JustReachedHome() override
@@ -474,7 +492,13 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
         DoScriptText(SAY_ZELI_DEATH, m_creature);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_FOUR_HORSEMEN, SPECIAL);
+
+            // Cast achiev check for last boss killed
+            if (m_pInstance->GetData(TYPE_FOUR_HORSEMEN) == DONE)
+                m_creature->CastSpell(m_creature, SPELL_ACHIEV_CHECK, true);
+        }
     }
 
     void JustReachedHome() override
