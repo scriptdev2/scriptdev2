@@ -53,10 +53,6 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[1] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_ANCIENT_TREASURE:
-            // We need to store this in m_mGoEntryGuidStore so
-            // we can spawn it later using DoRespawnGameObject.
-            break;
         default:
             return;
     }
@@ -120,7 +116,6 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
                         pWarden->ForcedDespawn();
                 }
                 DoUseDoorOrButton(GO_ANCIENT_VAULT);
-                DoRespawnGameObject(GO_ANCIENT_TREASURE, HOUR);
             }
             m_auiEncounter[1] = uiData;
             break;
