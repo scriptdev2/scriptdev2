@@ -42,9 +42,6 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_TEMPLE_DOOR_UPPER:
-            if (m_auiEncounter[0] == DONE)
-                pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
         case GO_TEMPLE_DOOR_LOWER:
             if (m_auiEncounter[0] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
@@ -67,15 +64,14 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_HALLSHAPER:
         case NPC_CUSTODIAN:
-        case NPC_GUARDIAN:
-        case NPC_VAULT_WARDER:
             m_lWardens.push_back(pCreature->GetObjectGuid());
-            pCreature->SetNoCallAssistance(true);           // no assistance
             break;
         case NPC_STONE_KEEPER:
             // FIXME - This isAlive check is currently useless
             m_mKeeperMap[pCreature->GetObjectGuid()] = pCreature->isAlive();
-            pCreature->SetNoCallAssistance(true);           // no assistance
+            break;
+        case NPC_ARCHAEDAS:
+            m_mNpcEntryGuidStore[NPC_ARCHAEDAS] = pCreature->GetObjectGuid();
             break;
         default:
             break;
@@ -97,26 +93,8 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
             break;
 
         case TYPE_ARCHAEDAS:
-            if (uiData == FAIL)
+            if (uiData == DONE)
             {
-                for (GuidList::const_iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
-                {
-                    if (Creature* pWarden = instance->GetCreature(*itr))
-                    {
-                        pWarden->SetDeathState(JUST_DIED);
-                        pWarden->Respawn();
-                        pWarden->SetNoCallAssistance(true);
-                    }
-                }
-            }
-            else if (uiData == DONE)
-            {
-                for (GuidList::const_iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
-                {
-                    Creature* pWarden = instance->GetCreature(*itr);
-                    if (pWarden && pWarden->isAlive())
-                        pWarden->ForcedDespawn();
-                }
                 DoUseDoorOrButton(GO_ANCIENT_VAULT);
                 DoRespawnGameObject(GO_ANCIENT_TREASURE, 30 * MINUTE);
             }
@@ -212,15 +190,14 @@ void instance_uldaman::DoResetKeeperEvent()
     {
         if (Creature* pKeeper = instance->GetCreature(itr->first))
         {
-            pKeeper->SetDeathState(JUST_DIED);
-            pKeeper->Respawn();
-            pKeeper->SetNoCallAssistance(true);
+            pKeeper->SetRespawnDelay(3);
+            pKeeper->ForcedDespawn(1000);
             itr->second = true;
         }
     }
 }
 
-Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase)
+Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher)
 {
     std::list<Creature*> lTemp;
 
@@ -229,25 +206,7 @@ Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher, uint
         Creature* pTemp = instance->GetCreature(*itr);
 
         if (pTemp && pTemp->isAlive() && !pTemp->getVictim())
-        {
-            switch (uiPhase)
-            {
-                case PHASE_ARCHA_1:
-                    if (pTemp->GetEntry() != NPC_CUSTODIAN && pTemp->GetEntry() != NPC_HALLSHAPER)
-                        continue;
-                    break;
-                case PHASE_ARCHA_2:
-                    if (pTemp->GetEntry() != NPC_GUARDIAN)
-                        continue;
-                    break;
-                case PHASE_ARCHA_3:
-                    if (pTemp->GetEntry() != NPC_VAULT_WARDER)
-                        continue;
-                    break;
-            }
-
             lTemp.push_back(pTemp);
-        }
     }
 
     if (lTemp.empty())
@@ -285,8 +244,7 @@ void instance_uldaman::Update(uint32 uiDiff)
                                 if (pPlayer->isAlive() && !pPlayer->isInCombat())
                                 {
                                     pKeeper->RemoveAurasDueToSpell(SPELL_STONED);
-                                    pKeeper->SetInCombatWith(pPlayer);
-                                    pKeeper->AddThreat(pPlayer);
+                                    pKeeper->AI()->AttackStart(pPlayer);
                                 }
                                 else
                                 {

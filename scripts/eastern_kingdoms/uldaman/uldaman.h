@@ -18,15 +18,12 @@ enum
     GO_ANCIENT_VAULT            = 124369,
     GO_ANCIENT_TREASURE         = 141979,
 
+    NPC_ARCHAEDAS               = 2748,
     NPC_CUSTODIAN               = 7309,
     NPC_HALLSHAPER              = 7077,
     NPC_GUARDIAN                = 7076,
     NPC_VAULT_WARDER            = 10120,
     NPC_STONE_KEEPER            = 4857,
-
-    PHASE_ARCHA_1               = 1,
-    PHASE_ARCHA_2               = 2,
-    PHASE_ARCHA_3               = 3,
 
     SPELL_STONED                = 10255,
     SPELL_FREEZE_ANIM           = 16245,
@@ -57,7 +54,7 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         void DoResetKeeperEvent();
 
-        Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
+        Creature* GetClosestDwarfNotInCombat(Creature* pSearcher);
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
