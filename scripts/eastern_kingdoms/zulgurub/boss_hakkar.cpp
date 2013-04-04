@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Hakkar
-SD%Complete: 95
-SDComment: Blood siphon spell buggy cause of Core Issue.
+SD%Complete: 100
+SDComment:
 SDCategory: Zul'Gurub
 EndScriptData */
 
@@ -29,7 +29,7 @@ enum
     SAY_AGGRO                   = -1309020,
     SAY_FLEEING                 = -1309021,
 
-    SPELL_BLOOD_SIPHON          = 24324,                    // Related Spells 24322, 24323, 24324, likely starting spell is 24324 (disabled until proper fixed)
+    SPELL_BLOOD_SIPHON          = 24324,                    // triggers 24322 or 24323 on caster
     SPELL_CORRUPTED_BLOOD       = 24328,
     SPELL_CAUSE_INSANITY        = 24327,
     SPELL_WILL_OF_HAKKAR        = 24178,
@@ -105,15 +105,13 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        /* Disabled as needs core fix// Blood Siphon Timer
-         * This also will requre spells 24320 24321 to be implemented (and used by the "Son of Hakkar" npcs)
         if (m_uiBloodSiphonTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_BLOOD_SIPHON) == CAST_OK)
                 m_uiBloodSiphonTimer = 90000;
         }
         else
-            m_uiBloodSiphonTimer -= uiDiff; */
+            m_uiBloodSiphonTimer -= uiDiff;
 
         // Corrupted Blood Timer
         if (m_uiCorruptedBloodTimer < uiDiff)
