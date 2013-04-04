@@ -53,6 +53,8 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[1] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        case GO_ANCIENT_TREASURE:
+            break;
         default:
             return;
     }
@@ -116,6 +118,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
                         pWarden->ForcedDespawn();
                 }
                 DoUseDoorOrButton(GO_ANCIENT_VAULT);
+                DoRespawnGameObject(GO_ANCIENT_TREASURE, 30 * MINUTE);
             }
             m_auiEncounter[1] = uiData;
             break;

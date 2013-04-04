@@ -37,7 +37,8 @@ enum
     SAY_AGGRO                       = -1070001,
     SAY_AWAKE_GUARDIANS             = -1070002,
     SAY_AWAKE_WARDERS               = -1070003,
-    SAY_UNIT_SLAIN                  = -1070004
+    SAY_UNIT_SLAIN                  = -1070004,
+    EMOTE_BREAKS_FREE               = -1070005,
 };
 
 struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
@@ -97,9 +98,9 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
     {
         if (pTarget->GetTypeId() != TYPEID_PLAYER)
         {
-            if (pTarget->HasAura(SPELL_STONED, EFFECT_INDEX_0))
+            if (pTarget->HasAura(SPELL_FREEZE_ANIM))
             {
-                pTarget->RemoveAurasDueToSpell(SPELL_STONED);
+                pTarget->RemoveAurasDueToSpell(SPELL_FREEZE_ANIM);
 
                 if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
@@ -126,12 +127,18 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
                 {
                     case 0:
                         DoCastSpellIfCan(m_creature, SPELL_ARCHAEDAS_AWAKEN_VISUAL);
+                        m_uiAwakeningTimer = 2000;
                         break;
                     case 1:
-                        DoScriptText(SAY_AGGRO, m_creature, NULL);
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        DoScriptText(EMOTE_BREAKS_FREE, m_creature);
+                        m_uiAwakeningTimer = 3000;
                         break;
                     case 2:
+                        DoScriptText(SAY_AGGRO, m_creature, NULL);
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        m_uiAwakeningTimer = 5000;
+                        break;
+                    case 3:
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_EVENT_STARTER)))
                             AttackStart(pPlayer);
                         else
@@ -142,7 +149,6 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
                 }
 
                 ++m_uiSubevent;
-                m_uiAwakeningTimer = 5000;
             }
             else
                 m_uiAwakeningTimer -= uiDiff;
