@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Archaedas
-SD%Complete: 60
-SDComment: Need correct way to deal with awaken vault and guardian spells, waiting for additions in mangos for them (target combination 22/7)
+SD%Complete: 100
+SDComment:
 SDCategory: Uldaman
 EndScriptData */
 

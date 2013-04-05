@@ -43,6 +43,9 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
         void OnCreatureCreate(Creature* pCreature) override;
 
+        void OnCreatureDeath(Creature* pCreature) override;
+        void OnCreatureEvade(Creature* pCreature) override;
+
         void Update(uint32 uiDiff) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
@@ -52,14 +55,14 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         void StartEvent(uint32 uiEventId, Player* pPlayer);
 
-        void DoResetKeeperEvent();
-
         Creature* GetClosestDwarfNotInCombat(Creature* pSearcher);
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
     protected:
+        void DoResetKeeperEvent();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
@@ -69,7 +72,7 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
         uint32 m_uiStoneKeepersFallen;
 
         GuidList m_lWardens;
-        std::map<ObjectGuid, bool> m_mKeeperMap;
+        GuidList m_lKeepers;
 };
 
 #endif
