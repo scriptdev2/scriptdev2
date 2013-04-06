@@ -349,6 +349,7 @@ UPDATE gameobject_template SET ScriptName='go_father_flame' WHERE entry=175245;
 /* BLACKWING LAIR */
 UPDATE instance_template SET ScriptName='instance_blackwing_lair' WHERE map=469;
 UPDATE creature_template SET ScriptName='boss_razorgore' WHERE entry=12435;
+UPDATE gameobject_template SET ScriptName='go_black_dragon_egg' WHERE entry=177807;
 UPDATE creature_template SET ScriptName='boss_vaelastrasz' WHERE entry=13020;
 UPDATE creature_template SET ScriptName='boss_broodlord' WHERE entry=12017;
 UPDATE creature_template SET ScriptName='boss_firemaw' WHERE entry=11983;
