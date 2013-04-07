@@ -105,7 +105,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_ANCIENT_VAULT);
-                DoRespawnGameObject(GO_ANCIENT_TREASURE, 40 * MINUTE);
+                DoRespawnGameObject(GO_ANCIENT_TREASURE, HOUR);
             }
             m_auiEncounter[1] = uiData;
             break;

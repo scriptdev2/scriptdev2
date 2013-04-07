@@ -101,6 +101,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         m_bIsPhaseOne           = true;
 
         DoCastSpellIfCan(m_creature, SPELL_GREEN_CHANNELING);
+        SetCombatMovement(false);
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -109,7 +110,12 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
         // Note: on aggro the bats from the cave behind the boss should fly outside!
         if (DoCastSpellIfCan(m_creature, SPELL_BAT_FORM) == CAST_OK)
+        {
             m_creature->SetLevitate(true);
+            // override MMaps, by allowing the boss to fly up from the ledge
+            m_creature->SetWalk(false);
+            m_creature->GetMotionMaster()->MovePoint(1, -12281.58f, -1392.84f, 146.1f);
+        }
     }
 
     void JustDied(Unit* /*pKiller*/) override
@@ -143,6 +149,25 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         }
 
         pSummoned->SetLevitate(true);
+    }
+
+    void EnterEvadeMode() override
+    {
+        // Override MMaps, and teleport to original position
+        float fX, fY, fZ, fO;
+        m_creature->GetRespawnCoord(fX, fY, fZ, &fO);
+        m_creature->NearTeleportTo(fX, fY, fZ, fO);
+
+        ScriptedAI::EnterEvadeMode();
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        SetCombatMovement(true);
+        DoStartMovement(m_creature->getVictim());
     }
 
     // Wrapper to despawn the bomb riders on evade / death

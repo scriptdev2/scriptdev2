@@ -688,12 +688,9 @@ bool ProcessEventId_event_go_focusing_iris(uint32 /*uiEventId*/, Object* pSource
 
         // Enter combat area - Move to ground point first, then start chasing target
         float fX, fY, fZ;
-        pMalygos->AI()->AttackStart((Player*)pSource);
-        pMalygos->GetMotionMaster()->MoveIdle();
-        pMalygos->GetMotionMaster()->Clear();
-
         pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 30.0f, pTrigger->GetAngle(pMalygos));
-        pMalygos->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ, false);
+        pMalygos->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ);
+        pMalygos->AI()->AttackStart((Player*)pSource);
 
         return true;
     }
