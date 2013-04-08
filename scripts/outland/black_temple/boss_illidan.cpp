@@ -137,7 +137,7 @@ enum
     // Misc Summoned
     SPELL_FLAME_CRASH_EFFECT        = 40836,                // Firey blue ring of circle that the other flame crash summons
     SPELL_EYE_BLAST_TRIGGER         = 40017,                // This summons Demon Form every few seconds and deals ~20k damage in its radius
-    SPELL_DEMON_FIRE                = 40029,                // Blue fire trail left by Eye Blast. Deals 2k per second if players stand on it.
+    // SPELL_DEMON_FIRE             = 40029,                // Blue fire trail left by Eye Blast. Deals 2k per second if players stand on it.
     SPELL_BLAZE_EFFECT              = 40610,                // Green flame on the ground, triggers damage (5k) every few seconds
 
     // Blade of Azzinoth
@@ -165,11 +165,11 @@ enum
     /************** Creature Summons **************/
     NPC_ILLIDARI_ELITE              = 23226,                // attacks Akama on the stairs
     NPC_FLAME_CRASH                 = 23336,                // has aura 40836
-    // NPC_PARASITIC_SHADOWFIEND     = 23498,               // has aura 41913 (in c_t_a)
+    // NPC_PARASITIC_SHADOWFIEND    = 23498,                // has aura 41913 (in c_t_a)
     NPC_BLADE_OF_AZZINOTH           = 22996,                // has aura 41997 and summons 22997 on spawn
     NPC_FLAME_OF_AZZINOTH           = 22997,
     NPC_ILLIDAN_TARGET              = 23070,                // the eye blast target - has aura 40017
-    NPC_DEMON_FIRE                  = 23069,                // has aura 40029
+    // NPC_DEMON_FIRE               = 23069,                // has aura 40029 (in EventAI)
     NPC_BLAZE                       = 23259,                // has aura 40610
     NPC_SHADOW_DEMON                = 23375,
     // NPC_CAGE_TRAP_DISTURB_TRIGGER = 23304,
@@ -553,12 +553,10 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI, private Dia
                 m_lBladesGuidList.push_back(pSummoned->GetObjectGuid());
                 break;
             case NPC_ILLIDAN_TARGET:
-                pSummoned->CastSpell(pSummoned, SPELL_EYE_BLAST_TRIGGER, true, NULL, NULL, m_creature->GetObjectGuid());
+                pSummoned->SetWalk(false);
+                pSummoned->CastSpell(pSummoned, SPELL_EYE_BLAST_TRIGGER, true);
                 pSummoned->GetMotionMaster()->MovePoint(0, m_fTargetMoveX, m_fTargetMoveY, m_fTargetMoveZ);
                 DoCastSpellIfCan(pSummoned, SPELL_EYE_BLAST_DUMMY, CAST_TRIGGERED);
-                break;
-            case NPC_DEMON_FIRE:
-                pSummoned->CastSpell(pSummoned, SPELL_DEMON_FIRE, true);
                 break;
             case NPC_SHADOW_DEMON:
                 pSummoned->CastSpell(pSummoned, SPELL_SHADOW_DEMON_PASSIVE, true);

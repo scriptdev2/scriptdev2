@@ -90,7 +90,9 @@ enum
     SPELL_VANISH                = 41476,
 
     SPELL_BERSERK               = 45078,
-    // SPELL_BALANCE_OF_POWER    = 41341,                   // procs 41342 on damage - added in c_t_a
+    // SPELL_BALANCE_OF_POWER   = 41341,                    // somehow related to 41344
+    SPELL_SHARED_RULE_DAM       = 41342,
+    SPELL_SHARED_RULE_HEAL      = 41343,
     SPELL_EMPYREAL_EQUIVALENCY  = 41333,
     SPELL_EMPYREAL_BALANCE      = 41499,
 };
@@ -203,6 +205,17 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
         m_bEventEnd   = false;
 
         m_uiEquivalencyTimer = urand(2000, 3000);
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        DoEndEvent();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_COUNCIL, DONE);
     }
 
     void DoStartEvent()
@@ -321,26 +334,17 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         }
     }
 
-    // ##### Workaround for missing spell aura proc 41342 - Remove when this is implemented in core #####
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
-        if (pDoneBy == m_creature)
-            return;
-
-        uiDamage /= 4;
-        if (!m_pInstance)
-            return;
-
-        for (uint8 i = 0; i < 4; ++i)
-        {
-            if (Creature* pCouncil = m_pInstance->GetSingleCreatureFromStorage(aCouncilMember[i]))
-            {
-                if (pCouncil != m_creature && uiDamage < pCouncil->GetHealth())
-                    pCouncil->SetHealth(pCouncil->GetHealth() - uiDamage);
-            }
-        }
+        int32 uiDamageTaken = (int32)uiDamage;
+        m_creature->CastCustomSpell(m_creature, SPELL_SHARED_RULE_DAM, &uiDamageTaken, NULL, NULL, true);
     }
-    // ##### End of workaround #####
+
+    void HealedBy(Unit * pHealer, uint32& uiHealedAmount) override
+    {
+        int32 uHealTaken = (int32)uiHealedAmount;
+        m_creature->CastCustomSpell(m_creature, SPELL_SHARED_RULE_HEAL, &uHealTaken, NULL, NULL, true);
+    }
 };
 
 /*######

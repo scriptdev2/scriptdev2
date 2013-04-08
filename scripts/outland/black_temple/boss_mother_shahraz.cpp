@@ -95,8 +95,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
         m_bIsEnraged                = false;
 
-        // ToDo: Enable this when the core will properly support the damage split! We can't deal 70-80k damage only to one player.
-        // DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
+        DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -162,8 +161,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         else
             m_uiPrismaticShieldTimer -= uiDiff;
 
-        // ToDo: Enable this spell when it will be properly supported by core! Right now it teleports players under the map.
-        /*if (m_uiFatalAttractionTimer < uiDiff)
+        if (m_uiFatalAttractionTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_FATAL_ATTRACTION) == CAST_OK)
             {
@@ -173,11 +171,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                     case 1: DoScriptText(SAY_SPELL_2, m_creature); break;
                     case 2: DoScriptText(SAY_SPELL_3, m_creature); break;
                 }
-                m_uiFatalAttractionTimer = 30000;
+                m_uiFatalAttractionTimer = urand(30000, 40000);
             }
         }
         else
-            m_uiFatalAttractionTimer -= uiDiff;*/
+            m_uiFatalAttractionTimer -= uiDiff;
 
         if (m_uiShriekTimer < uiDiff)
         {
