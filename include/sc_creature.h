@@ -69,8 +69,8 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         // Called when reached home after MoveTargetHome (in evade)
         void JustReachedHome() override {}
 
-        // Called at any heal cast/item used (call non implemented in mangos)
-        // void HealBy(Unit* pHealer, uint32 uiAmountHealed) override {}
+        // Called at any Heal received
+        void HealedBy(Unit * /*pHealer*/, uint32& /*uiHealedAmount*/) override {}
 
         // Called at any Damage to any victim (before damage apply)
         void DamageDeal(Unit* /*pDoneTo*/, uint32& /*uiDamage*/) override {}
