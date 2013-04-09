@@ -105,6 +105,21 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
         }
     }
 
+    // Workaround for the shared health pool
+    void HealedBy(Unit * pHealer, uint32& uiHealedAmount) override
+    {
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pTwin = m_pInstance->GetSingleCreatureFromStorage(m_creature->GetEntry() == NPC_VEKLOR ? NPC_VEKLOR : NPC_VEKNILASH))
+        {
+            float fHealPercent = ((float)uiHealedAmount) / ((float)m_creature->GetMaxHealth());
+            uint32 uiTwinHeal = (uint32)(fHealPercent * ((float)pTwin->GetMaxHealth()));
+            uint32 uiTwinHealth = pTwin->GetHealth() + uiTwinHeal;
+            pTwin->SetHealth(uiTwinHealth < pTwin->GetMaxHealth() ? uiTwinHealth : pTwin->GetMaxHealth());
+        }
+    }
+
     void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
