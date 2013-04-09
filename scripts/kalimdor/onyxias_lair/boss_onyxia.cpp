@@ -137,6 +137,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     bool m_bIsSummoningWhelps;
 
+    uint32 m_uiPhaseTimer;
+
     void Reset() override
     {
         if (!IsCombatMovement())
@@ -149,19 +151,21 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_uiCleaveTimer = urand(2000, 5000);
         m_uiWingBuffetTimer = urand(10000, 20000);
 
-        m_uiMovePoint = urand(0, m_uiMaxBreathPositions - 1);
+        m_uiMovePoint = 4;                                  // Start in the south
         m_uiMovementTimer = 20000;
         m_pPointData = GetMoveData();
 
         m_uiFireballTimer = 15000;
         m_uiSummonWhelpsTimer = 15000;
-        m_uiBellowingRoarTimer = 2000;                      // Immediately after landing
+        m_uiBellowingRoarTimer = 1;                         // Immediately after landing
         m_uiWhelpTimer = 1000;
         m_uiSummonGuardTimer = 15000;
 
         m_uiSummonCount = 0;
 
         m_bIsSummoningWhelps = false;
+
+        m_uiPhaseTimer = 0;
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -254,10 +258,21 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if (uiMoveType != POINT_MOTION_TYPE || !m_pInstance)
             return;
 
-        if (m_uiPhase == PHASE_BREATH)
+        if (m_uiPhase == PHASE_BREATH || m_uiPhase == PHASE_BREATH_PRE)
         {
             if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
                 m_creature->SetFacingToObject(pTrigger);
+        }
+
+        if (m_uiPhase == PHASE_BREATH_PRE && !m_uiPhaseTimer)
+        {
+            // sort of a hack, it is unclear how this really work but the values appear to be valid
+            m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+            m_creature->SetLevitate(true);
+
+            if (m_pPointData)
+                m_creature->Relocate(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
+            m_uiPhaseTimer = 3000;                          // Start phase two when lift off complete
         }
     }
 
@@ -311,25 +326,14 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 else
                     m_uiWingBuffetTimer -= uiDiff;
 
-                if (m_uiPhase == PHASE_START && m_creature->GetHealthPercent() < 65.0f)
+                if (m_uiPhase == PHASE_START && m_creature->GetHealthPercent() < 65.0f && m_pPointData)
                 {
-                    m_uiPhase = PHASE_BREATH;
-
-                    SetCombatMovement(false);
-                    m_creature->GetMotionMaster()->MoveIdle();
-
+                    m_uiPhase = PHASE_BREATH_PRE;
                     DoScriptText(SAY_PHASE_2_TRANS, m_creature);
+                    SetCombatMovement(false);
 
-                    // sort of a hack, it is unclear how this really work but the values appear to be valid
-                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
-                    m_creature->SetLevitate(true);
-
-                    if (m_pPointData)
-                        m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
-
-                    // TODO - this might not be the correct place to set this setting
-                    if (m_pInstance)
-                        m_pInstance->SetData(TYPE_ONYXIA, DATA_LIFTOFF);
+                    float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
+                    m_creature->GetMotionMaster()->MovePoint(1, m_pPointData->fX, m_pPointData->fY, fGroundZ);
                     return;
                 }
 
@@ -340,15 +344,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 if (m_creature->GetHealthPercent() < 40.0f)
                 {
-                    m_uiPhase = PHASE_END;
+                    m_uiPhase = PHASE_BREATH_POST;
+                    m_uiPhaseTimer = 2000;
                     DoScriptText(SAY_PHASE_3_TRANS, m_creature);
 
                     // undo flying
                     m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
                     m_creature->SetLevitate(false);
-
-                    SetCombatMovement(true);
-                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                     return;
                 }
 
@@ -436,6 +438,52 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 }
                 else
                     m_uiSummonGuardTimer -= uiDiff;
+
+                break;
+            }
+            // Phase-switching phases
+            case PHASE_BREATH_PRE:
+            {
+                if (m_uiPhaseTimer)
+                {
+                    if (m_uiPhaseTimer <= uiDiff)
+                    {
+                        m_uiPhase = PHASE_BREATH;
+                        m_uiMovementTimer = urand(15000, 25000);
+
+                        if (m_pInstance)
+                            m_pInstance->SetData(TYPE_ONYXIA, DATA_LIFTOFF);
+
+                        // Move to the north side of the room
+                        m_uiMovePoint = 0;
+                        m_pPointData = GetMoveData();
+                        m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
+
+                        m_uiPhaseTimer = 0;
+                    }
+                    else
+                        m_uiPhaseTimer -= uiDiff;
+                }
+
+                break;
+            }
+            case PHASE_BREATH_POST:
+            {
+                if (m_uiPhaseTimer)
+                {
+                    if (m_uiPhaseTimer <= uiDiff)
+                    {
+                        m_uiPhase = PHASE_END;
+
+                        float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+                        m_creature->Relocate(m_creature->GetPositionX(), m_creature->GetPositionY(), fGroundZ);
+
+                        SetCombatMovement(true, true);
+                        m_uiPhaseTimer = 0;
+                    }
+                    else
+                        m_uiPhaseTimer -= uiDiff;
+                }
 
                 break;
             }
