@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Baroness_Anastari
-SD%Complete: 75
-SDComment: Possess event NYI
+SD%Complete: 100
+SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
@@ -29,6 +29,7 @@ enum
     SPELL_BANSHEE_CURSE     = 16867,
     SPELL_SILENCE           = 18327,
     SPELL_POSSESS           = 17244,
+    SPELL_POSSESSED         = 17246,
     SPELL_POSSESS_INV       = 17250,        // baroness becomes invisible while possessing a target
 };
 
@@ -40,6 +41,9 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     uint32 m_uiBansheeCurseTimer;
     uint32 m_uiSilenceTimer;
     uint32 m_uiPossessTimer;
+    uint32 m_uiPossessEndTimer;
+
+    ObjectGuid m_possessedPlayer;
 
     void Reset() override
     {
@@ -47,10 +51,57 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         m_uiBansheeCurseTimer   = 10000;
         m_uiSilenceTimer        = 25000;
         m_uiPossessTimer        = 15000;
+        m_uiPossessEndTimer     = 0;
+    }
+
+    void EnterEvadeMode() override
+    {
+        // If it's invisible don't evade
+        if (m_uiPossessEndTimer)
+            return;
+
+        ScriptedAI::EnterEvadeMode();
     }
 
     void UpdateAI(const uint32 uiDiff) override
     {
+        if (m_uiPossessEndTimer)
+        {
+            // Check if the possessed player has been damaged
+            if (m_uiPossessEndTimer <= uiDiff)
+            {
+                // If aura has expired, return to fight
+                if (!m_creature->HasAura(SPELL_POSSESS_INV))
+                {
+                    m_uiPossessEndTimer = 0;
+                    return;
+                }
+
+                // Check for possessed player
+                Player* pPlayer = m_creature->GetMap()->GetPlayer(m_possessedPlayer);
+                if (!pPlayer || !pPlayer->isAlive())
+                {
+                    m_creature->RemoveAurasDueToSpell(SPELL_POSSESS_INV);
+                    m_uiPossessEndTimer = 0;
+                    return;
+                }
+
+                // If possessed player has less than 50% health
+                if (pPlayer->GetHealth() <= pPlayer->GetMaxHealth() * .5f)
+                {
+                    m_creature->RemoveAurasDueToSpell(SPELL_POSSESS_INV);
+                    pPlayer->RemoveAurasDueToSpell(SPELL_POSSESSED);
+                    pPlayer->RemoveAurasDueToSpell(SPELL_POSSESS);
+                    m_uiPossessEndTimer = 0;
+                    return;
+                }
+
+                m_uiPossessEndTimer = 1000;
+            }
+            else
+                m_uiPossessEndTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -88,20 +139,23 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
             m_uiSilenceTimer -= uiDiff;
 
         // Possess
-        // ToDo: uncomment this when the event is properly implemented
-        /*if (m_uiPossessTimer < uiDiff)
+        if (m_uiPossessTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_POSSESS, SELECT_FLAG_PLAYER))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_POSSESS) == CAST_OK)
                 {
+                    DoCastSpellIfCan(pTarget, SPELL_POSSESSED, CAST_TRIGGERED);
                     DoCastSpellIfCan(m_creature, SPELL_POSSESS_INV, CAST_TRIGGERED);
+
+                    m_possessedPlayer = pTarget->GetObjectGuid();
+                    m_uiPossessEndTimer = 1000;
                     m_uiPossessTimer = 30000;
                 }
             }
         }
         else
-            m_uiPossessTimer -= uiDiff;*/
+            m_uiPossessTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
