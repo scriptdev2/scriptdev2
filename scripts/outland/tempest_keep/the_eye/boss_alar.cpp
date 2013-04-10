@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_alar
-SD%Complete: 70
-SDComment: Dive Bomb event NYI
+SD%Complete: 90
+SDComment: Boss movement should be improved.
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
@@ -38,8 +38,8 @@ enum
     SPELL_DIVE_BOMB_VISUAL  = 35367,        // visual transform to fire ball
     SPELL_DIVE_BOMB         = 35181,        // dive bomb damage spell
     SPELL_BOMB_REBIRTH      = 35369,        // used after the dive bomb - to transform back to phoenis
-    SPELL_CHARGE            = 35412,        // used while in Dive Bomb form - to charge a target
-    // SPELL_SUMMON_ADDS       = 18814,        // summons 3*19551 - Not sure if the spell is the right id
+    SPELL_CHARGE            = 35412,        // charge a random target
+    // SPELL_SUMMON_ADDS    = 18814,        // summons 3*19551 - Not sure if the spell is the right id
     SPELL_BERSERK           = 27680,        // this spell is used only during phase II
 
     NPC_EMBER_OF_ALAR       = 19551,        // scripted in Acid
@@ -55,6 +55,7 @@ enum
     PHASE_ONE               = 1,
     PHASE_REBIRTH           = 2,
     PHASE_TWO               = 3,
+    PHASE_DIVE_BOMB         = 4,
 };
 
 struct EventLocation
@@ -96,6 +97,8 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
     uint32 m_uiFlameQuillsTimer;
     uint32 m_uiFlamePatchTimer;
     uint32 m_uiDiveBombTimer;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiRebirthTimer;
     uint32 m_uiMeltArmorTimer;
 
     bool m_bCanSummonEmber;
@@ -115,6 +118,8 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
         m_uiFlamePatchTimer     = 20000;
         m_uiDiveBombTimer       = 30000;
         m_uiMeltArmorTimer      = 10000;
+        m_uiChargeTimer         = 20000;
+        m_uiRebirthTimer        = 0;
 
         m_bCanSummonEmber       = true;
     }
@@ -180,11 +185,19 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
         switch (uiPointId)
         {
             case POINT_ID_QUILLS:
-                if (DoCastSpellIfCan(m_creature, SPELL_FLAME_QUILLS) == CAST_OK)
+                if (m_uiPhase == PHASE_ONE)
                 {
-                    // Set the platform id so the boss will move to the last or the first platform
-                    m_uiCurrentPlatformId = urand(0, 1) ? 2 : 3;
-                    m_uiPlatformMoveTimer = 10000;
+                    if (DoCastSpellIfCan(m_creature, SPELL_FLAME_QUILLS) == CAST_OK)
+                    {
+                        // Set the platform id so the boss will move to the last or the first platform
+                        m_uiCurrentPlatformId = urand(0, 1) ? 2 : 3;
+                        m_uiPlatformMoveTimer = 10000;
+                    }
+                }
+                else if (m_uiPhase == PHASE_DIVE_BOMB)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_DIVE_BOMB_VISUAL) == CAST_OK)
+                        m_uiDiveBombTimer = 5000;
                 }
                 break;
             case POINT_ID_PLATFORM:
@@ -323,6 +336,79 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
             }
             else
                 m_uiMeltArmorTimer -= uiDiff;
+
+            if (m_uiChargeTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
+                        m_uiChargeTimer = 20000;
+                }
+            }
+            else
+                m_uiChargeTimer -= uiDiff;
+
+            if (m_uiDiveBombTimer)
+            {
+                if (m_uiDiveBombTimer <= uiDiff)
+                {
+                    SetCombatMovement(false);
+                    m_creature->GetMotionMaster()->MovePoint(POINT_ID_QUILLS, aCenterLocation[0].m_fX, aCenterLocation[0].m_fY, aCenterLocation[0].m_fZ);
+                    m_uiPhase = PHASE_DIVE_BOMB;
+                    m_uiRangeCheckTimer = 0;
+                    m_uiDiveBombTimer = 0;
+                }
+                else
+                    m_uiDiveBombTimer -= uiDiff;
+            }
+        }
+        // Dive Bomb event
+        else if (m_uiPhase == PHASE_DIVE_BOMB)
+        {
+            if (m_uiDiveBombTimer)
+            {
+                if (m_uiDiveBombTimer <= uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    {
+                        if (DoCastSpellIfCan(pTarget, SPELL_DIVE_BOMB) == CAST_OK)
+                        {
+                            m_creature->Relocate(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+                            m_uiRebirthTimer = 2000;
+                            m_uiDiveBombTimer = 0;
+                        }
+                    }
+                }
+                else
+                    m_uiDiveBombTimer -= uiDiff;
+            }
+
+            if (m_uiRebirthTimer)
+            {
+                if (m_uiRebirthTimer <= uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_BOMB_REBIRTH) == CAST_OK)
+                    {
+                        m_creature->RemoveAurasDueToSpell(SPELL_DIVE_BOMB_VISUAL);
+                        SetCombatMovement(true, true);
+
+                        // Spawn 2 Embers of Alar
+                        float fX, fY, fZ;
+                        for (uint8 i = 0; i < 2; ++i)
+                        {
+                            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 5.0f, fX, fY, fZ);
+                            m_creature->SummonCreature(NPC_EMBER_OF_ALAR, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                        }
+
+                        m_uiPhase = PHASE_TWO;
+                        m_uiRangeCheckTimer = 2000;
+                        m_uiDiveBombTimer = 30000;
+                        m_uiRebirthTimer = 0;
+                    }
+                }
+                else
+                    m_uiRebirthTimer -= uiDiff;
+            }
         }
 
         // only cast flame buffet when not in motion
