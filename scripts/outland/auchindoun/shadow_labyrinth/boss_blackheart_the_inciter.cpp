@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Blackheart_the_Inciter
-SD%Complete: 60
-SDComment: Incite Chaos needs further research and core support
+SD%Complete: 90
+SDComment: Not all yells are implemented.
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    SPELL_INCITE_CHAOS      = 33676,                        // triggers 33684 on party members - needs core support
+    SPELL_INCITE_CHAOS      = 33676,                        // triggers 33684 on party members
     SPELL_CHARGE            = 33709,
     SPELL_WAR_STOMP         = 33707,
 
@@ -64,12 +64,16 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     uint32 m_uiInciteChaosTimer;
+    uint32 m_uiInciteChaosWaitTimer;
     uint32 m_uiChargeTimer;
     uint32 m_uiKnockbackTimer;
 
+    GuidVector m_vTargetsGuids;
+
     void Reset() override
     {
-        m_uiInciteChaosTimer = 50000;
+        m_uiInciteChaosWaitTimer = 0;
+        m_uiInciteChaosTimer = 15000;
         m_uiChargeTimer      = urand(30000, 37000);
         m_uiKnockbackTimer   = urand(10000, 14000);
     }
@@ -106,27 +110,64 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             m_pInstance->SetData(TYPE_INCITER, FAIL);
     }
 
+    void EnterEvadeMode()
+    {
+        // if we are waiting for Incite chaos to expire don't evade
+        if (m_uiInciteChaosWaitTimer)
+            return;
+
+        ScriptedAI::EnterEvadeMode();
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
+        if (m_uiInciteChaosWaitTimer)
+        {
+            if (m_uiInciteChaosWaitTimer <= uiDiff)
+            {
+                // Restart attack on all targets
+                for (GuidVector::const_iterator itr = m_vTargetsGuids.begin(); itr!= m_vTargetsGuids.end(); ++itr)
+                {
+                    if (Unit* pTarget = m_creature->GetMap()->GetUnit(*itr))
+                        AttackStart(pTarget);
+                }
+
+                m_creature->HandleEmote(EMOTE_STATE_NONE);
+                m_uiInciteChaosWaitTimer = 0;
+            }
+            else
+                m_uiInciteChaosWaitTimer -= uiDiff;
+        }
+
         // Return since we have no pTarget
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        // ToDo: this needs future core and script support
-        /*if (m_uiInciteChaosTimer < uiDiff)
+        if (m_uiInciteChaosTimer < uiDiff)
         {
+            // Store the threat list
+            m_vTargetsGuids.clear();
+            m_creature->FillGuidsListFromThreatList(m_vTargetsGuids);
+
             if (DoCastSpellIfCan(m_creature, SPELL_INCITE_CHAOS) == CAST_OK)
-                m_uiInciteChaosTimer = 40000;
+            {
+                m_creature->HandleEmote(EMOTE_STATE_LAUGH);
+                m_uiInciteChaosTimer = 55000;
+                m_uiInciteChaosWaitTimer = 16000;
+                return;
+            }
         }
         else
-            m_uiInciteChaosTimer -= uiDiff;*/
+            m_uiInciteChaosTimer -= uiDiff;
 
         // Charge Timer
         if (m_uiChargeTimer < uiDiff)
         {
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-            if (pTarget && DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
-                m_uiChargeTimer = urand(30000, 43000);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_CHARGE, SELECT_FLAG_NOT_IN_MELEE_RANGE))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
+                    m_uiChargeTimer = urand(30000, 43000);
+            }
         }
         else
             m_uiChargeTimer -= uiDiff;
