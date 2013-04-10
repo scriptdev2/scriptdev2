@@ -568,6 +568,8 @@ struct MANGOS_DLL_DECL npc_reginald_windsorAI : public npc_escortAI, private Dia
         DialogueHelper(aMasqueradeDialogue)
     {
         m_pScriptedMap = (ScriptedMap*)m_creature->GetInstanceData();
+        // Npc flag is controlled by script
+        m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
         InitializeDialogueHelper(m_pScriptedMap);
         Reset();
     }
