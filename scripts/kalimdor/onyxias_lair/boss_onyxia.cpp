@@ -68,31 +68,39 @@ enum
 
     MAX_WHELPS_PER_PACK         = 40,
 
-    PHASE_START                 = 1,
-    PHASE_BREATH                = 2,
-    PHASE_END                   = 3,
-    PHASE_BREATH_PRE            = 4,
-    PHASE_BREATH_POST           = 5
+    POINT_ID_NORTH              = 0,
+    POINT_ID_SOUTH              = 4,
+    NUM_MOVE_POINT              = 8,
+    POINT_ID_LIFTOFF            = 1 + NUM_MOVE_POINT,
+    POINT_ID_IN_AIR             = 2 + NUM_MOVE_POINT,
+    POINT_ID_INIT_NORTH         = 3 + NUM_MOVE_POINT,
+    POINT_ID_LAND               = 4 + NUM_MOVE_POINT,
+
+    PHASE_START                 = 1,                        // Health above 65%, normal ground abilities
+    PHASE_BREATH                = 2,                        // Breath phase (while health above 40%)
+    PHASE_END                   = 3,                        // normal ground abilities + some extra abilities
+    PHASE_BREATH_POST           = 4,                        // Landing and initial fearing
+    PHASE_TO_LIFTOFF            = 5,                        // Movement to south-entrance of room and liftoff there
+    PHASE_BREATH_PRE            = 6,                        // lifting off + initial flying to north side (summons also first pack of whelps)
+
 };
 
 struct OnyxiaMove
 {
-    uint32 uiLocId;
-    uint32 uiLocIdEnd;
     uint32 uiSpellId;
     float fX, fY, fZ;
 };
 
-static OnyxiaMove aMoveData[] =
+static const OnyxiaMove aMoveData[NUM_MOVE_POINT] =
 {
-    {0, 4, SPELL_BREATH_NORTH_TO_SOUTH,  22.8763f, -217.152f, -60.0548f},   // north
-    {1, 5, SPELL_BREATH_NE_TO_SW,        10.2191f, -247.912f, -60.896f},    // north-east
-    {2, 6, SPELL_BREATH_EAST_TO_WEST,   -31.4963f, -250.123f, -60.1278f},   // east
-    {3, 7, SPELL_BREATH_SE_TO_NW,       -63.5156f, -240.096f, -60.477f},    // south-east
-    {4, 0, SPELL_BREATH_SOUTH_TO_NORTH, -65.8444f, -213.809f, -60.2985f},   // south
-    {5, 1, SPELL_BREATH_SW_TO_NE,       -58.2509f, -189.020f, -60.790f},    // south-west
-    {6, 2, SPELL_BREATH_WEST_TO_EAST,   -33.5561f, -182.682f, -60.9457f},   // west
-    {7, 3, SPELL_BREATH_NW_TO_SE,         6.8951f, -180.246f, -60.896f},    // north-west
+    {SPELL_BREATH_NORTH_TO_SOUTH,  24.16332f, -216.0808f, -58.98009f},  // north (coords verified in wotlk)
+    {SPELL_BREATH_NE_TO_SW,        10.2191f,  -247.912f,  -60.896f},    // north-east
+    {SPELL_BREATH_EAST_TO_WEST,   -15.00505f, -244.4841f, -60.40087f},  // east (coords verified in wotlk)
+    {SPELL_BREATH_SE_TO_NW,       -63.5156f,  -240.096f,  -60.477f},    // south-east
+    {SPELL_BREATH_SOUTH_TO_NORTH, -66.3589f,  -215.928f,  -64.23904f},  // south (coords verified in wotlk)
+    {SPELL_BREATH_SW_TO_NE,       -58.2509f,  -189.020f,  -60.790f},    // south-west
+    {SPELL_BREATH_WEST_TO_EAST,   -16.70134f, -181.4501f, -61.98513f},  // west (coords verified in wotlk)
+    {SPELL_BREATH_NW_TO_SE,        12.26687f, -181.1084f, -60.23914f},  // north-west (coords verified in wotlk)
 };
 
 static const float afSpawnLocations[3][3] =
@@ -108,7 +116,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         m_pInstance = (instance_onyxias_lair*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        m_uiMaxBreathPositions = countof(aMoveData);
         Reset();
     }
 
@@ -116,7 +123,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     instance_onyxias_lair* m_pInstance;
 
     uint8 m_uiPhase;
-    uint8 m_uiMaxBreathPositions;
 
     uint32 m_uiFlameBreathTimer;
     uint32 m_uiCleaveTimer;
@@ -125,7 +131,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     uint32 m_uiMovePoint;
     uint32 m_uiMovementTimer;
-    OnyxiaMove* m_pPointData;
 
     uint32 m_uiFireballTimer;
     uint32 m_uiSummonWhelpsTimer;
@@ -151,13 +156,12 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_uiCleaveTimer = urand(2000, 5000);
         m_uiWingBuffetTimer = urand(10000, 20000);
 
-        m_uiMovePoint = 4;                                  // Start in the south
-        m_uiMovementTimer = 20000;
-        m_pPointData = GetMoveData();
+        m_uiMovePoint = POINT_ID_NORTH;                     // First point reached by the flying Onyxia
+        m_uiMovementTimer = 25000;
 
-        m_uiFireballTimer = 15000;
-        m_uiSummonWhelpsTimer = 15000;
-        m_uiBellowingRoarTimer = 1;                         // Immediately after landing
+        m_uiFireballTimer = 1000;
+        m_uiSummonWhelpsTimer = 60000;
+        m_uiBellowingRoarTimer = 30000;
         m_uiWhelpTimer = 1000;
         m_uiSummonGuardTimer = 15000;
 
@@ -236,44 +240,62 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 pSpell->Id == SPELL_BREATH_NORTH_TO_SOUTH)
         {
             // This was sent with SendMonsterMove - which resulted in better speed than now
-            m_pPointData = GetMoveData();
-            if (m_pPointData)
-                m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
+            m_creature->GetMotionMaster()->MovePoint(m_uiMovePoint, aMoveData[m_uiMovePoint].fX, aMoveData[m_uiMovePoint].fY, aMoveData[m_uiMovePoint].fZ);
         }
     }
 
-    OnyxiaMove* GetMoveData()
-    {
-        for (uint32 i = 0; i < m_uiMaxBreathPositions; ++i)
-        {
-            if (aMoveData[i].uiLocId == m_uiMovePoint)
-                return &aMoveData[i];
-        }
-
-        return NULL;
-    }
-
-    void MovementInform(uint32 uiMoveType, uint32 /*uiPointId*/) override
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !m_pInstance)
             return;
 
-        if (m_uiPhase == PHASE_BREATH || m_uiPhase == PHASE_BREATH_PRE)
+        switch (uiPointId)
         {
-            if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
-                m_creature->SetFacingToObject(pTrigger);
+            case POINT_ID_IN_AIR:
+                // sort of a hack, it is unclear how this really work but the values are valid
+                m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+                m_creature->SetLevitate(true);
+                m_uiPhaseTimer = 1000;                          // Movement to Initial North Position is delayed
+                return;
+            case POINT_ID_LAND:
+                // undo flying
+                m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
+                m_creature->SetLevitate(false);
+                m_uiPhaseTimer = 500;                           // Start PHASE_END shortly delayed
+                return;
+            case POINT_ID_LIFTOFF:
+                m_uiPhaseTimer = 500;                           // Start Flying shortly delayed
+                break;
+            case POINT_ID_INIT_NORTH:                           // Start PHASE_BREATH
+                m_uiPhase = PHASE_BREATH;
+                m_uiSummonCount = 0;
+                break;
         }
 
-        if (m_uiPhase == PHASE_BREATH_PRE && !m_uiPhaseTimer)
-        {
-            // sort of a hack, it is unclear how this really work but the values appear to be valid
-            m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
-            m_creature->SetLevitate(true);
+        if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
+            m_creature->SetFacingToObject(pTrigger);
+    }
 
-            if (m_pPointData)
-                m_creature->Relocate(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
-            m_uiPhaseTimer = 3000;                          // Start phase two when lift off complete
+    void AttackStart(Unit* pWho) override
+    {
+        if (m_uiPhase == PHASE_START || m_uiPhase == PHASE_END)
+            ScriptedAI::AttackStart(pWho);
+    }
+
+    bool DidSummonWhelps(const uint32 uiDiff)
+    {
+        if (m_uiSummonCount >= MAX_WHELPS_PER_PACK)
+            return true;
+
+        if (m_uiWhelpTimer < uiDiff)
+        {
+            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
+            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
+            m_uiWhelpTimer = 500;
         }
+        else
+            m_uiWhelpTimer -= uiDiff;
+        return false;
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -326,14 +348,16 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 else
                     m_uiWingBuffetTimer -= uiDiff;
 
-                if (m_uiPhase == PHASE_START && m_creature->GetHealthPercent() < 65.0f && m_pPointData)
+                if (m_uiPhase == PHASE_START && m_creature->GetHealthPercent() < 65.0f)
                 {
-                    m_uiPhase = PHASE_BREATH_PRE;
+                    m_uiPhase = PHASE_TO_LIFTOFF;
                     DoScriptText(SAY_PHASE_2_TRANS, m_creature);
                     SetCombatMovement(false);
+                    m_creature->GetMotionMaster()->MoveIdle();
+                    m_creature->SetTargetGuid(ObjectGuid());
 
-                    float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
-                    m_creature->GetMotionMaster()->MovePoint(1, m_pPointData->fX, m_pPointData->fY, fGroundZ);
+                    float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), aMoveData[POINT_ID_SOUTH].fX, aMoveData[POINT_ID_SOUTH].fY, aMoveData[POINT_ID_SOUTH].fZ);
+                    m_creature->GetMotionMaster()->MovePoint(POINT_ID_LIFTOFF, aMoveData[POINT_ID_SOUTH].fX, aMoveData[POINT_ID_SOUTH].fY, fGroundZ);
                     return;
                 }
 
@@ -345,46 +369,39 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 if (m_creature->GetHealthPercent() < 40.0f)
                 {
                     m_uiPhase = PHASE_BREATH_POST;
-                    m_uiPhaseTimer = 2000;
                     DoScriptText(SAY_PHASE_3_TRANS, m_creature);
 
-                    // undo flying
-                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
-                    m_creature->SetLevitate(false);
+                    float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+                    m_creature->GetMotionMaster()->MoveFlyOrLand(POINT_ID_LAND, m_creature->GetPositionX(), m_creature->GetPositionY(), fGroundZ, false);
                     return;
                 }
 
                 if (m_uiMovementTimer < uiDiff)
                 {
-                    m_uiMovementTimer = 25000;
-
                     // 3 possible actions
                     switch (urand(0, 2))
                     {
                         case 0:                             // breath
-                            m_pPointData = GetMoveData();
-                            if (m_pPointData)
-                            {
-                                DoScriptText(EMOTE_BREATH, m_creature);
-                                DoCastSpellIfCan(m_creature, m_pPointData->uiSpellId, CAST_INTERRUPT_PREVIOUS);
-                                m_uiMovePoint = m_pPointData->uiLocIdEnd;
-                            }
+                            DoScriptText(EMOTE_BREATH, m_creature);
+                            DoCastSpellIfCan(m_creature, aMoveData[m_uiMovePoint].uiSpellId, CAST_INTERRUPT_PREVIOUS);
+                            m_uiMovePoint += NUM_MOVE_POINT / 2;
+                            m_uiMovePoint %= NUM_MOVE_POINT;
+                            m_uiMovementTimer = 25000;
                             return;
                         case 1:                             // a point on the left side
                         {
                             // C++ is stupid, so add -1 with +7
-                            m_uiMovePoint += m_uiMaxBreathPositions - 1;
-                            m_uiMovePoint %= m_uiMaxBreathPositions;
+                            m_uiMovePoint += NUM_MOVE_POINT - 1;
+                            m_uiMovePoint %= NUM_MOVE_POINT;
                             break;
                         }
                         case 2:                             // a point on the right side
-                            ++m_uiMovePoint %= m_uiMaxBreathPositions;
+                            ++m_uiMovePoint %= NUM_MOVE_POINT;
                             break;
                     }
 
-                    m_pPointData = GetMoveData();
-                    if (m_pPointData)
-                        m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
+                    m_uiMovementTimer = urand(15000, 25000);
+                    m_creature->GetMotionMaster()->MovePoint(m_uiMovePoint, aMoveData[m_uiMovePoint].fX, aMoveData[m_uiMovePoint].fY, aMoveData[m_uiMovePoint].fZ);
                 }
                 else
                     m_uiMovementTimer -= uiDiff;
@@ -394,7 +411,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     {
                         if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H) == CAST_OK)
-                            m_uiFireballTimer = 8000;
+                            m_uiFireballTimer = urand(3000, 5000);
                     }
                 }
                 else
@@ -402,18 +419,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 if (m_bIsSummoningWhelps)
                 {
-                    if (m_uiSummonCount < MAX_WHELPS_PER_PACK)
-                    {
-                        if (m_uiWhelpTimer < uiDiff)
-                        {
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
-                            m_uiWhelpTimer = 500;
-                        }
-                        else
-                            m_uiWhelpTimer -= uiDiff;
-                    }
-                    else
+                    if (DidSummonWhelps(uiDiff))
                     {
                         m_bIsSummoningWhelps = false;
                         m_uiSummonCount = 0;
@@ -441,52 +447,37 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 break;
             }
-            // Phase-switching phases
-            case PHASE_BREATH_PRE:
-            {
-                if (m_uiPhaseTimer)
+            case PHASE_BREATH_PRE:                          // Summon first rounds of whelps
+                DidSummonWhelps(uiDiff);
+                // no break here
+            default:                                        // Phase-switching phases
+                if (!m_uiPhaseTimer)
+                    break;
+                if (m_uiPhaseTimer <= uiDiff)
                 {
-                    if (m_uiPhaseTimer <= uiDiff)
+                    switch (m_uiPhase)
                     {
-                        m_uiPhase = PHASE_BREATH;
-                        m_uiMovementTimer = urand(15000, 25000);
-
-                        if (m_pInstance)
-                            m_pInstance->SetData(TYPE_ONYXIA, DATA_LIFTOFF);
-
-                        // Move to the north side of the room
-                        m_uiMovePoint = 0;
-                        m_pPointData = GetMoveData();
-                        m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
-
-                        m_uiPhaseTimer = 0;
+                        case PHASE_TO_LIFTOFF:
+                            m_uiPhase = PHASE_BREATH_PRE;
+                            if (m_pInstance)
+                                m_pInstance->SetData(TYPE_ONYXIA, DATA_LIFTOFF);
+                            m_creature->GetMotionMaster()->MoveFlyOrLand(POINT_ID_IN_AIR, aMoveData[POINT_ID_SOUTH].fX, aMoveData[POINT_ID_SOUTH].fY, aMoveData[POINT_ID_SOUTH].fZ, true);
+                            break;
+                        case PHASE_BREATH_PRE:
+                            m_creature->GetMotionMaster()->MovePoint(POINT_ID_INIT_NORTH, aMoveData[POINT_ID_NORTH].fX, aMoveData[POINT_ID_NORTH].fY, aMoveData[POINT_ID_NORTH].fZ);
+                            break;
+                        case PHASE_BREATH_POST:
+                            m_uiPhase = PHASE_END;
+                            m_creature->SetTargetGuid(m_creature->getVictim()->GetObjectGuid());
+                            SetCombatMovement(true, true);
+                            DoCastSpellIfCan(m_creature, SPELL_BELLOWINGROAR);
+                            break;
                     }
-                    else
-                        m_uiPhaseTimer -= uiDiff;
+                    m_uiPhaseTimer = 0;
                 }
-
+                else
+                    m_uiPhaseTimer -= uiDiff;
                 break;
-            }
-            case PHASE_BREATH_POST:
-            {
-                if (m_uiPhaseTimer)
-                {
-                    if (m_uiPhaseTimer <= uiDiff)
-                    {
-                        m_uiPhase = PHASE_END;
-
-                        float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
-                        m_creature->Relocate(m_creature->GetPositionX(), m_creature->GetPositionY(), fGroundZ);
-
-                        SetCombatMovement(true, true);
-                        m_uiPhaseTimer = 0;
-                    }
-                    else
-                        m_uiPhaseTimer -= uiDiff;
-                }
-
-                break;
-            }
         }
     }
 
