@@ -61,6 +61,7 @@ enum
 
     // Lynx Form
     SPELL_CLAW_RAGE                 = 42583,                // Charges a random target and applies dummy effect 43149 on it
+    SPELL_CLAW_RAGE_TRIGGER         = 43149,
     SPELL_LYNX_RUSH                 = 43152,                // Charges 9 targets in a row - Dummy effect should apply 43153
     SPELL_LYNX_RUSH_CHARGE          = 43153,
 
@@ -304,6 +305,15 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    {
+        if (pSpellEntry->Id == SPELL_CLAW_RAGE && pTarget->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_CLAW_RAGE_TRIGGER, CAST_TRIGGERED);
+            m_uiLynxRushTimer += 8000;
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_bIsInTransition)
@@ -396,7 +406,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 {
                     if (m_uiClawRageTimer < uiDiff)
                     {
-                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_CLAW_RAGE, SELECT_FLAG_IN_MELEE_RANGE | SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_CLAW_RAGE, SELECT_FLAG_PLAYER))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_CLAW_RAGE) == CAST_OK)
                                 m_uiClawRageTimer = urand(15000, 20000);
