@@ -69,6 +69,7 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
         case NPC_NALORAKK:
         case NPC_JANALAI:
         case NPC_MALACRASS:
+        case NPC_ZULJIN:
         case NPC_HARRISON:
         case NPC_BEAR_SPIRIT:
         case NPC_EAGLE_SPIRIT:

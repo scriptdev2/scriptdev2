@@ -1329,6 +1329,7 @@ UPDATE creature_template SET ScriptName='boss_janalai' WHERE entry=23578;
 UPDATE creature_template SET ScriptName='boss_malacrass' WHERE entry=24239;
 UPDATE creature_template SET ScriptName='boss_nalorakk' WHERE entry=23576;
 UPDATE creature_template SET ScriptName='boss_zuljin' WHERE entry=23863;
+UPDATE creature_template SET ScriptName='npc_feather_vortex' WHERE entry=24136;
 UPDATE creature_template SET ScriptName='npc_dragonhawk_egg' WHERE entry=23817;
 UPDATE creature_template SET ScriptName='npc_janalai_firebomb' WHERE entry=23920;
 UPDATE creature_template SET ScriptName='npc_amanishi_hatcher' WHERE entry IN (23818,24504);

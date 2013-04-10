@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Zuljin
-SD%Complete: 70
-SDComment: Timers. Lynx phase abilities NYI
+SD%Complete: 90
+SDComment: Timers should be improved.
 SDCategory: Zul'Aman
 EndScriptData */
 
@@ -57,11 +57,12 @@ enum
     NPC_FEATHER_VORTEX              = 24136,                // ToDo: script via ACID
     SPELL_CYCLONE_VISUAL            = 43119,                // trigger 43147 visual
     SPELL_CYCLONE_PASSIVE           = 43120,                // trigger 43121 (4y aoe) every second
+    SPELL_CYCLONE                   = 43121,
 
     // Lynx Form
-    SPELL_CLAW_RAGE_HASTE           = 42583,                // Charges a random target and applies dummy effect 43149 on it
-    SPELL_CLAW_RAGE_TRIGGER         = 43149,
-    SPELL_LYNX_RUSH_HASTE           = 43152,                // Charges 9 targets in a row - Dummy effect should apply 43153
+    SPELL_CLAW_RAGE                 = 42583,                // Charges a random target and applies dummy effect 43149 on it
+    SPELL_LYNX_RUSH                 = 43152,                // Charges 9 targets in a row - Dummy effect should apply 43153
+    SPELL_LYNX_RUSH_CHARGE          = 43153,
 
     // Dragonhawk Form
     SPELL_FLAME_WHIRL               = 43213,                // trigger two spells
@@ -83,6 +84,7 @@ enum
     SPELL_BERSERK                   = 45078,                // Berserk timer or existance is unk
 
     MAX_VORTEXES                    = 4,
+    MAX_LYNX_RUSH                   = 10,
     POINT_ID_CENTER                 = 0,
 
     PHASE_BEAR                      = 0,
@@ -111,6 +113,10 @@ static const BossPhase aZuljinPhases[] =
 // coords for going for changing form
 static const float fZuljinMoveLoc[3] = {120.148811f, 703.713684f, 45.111477f};
 
+/*######
+## boss_zuljin
+######*/
+
 struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
 {
     boss_zuljinAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -133,6 +139,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
 
     uint32 m_uiClawRageTimer;
     uint32 m_uiLynxRushTimer;
+    uint8 m_uiLynxRushCount;
 
     uint32 m_uiFlameWhirlTimer;
     uint32 m_uiFlameBreathTimer;
@@ -156,7 +163,8 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         m_uiOverpowerTimer      = 5000;
 
         m_uiClawRageTimer       = 5000;
-        m_uiLynxRushTimer       = 14000;
+        m_uiLynxRushTimer       = 15000;
+        m_uiLynxRushCount       = 0;
 
         m_uiFlameWhirlTimer     = 7000;
         m_uiFlameBreathTimer    = 15000;
@@ -237,8 +245,10 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 pSummoned->CastSpell(pSummoned, SPELL_CYCLONE_VISUAL, true);
                 pSummoned->CastSpell(pSummoned, SPELL_CYCLONE_PASSIVE, true);
                 m_lSummonsList.push_back(pSummoned->GetObjectGuid());
-                if (m_creature->getVictim())
-                    pSummoned->AI()->AttackStart(m_creature->getVictim());
+
+                // Attack random target
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    pSummoned->GetMotionMaster()->MoveFollow(pTarget, 0, 0);
                 break;
             case NPC_COLUMN_OF_FIRE:
                 pSummoned->CastSpell(pSummoned, SPELL_PILLAR_TRIGGER, true);
@@ -380,9 +390,45 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 // Nothing here; Spells casted just once at the beginning of the phase;
                 break;
             case PHASE_LYNX:
-                // ToDo: Note for further development of this phase!
-                // In this phase the boss used two melee spells: SPELL_CLAW_RAGE_HASTE and SPELL_LYNX_RUSH_HASTE
-                // However the way these spells are used and what are their mechanics and timers is highly unknown
+
+                // Don't apply Claw Rage during Lynx Rush
+                if (!m_uiLynxRushCount)
+                {
+                    if (m_uiClawRageTimer < uiDiff)
+                    {
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_CLAW_RAGE, SELECT_FLAG_IN_MELEE_RANGE | SELECT_FLAG_PLAYER))
+                        {
+                            if (DoCastSpellIfCan(pTarget, SPELL_CLAW_RAGE) == CAST_OK)
+                                m_uiClawRageTimer = urand(15000, 20000);
+                        }
+                    }
+                    else
+                        m_uiClawRageTimer -= uiDiff;
+                }
+
+                if (m_uiLynxRushTimer < uiDiff)
+                {
+                    if (!m_uiLynxRushCount)
+                        DoCastSpellIfCan(m_creature, SPELL_LYNX_RUSH);
+                    else
+                    {
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                            DoCastSpellIfCan(pTarget, SPELL_LYNX_RUSH_CHARGE);
+                    }
+
+                    ++m_uiLynxRushCount;
+
+                    if (m_uiLynxRushCount == MAX_LYNX_RUSH)
+                    {
+                        m_uiLynxRushTimer = urand(20000, 25000);
+                        m_uiLynxRushCount = 0;
+                    }
+                    else
+                        m_uiLynxRushTimer = 400;
+                }
+                else
+                    m_uiLynxRushTimer -= uiDiff;
+
                 break;
             case PHASE_DRAGONHAWK:
 
@@ -422,6 +468,45 @@ CreatureAI* GetAI_boss_zuljin(Creature* pCreature)
     return new boss_zuljinAI(pCreature);
 }
 
+/*######
+## npc_feather_vortex
+######*/
+
+struct MANGOS_DLL_DECL npc_feather_vortexAI : public ScriptedAI
+{
+    npc_feather_vortexAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    void Reset() override { }
+
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    {
+        if (pSpellEntry->Id == SPELL_CYCLONE && pTarget->GetTypeId() == TYPEID_PLAYER && m_pInstance)
+        {
+            if (Creature* pZuljin = m_pInstance->GetSingleCreatureFromStorage(NPC_ZULJIN))
+            {
+                // Change target on player hit
+                if (Unit* pTarget = pZuljin->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    m_creature->GetMotionMaster()->MoveFollow(pTarget, 0, 0);
+            }
+        }
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_feather_vortex(Creature* pCreature)
+{
+    return new npc_feather_vortexAI(pCreature);
+}
+
 void AddSC_boss_zuljin()
 {
     Script* pNewScript;
@@ -429,5 +514,10 @@ void AddSC_boss_zuljin()
     pNewScript = new Script;
     pNewScript->Name = "boss_zuljin";
     pNewScript->GetAI = &GetAI_boss_zuljin;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_feather_vortex";
+    pNewScript->GetAI = &GetAI_npc_feather_vortex;
     pNewScript->RegisterSelf();
 }

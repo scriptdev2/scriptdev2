@@ -51,7 +51,7 @@ enum InstanceZA
     NPC_JANALAI             = 23578,
     NPC_HALAZZI             = 23577,
     NPC_MALACRASS           = 24239,
-    // NPC_ZULJIN           = 23863,
+    NPC_ZULJIN              = 23863,
 
     // Narolakk event npcs
     NPC_MEDICINE_MAN        = 23581,
