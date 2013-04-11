@@ -923,6 +923,7 @@ UPDATE creature_template SET ScriptName='npc_belnistrasz' WHERE entry=8516;
 /* RAZORFEN KRAUL */
 UPDATE instance_template SET ScriptName='instance_razorfen_kraul' WHERE map=47;
 UPDATE creature_template SET ScriptName='npc_willix_the_importer' WHERE entry=4508;
+UPDATE creature_template SET ScriptName='npc_snufflenose_gopher' WHERE entry=4781;
 
 /* REDRIDGE MOUNTAINS */
 UPDATE creature_template SET ScriptName='npc_corporal_keeshan' WHERE entry=349;

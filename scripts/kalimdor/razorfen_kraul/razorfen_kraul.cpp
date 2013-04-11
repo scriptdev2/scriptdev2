@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Razorfen_Kraul
 SD%Complete: 100
-SDComment: Willix the Importer Escort Event
+SDComment: Quest support: 1144, 1221
 SDCategory: Razorfen Kraul
 EndScriptData */
 
@@ -27,6 +27,11 @@ EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "pet_ai.h"
+
+/*######
+## npc_willix_the_importer
+######*/
 
 enum
 {
@@ -145,6 +150,108 @@ bool QuestAccept_npc_willix_the_importer(Player* pPlayer, Creature* pCreature, c
     return true;
 }
 
+/*######
+## npc_snufflenose_gopher
+######*/
+
+enum
+{
+    SPELL_SNUFFLENOSE_COMMAND   = 8283,
+    NPC_SNUFFLENOSE_GOPHER      = 4781,
+    GO_BLUELEAF_TUBBER          = 20920,
+};
+
+struct MANGOS_DLL_DECL npc_snufflenose_gopherAI : public ScriptedPetAI
+{
+    npc_snufflenose_gopherAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
+
+    bool m_bIsMovementActive;
+
+    ObjectGuid m_targetTubberGuid;
+
+    void Reset() override
+    {
+        m_bIsMovementActive  = false;
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_targetTubberGuid))
+        {
+            pGo->SetRespawnTime(5 * MINUTE);
+            pGo->Refresh();
+
+            pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+        }
+
+        m_bIsMovementActive = false;
+    }
+
+    // Function to search for new tubber in range
+    void DoFindNewTubber()
+    {
+        std::list<GameObject*> lTubbersInRange;
+        GetGameObjectListWithEntryInGrid(lTubbersInRange, m_creature, GO_BLUELEAF_TUBBER, 40.0f);
+
+        if (lTubbersInRange.empty())
+            return;
+
+        lTubbersInRange.sort(ObjectDistanceOrder(m_creature));
+        GameObject* pNearestTubber = NULL;
+
+        // Always need to find new ones
+        for (std::list<GameObject*>::const_iterator itr = lTubbersInRange.begin(); itr != lTubbersInRange.end(); ++itr)
+        {
+            if (!(*itr)->isSpawned() && (*itr)->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND) && (*itr)->IsWithinLOSInMap(m_creature))
+            {
+                pNearestTubber = *itr;
+                break;
+             }
+        }
+
+        if (!pNearestTubber)
+            return;
+        m_targetTubberGuid = pNearestTubber->GetObjectGuid();
+
+        float fX, fY, fZ;
+        pNearestTubber->GetContactPoint(m_creature, fX, fY, fZ);
+        m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+        m_bIsMovementActive = true;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_bIsMovementActive)
+            ScriptedPetAI::UpdateAI(uiDiff);
+    }
+};
+
+CreatureAI* GetAI_npc_snufflenose_gopher(Creature* pCreature)
+{
+    return new npc_snufflenose_gopherAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_snufflenose_gopher(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    // always check spellid and effectindex
+    if (uiSpellId == SPELL_SNUFFLENOSE_COMMAND && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (pCreatureTarget->GetEntry() == NPC_SNUFFLENOSE_GOPHER)
+        {
+            if (npc_snufflenose_gopherAI* pGopherAI = dynamic_cast<npc_snufflenose_gopherAI*>(pCreatureTarget->AI()))
+                pGopherAI->DoFindNewTubber();
+        }
+
+        // always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_razorfen_kraul()
 {
     Script* pNewScript;
@@ -153,5 +260,11 @@ void AddSC_razorfen_kraul()
     pNewScript->Name = "npc_willix_the_importer";
     pNewScript->GetAI = &GetAI_npc_willix_the_importer;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_willix_the_importer;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_snufflenose_gopher";
+    pNewScript->GetAI = &GetAI_npc_snufflenose_gopher;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_snufflenose_gopher;
     pNewScript->RegisterSelf();
 }
