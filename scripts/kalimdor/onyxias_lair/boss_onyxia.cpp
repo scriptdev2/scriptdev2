@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Onyxia
-SD%Complete: 70
-SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support. Use of spells 22191 and 21131 unknown
+SD%Complete: 85
+SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support. Use of spell 22191 unknown
 SDCategory: Onyxia's Lair
 EndScriptData */
 
@@ -58,7 +58,7 @@ enum
     SPELL_VISUAL_BREATH_A       = 4880,                     // Only and all of the above Breath spells (and their triggered spells) have these visuals
     SPELL_VISUAL_BREATH_B       = 4919,
 
-    // SPELL_BREATH                = 21131,                 // 8x in "array", different initial cast than the other arrays
+    SPELL_BREATH_ENTRANCE       = 21131,                    // 8x in "array", different initial cast than the other arrays
 
     SPELL_BELLOWINGROAR         = 18431,
     SPELL_HEATED_GROUND         = 22191,                    // TODO
@@ -128,6 +128,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 m_uiCleaveTimer;
     uint32 m_uiTailSweepTimer;
     uint32 m_uiWingBuffetTimer;
+    uint32 m_uiCheckInLairTimer;
 
     uint32 m_uiMovePoint;
     uint32 m_uiMovementTimer;
@@ -155,6 +156,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_uiTailSweepTimer = urand(15000, 20000);
         m_uiCleaveTimer = urand(2000, 5000);
         m_uiWingBuffetTimer = urand(10000, 20000);
+        m_uiCheckInLairTimer = 3000;
 
         m_uiMovePoint = POINT_ID_NORTH;                     // First point reached by the flying Onyxia
         m_uiMovementTimer = 25000;
@@ -347,6 +349,19 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 }
                 else
                     m_uiWingBuffetTimer -= uiDiff;
+
+                if (m_uiCheckInLairTimer < uiDiff)
+                {
+                    if (m_pInstance)
+                    {
+                        Creature* pOnyTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER);
+                        if (pOnyTrigger && !m_creature->IsWithinDistInMap(pOnyTrigger, 90.0f, false))
+                            DoCastSpellIfCan(m_creature, SPELL_BREATH_ENTRANCE);
+                    }
+                    m_uiCheckInLairTimer = 3000;
+                }
+                else
+                    m_uiCheckInLairTimer -= uiDiff;
 
                 if (m_uiPhase == PHASE_START && m_creature->GetHealthPercent() < 65.0f)
                 {
