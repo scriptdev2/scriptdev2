@@ -16,13 +16,14 @@
 
 /* ScriptData
 SDName: boss_kiljaeden
-SD%Complete: 80
-SDComment: Sinister Reflection need core and AI support.
+SD%Complete: 90
+SDComment: Sinister Reflection needs AI support.
 SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
 #include "sunwell_plateau.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -93,6 +94,9 @@ enum
     SPELL_ANVEENA_PRISON        = 46367,
     SPELL_SACRIFICE_ANVEENA     = 46474,
     SPELL_SINISTER_REFL_CLASS   = 45893,        // increase the size of the clones
+    SPELL_SINISTER_REFL_CLONE   = 45785,        // clone the player
+    SPELL_VENGEANCE_BLUE_FLIGHT = 45839,        // possess the dragon
+    SPELL_POSSESS_DRAKE_IMMUNE  = 45838,        // immunity while the player possesses the dragon
 
     // Npcs
     NPC_SHIELD_ORB              = 25502,
@@ -466,6 +470,20 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
             pSummoned->GetMotionMaster()->Clear();
             pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, pSummoned->GetPositionZ());
         }
+        else if (pSummoned->GetEntry() == NPC_SINISTER_REFLECTION)
+        {
+            if (pSummoned->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)pSummoned;
+
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                {
+                    pPlayer->CastSpell(pSummoned, SPELL_SINISTER_REFL_CLONE, true);
+                    pSummoned->CastSpell(pSummoned, SPELL_SINISTER_REFL_CLASS, true);
+                    pSummoned->AI()->AttackStart(pPlayer);
+                }
+            }
+        }
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned) override
@@ -594,7 +612,6 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
             case PHASE_DARKNESS:
 
                 // In the last phase he uses this spell more often
-                /* ToDo: Uncomment this spell when the Blue Dragonfight Orbs are implemented
                 if (m_uiDarknessOfSoulsTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_DARKNESS_OF_SOULS) == CAST_OK)
@@ -602,7 +619,6 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 }
                 else
                     m_uiDarknessOfSoulsTimer -= uiDiff;
-                */
 
                 if (m_uiFlameDartTimer < uiDiff)
                 {
@@ -751,6 +767,66 @@ struct MANGOS_DLL_DECL npc_shield_orbAI : public ScriptedAI
     void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
+/*######
+## npc_power_blue_flight
+######*/
+
+struct MANGOS_DLL_DECL npc_power_blue_flightAI : public ScriptedAI
+{
+    npc_power_blue_flightAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        SetCombatMovement(false);
+        m_bHasPossessed = false;
+        Reset();
+    }
+
+    bool m_bHasPossessed;
+
+    void Reset() override { }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        if (m_creature->IsTemporarySummon())
+        {
+            TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                pPlayer->RemoveAurasDueToSpell(SPELL_POSSESS_DRAKE_IMMUNE);
+        }
+    }
+
+    void UpdateAI(const uint32 /*uiDiff*/) override
+    {
+        if (!m_bHasPossessed)
+        {
+            if (m_creature->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                {
+                    pPlayer->CastSpell(m_creature, SPELL_VENGEANCE_BLUE_FLIGHT, true);
+                    pPlayer->CastSpell(pPlayer, SPELL_POSSESS_DRAKE_IMMUNE, true);
+                }
+            }
+
+            // Reset the No Interact flag of the closest orb
+            GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_1, 10.0f);
+            if (!pOrb)
+                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_2, 10.0f);
+            if (!pOrb)
+                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_3, 10.0f);
+            if (!pOrb)
+                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_4, 10.0f);
+
+            if (pOrb)
+                pOrb->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+
+            m_bHasPossessed = true;
+        }
+    }
+};
+
 CreatureAI* GetAI_boss_kiljaeden(Creature* pCreature)
 {
     return new boss_kiljaedenAI(pCreature);
@@ -764,6 +840,11 @@ CreatureAI* GetAI_npc_kiljaeden_controller(Creature* pCreature)
 CreatureAI* GetAI_npc_shield_orb(Creature* pCreature)
 {
     return new npc_shield_orbAI(pCreature);
+}
+
+CreatureAI* GetAI_npc_power_blue_flight(Creature* pCreature)
+{
+    return new npc_power_blue_flightAI(pCreature);
 }
 
 void AddSC_boss_kiljaeden()
@@ -784,5 +865,10 @@ void AddSC_boss_kiljaeden()
     pNewScript = new Script;
     pNewScript->Name = "npc_shield_orb";
     pNewScript->GetAI = &GetAI_npc_shield_orb;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_power_blue_flight";
+    pNewScript->GetAI = &GetAI_npc_power_blue_flight;
     pNewScript->RegisterSelf();
 }
