@@ -61,7 +61,7 @@ enum
     SPELL_BREATH_ENTRANCE       = 21131,                    // 8x in "array", different initial cast than the other arrays
 
     SPELL_BELLOWINGROAR         = 18431,
-    SPELL_HEATED_GROUND         = 22191,                    // TODO
+    SPELL_HEATED_GROUND         = 22191,                    // Prevent players from hiding in the tunnels when it is time for Onyxia's breath
 
     SPELL_SUMMONWHELP           = 17646,                    // TODO this spell is only a summon spell, but would need a spell to activate the eggs
     SPELL_SUMMON_LAIR_GUARD     = 68968,
@@ -243,6 +243,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             // This was sent with SendMonsterMove - which resulted in better speed than now
             m_creature->GetMotionMaster()->MovePoint(m_uiMovePoint, aMoveData[m_uiMovePoint].fX, aMoveData[m_uiMovePoint].fY, aMoveData[m_uiMovePoint].fZ);
+            DoCastSpellIfCan(m_creature, SPELL_HEATED_GROUND, CAST_TRIGGERED);
         }
     }
 
