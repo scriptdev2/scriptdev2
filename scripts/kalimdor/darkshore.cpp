@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 731, 994, 995, 2078, 5321
+SDComment: Quest support: 731, 945, 994, 995, 2078, 2118, 5321
 SDCategory: Darkshore
 EndScriptData */
 
@@ -26,6 +26,8 @@ npc_kerlonian
 npc_prospector_remtravel
 npc_threshwackonator
 npc_volcor
+npc_therylune
+npc_rabid_bear
 EndContentData */
 
 #include "precompiled.h"
@@ -545,6 +547,133 @@ bool QuestAccept_npc_volcor(Player* pPlayer, Creature* pCreature, const Quest* p
     return true;
 }
 
+/*####
+# npc_therylune
+####*/
+
+enum
+{
+    SAY_THERYLUNE_START              = -1000905,
+    SAY_THERYLUNE_FINISH             = -1000906,
+
+    NPC_THERYSIL                     = 3585,
+
+    QUEST_ID_THERYLUNE_ESCAPE        = 945,
+};
+
+struct MANGOS_DLL_DECL npc_theryluneAI : public npc_escortAI
+{
+    npc_theryluneAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+
+    void Reset()
+    {
+    }
+
+    void JustReachedHome()
+    {
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 17:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_ID_THERYLUNE_ESCAPE, m_creature);
+                break;
+            case 19:
+            	if (Player* pPlayer = GetPlayerForEscort())
+                	DoScriptText(SAY_THERYLUNE_FINISH, m_creature, pPlayer);
+                SetRun();
+                break;
+            case 20:
+                    m_creature->ForcedDespawn(2000);
+                    //TODO adjustement needed: NPC plays death animation but should just vanish/escape/despawn
+                break;
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_therylune(Creature* pCreature)
+{
+    return new npc_theryluneAI(pCreature);
+}
+
+bool QuestAccept_npc_therylune(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ID_THERYLUNE_ESCAPE)
+    {
+        if (npc_theryluneAI* pEscortAI = dynamic_cast<npc_theryluneAI*>(pCreature->AI()))
+            pEscortAI->Start(false, pPlayer, pQuest);
+
+        DoScriptText(SAY_THERYLUNE_START, pCreature, pPlayer);
+    }
+
+    return true;
+}
+
+/*######
+## npc_rabid_bear
+######*/
+
+enum
+{
+    QUEST_PLAGUED_LANDS          = 2118,
+    NPC_RABID_BEAR               = 2164,
+    NPC_RABID_BEAR_CAPTURED      = 11836,
+    GO_BEAR_TRAP                 = 111148,
+};
+
+struct MANGOS_DLL_DECL npc_rabid_bearAI : public ScriptedAI
+{
+    npc_rabid_bearAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset();
+    }
+
+    Player* pPlayer;
+
+    void Reset() override
+    {
+        pPlayer = NULL;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (pWho->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        pPlayer = (Player*)pWho;
+        if (pPlayer->GetQuestStatus(QUEST_PLAGUED_LANDS) == QUEST_STATUS_INCOMPLETE)
+        {
+            if (GetClosestGameObjectWithEntry(m_creature, GO_BEAR_TRAP, 0.5f))
+            {
+                pPlayer->CastedCreatureOrGO(NPC_RABID_BEAR_CAPTURED, m_creature->GetObjectGuid(), 9437, true);
+                m_creature->setFaction(35);
+                m_creature->addUnitState(UNIT_STAT_STUNNED);
+                m_creature->DeleteThreatList();
+                m_creature->ForcedDespawn(5000);
+                // TODO currently NPC_RABID_BEAR_CAPTURED is despawned after 5 sec, granting the quest completion that was previously missing
+                // NPC should instead follow player to quest giver Tharnariun Treetender (NPC 3701)
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_rabid_bear(Creature* pCreature)
+{
+    return new npc_rabid_bearAI(pCreature);
+}
+
 void AddSC_darkshore()
 {
     Script* pNewScript;
@@ -572,5 +701,16 @@ void AddSC_darkshore()
     pNewScript->Name = "npc_volcor";
     pNewScript->GetAI = &GetAI_npc_volcor;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_volcor;
+    pNewScript->RegisterSelf();
+	
+    pNewScript = new Script;
+    pNewScript->Name = "npc_therylune";
+    pNewScript->GetAI = &GetAI_npc_therylune;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_therylune;
+    pNewScript->RegisterSelf();
+	
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rabid_bear";
+    pNewScript->GetAI = &GetAI_npc_rabid_bear;
     pNewScript->RegisterSelf();
 }
