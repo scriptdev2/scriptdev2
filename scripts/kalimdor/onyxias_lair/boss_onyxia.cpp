@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Onyxia
 SD%Complete: 85
-SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support. Use of spell 22191 unknown
+SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support.
 SDCategory: Onyxia's Lair
 EndScriptData */
 

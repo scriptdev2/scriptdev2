@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 731, 994, 995, 2078, 5321
+SDComment: Quest support: 731, 945, 994, 995, 2078, 5321
 SDCategory: Darkshore
 EndScriptData */
 
@@ -26,6 +26,7 @@ npc_kerlonian
 npc_prospector_remtravel
 npc_threshwackonator
 npc_volcor
+npc_therylune
 EndContentData */
 
 #include "precompiled.h"
@@ -545,6 +546,63 @@ bool QuestAccept_npc_volcor(Player* pPlayer, Creature* pCreature, const Quest* p
     return true;
 }
 
+/*####
+# npc_therylune
+####*/
+
+enum
+{
+    SAY_THERYLUNE_START              = -1000905,
+    SAY_THERYLUNE_FINISH             = -1000906,
+
+    NPC_THERYSIL                     = 3585,
+
+    QUEST_ID_THERYLUNE_ESCAPE        = 945,
+};
+
+struct MANGOS_DLL_DECL npc_theryluneAI : public npc_escortAI
+{
+    npc_theryluneAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+
+    void Reset() override {}
+
+    void WaypointReached(uint32 uiPointId) override
+    {
+        switch(uiPointId)
+        {
+            case 17:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_ID_THERYLUNE_ESCAPE, m_creature);
+                break;
+            case 19:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_THERYLUNE_FINISH, m_creature, pPlayer);
+                SetRun();
+                break;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_therylune(Creature* pCreature)
+{
+    return new npc_theryluneAI(pCreature);
+}
+
+bool QuestAccept_npc_therylune(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ID_THERYLUNE_ESCAPE)
+    {
+        if (npc_theryluneAI* pEscortAI = dynamic_cast<npc_theryluneAI*>(pCreature->AI()))
+        {
+            pEscortAI->Start(false, pPlayer, pQuest);
+            DoScriptText(SAY_THERYLUNE_START, pCreature, pPlayer);
+        }
+    }
+
+    return true;
+}
+
 void AddSC_darkshore()
 {
     Script* pNewScript;
@@ -572,5 +630,11 @@ void AddSC_darkshore()
     pNewScript->Name = "npc_volcor";
     pNewScript->GetAI = &GetAI_npc_volcor;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_volcor;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_therylune";
+    pNewScript->GetAI = &GetAI_npc_therylune;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_therylune;
     pNewScript->RegisterSelf();
 }
