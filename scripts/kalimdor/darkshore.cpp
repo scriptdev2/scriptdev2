@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 731, 945, 994, 995, 2078, 5321
+SDComment: Quest support: 731, 945, 994, 995, 2078, 2118, 5321
 SDCategory: Darkshore
 EndScriptData */
 
@@ -27,6 +27,7 @@ npc_prospector_remtravel
 npc_threshwackonator
 npc_volcor
 npc_therylune
+npc_rabid_bear
 EndContentData */
 
 #include "precompiled.h"
@@ -603,6 +604,135 @@ bool QuestAccept_npc_therylune(Player* pPlayer, Creature* pCreature, const Quest
     return true;
 }
 
+/*######
+## npc_rabid_bear
+######*/
+
+enum
+{
+    QUEST_PLAGUED_LANDS             = 2118,
+
+    NPC_CAPTURED_RABID_THISTLE_BEAR = 11836,
+    NPC_THARNARIUN_TREETENDER       = 3701,                 // Npc related to quest-outro
+    GO_NIGHT_ELVEN_BEAR_TRAP        = 111148,               // This is actually the (visual) spell-focus GO
+
+    SPELL_RABIES                    = 3150,                 // Spell used in comabt
+};
+
+struct MANGOS_DLL_DECL npc_rabid_bearAI : public ScriptedAI
+{
+    npc_rabid_bearAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset();
+        JustRespawned();
+    }
+
+    uint32 m_uiCheckTimer;
+    uint32 m_uiRabiesTimer;
+    uint32 m_uiDespawnTimer;
+
+    void Reset() override
+    {
+        m_uiRabiesTimer = urand(12000, 18000);
+    }
+
+    void JustRespawned() override
+    {
+        m_uiCheckTimer = 1000;
+        m_uiDespawnTimer = 0;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_uiCheckTimer && pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_THARNARIUN_TREETENDER &&
+              pWho->IsWithinDist(m_creature, 2 * INTERACTION_DISTANCE, false))
+        {
+            // Possible related spell: 9455 9372
+            m_creature->ForcedDespawn(1000);
+            m_creature->GetMotionMaster()->MoveIdle();
+
+            return;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiCheckTimer && m_creature->isInCombat())
+        {
+            if (m_uiCheckTimer <= uiDiff)
+            {
+                // Trap nearby?
+                if (GameObject* pTrap = GetClosestGameObjectWithEntry(m_creature, GO_NIGHT_ELVEN_BEAR_TRAP, 0.5f))
+                {
+                    // Despawn trap
+                    pTrap->Use(m_creature);
+                    // "Evade"
+                    m_creature->RemoveAllAurasOnEvade();
+                    m_creature->DeleteThreatList();
+                    m_creature->CombatStop(true);
+                    m_creature->SetLootRecipient(NULL);
+                    Reset();
+                    // Update Entry and start following player
+                    m_creature->UpdateEntry(NPC_CAPTURED_RABID_THISTLE_BEAR);
+                    // get player
+                    Unit* pTrapOwner = pTrap->GetOwner();
+                    if (pTrapOwner && pTrapOwner->GetTypeId() == TYPEID_PLAYER &&
+                            ((Player*)pTrapOwner)->GetQuestStatus(QUEST_PLAGUED_LANDS) == QUEST_STATUS_INCOMPLETE)
+                    {
+                        ((Player*)pTrapOwner)->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
+                        m_creature->GetMotionMaster()->MoveFollow(pTrapOwner, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+                    }
+                    else                                // Something unexpected happened
+                        m_creature->ForcedDespawn(1000);
+
+                    // No need to check any more
+                    m_uiCheckTimer = 0;
+                    // Despawn after a while (delay guesswork)
+                    m_uiDespawnTimer = 3 * MINUTE * IN_MILLISECONDS;
+
+                    return;
+                }
+                else
+                    m_uiCheckTimer = 1000;
+            }
+            else
+                m_uiCheckTimer -= uiDiff;
+        }
+
+        if (m_uiDespawnTimer && !m_creature->isInCombat())
+        {
+            if (m_uiDespawnTimer <= uiDiff)
+            {
+                m_creature->ForcedDespawn();
+                return;
+            }
+            else
+                m_uiDespawnTimer -= uiDiff;
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiRabiesTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, SPELL_RABIES))
+                DoCastSpellIfCan(pTarget, SPELL_RABIES);
+            m_uiRabiesTimer = urand(12000, 18000);
+        }
+        else
+            m_uiRabiesTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_rabid_bear(Creature* pCreature)
+{
+    return new npc_rabid_bearAI(pCreature);
+}
+
 void AddSC_darkshore()
 {
     Script* pNewScript;
@@ -636,5 +766,10 @@ void AddSC_darkshore()
     pNewScript->Name = "npc_therylune";
     pNewScript->GetAI = &GetAI_npc_therylune;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_therylune;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rabid_bear";
+    pNewScript->GetAI = &GetAI_npc_rabid_bear;
     pNewScript->RegisterSelf();
 }
