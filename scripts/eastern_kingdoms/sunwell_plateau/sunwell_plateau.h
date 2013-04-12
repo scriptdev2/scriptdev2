@@ -19,7 +19,7 @@ enum
     NPC_KALECGOS_DRAGON         = 24850,            // kalecgos blue dragon hostile
     NPC_KALECGOS_HUMAN          = 24891,            // kalecgos human form in spectral realm
     NPC_SATHROVARR              = 24892,
-    NPC_MADRIGOSA               = 25160,
+    NPC_MADRIGOSA               = 24895,
     NPC_FLIGHT_TRIGGER_LEFT     = 25357,            // Related to Felmyst flight path. Also the anchor to summon Madrigosa
     // NPC_FLIGHT_TRIGGER_RIGHT = 25358,            // related to Felmyst flight path
     NPC_BRUTALLUS               = 24882,
