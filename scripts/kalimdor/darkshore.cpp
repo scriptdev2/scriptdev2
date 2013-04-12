@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 731, 945, 994, 995, 2078, 5321
+SDComment: Quest support: 731, 945, 994, 995, 2078, 2118, 5321
 SDCategory: Darkshore
 EndScriptData */
 
@@ -27,6 +27,7 @@ npc_prospector_remtravel
 npc_threshwackonator
 npc_volcor
 npc_therylune
+npc_rabid_bear
 EndContentData */
 
 #include "precompiled.h"
@@ -620,6 +621,59 @@ bool QuestAccept_npc_therylune(Player* pPlayer, Creature* pCreature, const Quest
     return true;
 }
 
+/*######
+## npc_rabid_bear
+######*/
+
+enum
+{
+    QUEST_PLAGUED_LANDS          = 2118,
+    NPC_RABID_BEAR               = 2164,
+    NPC_RABID_BEAR_CAPTURED      = 11836,
+    GO_BEAR_TRAP                 = 111148,
+};
+
+struct MANGOS_DLL_DECL npc_rabid_bearAI : public ScriptedAI
+{
+    npc_rabid_bearAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset();
+    }
+
+    Player* pPlayer;
+
+    void Reset() override
+    {
+        pPlayer = NULL;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (pWho->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        pPlayer = (Player*)pWho;
+        if (pPlayer->GetQuestStatus(QUEST_PLAGUED_LANDS) == QUEST_STATUS_INCOMPLETE)
+        {
+            if (GetClosestGameObjectWithEntry(m_creature, GO_BEAR_TRAP, 0.5f))
+            {
+                pPlayer->CastedCreatureOrGO(NPC_RABID_BEAR_CAPTURED, m_creature->GetObjectGuid(), 9437, true);
+                m_creature->setFaction(35);
+                m_creature->addUnitState(UNIT_STAT_STUNNED);
+                m_creature->DeleteThreatList();
+                m_creature->ForcedDespawn(5000);
+                // TODO currently NPC_RABID_BEAR_CAPTURED is despawned after 5 sec, granting the quest completion that was previously missing
+                // NPC should instead follow player to quest giver Tharnariun Treetender (NPC 3701)
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_rabid_bear(Creature* pCreature)
+{
+    return new npc_rabid_bearAI(pCreature);
+}
+
 void AddSC_darkshore()
 {
     Script* pNewScript;
@@ -653,5 +707,10 @@ void AddSC_darkshore()
     pNewScript->Name = "npc_therylune";
     pNewScript->GetAI = &GetAI_npc_therylune;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_therylune;
+    pNewScript->RegisterSelf();
+	
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rabid_bear";
+    pNewScript->GetAI = &GetAI_npc_rabid_bear;
     pNewScript->RegisterSelf();
 }
