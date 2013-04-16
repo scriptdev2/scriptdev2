@@ -209,10 +209,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                 for (GuidSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
                 {
                     if (Creature* pMojo = instance->GetCreature(*itr))
-                    {
                         pMojo->Respawn();
-                        pMojo->GetMotionMaster()->MoveTargetedHome();
-                    }
                 }
             }
             if (uiData == SPECIAL)

@@ -161,10 +161,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
                 if (Creature* pMidnight = GetSingleCreatureFromStorage(NPC_MIDNIGHT))
                 {
                     if (!pMidnight->isAlive())
-                    {
                         pMidnight->Respawn();
-                        pMidnight->GetMotionMaster()->MoveTargetedHome();
-                    }
                 }
             }
             break;

@@ -507,10 +507,7 @@ void instance_violet_hold::CallGuards(bool bRespawn)
         if (Creature* pGuard = instance->GetCreature(*itr))
         {
             if (bRespawn)
-            {
                 pGuard->Respawn();
-                pGuard->GetMotionMaster()->MoveTargetedHome();
-            }
             else if (pGuard->isAlive())
             {
                 pGuard->SetWalk(false);
