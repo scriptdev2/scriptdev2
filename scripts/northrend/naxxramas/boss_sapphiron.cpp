@@ -322,6 +322,25 @@ CreatureAI* GetAI_boss_sapphiron(Creature* pCreature)
     return new boss_sapphironAI(pCreature);
 }
 
+bool GOUse_go_sapphiron_birth(Player* pPlayer, GameObject* pGo)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return true;
+
+    if (pInstance->GetData(TYPE_SAPPHIRON) != NOT_STARTED)
+        return true;
+
+    // If already summoned return (safety check)
+    if (pInstance->GetSingleCreatureFromStorage(NPC_SAPPHIRON, true))
+        return true;
+
+    // Set data to special and allow the Go animation to proceed
+    pInstance->SetData(TYPE_SAPPHIRON, SPECIAL);
+    return false;
+}
+
 void AddSC_boss_sapphiron()
 {
     Script* pNewScript;
@@ -329,5 +348,10 @@ void AddSC_boss_sapphiron()
     pNewScript = new Script;
     pNewScript->Name = "boss_sapphiron";
     pNewScript->GetAI = &GetAI_boss_sapphiron;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_sapphiron_birth";
+    pNewScript->pGOUse = &GOUse_go_sapphiron_birth;
     pNewScript->RegisterSelf();
 }

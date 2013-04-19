@@ -843,6 +843,7 @@ UPDATE creature_template SET ScriptName='boss_stalagg' WHERE entry=15929;
 UPDATE creature_template SET ScriptName='boss_feugen' WHERE entry=15930;
 UPDATE creature_template SET ScriptName='npc_tesla_coil' WHERE entry=16218;
 UPDATE creature_template SET ScriptName='boss_sapphiron' WHERE entry=15989;
+UPDATE gameobject_template SET ScriptName='go_sapphiron_birth' WHERE entry=181356;
 UPDATE creature_template SET ScriptName='boss_kelthuzad' WHERE entry=15990;
 
 /* NETHERSTORM */
