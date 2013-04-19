@@ -12,11 +12,14 @@ enum
     TYPE_SARTHARION_EVENT       = 1,
     // internal used types for achievement
     TYPE_ALIVE_DRAGONS          = 2,
+    TYPE_VOLCANO_BLOW_FAILED    = 3,
 
     NPC_SARTHARION              = 28860,
     NPC_TENEBRON                = 30452,
     NPC_SHADRON                 = 30451,
     NPC_VESPERON                = 30449,
+
+    NPC_FIRE_CYCLONE            = 30648,
 
     GO_TWILIGHT_PORTAL          = 193988,
 
@@ -43,6 +46,8 @@ class MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
+        ObjectGuid SelectRandomFireCycloneGuid();
+
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
         bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
@@ -50,6 +55,10 @@ class MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint8 m_uiAliveDragons;
+
+        std::set<uint32> m_sVolcanoBlowFailPlayers;
+
+        GuidList m_lFireCycloneGuidList;
 };
 
 #endif

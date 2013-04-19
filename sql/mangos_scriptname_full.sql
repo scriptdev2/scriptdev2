@@ -906,6 +906,7 @@ UPDATE creature_template SET ScriptName='mob_tenebron' WHERE entry=30452;
 UPDATE creature_template SET ScriptName='mob_twilight_eggs' WHERE entry=30882;
 UPDATE creature_template SET ScriptName='mob_twilight_whelp' WHERE entry IN (30890, 31214);
 UPDATE creature_template SET ScriptName='npc_flame_tsunami' WHERE entry=30616;
+UPDATE creature_template SET ScriptName='npc_fire_cyclone' WHERE entry=30648;
 
 /* ONYXIA'S LAIR */
 UPDATE instance_template SET ScriptName='instance_onyxias_lair' WHERE map=249;

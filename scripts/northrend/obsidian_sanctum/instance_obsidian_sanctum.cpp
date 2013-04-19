@@ -52,15 +52,28 @@ void instance_obsidian_sanctum::OnCreatureCreate(Creature* pCreature)
         case NPC_SARTHARION:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_FIRE_CYCLONE:
+            m_lFireCycloneGuidList.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
 void instance_obsidian_sanctum::SetData(uint32 uiType, uint32 uiData)
 {
     if (uiType == TYPE_SARTHARION_EVENT)
+    {
         m_auiEncounter[0] = uiData;
+        if (uiData == IN_PROGRESS)
+            m_sVolcanoBlowFailPlayers.clear();
+    }
     else if (uiType == TYPE_ALIVE_DRAGONS)
         m_uiAliveDragons = uiData;
+    else if (uiType == TYPE_VOLCANO_BLOW_FAILED)
+    {
+        // Insert the players who fail the achiev and haven't been already inserted in the set
+        if (m_sVolcanoBlowFailPlayers.find(uiData) == m_sVolcanoBlowFailPlayers.end())
+            m_sVolcanoBlowFailPlayers.insert(uiData);
+    }
 
     // No need to save anything here
 }
@@ -73,7 +86,18 @@ uint32 instance_obsidian_sanctum::GetData(uint32 uiType) const
     return 0;
 }
 
-bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
+ObjectGuid instance_obsidian_sanctum::SelectRandomFireCycloneGuid()
+{
+    if (m_lFireCycloneGuidList.empty())
+        return ObjectGuid();
+
+    GuidList::iterator iter = m_lFireCycloneGuidList.begin();
+    advance(iter, urand(0, m_lFireCycloneGuidList.size() - 1));
+
+    return *iter;
+}
+
+bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
     {
@@ -86,6 +110,10 @@ bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId
         case ACHIEV_DRAGONS_ALIVE_3_N:
         case ACHIEV_DRAGONS_ALIVE_3_H:
             return m_uiAliveDragons >= 3;
+        case ACHIEV_CRIT_VOLCANO_BLOW_N:
+        case ACHIEV_CRIT_VOLCANO_BLOW_H:
+            // Return true if not found in the set
+            return m_sVolcanoBlowFailPlayers.find(pSource->GetGUIDLow()) == m_sVolcanoBlowFailPlayers.end();
         default:
             return false;
     }

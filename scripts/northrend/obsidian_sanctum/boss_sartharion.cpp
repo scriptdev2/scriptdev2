@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss Sartharion
-SD%Complete: 70%
-SDComment: Flame wave, achievement and portal events need to be implemented
+SD%Complete: 80%
+SDComment: Portal events need to be implemented
 SDCategory: Obsidian Sanctum
 EndScriptData */
 
@@ -57,7 +57,6 @@ enum
     SPELL_TAIL_LASH                             = 56910,    // A sweeping tail strike hits all enemies behind the caster, inflicting 3063 to 3937 damage and stunning them for 2 sec.
     SPELL_TAIL_LASH_H                           = 58957,    // A sweeping tail strike hits all enemies behind the caster, inflicting 4375 to 5625 damage and stunning them for 2 sec.
     SPELL_WILL_OF_SARTHARION                    = 61254,    // Sartharion's presence bolsters the resolve of the Twilight Drakes, increasing their total health by 25%. This effect also increases Sartharion's health by 25%.
-    SPELL_LAVA_STRIKE                           = 57571,    // (Real spell casted should be 57578) 57571 then trigger visual missile, then summon Lava Blaze on impact(spell 57572)
     SPELL_TWILIGHT_REVENGE                      = 60639,
 
     SPELL_PYROBUFFET                            = 56916,    // currently used for hard enrage after 15 minutes
@@ -116,8 +115,14 @@ enum
 
     // flame tsunami
     SPELL_FLAME_TSUNAMI                         = 57494,    // the visual dummy
-    SPELL_FLAME_TSUNAMI_LEAP                    = 60241,    // SPELL_EFFECT_138 some leap effect, causing caster to move in direction
+    // SPELL_FLAME_TSUNAMI_LEAP                 = 60241,    // SPELL_EFFECT_138 some leap effect, causing caster to move in direction
     SPELL_FLAME_TSUNAMI_DMG_AURA                = 57492,    // periodic damage, npc has this aura
+
+    // fire cyclone
+    // SPELL_LAVA_STRIKE                        = 57578,    // triggers 57571 then trigger visual missile, then summon Lava Blaze on impact(spell 57572)
+    SPELL_LAVA_STRIKE_IMPACT                    = 57591,
+    // SPELL_CYCLONE_AURA                       = 57560,    // in creature_template_addon
+    SPELL_CYCLONE_AURA_STRIKE                   = 57598,    // triggers 57578
 
     NPC_FLAME_TSUNAMI                           = 30616,    // for the flame waves
     NPC_LAVA_BLAZE                              = 30643,    // adds spawning from flame strike
@@ -185,12 +190,12 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 {
     boss_sartharionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_obsidian_sanctum*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_obsidian_sanctum* m_pInstance;
     bool m_bIsRegularMode;
 
     bool m_bIsBerserk;
@@ -229,7 +234,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         m_uiFlameBreathTimer    = 20000;
         m_uiTailSweepTimer      = 20000;
         m_uiCleaveTimer         = 7000;
-        m_uiLavaStrikeTimer     = 5000;
+        m_uiLavaStrikeTimer     = urand(20000, 30000);
 
         m_bHasCalledTenebron    = false;
         m_bHasCalledShadron     = false;
@@ -462,48 +467,59 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         // Lavas Strike
         if (m_uiLavaStrikeTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (m_pInstance)
             {
-                DoCastSpellIfCan(pTarget, SPELL_LAVA_STRIKE);
+                if (Creature* pCyclone = m_creature->GetMap()->GetCreature(m_pInstance->SelectRandomFireCycloneGuid()))
+                    pCyclone->CastSpell(pCyclone, SPELL_CYCLONE_AURA_STRIKE, true);
 
-                switch (urand(0, 15))
+                switch (urand(0, 5))
                 {
                     case 0: DoScriptText(SAY_SARTHARION_SPECIAL_1, m_creature); break;
                     case 1: DoScriptText(SAY_SARTHARION_SPECIAL_2, m_creature); break;
                     case 2: DoScriptText(SAY_SARTHARION_SPECIAL_3, m_creature); break;
+                    case 3: DoScriptText(SAY_SARTHARION_SPECIAL_4, m_creature); break;
                 }
             }
-            m_uiLavaStrikeTimer = urand(5000, 20000);
+            m_uiLavaStrikeTimer = 30000;
         }
         else
             m_uiLavaStrikeTimer -= uiDiff;
 
         // call tenebron
-        if (!m_bHasCalledTenebron && m_uiTenebronTimer < uiDiff)
+        if (!m_bHasCalledTenebron)
         {
-            CallDragon(NPC_TENEBRON);
-            m_bHasCalledTenebron = true;
+            if (m_uiTenebronTimer < uiDiff)
+            {
+                CallDragon(NPC_TENEBRON);
+                m_bHasCalledTenebron = true;
+            }
+            else
+                m_uiTenebronTimer -= uiDiff;
         }
-        else
-            m_uiTenebronTimer -= uiDiff;
 
         // call shadron
-        if (!m_bHasCalledShadron && m_uiShadronTimer < uiDiff)
+        if (!m_bHasCalledShadron)
         {
-            CallDragon(NPC_SHADRON);
-            m_bHasCalledShadron = true;
+            if (m_uiShadronTimer < uiDiff)
+            {
+                CallDragon(NPC_SHADRON);
+                m_bHasCalledShadron = true;
+            }
+            else
+                m_uiShadronTimer -= uiDiff;
         }
-        else
-            m_uiShadronTimer -= uiDiff;
 
         // call vesperon
-        if (!m_bHasCalledVesperon && m_uiVesperonTimer < uiDiff)
+        if (!m_bHasCalledVesperon)
         {
-            CallDragon(NPC_VESPERON);
-            m_bHasCalledVesperon = true;
+            if (m_uiVesperonTimer < uiDiff)
+            {
+                CallDragon(NPC_VESPERON);
+                m_bHasCalledVesperon = true;
+            }
+            else
+                m_uiVesperonTimer -= uiDiff;
         }
-        else
-            m_uiVesperonTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
 
@@ -894,7 +910,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
         DoScriptText(SAY_SHADRON_BREATH, m_creature);
     }
 
-    void UpdateDragonAI(const uint32 uiDiff) override
+    void UpdateDragonAI(const uint32 uiDiff)
     {
         if (m_uiAcolyteShadronTimer < uiDiff)
         {
@@ -967,7 +983,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
         DoScriptText(SAY_VESPERON_BREATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    void UpdateDragonAI(const uint32 uiDiff)
     {
         if (m_uiAcolyteVesperonTimer < uiDiff)
         {
@@ -1054,7 +1070,7 @@ struct MANGOS_DLL_DECL npc_flame_tsunamiAI : public ScriptedAI
 
     uint32 m_uiTsunamiTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiTsunamiTimer = 2000;
 
@@ -1073,7 +1089,7 @@ struct MANGOS_DLL_DECL npc_flame_tsunamiAI : public ScriptedAI
         m_creature->RemoveAllAurasOnEvade();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiTsunamiTimer)
         {
@@ -1095,6 +1111,44 @@ struct MANGOS_DLL_DECL npc_flame_tsunamiAI : public ScriptedAI
 CreatureAI* GetAI_npc_flame_tsunami(Creature* pCreature)
 {
     return new npc_flame_tsunamiAI(pCreature);
+}
+
+/*######
+## npc_fire_cyclone
+######*/
+
+struct MANGOS_DLL_DECL npc_fire_cycloneAI : public ScriptedAI
+{
+    npc_fire_cycloneAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    void Reset()  override { }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    {
+        // Mark the achiev failed for the hit target
+        if (pSpell->Id == SPELL_LAVA_STRIKE_IMPACT && pTarget->GetTypeId() == TYPEID_PLAYER && m_pInstance)
+            m_pInstance->SetData(TYPE_VOLCANO_BLOW_FAILED, pTarget->GetGUIDLow());
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_LAVA_BLAZE)
+            pSummoned->SetInCombatWithZone();
+    }
+};
+
+CreatureAI* GetAI_npc_fire_cyclone(Creature* pCreature)
+{
+    return new npc_fire_cycloneAI(pCreature);
 }
 
 void AddSC_boss_sartharion()
@@ -1134,5 +1188,10 @@ void AddSC_boss_sartharion()
     pNewScript = new Script;
     pNewScript->Name = "npc_flame_tsunami";
     pNewScript->GetAI = &GetAI_npc_flame_tsunami;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_fire_cyclone";
+    pNewScript->GetAI = &GetAI_npc_fire_cyclone;
     pNewScript->RegisterSelf();
 }
