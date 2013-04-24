@@ -252,6 +252,12 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
                 }
             }
             break;
+        case TYPE_MOLDAR:
+        case TYPE_FENGUS:
+        case TYPE_SLIPKIK:
+        case TYPE_KROMCRUSH:
+            m_auiEncounter[uiType] = uiData;
+            break;
     }
 
     if (uiData == DONE)
@@ -262,7 +268,9 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
         saveStream    << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
                       << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
                       << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-                      << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11];
+                      << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
+                      << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiEncounter[14] << " "
+                      << m_auiEncounter[15];
 
         m_strInstData = saveStream.str();
 
@@ -328,6 +336,19 @@ void instance_dire_maul::OnCreatureDeath(Creature* pCreature)
         case NPC_KING_GORDOK:
             SetData(TYPE_KING_GORDOK, DONE);
             break;
+            // Handle Ogre guards for Tribute Run chest
+        case NPC_GUARD_MOLDAR:
+            SetData(TYPE_MOLDAR, DONE);
+            break;
+        case NPC_GUARD_FENGUS:
+            SetData(TYPE_FENGUS, DONE);
+            break;
+        case NPC_GUARD_SLIPKIK:
+            SetData(TYPE_SLIPKIK, DONE);
+            break;
+        case NPC_CAPTAIN_KROMCRUSH:
+            SetData(TYPE_KROMCRUSH, DONE);
+            break;
     }
 }
 
@@ -345,7 +366,9 @@ void instance_dire_maul::Load(const char* chrIn)
     loadStream >>   m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >>
                m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5] >>
                m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8] >>
-               m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11];
+               m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11] >>
+               m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiEncounter[14] >>
+               m_auiEncounter[15];
 
     if (m_auiEncounter[TYPE_ALZZIN] >= DONE)
         m_bWallDestroyed = true;
@@ -357,6 +380,28 @@ void instance_dire_maul::Load(const char* chrIn)
     }
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+bool instance_dire_maul::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
+{
+    switch (uiInstanceConditionId)
+    {
+        case INSTANCE_CONDITION_ID_NORMAL_MODE:             // No guards alive
+        case INSTANCE_CONDITION_ID_HARD_MODE:               // One guard alive
+        case INSTANCE_CONDITION_ID_HARD_MODE_2:             // Two guards alive
+        case INSTANCE_CONDITION_ID_HARD_MODE_3:             // Three guards alive
+        case INSTANCE_CONDITION_ID_HARD_MODE_4:             // All guards alive
+        {
+            uint8 uiTributeRunAliveBosses = (GetData(TYPE_MOLDAR) != DONE ? 1 : 0) + (GetData(TYPE_FENGUS) != DONE ? 1 : 0) + (GetData(TYPE_SLIPKIK) != DONE ? 1 : 0)
+                + (GetData(TYPE_KROMCRUSH) != DONE ? 1 : 0);
+
+            return uiInstanceConditionId == uiTributeRunAliveBosses;
+        }
+    }
+
+    script_error_log("instance_dire_maul::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                     uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
+    return false;
 }
 
 bool instance_dire_maul::CheckAllGeneratorsDestroyed()

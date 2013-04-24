@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 12,
+    MAX_ENCOUNTER               = 16,
     MAX_GENERATORS              = 5,
 
     // East
@@ -27,6 +27,10 @@ enum
 
     // North
     TYPE_KING_GORDOK            = 11,
+    TYPE_MOLDAR                 = 12,
+    TYPE_FENGUS                 = 13,
+    TYPE_SLIPKIK                = 14,
+    TYPE_KROMCRUSH              = 15,
 
     // East
     GO_CRUMBLE_WALL             = 177220,
@@ -101,6 +105,8 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
+
+        bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
     protected:
         bool CheckAllGeneratorsDestroyed();
