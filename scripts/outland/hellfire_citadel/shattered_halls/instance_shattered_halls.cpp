@@ -124,6 +124,7 @@ void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
                         pPlayer->SummonCreature(m_uiTeam == ALLIANCE ? aSoldiersLocs[i].m_uiAllianceEntry : aSoldiersLocs[i].m_uiHordeEntry, aSoldiersLocs[i].m_fX, aSoldiersLocs[i].m_fY, aSoldiersLocs[i].m_fZ, aSoldiersLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 
                     // Summon the executioner for 80 min; ToDo: set the flags in DB
+                    // Note: according to wowhead he shouldn't be targetable until Kargath encounter is finished. ToDo: research if he should still be available for players even if there are no prisoners left alive
                     if (Creature* pExecutioner = pPlayer->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 80 * MINUTE * IN_MILLISECONDS, true))
                         pExecutioner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
@@ -133,9 +134,21 @@ void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
             }
             if (uiData == DONE)
             {
-                // Allow playes to complete the quest only after the executioner is dead
+                // If the officer is already killed, then skip the quest completion
+                if (m_uiExecutionStage)
+                    break;
+
+                // Complete quest 9524 or 9525
                 if (Creature* pOfficer = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? NPC_OFFICER_ALLIANCE : NPC_OFFICER_HORDE))
-                    pOfficer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
+                {
+                    Map::PlayerList const& lPlayers = instance->GetPlayers();
+
+                    for (Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+                    {
+                        if (Player* pPlayer = itr->getSource())
+                            pPlayer->KilledMonsterCredit(pOfficer->GetEntry(), pOfficer->GetObjectGuid());
+                    }
+                }
             }
             break;
     }
@@ -205,6 +218,22 @@ void instance_shattered_halls::OnCreatureEvade(Creature* pCreature)
         SetData(TYPE_EXECUTION, IN_PROGRESS);
 }
 
+bool instance_shattered_halls::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
+{
+    switch (uiInstanceConditionId)
+    {
+        case INSTANCE_CONDITION_ID_NORMAL_MODE:             // No soldier alive
+        case INSTANCE_CONDITION_ID_HARD_MODE:               // One soldier alive
+        case INSTANCE_CONDITION_ID_HARD_MODE_2:             // Two soldier alive
+        case INSTANCE_CONDITION_ID_HARD_MODE_3:             // Three soldier alive
+            return uiInstanceConditionId == INSTANCE_CONDITION_ID_HARD_MODE_3 - m_uiExecutionStage;
+    }
+
+    script_error_log("instance_shattered_halls::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
+                     uiInstanceConditionId, pPlayer ? pPlayer->GetGuidStr().c_str() : "NULL", pConditionSource ? pConditionSource->GetGuidStr().c_str() : "NULL", conditionSourceType);
+    return false;
+}
+
 void instance_shattered_halls::Update(uint32 uiDiff)
 {
     if (m_auiEncounter[TYPE_EXECUTION] != IN_PROGRESS)
@@ -267,7 +296,7 @@ InstanceData* GetInstanceData_instance_shattered_halls(Map* pMap)
 
 bool AreaTrigger_at_shattered_halls(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
-    if (pPlayer->isGameMaster() || pPlayer->isDead())
+    if (pPlayer->isGameMaster() || !pPlayer->isAlive())
         return false;
 
     instance_shattered_halls* pInstance = (instance_shattered_halls*)pPlayer->GetInstanceData();
