@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
     void UpdateAI(const uint32 uiDiff) override
     {
         // Update only the intro related stuff
-        if (m_pInstance->GetData(TYPE_BRUTALLUS) == SPECIAL)
+        if (m_pInstance && m_pInstance->GetData(TYPE_BRUTALLUS) == SPECIAL)
         {
             UpdateIntroEvent(uiDiff);
             return;
