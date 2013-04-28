@@ -1351,6 +1351,7 @@ DELETE FROM scripted_areatrigger WHERE entry=1447;
 INSERT INTO scripted_areatrigger VALUES (1447,'at_zulfarrak');
 UPDATE creature_template SET ScriptName='npc_sergeant_bly' WHERE entry=7604;
 UPDATE creature_template SET ScriptName='npc_weegli_blastfuse' WHERE entry=7607;
+UPDATE creature_template SET ScriptName='boss_zumrah' WHERE entry=7271;
 
 /* ZUL'GURUB */
 UPDATE instance_template SET ScriptName='instance_zulgurub' WHERE map=309;

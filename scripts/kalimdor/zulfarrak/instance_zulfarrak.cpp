@@ -44,6 +44,17 @@ void instance_zulfarrak::OnCreatureCreate(Creature* pCreature)
     }
 }
 
+void instance_zulfarrak::OnObjectCreate(GameObject* pGo)
+{
+    if (pGo->GetEntry() == GO_SHALLOW_GRAVE)
+        m_lShallowGravesGuidList.push_back(pGo->GetObjectGuid());
+    else if (pGo->GetEntry() == GO_END_DOOR)
+    {
+        if (GetData(TYPE_SEZZZIZ) == DONE)
+            pGo->SetGoState(GO_STATE_ACTIVE);
+    }
+}
+
 void instance_zulfarrak::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
