@@ -64,8 +64,6 @@ struct MANGOS_DLL_DECL boss_zumrahAI : public ScriptedAI
 
     bool m_bHasTurnedHostile;
 
-    GuidList m_lUsableGravesList;
-
     void Reset() override
     {
         m_uiShadowBoltTimer         = 1000;
@@ -78,29 +76,6 @@ struct MANGOS_DLL_DECL boss_zumrahAI : public ScriptedAI
     void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
-
-        if (m_pInstance)
-        {
-            // Get the list of usable graves (not used already by players)
-            m_lUsableGravesList.clear();
-            GuidList lTempList;
-            std::list<GameObject*> lGravesInRange;
-
-            m_pInstance->GetShallowGravesGuidList(lTempList);
-            for (GuidList::const_iterator itr = lTempList.begin(); itr != lTempList.end(); ++itr)
-            {
-                if (GameObject* pGo = m_creature->GetMap()->GetGameObject(*itr))
-                {
-                    if (pGo->isSpawned())
-                        lGravesInRange.push_back(pGo);
-                }
-            }
-
-            // Sort the graves and store them for future use
-            lGravesInRange.sort(ObjectDistanceOrder(m_creature));
-            for (std::list<GameObject*>::const_iterator itr = lGravesInRange.begin(); itr != lGravesInRange.end(); ++itr)
-                m_lUsableGravesList.push_back((*itr)->GetObjectGuid());
-        }
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
@@ -138,18 +113,31 @@ struct MANGOS_DLL_DECL boss_zumrahAI : public ScriptedAI
             pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
-    ObjectGuid SelectRandomShallowGrave()
+    GameObject* SelectNearbyShallowGrave()
     {
-        if (m_lUsableGravesList.empty())
-            return ObjectGuid();
+        if (!m_pInstance)
+            return NULL;
 
-        GuidList::iterator iter = m_lUsableGravesList.begin();
+        // Get the list of usable graves (not used already by players)
+        GuidList lTempList;
+        std::list<GameObject*> lGravesInRange;
 
-        // Remove the used grave
-        ObjectGuid uiGraveGuid = *iter;
-        m_lUsableGravesList.erase(iter);
+        m_pInstance->GetShallowGravesGuidList(lTempList);
+        for (GuidList::const_iterator itr = lTempList.begin(); itr != lTempList.end(); ++itr)
+        {
+            GameObject* pGo = m_creature->GetMap()->GetGameObject(*itr);
+            // Go spawned and no looting in process
+            if (pGo && pGo->isSpawned() && pGo->getLootState() == GO_READY)
+                lGravesInRange.push_back(pGo);
+        }
 
-        return uiGraveGuid;
+        if (lGravesInRange.empty())
+            return NULL;
+
+        // Sort the graves
+        lGravesInRange.sort(ObjectDistanceOrder(m_creature));
+
+        return *lGravesInRange.begin();
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -162,20 +150,17 @@ struct MANGOS_DLL_DECL boss_zumrahAI : public ScriptedAI
             if (m_uiSpawnZombieTimer <= uiDiff)
             {
                 // Use a nearby grave to spawn zombies
-                if (GameObject* pGrave = m_creature->GetMap()->GetGameObject(SelectRandomShallowGrave()))
+                if (GameObject* pGrave = SelectNearbyShallowGrave())
                 {
-                    if (pGrave->isSpawned())
-                    {
-                        m_creature->CastSpell(pGrave->GetPositionX(), pGrave->GetPositionY(), pGrave->GetPositionZ(), SPELL_SUMMON_ZOMBIES, true, NULL, NULL, pGrave->GetObjectGuid());
-                        pGrave->SetLootState(GO_JUST_DEACTIVATED);
+                    m_creature->CastSpell(pGrave->GetPositionX(), pGrave->GetPositionY(), pGrave->GetPositionZ(), SPELL_SUMMON_ZOMBIES, true, NULL, NULL, pGrave->GetObjectGuid());
+                    pGrave->SetLootState(GO_JUST_DEACTIVATED);
 
-                        if (roll_chance_i(30))
-                            DoScriptText(SAY_SUMMON, m_creature);
+                    if (roll_chance_i(30))
+                        DoScriptText(SAY_SUMMON, m_creature);
 
-                        m_uiSpawnZombieTimer = 20000;
-                    }
+                    m_uiSpawnZombieTimer = 20000;
                 }
-                else
+                else                                        // No Grave usable any more
                     m_uiSpawnZombieTimer = 0;
             }
             else
