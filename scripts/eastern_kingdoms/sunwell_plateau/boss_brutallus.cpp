@@ -462,9 +462,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud(const Aura* pAura, boo
                 if (Creature* pMadrigosa = pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
                 {
                     // Set respawn pos to current pos
-                    CreatureCreatePos madrigosaPos(pMadrigosa->GetMap(), pMadrigosa->GetPositionX(), pMadrigosa->GetPositionY(), pMadrigosa->GetPositionZ(),
-                        pMadrigosa->GetOrientation(), pMadrigosa->GetPhaseMask());
-                    pMadrigosa->SetRespawnCoord(madrigosaPos);
+                    pMadrigosa->SetRespawnCoord(pMadrigosa->GetPositionX(), pMadrigosa->GetPositionY(), pMadrigosa->GetPositionZ(), pMadrigosa->GetOrientation());
 
                     pMadrigosa->CastSpell(pMadrigosa, SPELL_FELBLAZE_PREVIZUAL, true);
                     pMadrigosa->ForcedDespawn(10000);
