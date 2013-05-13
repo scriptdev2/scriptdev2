@@ -225,7 +225,7 @@ bool instance_shattered_halls::CheckConditionCriteriaMeet(Player const* pPlayer,
         case INSTANCE_CONDITION_ID_HARD_MODE:               // One soldier alive
         case INSTANCE_CONDITION_ID_HARD_MODE_2:             // Two soldier alive
         case INSTANCE_CONDITION_ID_HARD_MODE_3:             // Three soldier alive
-            return uiInstanceConditionId == INSTANCE_CONDITION_ID_HARD_MODE_3 - m_uiExecutionStage;
+            return uiInstanceConditionId == uint32(INSTANCE_CONDITION_ID_HARD_MODE_3 - m_uiExecutionStage);
     }
 
     script_error_log("instance_shattered_halls::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",

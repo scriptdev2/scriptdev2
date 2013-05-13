@@ -813,11 +813,11 @@ struct MANGOS_DLL_DECL npc_power_blue_flightAI : public ScriptedAI
             // Reset the No Interact flag of the closest orb
             GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_1, 10.0f);
             if (!pOrb)
-                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_2, 10.0f);
+                pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_2, 10.0f);
             if (!pOrb)
-                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_3, 10.0f);
+                pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_3, 10.0f);
             if (!pOrb)
-                GameObject* pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_4, 10.0f);
+                pOrb = GetClosestGameObjectWithEntry(m_creature, GO_ORB_BLUE_FLIGHT_4, 10.0f);
 
             if (pOrb)
                 pOrb->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
