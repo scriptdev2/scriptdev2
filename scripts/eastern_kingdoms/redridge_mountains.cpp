@@ -58,6 +58,15 @@ struct MANGOS_DLL_DECL npc_corporal_keeshan_escortAI : public npc_escortAI
         m_uiShieldBashTimer  = 8000;
     }
 
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_START_ESCORT && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoScriptText(SAY_CORPORAL_KEESHAN_1, m_creature);
+            Start(false, (Player*)pInvoker, GetQuestTemplateStore(uiMiscValue));
+        }
+    }
+
     void WaypointStart(uint32 uiWP) override
     {
         switch (uiWP)
@@ -122,13 +131,7 @@ CreatureAI* GetAI_npc_corporal_keeshan(Creature* pCreature)
 bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_IN_ACTION)
-    {
-        if (npc_corporal_keeshan_escortAI* pEscortAI = dynamic_cast<npc_corporal_keeshan_escortAI*>(pCreature->AI()))
-        {
-            DoScriptText(SAY_CORPORAL_KEESHAN_1, pCreature);
-            pEscortAI->Start(false, pPlayer, pQuest);
-        }
-    }
+        pCreature->AI()->SendAIEvent(AI_EVENT_START_ESCORT, pPlayer, pCreature, pQuest->GetQuestId());
 
     return true;
 }

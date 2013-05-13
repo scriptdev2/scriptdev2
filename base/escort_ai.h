@@ -5,6 +5,9 @@
 #ifndef SC_ESCORTAI_H
 #define SC_ESCORTAI_H
 
+// Remove this include, when EscortAI stores uint32 quest-id instead of Quest*
+#include "ObjectMgr.h"
+
 struct Escort_Waypoint
 {
     Escort_Waypoint(uint32 uiId, float fX, float fY, float fZ, uint32 uiWaitTime) :

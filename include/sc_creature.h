@@ -130,6 +130,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         // Called at World update tick
         void UpdateAI(const uint32) override;
 
+        // Called when an AI Event is received
+        void ReceiveAIEvent(AIEventType /*eventType*/, Creature* /*pSender*/, Unit* /*pInvoker*/, uint32 /*uiMiscValue*/) override {}
+
         // == State checks =================================
 
         // Check if unit is visible for MoveInLineOfSight
