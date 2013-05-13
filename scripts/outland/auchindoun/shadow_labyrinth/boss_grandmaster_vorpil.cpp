@@ -180,8 +180,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                pTarget->GetRandomPoint(aVorpilTeleportLoc[0], aVorpilTeleportLoc[1], aVorpilTeleportLoc[2], 3.0f, fX, fY, fZ);
-                DoTeleportPlayer(pTarget, fX, fY, fZ, m_creature->GetAngle(m_creature->GetPositionX(), m_creature->GetPositionY()));
+                pTarget->GetRandomPoint(aVorpilTeleportLoc[0], aVorpilTeleportLoc[1], aVorpilTeleportLoc[2], 4.0f, fX, fY, fZ);
+                DoTeleportPlayer(pTarget, fX, fY, fZ, m_creature->GetAngle(fX, fY));
             }
         }
     }
@@ -196,10 +196,15 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         {
             if (m_uiRainOfFireTimer <= uiDiff)
             {
+                SetCombatMovement(false, true);
                 DoTeleportToPlatform();
 
-                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE_H) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE_H, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                     m_uiRainOfFireTimer = 0;
+
+                SetCombatMovement(true);
+
+                return;                                     // Nothing more todo after the players had been teleported
             }
             else
                 m_uiRainOfFireTimer -= uiDiff;
