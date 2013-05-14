@@ -1345,12 +1345,12 @@ UPDATE creature_template SET ScriptName='npc_gurgthock' WHERE entry=30007;
 
 /* ZUL'FARRAK */
 UPDATE instance_template SET ScriptName='instance_zulfarrak' WHERE map=209;
-DELETE FROM scripted_event_id WHERE id=2488;
-INSERT INTO scripted_event_id VALUES (2488,'event_go_zulfarrak_gong');
+DELETE FROM scripted_event_id WHERE id IN (2488,2609);
+INSERT INTO scripted_event_id VALUES
+(2488,'event_go_zulfarrak_gong'),
+(2609,'event_spell_unlocking');
 DELETE FROM scripted_areatrigger WHERE entry=1447;
 INSERT INTO scripted_areatrigger VALUES (1447,'at_zulfarrak');
-UPDATE creature_template SET ScriptName='npc_sergeant_bly' WHERE entry=7604;
-UPDATE creature_template SET ScriptName='npc_weegli_blastfuse' WHERE entry=7607;
 UPDATE creature_template SET ScriptName='boss_zumrah' WHERE entry=7271;
 
 /* ZUL'GURUB */

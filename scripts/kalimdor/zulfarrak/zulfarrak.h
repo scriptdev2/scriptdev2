@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER                   = 8,
+    MAX_ENCOUNTER                   = 9,
 
     TYPE_VELRATHA                   = 0,
     TYPE_GAHZRILLA                  = 1,
@@ -17,6 +17,7 @@ enum
     TYPE_NEKRUM                     = 5,
     TYPE_SEZZZIZ                    = 6,
     TYPE_CHIEF_SANDSCALP            = 7,
+    TYPE_PYRAMID_EVENT              = 8,
 
     NPC_VELRATHA                    = 7795,
     NPC_GAHZRILLA                   = 7273,
@@ -27,8 +28,18 @@ enum
     NPC_SEZZZIZ                     = 7275,
     NPC_CHIEF_SANDSCALP             = 7267,
 
+    NPC_SERGEANT_BLY                = 7604,
+    NPC_SANDFURY_SLAVE              = 7787,
+    NPC_SANDFURY_DRUDGE             = 7788,
+    NPC_SANDFURY_CRETIN             = 7789,
+    NPC_SANDFURY_ACOLYTE            = 8876,
+    NPC_SANDFURY_ZEALOT             = 8877,
+
     GO_SHALLOW_GRAVE                = 128403,
     GO_END_DOOR                     = 146084,
+
+    // EVENT_ID_GONG_ZULFARRAK      = 2488,                 // go 141832
+    // EVENT_ID_UNLOCKING           = 2609,                 // spell 10738
 
     AREATRIGGER_ANTUSUL             = 1447,
 };
@@ -56,11 +67,16 @@ class MANGOS_DLL_DECL instance_zulfarrak : public ScriptedInstance
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
+        void Update(uint32 uiDiff) override;
+
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         GuidList m_lShallowGravesGuidList;
+        GuidList m_lPyramidTrollsGuidList;
+
+        uint32 m_uiPyramidEventTimer;
 };
 
 #endif
