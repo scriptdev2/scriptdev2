@@ -103,7 +103,6 @@ UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry=18459
 UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry BETWEEN 185461 AND 185464;
 UPDATE gameobject_template SET ScriptName='go_jump_a_tron' WHERE entry=183146;
 UPDATE gameobject_template SET ScriptName='go_mysterious_snow_mound' WHERE entry=195308;
-UPDATE gameobject_template SET ScriptName='go_shrine_of_the_birds' WHERE entry IN (185547,185553,185551);
 UPDATE gameobject_template SET ScriptName='go_tele_to_dalaran_crystal' WHERE entry=191230;
 UPDATE gameobject_template SET ScriptName='go_tele_to_violet_stand' WHERE entry=191229;
 UPDATE gameobject_template SET ScriptName='go_andorhal_tower' WHERE entry IN (176094,176095,176096,176097);
@@ -166,7 +165,7 @@ UPDATE creature_template SET ScriptName='spell_dummy_npc' WHERE entry IN (
 -- outland
 16880,16518,16847,17157,17326,17654,18879,21729,22105,24918,24922,25084,25085,
 -- northrend
-23678,25752,25753,25758,25792,25793,26268,26270,26421,26616,26643,26841,26924,27122,27263,27264,27265,27808,28053,28054,28068,28093,28465,28600,29319,29327,29329,29330,29338,30146,32149);
+23678,25752,25753,25758,25792,25793,26268,26270,26421,26616,26643,26841,26924,27122,27808,28053,28054,28068,28093,28465,28600,29319,29327,29329,29330,29338,30146,32149);
 
 UPDATE gameobject_template SET ScriptName='spell_dummy_go' WHERE entry IN (181616,186949);
 

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 5097, 5098, 10990, 10991, 10992, 12557, 14092/14076. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 5097, 5098, 12557, 14092/14076. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -26,7 +26,6 @@ go_barov_journal
 go_ethereum_prison
 go_ethereum_stasis
 go_mysterious_snow_mound
-go_shrine_of_the_birds
 go_tele_to_dalaran_crystal
 go_tele_to_violet_stand
 go_andorhal_tower
@@ -183,46 +182,6 @@ bool GOUse_go_mysterious_snow_mound(Player* pPlayer, GameObject* pGo)
 
     pGo->SetLootState(GO_JUST_DEACTIVATED);
     return true;
-}
-
-/*######
-## go_shrine_of_the_birds
-######*/
-
-enum
-{
-    NPC_HAWK_GUARD   = 22992,
-    NPC_EAGLE_GUARD  = 22993,
-    NPC_FALCON_GUARD = 22994,
-    GO_SHRINE_HAWK   = 185551,
-    GO_SHRINE_EAGLE  = 185547,
-    GO_SHRINE_FALCON = 185553
-};
-
-bool GOUse_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
-{
-    uint32 uiBirdEntry = 0;
-
-    float fX, fY, fZ;
-    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), INTERACTION_DISTANCE);
-
-    switch (pGo->GetEntry())
-    {
-        case GO_SHRINE_HAWK:
-            uiBirdEntry = NPC_HAWK_GUARD;
-            break;
-        case GO_SHRINE_EAGLE:
-            uiBirdEntry = NPC_EAGLE_GUARD;
-            break;
-        case GO_SHRINE_FALCON:
-            uiBirdEntry = NPC_FALCON_GUARD;
-            break;
-    }
-
-    if (uiBirdEntry)
-        pPlayer->SummonCreature(uiBirdEntry, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OOC_DESPAWN, 60000);
-
-    return false;
 }
 
 /*######
@@ -383,11 +342,6 @@ void AddSC_go_scripts()
     pNewScript = new Script;
     pNewScript->Name = "go_mysterious_snow_mound";
     pNewScript->pGOUse =          &GOUse_go_mysterious_snow_mound;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "go_shrine_of_the_birds";
-    pNewScript->pGOUse =          &GOUse_go_shrine_of_the_birds;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
