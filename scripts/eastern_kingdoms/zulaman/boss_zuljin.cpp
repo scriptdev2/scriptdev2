@@ -297,8 +297,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 DoCastSpellIfCan(m_creature, SPELL_ENERGY_STORM, CAST_TRIGGERED);
 
                 // summon 4 vortexes
-                for (uint8 i = 0; i < MAX_VORTEXES; ++i)
-                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_CYCLONE, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_CYCLONE, CAST_TRIGGERED);
             }
 
             m_bIsInTransition = false;
