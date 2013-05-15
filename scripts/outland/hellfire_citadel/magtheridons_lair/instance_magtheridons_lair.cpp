@@ -237,11 +237,9 @@ void instance_magtheridons_lair::Update(uint32 uiDiff)
         if (Creature* pMagtheridon = GetSingleCreatureFromStorage(NPC_MAGTHERIDON))
         {
             if (pMagtheridon->isAlive())
-            {
                 DoScriptText(aRandomTaunt[urand(0, 5)], pMagtheridon);
-                m_uiRandYellTimer = 90000;
-            }
         }
+        m_uiRandYellTimer = 90000;
     }
     else
         m_uiRandYellTimer -= uiDiff;

@@ -55,7 +55,7 @@ enum
     SPELL_DARK_FLAME                        = 45345,
 
     // Sacrolash spells
-    SPELL_DARK_TOUCHED                      = 45347,        // TODO NYI  - Player debuff; removed by shadow damage
+    SPELL_DARK_TOUCHED                      = 45347,        // Player debuff; removed by shadow damage
     SPELL_SHADOW_BLADES                     = 45248,        // 10 secs
     SPELL_DARK_STRIKE                       = 45271,
     SPELL_SHADOW_NOVA                       = 45329,        // 30-35 secs
@@ -69,7 +69,7 @@ enum
 
     // Alythess spells
     SPELL_PYROGENICS                        = 45230,        // Self buff; 15secs
-    SPELL_FLAME_TOUCHED                     = 45348,        // TODO NYI  - Player debuff; removed by shadow damage
+    SPELL_FLAME_TOUCHED                     = 45348,        // Player debuff; removed by shadow damage
     SPELL_CONFLAGRATION                     = 45342,        // 30-35 secs
     SPELL_BLAZE                             = 45235,        // On main target every 3 secs; should trigger 45236 which leaves a fire on the ground
     SPELL_FLAME_SEAR                        = 46771,        // A few random targets debuff
@@ -104,7 +104,6 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
 
     uint32 m_uiEnrageTimer;
     uint32 m_uiPyrogenicsTimer;
-    uint32 m_uiFlameTouchedTimer;
     uint32 m_uiConflagrationTimer;
     uint32 m_uiBlazeTimer;
     uint32 m_uiFlameSearTimer;
@@ -114,7 +113,6 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
     {
         m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
         m_uiPyrogenicsTimer     = 20000;
-        m_uiFlameTouchedTimer   = 30000;
         m_uiConflagrationTimer  = urand(25000, 30000);
         m_uiBlazeTimer          = 1000;
         m_uiFlameSearTimer      = 5000;
@@ -187,6 +185,33 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    {
+        if (pTarget->HasAura(SPELL_DARK_FLAME))
+            return;
+
+        if (pSpell->SchoolMask == SPELL_SCHOOL_MASK_FIRE)
+        {
+            if (pTarget->HasAura(SPELL_DARK_TOUCHED))
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_DARK_TOUCHED);
+                pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
+            }
+            else
+                pTarget->CastSpell(pTarget, SPELL_FLAME_TOUCHED, true);
+        }
+        else if (pSpell->SchoolMask == SPELL_SCHOOL_MASK_SHADOW)
+        {
+            if (pTarget->HasAura(SPELL_FLAME_TOUCHED))
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_FLAME_TOUCHED);
+                pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
+            }
+            else
+                pTarget->CastSpell(pTarget, SPELL_DARK_TOUCHED, true);
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_EREDAR_TWINS) == SPECIAL)
@@ -220,16 +245,6 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
         else
             m_uiPyrogenicsTimer -= uiDiff;
-
-        /* // Spell needs research of fix; it shoudn't be cast on self
-        if (m_uiFlameTouchedTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_FLAME_TOUCHED) == CAST_OK)
-                m_uiFlameTouchedTimer = urand(10000, 13000);
-        }
-        else
-            m_uiFlameTouchedTimer -= uiDiff;
-        */
 
         if (m_uiConflagrationTimer < uiDiff)
         {
@@ -279,7 +294,6 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     uint32 m_uiEnrageTimer;
-    uint32 m_uiDarkTouchedTimer;
     uint32 m_uiShadowNovaTimer;
     uint32 m_uiConfoundingBlowTimer;
     uint32 m_uiShadowBladesTimer;
@@ -288,7 +302,6 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
     void Reset() override
     {
         m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
-        m_uiDarkTouchedTimer     = 30000;
         m_uiShadowNovaTimer      = 15000;
         m_uiConfoundingBlowTimer = 30000;
         m_uiShadowBladesTimer    = 15000;
@@ -348,6 +361,33 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
+    {
+        if (pTarget->HasAura(SPELL_DARK_FLAME))
+            return;
+
+        if (pSpell->SchoolMask == SPELL_SCHOOL_MASK_FIRE)
+        {
+            if (pTarget->HasAura(SPELL_DARK_TOUCHED))
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_DARK_TOUCHED);
+                pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
+            }
+            else
+                pTarget->CastSpell(pTarget, SPELL_FLAME_TOUCHED, true);
+        }
+        else if (pSpell->SchoolMask == SPELL_SCHOOL_MASK_SHADOW)
+        {
+            if (pTarget->HasAura(SPELL_FLAME_TOUCHED))
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_FLAME_TOUCHED);
+                pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
+            }
+            else
+                pTarget->CastSpell(pTarget, SPELL_DARK_TOUCHED, true);
+        }
+    }
+
     // Return a random target which it's not in range of 10 yards of boss
     Unit* GetRandomTargetAtDist(float fDist)
     {
@@ -395,16 +435,6 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
         else
             m_uiEnrageTimer -= uiDiff;
-
-        /* // Spell needs research of fix; it shoudn't be cast on self
-        if (m_uiDarkTouchedTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_DARK_TOUCHED) == CAST_OK)
-                m_uiDarkTouchedTimer = urand(10000, 13000);
-        }
-        else
-            m_uiDarkTouchedTimer -= uiDiff;
-        */
 
         if (m_uiShadowBladesTimer < uiDiff)
         {
