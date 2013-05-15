@@ -228,17 +228,13 @@ void instance_magtheridons_lair::Update(uint32 uiDiff)
             m_uiCageBreakTimer -= uiDiff;
     }
 
-    // no yell if event is in progress
-    if (GetData(TYPE_CHANNELER_EVENT) == IN_PROGRESS)
+    // no yell if event is in progress or finished
+    if (m_auiEncounter[TYPE_CHANNELER_EVENT] == IN_PROGRESS || m_auiEncounter[TYPE_MAGTHERIDON_EVENT] == DONE)
         return;
 
     if (m_uiRandYellTimer < uiDiff)
     {
-        if (Creature* pMagtheridon = GetSingleCreatureFromStorage(NPC_MAGTHERIDON))
-        {
-            if (pMagtheridon->isAlive())
-                DoScriptText(aRandomTaunt[urand(0, 5)], pMagtheridon);
-        }
+        DoOrSimulateScriptTextForThisInstance(aRandomTaunt[urand(0, 5)], NPC_MAGTHERIDON);
         m_uiRandYellTimer = 90000;
     }
     else
