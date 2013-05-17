@@ -415,6 +415,9 @@ UPDATE creature_template SET ScriptName='npc_time_rift' WHERE entry=17838;
 /*  */
 
 /* THE SLAVE PENS */
+UPDATE creature_template SET ScriptName='boss_ahune' WHERE entry=25740;
+UPDATE creature_template SET ScriptName='npc_frozen_core' WHERE entry=25865;
+UPDATE creature_template SET ScriptName='npc_ice_spear_bunny' WHERE entry=25985;
 
 /* THE UNDERBOG */
 UPDATE creature_template SET ScriptName='mob_underbog_mushroom' WHERE entry=17990;
