@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho) override
     {
-        if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 60.0f))
+        if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 60.0f))
         {
             DoScriptText(SAY_INTRO, m_creature);
             m_bHasTaunted = true;
@@ -229,6 +229,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
+    // Function to handle the Feather Vortexes despawn on phase change
     void DoDespawnVortexes()
     {
         for (GuidList::const_iterator itr = m_lSummonsList.begin(); itr != m_lSummonsList.end(); ++itr)
@@ -277,7 +278,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
     {
         if (pSpell->Id == SPELL_SPIRIT_DRAIN)
         {
-            DoCastSpellIfCan(m_creature, aZuljinPhases[m_uiPhase].uiSpiritSpellId);
+            DoCastSpellIfCan(m_creature, aZuljinPhases[m_uiPhase].uiSpiritSpellId, CAST_INTERRUPT_PREVIOUS);
             DoScriptText(aZuljinPhases[m_uiPhase].iYellId, m_creature);
             DoScriptText(aZuljinPhases[m_uiPhase].iEmoteId, m_creature);
 
