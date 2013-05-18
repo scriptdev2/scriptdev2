@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 11020, 10458, 10480, 10481, 10514, 10588, 10781, 10804, 10854.
+SDComment: Quest support: 11020, 10458, 10480, 10481, 10514, 10540, 10588, 10781, 10804, 10854.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -1796,6 +1796,43 @@ bool EffectDummyCreature_npc_shadowmoon_tuber_node(Unit* pCaster, uint32 uiSpell
     return false;
 }
 
+/*######
+## npc_veneratus_spawn_node
+######*/
+
+enum
+{
+    SAY_VENERATUS_SPAWN         = -1000579,
+
+    NPC_VENERATUS               = 20427,
+    NPC_SPIRIT_HUNTER           = 21332,
+};
+
+struct MANGOS_DLL_DECL npc_veneratus_spawn_nodeAI : public Scripted_NoMovementAI
+{
+    npc_veneratus_spawn_nodeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset() override { }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        // Check for the spirit hunter in order to spawn Veneratus; this will replace missing spells 36614 (dummy periodic spell) and 36616 (summon spell)
+        if (pWho->GetEntry() == NPC_SPIRIT_HUNTER && m_creature->IsWithinDistInMap(pWho, 40.0f) && m_creature->IsWithinLOSInMap(pWho))
+        {
+            DoScriptText(SAY_VENERATUS_SPAWN, pWho);
+            DoSpawnCreature(NPC_VENERATUS, 0, 0, 0, 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
+            m_creature->ForcedDespawn();
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override { }
+};
+
+CreatureAI* GetAI_npc_veneratus_spawn_node(Creature* pCreature)
+{
+    return new npc_veneratus_spawn_nodeAI(pCreature);
+}
+
 void AddSC_shadowmoon_valley()
 {
     Script* pNewScript;
@@ -1864,5 +1901,10 @@ void AddSC_shadowmoon_valley()
     pNewScript = new Script;
     pNewScript->Name = "npc_shadowmoon_tuber_node";
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_shadowmoon_tuber_node;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_veneratus_spawn_node";
+    pNewScript->GetAI = &GetAI_npc_veneratus_spawn_node;
     pNewScript->RegisterSelf();
 }

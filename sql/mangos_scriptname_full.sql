@@ -1008,6 +1008,7 @@ UPDATE gameobject_template SET ScriptName='go_crystal_prison' WHERE entry=185126
 UPDATE creature_template SET ScriptName='npc_spawned_oronok_tornheart' WHERE entry=21685;
 UPDATE creature_template SET ScriptName='npc_domesticated_felboar' WHERE entry=21195;
 UPDATE creature_template SET ScriptName='npc_shadowmoon_tuber_node' WHERE entry=21347;
+UPDATE creature_template SET ScriptName='npc_veneratus_spawn_node' WHERE entry=21334;
 
 /* SHATTRATH */
 UPDATE creature_template SET ScriptName='npc_dirty_larry' WHERE entry=19720;
