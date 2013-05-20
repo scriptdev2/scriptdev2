@@ -355,9 +355,9 @@ UPDATE creature_template SET ScriptName='boss_victor_nefarius' WHERE entry=10162
 UPDATE creature_template SET ScriptName='boss_nefarian' WHERE entry=11583;
 
 /* BLADE'S EDGE MOUNTAINS */
-UPDATE creature_template SET ScriptName='mobs_bladespire_ogre' WHERE entry IN (19998,20334,21296,21975);
 UPDATE creature_template SET ScriptName='mobs_nether_drake' WHERE entry IN (20021,21817,21820,21821,21823);
 UPDATE creature_template SET ScriptName='npc_daranelle' WHERE entry=21469;
+UPDATE creature_template SET ScriptName='npc_bloodmaul_stout_trigger' WHERE entry=21241;
 
 /* BLASTED LANDS */
 UPDATE creature_template SET ScriptName='npc_fallen_hero_of_horde' WHERE entry=7572;

@@ -107,7 +107,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000153,'Contemptible wretch!',11338,1,0,0,'kazzak SAY_KILL2'),
 (-1000154,'The universe will be remade.',11339,1,0,0,'kazzak SAY_KILL3'),
 (-1000155,'The Legion... will never... fall.',11340,1,0,0,'kazzak SAY_DEATH'),
-(-1000156,'REUSE ME',0,0,0,0,'REUSE ME'),
+
+(-1000156,'Bloodmaul Brew? Me favorite!',0,0,0,0,'bladespire ogre SAY_BREW_1'),
+
 (-1000157,'Invaders, you dangle upon the precipice of oblivion! The Burning Legion comes and with it comes your end.',0,1,0,0,'kazzak SAY_RAND1'),
 (-1000158,'Impudent whelps, you only delay the inevitable. Where one has fallen, ten shall rise. Such is the will of Kazzak...',0,1,0,0,'kazzak SAY_RAND2'),
 
@@ -176,9 +178,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000205,'%s looks at you unexpectadly.',0,2,0,0,'cluck EMOTE_H_HELLO'),
 (-1000206,'%s starts pecking at the feed.',0,2,0,0,'cluck EMOTE_CLUCK_TEXT2'),
 
-(-1000207,'REUSE ME',0,0,0,0,'REUSE ME'),
-
-(-1000208,'REUSE ME',0,0,0,0,'REUSE ME'),
+(-1000207,'Mmm. Me thirsty!',0,0,0,0,'bladespire ogre SAY_BREW_2'),
+(-1000208,'Ohh, look! Bloodmaul Brew! Mmmm...',0,0,0,0,'bladespire ogre SAY_BREW_3'),
 
 (-1000209,'Very well. Let\'s see what you have to show me, $N.',0,0,1,0,'anvilward SAY_ANVIL1'),
 (-1000210,'What manner of trick is this, $R? If you seek to ambush me, I warn you I will not go down quietly!',0,0,1,0,'anvilward SAY_ANVIL2'),

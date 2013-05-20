@@ -17,42 +17,18 @@
 /* ScriptData
 SDName: Blades_Edge_Mountains
 SD%Complete: 90
-SDComment: Quest support: 10503, 10504, 10556, 10609. (npc_daranelle needs bit more work before consider complete)
+SDComment: Quest support: 10503, 10504, 10512, 10545, 10556, 10609. (npc_daranelle needs bit more work before consider complete)
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
 /* ContentData
-mobs_bladespire_ogre
 mobs_nether_drake
 npc_daranelle
+npc_bloodmaul_stout_trigger
 EndContentData */
 
 #include "precompiled.h"
-
-/*######
-## mobs_bladespire_ogre
-######*/
-
-// TODO: add support for quest 10512 + creature abilities
-struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
-{
-    mobs_bladespire_ogreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset() override { }
-
-    void UpdateAI(const uint32 /*uiDiff*/) override
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mobs_bladespire_ogre(Creature* pCreature)
-{
-    return new mobs_bladespire_ogreAI(pCreature);
-}
+#include "TemporarySummon.h"
 
 /*######
 ## mobs_nether_drake
@@ -275,17 +251,124 @@ CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
 }
 
 /*######
-## AddSC
+## npc_bloodmaul_stout_trigger
 ######*/
+
+enum
+{
+    SAY_BREW_1                  = -1000156,
+    SAY_BREW_2                  = -1000207,
+    SAY_BREW_3                  = -1000208,
+
+    SPELL_INTOXICATION          = 35240,
+    SPELL_INTOXICATION_VISUAL   = 35777,
+};
+
+static const uint32 aOgreEntries[] = {19995, 19998, 20334, 20723, 20726, 20730, 20731, 20732, 21296};
+
+struct MANGOS_DLL_DECL npc_bloodmaul_stout_triggerAI : public ScriptedAI
+{
+    npc_bloodmaul_stout_triggerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiStartTimer;
+    bool m_bHasValidOgre;
+
+    ObjectGuid m_selectedOgreGuid;
+
+    void Reset() override
+    {
+        m_uiStartTimer = 1000;
+        m_bHasValidOgre = false;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (m_bHasValidOgre && pWho->GetObjectGuid() == m_selectedOgreGuid && m_creature->IsWithinDistInMap(pWho, 3.5f))
+        {
+            // This part it's not 100% accurate - most of it is guesswork
+            // Some animations or spells may be missing
+            pWho->CastSpell(pWho, SPELL_INTOXICATION_VISUAL, true);
+            pWho->CastSpell(pWho, SPELL_INTOXICATION, true);
+
+            // Handle evade after some time with EAI
+            m_creature->AI()->SendAIEvent(AI_EVENT_CUSTOM_EVENTAI_A, m_creature, (Creature*)pWho);
+
+            // Give kill credit to the summoner player
+            if (m_creature->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                if (Player* pSummoner = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                    pSummoner->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
+            }
+
+            m_bHasValidOgre = false;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiStartTimer)
+        {
+            if (m_uiStartTimer <= uiDiff)
+            {
+                // get all the ogres in range
+                std::list<Creature*> lOgreList;
+                for (uint8 i = 0; i < countof(aOgreEntries); ++i)
+                    GetCreatureListWithEntryInGrid(lOgreList, m_creature,  aOgreEntries[i], 30.0f);
+
+                if (lOgreList.empty())
+                {
+                    m_uiStartTimer = 1000;
+                    return;
+                }
+
+                // sort by distance and get only the closest
+                lOgreList.sort(ObjectDistanceOrder(m_creature));
+
+                std::list<Creature*>::iterator ogreItr = lOgreList.begin();
+                Creature* pOgre = NULL;
+
+                do
+                {
+                    if ((*ogreItr)->isAlive() && !(*ogreItr)->HasAura(SPELL_INTOXICATION))
+                        pOgre = *ogreItr;
+
+                    ++ogreItr;
+                }
+                while (!pOgre && ogreItr != lOgreList.end());
+
+                // Move ogre to the point
+                float fX, fY, fZ;
+                pOgre->GetMotionMaster()->MoveIdle();
+                m_creature->GetContactPoint(pOgre, fX, fY, fZ);
+                pOgre->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+
+                switch (urand(0, 2))
+                {
+                    case 0: DoScriptText(SAY_BREW_1, pOgre); break;
+                    case 1: DoScriptText(SAY_BREW_2, pOgre); break;
+                    case 2: DoScriptText(SAY_BREW_3, pOgre); break;
+                }
+
+                m_selectedOgreGuid = pOgre->GetObjectGuid();
+                m_uiStartTimer = 0;
+                m_bHasValidOgre = true;
+            }
+            else
+                m_uiStartTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_bloodmaul_stout_trigger(Creature* pCreature)
+{
+    return new npc_bloodmaul_stout_triggerAI(pCreature);
+}
 
 void AddSC_blades_edge_mountains()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "mobs_bladespire_ogre";
-    pNewScript->GetAI = &GetAI_mobs_bladespire_ogre;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "mobs_nether_drake";
@@ -295,5 +378,10 @@ void AddSC_blades_edge_mountains()
     pNewScript = new Script;
     pNewScript->Name = "npc_daranelle";
     pNewScript->GetAI = &GetAI_npc_daranelle;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_bloodmaul_stout_trigger";
+    pNewScript->GetAI = &GetAI_npc_bloodmaul_stout_trigger;
     pNewScript->RegisterSelf();
 }
