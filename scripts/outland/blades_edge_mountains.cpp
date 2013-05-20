@@ -319,14 +319,14 @@ struct MANGOS_DLL_DECL npc_bloodmaul_stout_triggerAI : public ScriptedAI
 
                 if (lOgreList.empty())
                 {
-                    m_uiStartTimer = 1000;
+                    m_uiStartTimer = 5000;
                     return;
                 }
 
                 // sort by distance and get only the closest
                 lOgreList.sort(ObjectDistanceOrder(m_creature));
 
-                std::list<Creature*>::iterator ogreItr = lOgreList.begin();
+                std::list<Creature*>::const_iterator ogreItr = lOgreList.begin();
                 Creature* pOgre = NULL;
 
                 do
@@ -337,6 +337,12 @@ struct MANGOS_DLL_DECL npc_bloodmaul_stout_triggerAI : public ScriptedAI
                     ++ogreItr;
                 }
                 while (!pOgre && ogreItr != lOgreList.end());
+
+                if (!pOgre)
+                {
+                    m_uiStartTimer = 5000;
+                    return;
+                }
 
                 // Move ogre to the point
                 float fX, fY, fZ;
