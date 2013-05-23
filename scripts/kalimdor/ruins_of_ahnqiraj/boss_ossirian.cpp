@@ -57,8 +57,8 @@ enum
 
 static const float aSandVortexSpawnPos[2][4] =
 {
-    {-9523.482f, 1880.435f, 85.645f, 5.08f},
-    {-9321.39f,  1822.968f, 84.266f, 3.16f},
+    { -9523.482f, 1880.435f, 85.645f, 5.08f},
+    { -9321.39f,  1822.968f, 84.266f, 3.16f},
 };
 
 static const float aCrystalSpawnPos[3] = { -9355.75f, 1905.43f, 85.55f};

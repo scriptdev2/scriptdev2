@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             if (m_uiInciteChaosWaitTimer <= uiDiff)
             {
                 // Restart attack on all targets
-                for (GuidVector::const_iterator itr = m_vTargetsGuids.begin(); itr!= m_vTargetsGuids.end(); ++itr)
+                for (GuidVector::const_iterator itr = m_vTargetsGuids.begin(); itr != m_vTargetsGuids.end(); ++itr)
                 {
                     if (Unit* pTarget = m_creature->GetMap()->GetUnit(*itr))
                         AttackStart(pTarget);

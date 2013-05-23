@@ -162,7 +162,7 @@ bool AreaTrigger_at_pit_of_saron(Player* pPlayer, AreaTriggerEntry const* pAt)
     if (pAt->id == AREATRIGGER_ID_TUNNEL_START)
     {
         if (pInstance->GetData(TYPE_GARFROST) != DONE || pInstance->GetData(TYPE_KRICK) != DONE ||
-            pInstance->GetData(TYPE_AMBUSH) != NOT_STARTED)
+                pInstance->GetData(TYPE_AMBUSH) != NOT_STARTED)
             return false;
 
         pInstance->DoStartAmbushEvent();

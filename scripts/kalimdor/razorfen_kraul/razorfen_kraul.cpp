@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL npc_snufflenose_gopherAI : public ScriptedPetAI
             {
                 pNearestTubber = *itr;
                 break;
-             }
+            }
         }
 
         if (!pNearestTubber)

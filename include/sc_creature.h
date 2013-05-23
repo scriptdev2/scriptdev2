@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         void JustReachedHome() override {}
 
         // Called at any Heal received
-        void HealedBy(Unit * /*pHealer*/, uint32& /*uiHealedAmount*/) override {}
+        void HealedBy(Unit* /*pHealer*/, uint32& /*uiHealedAmount*/) override {}
 
         // Called at any Damage to any victim (before damage apply)
         void DamageDeal(Unit* /*pDoneTo*/, uint32& /*uiDamage*/) override {}

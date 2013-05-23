@@ -569,7 +569,7 @@ struct MANGOS_DLL_DECL npc_theryluneAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId) override
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 17:
                 if (Player* pPlayer = GetPlayerForEscort())

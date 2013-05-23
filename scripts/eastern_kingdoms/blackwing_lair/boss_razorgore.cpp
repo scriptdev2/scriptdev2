@@ -214,12 +214,12 @@ bool EffectDummyGameObj_go_black_dragon_egg(Unit* pCaster, uint32 uiSpellId, Spe
         {
             if (urand(0, 1))
             {
-                    switch (urand(0, 2))
-                    {
-                        case 0: DoScriptText(SAY_EGGS_BROKEN_1, pCaster); break;
-                        case 1: DoScriptText(SAY_EGGS_BROKEN_2, pCaster); break;
-                        case 2: DoScriptText(SAY_EGGS_BROKEN_3, pCaster); break;
-                    }
+                switch (urand(0, 2))
+                {
+                    case 0: DoScriptText(SAY_EGGS_BROKEN_1, pCaster); break;
+                    case 1: DoScriptText(SAY_EGGS_BROKEN_2, pCaster); break;
+                    case 2: DoScriptText(SAY_EGGS_BROKEN_3, pCaster); break;
+                }
             }
 
             // Store the eggs which are destroyed, in order to count them for the second phase

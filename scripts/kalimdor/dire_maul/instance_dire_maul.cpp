@@ -393,7 +393,7 @@ bool instance_dire_maul::CheckConditionCriteriaMeet(Player const* pPlayer, uint3
         case INSTANCE_CONDITION_ID_HARD_MODE_4:             // All guards alive
         {
             uint8 uiTributeRunAliveBosses = (GetData(TYPE_MOLDAR) != DONE ? 1 : 0) + (GetData(TYPE_FENGUS) != DONE ? 1 : 0) + (GetData(TYPE_SLIPKIK) != DONE ? 1 : 0)
-                + (GetData(TYPE_KROMCRUSH) != DONE ? 1 : 0);
+                                            + (GetData(TYPE_KROMCRUSH) != DONE ? 1 : 0);
 
             return uiInstanceConditionId == uiTributeRunAliveBosses;
         }

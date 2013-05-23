@@ -1098,7 +1098,7 @@ struct MANGOS_DLL_DECL npc_flame_tsunamiAI : public ScriptedAI
                 // Note: currently the way in which spell 60241 works is unk, so for the moment we'll use simple movement
                 m_creature->SetWalk(false);
                 m_creature->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX() < 3250.0f ? m_creature->GetPositionX() + 86.5f : m_creature->GetPositionX() - 86.5f,
-                    m_creature->GetPositionY(), m_creature->GetPositionZ());
+                        m_creature->GetPositionY(), m_creature->GetPositionZ());
 
                 m_uiTsunamiTimer = 0;
             }

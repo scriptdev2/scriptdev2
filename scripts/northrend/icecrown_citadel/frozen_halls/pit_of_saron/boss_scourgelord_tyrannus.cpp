@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_tyrannusAI : public ScriptedAI
 
 CreatureAI* GetAI_boss_tyrannus(Creature* pCreature)
 {
-    return new boss_tyrannusAI (pCreature);
+    return new boss_tyrannusAI(pCreature);
 }
 
 /*######
