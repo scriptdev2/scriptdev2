@@ -3060,7 +3060,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1580103,'In time, the light and hope held within - will rebirth more than this mere fount of power... Mayhap, they will rebirth the soul of a nation.',12521,0,0,1,'velen SAY_OUTRO_9'),
 (-1580104,'Blessed ancestors! I feel it... so much love... so much grace... there are... no words... impossible to describe...',12526,0,0,1,'liadrin SAY_OUTRO_10'),
 (-1580105,'Salvation, young one. It waits for us all.',12522,0,0,1,'velen SAY_OUTRO_11'),
-(-1580106,'Farewell...!',12523,0,0,1,'velen SAY_OUTRO_12');
+(-1580106,'Farewell...!',12523,0,0,1,'velen SAY_OUTRO_12'),
+
+(-1580107,'%s takes a deep breath.',0,3,0,0,'felmyst EMOTE_DEEP_BREATH');
 
 -- -1 585 000 MAGISTER'S TERRACE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

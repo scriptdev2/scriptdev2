@@ -90,6 +90,7 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_KALECGOS_HUMAN:
         case NPC_SATHROVARR:
         case NPC_FLIGHT_TRIGGER_LEFT:
+        case NPC_FLIGHT_TRIGGER_RIGHT:
         case NPC_MADRIGOSA:
         case NPC_BRUTALLUS:
         case NPC_FELMYST:
@@ -107,6 +108,11 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_DECEIVER:
             m_lDeceiversGuidList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_WORLD_TRIGGER:
+            // sort triggers for flightpath
+            if (pCreature->GetPositionZ() < 51.0f)
+                m_lAllFlightTriggersList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -216,6 +222,8 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
                 // Temporary - until spell 46650 is properly fixed
                 DoUseDoorOrButton(GO_FIRE_BARRIER);
             }
+            else if (uiData == IN_PROGRESS)
+                DoSortFlightTriggers();
             break;
         case TYPE_EREDAR_TWINS:
             m_auiEncounter[uiType] = uiData;
@@ -323,16 +331,13 @@ void instance_sunwell_plateau::Update(uint32 uiDiff)
     {
         if (m_uiKiljaedenYellTimer < uiDiff)
         {
-            if (Creature* pKiljaeden = GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
+            switch (urand(0, 4))
             {
-                switch (urand(0, 4))
-                {
-                    case 0: DoScriptText(SAY_ORDER_1, pKiljaeden); break;
-                    case 1: DoScriptText(SAY_ORDER_2, pKiljaeden); break;
-                    case 2: DoScriptText(SAY_ORDER_3, pKiljaeden); break;
-                    case 3: DoScriptText(SAY_ORDER_4, pKiljaeden); break;
-                    case 4: DoScriptText(SAY_ORDER_5, pKiljaeden); break;
-                }
+                case 0: DoOrSimulateScriptTextForThisInstance(SAY_ORDER_1, NPC_KILJAEDEN_CONTROLLER); break;
+                case 1: DoOrSimulateScriptTextForThisInstance(SAY_ORDER_2, NPC_KILJAEDEN_CONTROLLER); break;
+                case 2: DoOrSimulateScriptTextForThisInstance(SAY_ORDER_3, NPC_KILJAEDEN_CONTROLLER); break;
+                case 3: DoOrSimulateScriptTextForThisInstance(SAY_ORDER_4, NPC_KILJAEDEN_CONTROLLER); break;
+                case 4: DoOrSimulateScriptTextForThisInstance(SAY_ORDER_5, NPC_KILJAEDEN_CONTROLLER); break;
             }
             m_uiKiljaedenYellTimer = 90000;
         }
@@ -364,6 +369,51 @@ void instance_sunwell_plateau::Load(const char* in)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+static bool sortByPositionX(Creature* pFirst, Creature* pSecond)
+{
+    return pFirst && pSecond && pFirst->GetPositionX() > pSecond->GetPositionX();
+}
+
+void instance_sunwell_plateau::DoSortFlightTriggers()
+{
+    if (m_lAllFlightTriggersList.empty())
+    {
+        script_error_log("Instance Sunwell Plateau: ERROR Failed to load flight triggers for creature id %u.", NPC_FELMYST);
+        return;
+    }
+
+    std::list<Creature*> lTriggers;                         // Valid pointers, only used locally
+    for (GuidList::const_iterator itr = m_lAllFlightTriggersList.begin(); itr != m_lAllFlightTriggersList.end(); ++itr)
+    {
+        if (Creature* pTrigger = instance->GetCreature(*itr))
+            lTriggers.push_back(pTrigger);
+    }
+
+    if (lTriggers.empty())
+        return;
+
+    // sort the flight triggers; first by position X, then group them by Y (left and right)
+    lTriggers.sort(sortByPositionX);
+    for (std::list<Creature*>::iterator itr = lTriggers.begin(); itr != lTriggers.end(); ++itr)
+    {
+        if ((*itr)->GetPositionY() < 600.0f)
+            m_vRightFlightTriggersVect.push_back((*itr)->GetObjectGuid());
+        else
+            m_vLeftFlightTriggersVect.push_back((*itr)->GetObjectGuid());
+    }
+}
+
+ObjectGuid instance_sunwell_plateau::SelectFelmystFlightTrigger(bool bLeftSide, uint8 uiIndex)
+{
+    // Return the flight trigger from the selected index
+    GuidVector& vTemp = bLeftSide ? m_vLeftFlightTriggersVect : m_vRightFlightTriggersVect;
+
+    if (uiIndex >= vTemp.size())
+        return ObjectGuid();
+
+    return vTemp[uiIndex];
+}
+
 void instance_sunwell_plateau::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
@@ -375,7 +425,7 @@ void instance_sunwell_plateau::JustDidDialogueStep(int32 iEntry)
                 {
                     pKalec->SetWalk(false);
                     pKalec->SetLevitate(true);
-                    pKalec->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2]);
+                    pKalec->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2], false);
                 }
             }
             break;

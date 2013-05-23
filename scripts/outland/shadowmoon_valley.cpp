@@ -33,6 +33,7 @@ event_spell_soul_captured_credit
 go_crystal_prison
 npc_spawned_oronok_tornheart
 npc_domesticated_felboar
+npc_veneratus_spawn_node
 EndContentData */
 
 #include "precompiled.h"

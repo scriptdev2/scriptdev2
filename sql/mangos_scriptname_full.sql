@@ -1100,6 +1100,7 @@ UPDATE creature_template SET ScriptName='spell_dummy_npc_brutallus_cloud' WHERE 
 UPDATE creature_template SET ScriptName='boss_felmyst' WHERE entry=25038;
 UPDATE creature_template SET ScriptName='npc_shield_orb' WHERE entry=25502;
 UPDATE creature_template SET ScriptName='npc_power_blue_flight' WHERE entry=25653;
+UPDATE creature_template SET ScriptName='npc_demonic_vapor' WHERE entry=25265;
 
 /* SWAMP OF SORROWS */
 UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;
