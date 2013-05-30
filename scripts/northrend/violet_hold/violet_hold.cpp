@@ -49,7 +49,7 @@ bool GOUse_go_activation_crystal(Player* pPlayer, GameObject* pGo)
 ## npc_door_seal
 ######*/
 
-bool EffectDummyCreature_npc_door_seal(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_door_seal(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_DESTROY_DOOR_SEAL && uiEffIndex == EFFECT_INDEX_0)
@@ -583,7 +583,7 @@ CreatureAI* GetAI_npc_teleportation_portal(Creature* pCreature)
     return new npc_teleportation_portalAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_teleportation_portal(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_teleportation_portal(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_PORTAL_PERIODIC && uiEffIndex == EFFECT_INDEX_0)

@@ -512,7 +512,7 @@ CreatureAI* GetAI_npc_anubarak_trial_spike(Creature* pCreature)
     return new npc_anubarak_trial_spikeAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_dummy_permafrost(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_dummy_permafrost(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_PERMAFROST_DUMMY && uiEffIndex == EFFECT_INDEX_0)

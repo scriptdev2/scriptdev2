@@ -209,7 +209,7 @@ CreatureAI* GetAI_npc_oil_stained_wolf(Creature* pCreature)
     return new npc_oil_stained_wolfAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_oil_stained_wolf(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_oil_stained_wolf(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiSpellId == SPELL_THROW_WOLF_BAIT)
     {

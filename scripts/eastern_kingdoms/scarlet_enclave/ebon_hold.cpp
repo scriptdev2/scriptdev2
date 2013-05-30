@@ -1259,7 +1259,7 @@ struct MANGOS_DLL_DECL npc_scarlet_ghoulAI : public ScriptedPetAI
     }
 };
 
-bool EffectDummyCreature_npc_scarlet_ghoul(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_scarlet_ghoul(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiSpellId == SPELL_GOTHIK_GHOUL_PING && uiEffIndex == EFFECT_INDEX_0)
     {
@@ -2890,7 +2890,7 @@ CreatureAI* GetAI_npc_acherus_deathcharger(Creature* pCreature)
     return new npc_acherus_deathchargerAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_acherus_deathcharger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_acherus_deathcharger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_HORSEMAN_SLAIN && uiEffIndex == EFFECT_INDEX_0)

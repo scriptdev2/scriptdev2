@@ -87,7 +87,7 @@ CreatureAI* GetAI_npc_ymirjar_deathbringer(Creature* pCreature)
     return new npc_ymirjar_deathbringerAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_summon_undead(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_summon_undead(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_SUMMON_UNDEAD && uiEffIndex == EFFECT_INDEX_0)

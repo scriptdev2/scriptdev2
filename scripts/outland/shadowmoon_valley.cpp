@@ -413,7 +413,7 @@ CreatureAI* GetAI_npc_dragonmaw_peon(Creature* pCreature)
     return new npc_dragonmaw_peonAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_dragonmaw_peon(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_dragonmaw_peon(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiEffIndex != EFFECT_INDEX_1 || uiSpellId != SPELL_SERVING_MUTTON || pCaster->GetTypeId() != TYPEID_PLAYER)
         return false;
@@ -1230,7 +1230,7 @@ CreatureAI* GetAI_npc_totem_of_spirits(Creature* pCreature)
     return new npc_totem_of_spiritsAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_totem_of_spirits(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_totem_of_spirits(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiEffIndex != EFFECT_INDEX_0)
         return false;
@@ -1773,7 +1773,7 @@ CreatureAI* GetAI_npc_domesticated_felboar(Creature* pCreature)
     return new npc_domesticated_felboarAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_shadowmoon_tuber_node(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_shadowmoon_tuber_node(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_TUBER_WHISTLE && uiEffIndex == EFFECT_INDEX_0)

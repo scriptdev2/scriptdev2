@@ -628,7 +628,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public boss_thekalBaseAI
     }
 };
 
-bool EffectDummyCreature_thekal_resurrection(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_thekal_resurrection(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_RESURRECT && uiEffIndex == EFFECT_INDEX_0)

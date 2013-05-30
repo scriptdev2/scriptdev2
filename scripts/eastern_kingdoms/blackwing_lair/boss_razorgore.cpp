@@ -203,7 +203,7 @@ CreatureAI* GetAI_boss_razorgore(Creature* pCreature)
     return new boss_razorgoreAI(pCreature);
 }
 
-bool EffectDummyGameObj_go_black_dragon_egg(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, GameObject* pGOTarget)
+bool EffectDummyGameObj_go_black_dragon_egg(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, GameObject* pGOTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiSpellId == SPELL_DESTROY_EGG && uiEffIndex == EFFECT_INDEX_1)
     {

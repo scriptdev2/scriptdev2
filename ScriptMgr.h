@@ -91,10 +91,10 @@ struct Script
     bool (*pItemUse)(Player*, Item*, SpellCastTargets const&);
     bool (*pAreaTrigger)(Player*, AreaTriggerEntry const*);
     bool (*pProcessEventId)(uint32, Object*, Object*, bool);
-    bool (*pEffectDummyNPC)(Unit*, uint32, SpellEffectIndex, Creature*);
-    bool (*pEffectDummyGO)(Unit*, uint32, SpellEffectIndex, GameObject*);
-    bool (*pEffectDummyItem)(Unit*, uint32, SpellEffectIndex, Item*);
-    bool (*pEffectScriptEffectNPC)(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectDummyNPC)(Unit*, uint32, SpellEffectIndex, Creature*, ObjectGuid);
+    bool (*pEffectDummyGO)(Unit*, uint32, SpellEffectIndex, GameObject*, ObjectGuid);
+    bool (*pEffectDummyItem)(Unit*, uint32, SpellEffectIndex, Item*, ObjectGuid);
+    bool (*pEffectScriptEffectNPC)(Unit*, uint32, SpellEffectIndex, Creature*, ObjectGuid);
     bool (*pEffectAuraDummy)(const Aura*, bool);
 
     CreatureAI* (*GetAI)(Creature*);

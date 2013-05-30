@@ -320,7 +320,7 @@ CreatureAI* GetAI_boss_attumen(Creature* pCreature)
     return new boss_attumenAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_mount_attumen(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_mount_attumen(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_MOUNT && uiEffIndex == EFFECT_INDEX_0)

@@ -222,7 +222,7 @@ bool GOUse_go_eternal_flame(Player* /*pPlayer*/, GameObject* pGo)
 /*######
 ## effectDummy_summon_hakkar
 ######*/
-bool EffectDummyCreature_summon_hakkar(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* /*pCreatureTarget*/)
+bool EffectDummyCreature_summon_hakkar(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* /*pCreatureTarget*/, ObjectGuid /*originalCasterGuid*/)
 {
     // Always check spellid and effectindex
     if (uiSpellId == SPELL_SUMMON_AVATAR && uiEffIndex == EFFECT_INDEX_0)

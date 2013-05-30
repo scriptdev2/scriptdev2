@@ -207,7 +207,7 @@ CreatureAI* GetAI_boss_ormorok(Creature* pCreature)
     return new boss_ormorokAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_crystal_spike_trigger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_crystal_spike_trigger(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_CRYSTAL_SPIKE_AURA && uiEffIndex == EFFECT_INDEX_0)

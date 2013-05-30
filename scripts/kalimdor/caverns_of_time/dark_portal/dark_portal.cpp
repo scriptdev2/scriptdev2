@@ -90,7 +90,7 @@ CreatureAI* GetAI_npc_medivh_black_morass(Creature* pCreature)
     return new npc_medivh_black_morassAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_medivh_black_morass(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_medivh_black_morass(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if ((uiSpellId == SPELL_CORRUPT && uiEffIndex == EFFECT_INDEX_0) || (uiSpellId == SPELL_CORRUPT_AEONUS && uiEffIndex == EFFECT_INDEX_0))
@@ -333,7 +333,7 @@ CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
     return new npc_time_riftAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_time_rift_channel(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_time_rift_channel(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_RIFT_PERIODIC && uiEffIndex == EFFECT_INDEX_0)

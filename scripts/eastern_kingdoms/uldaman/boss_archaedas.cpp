@@ -185,7 +185,7 @@ CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
     return new boss_archaedasAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_vault_warder(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_vault_warder(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_AWAKEN_VAULT_WARDER && uiEffIndex == EFFECT_INDEX_0)

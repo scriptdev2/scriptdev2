@@ -436,7 +436,7 @@ CreatureAI* GetAI_npc_grimstone(Creature* pCreature)
     return new npc_grimstoneAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_banner_of_provocation(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_banner_of_provocation(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     if (uiSpellId == SPELL_SUMMON_THELRIN_DND && uiEffIndex != EFFECT_INDEX_0)
     {

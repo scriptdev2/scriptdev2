@@ -375,7 +375,7 @@ CreatureAI* GetAI_npc_ice_spear_bunny(Creature* pCreature)
     return new npc_ice_spear_bunnyAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_ice_spear_bunny(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_ice_spear_bunny(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_ICE_SPEAR_DELAY && uiEffIndex == EFFECT_INDEX_0)

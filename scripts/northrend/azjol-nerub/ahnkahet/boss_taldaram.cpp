@@ -292,7 +292,7 @@ CreatureAI* GetAI_boss_taldaram(Creature* pCreature)
     return new boss_taldaramAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_conjure_flame_orbs(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_conjure_flame_orbs(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_CONJURE_FLAME_SPHERE && uiEffIndex == EFFECT_INDEX_0)

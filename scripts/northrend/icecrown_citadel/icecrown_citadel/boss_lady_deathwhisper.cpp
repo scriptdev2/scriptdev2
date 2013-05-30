@@ -469,7 +469,7 @@ CreatureAI* GetAI_boss_lady_deathwhisper(Creature* pCreature)
     return new boss_lady_deathwhisperAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_mana_barrier(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_mana_barrier(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_MANA_BARRIER && uiEffIndex == EFFECT_INDEX_0)

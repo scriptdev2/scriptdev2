@@ -293,7 +293,7 @@ CreatureAI* GetAI_boss_ionar(Creature* pCreature)
     return new boss_ionarAI(pCreature);
 }
 
-bool EffectDummyCreature_boss_ionar(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_boss_ionar(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_DISPERSE && uiEffIndex == EFFECT_INDEX_0)

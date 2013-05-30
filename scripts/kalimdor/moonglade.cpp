@@ -142,7 +142,7 @@ CreatureAI* GetAI_npc_clintar_dw_spirit(Creature* pCreature)
 }
 
 // we expect this spell to be triggered from spell casted at questAccept
-bool EffectDummyCreature_npc_clintar_dw_spirit(Unit* pCaster, uint32 spellId, SpellEffectIndex effIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_clintar_dw_spirit(Unit* pCaster, uint32 spellId, SpellEffectIndex effIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (spellId == SPELL_EMERALD_DREAM && effIndex == EFFECT_INDEX_0)
@@ -601,7 +601,7 @@ bool QuestAccept_npc_keeper_remulos(Player* pPlayer, Creature* pCreature, const 
     return false;
 }
 
-bool EffectDummyCreature_conjure_rift(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* /*pCreatureTarget*/)
+bool EffectDummyCreature_conjure_rift(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* /*pCreatureTarget*/, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_CONJURE_RIFT && uiEffIndex == EFFECT_INDEX_0)

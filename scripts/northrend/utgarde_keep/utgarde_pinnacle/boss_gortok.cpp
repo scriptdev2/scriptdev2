@@ -137,7 +137,7 @@ CreatureAI* GetAI_boss_gortok(Creature* pCreature)
     return new boss_gortokAI(pCreature);
 }
 
-bool EffectDummyCreature_spell_awaken_gortok(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_spell_awaken_gortok(Unit* /*pCaster*/, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
 {
     // always check spellid and effectindex
     if (uiSpellId == SPELL_AWAKEN_GORTOK && uiEffIndex == EFFECT_INDEX_0)
