@@ -358,6 +358,7 @@ UPDATE creature_template SET ScriptName='boss_nefarian' WHERE entry=11583;
 UPDATE creature_template SET ScriptName='mobs_nether_drake' WHERE entry IN (20021,21817,21820,21821,21823);
 UPDATE creature_template SET ScriptName='npc_daranelle' WHERE entry=21469;
 UPDATE creature_template SET ScriptName='npc_bloodmaul_stout_trigger' WHERE entry=21241;
+UPDATE creature_template SET ScriptName='npc_simon_game_bunny' WHERE entry=22923;
 
 /* BLASTED LANDS */
 UPDATE creature_template SET ScriptName='npc_fallen_hero_of_horde' WHERE entry=7572;

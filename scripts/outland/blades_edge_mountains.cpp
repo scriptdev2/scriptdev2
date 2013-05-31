@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Blades_Edge_Mountains
 SD%Complete: 90
-SDComment: Quest support: 10503, 10504, 10512, 10545, 10556, 10609. (npc_daranelle needs bit more work before consider complete)
+SDComment: Quest support: 10503, 10504, 10512, 10545, 10556, 10609, 11058, 11080. (npc_daranelle needs bit more work before consider complete)
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
@@ -25,6 +25,7 @@ EndScriptData */
 mobs_nether_drake
 npc_daranelle
 npc_bloodmaul_stout_trigger
+npc_simon_game_bunny
 EndContentData */
 
 #include "precompiled.h"
@@ -372,6 +373,427 @@ CreatureAI* GetAI_npc_bloodmaul_stout_trigger(Creature* pCreature)
     return new npc_bloodmaul_stout_triggerAI(pCreature);
 }
 
+/*######
+## npc_simon_game_bunny
+######*/
+
+enum
+{
+    // sounds
+    SOUND_ID_BLUE                   = 11588,
+    SOUND_ID_GREEN                  = 11589,
+    SOUND_ID_RED                    = 11590,
+    SOUND_ID_YELLOW                 = 11591,
+    SOUND_ID_DISABLE_NODE           = 11758,
+
+    // generic spells
+    SPELL_SIMON_GAME_START          = 39993,        // aura used to prepare the AI game
+    SPELL_PRE_EVENT_TIMER           = 40041,        // aura used to handle the color sequence
+
+    // stage prepare spells (summons the colored auras)
+    SPELL_PRE_GAME_BLUE_AURA        = 40176,
+    SPELL_PRE_GAME_GREEN_AURA       = 40177,
+    SPELL_PRE_GAME_RED_AURA         = 40178,
+    SPELL_PRE_GAME_YELLOW_AURA      = 40179,
+
+    // stage prepare spells large
+    SPELL_PRE_GAME_YELLOW_LARGE     = 41110,
+    SPELL_PRE_GAME_RED_LARGE        = 41111,
+    SPELL_PRE_GAME_GREEN_LARGE      = 41112,
+    SPELL_PRE_GAME_BLUE_LARGE       = 41113,
+
+    // visual spells which define which buttons are pressed
+    SPELL_BUTTON_PUSH_BLUE          = 40244,
+    SPELL_BUTTON_PUSH_GREEN         = 40245,
+    SPELL_BUTTON_PUSH_RED           = 40246,
+    SPELL_BUTTON_PUSH_YELLOW        = 40247,
+
+    // allow the clusters to be used and despawns the visual auras
+    SPELL_GAME_START_RED            = 40169,
+    SPELL_GAME_START_BLUE           = 40170,
+    SPELL_GAME_START_GREEN          = 40171,
+    SPELL_GAME_START_YELLOW         = 40172,
+
+    // locks the clusters after a stage is completed
+    SPELL_GAME_END_BLUE             = 40283,
+    SPELL_GAME_END_GREEN            = 40284,
+    SPELL_GAME_END_RED              = 40285,
+    SPELL_GAME_END_YELLOW           = 40286,
+
+    // other spells
+    // SPELL_SWITCHED_ON_OFF        = 40512,            // decharger lock (not used)
+    // SPELL_SWITCHED_ON_OFF_2      = 40499,            // decharger unlock (not used)
+    SPELL_SWITCHED_ON               = 40494,            // apexis lock spell
+    SPELL_SWITCHED_OFF              = 40495,            // apexis unlock spell
+
+    // misc visual spells
+    SPELL_VISUAL_LEVEL_START        = 40436,            // on Player game begin
+    SPELL_VISUAL_GAME_FAILED        = 40437,            // on Player game fail
+    SPELL_VISUAL_GAME_START         = 40387,            // on AI game begin
+    SPELL_VISUAL_GAME_TICK          = 40391,            // game tick (sound)
+    SPELL_VISUAL_GAME_TICK_LARGE    = 42019,            // game tick large (sound)
+
+    // spells used by the player on GO press
+    SPELL_INTROSPECTION_GREEN       = 40055,
+    SPELL_INTROSPECTION_BLUE        = 40165,
+    SPELL_INTROSPECTION_RED         = 40166,
+    SPELL_INTROSPECTION_YELLOW      = 40167,
+
+    // button press results
+    SPELL_SIMON_BUTTON_PRESSED      = 39999,
+    SPELL_GOOD_PRESS                = 40063,
+    SPELL_BAD_PRESS                 = 41241,            // single player punishment
+    SPELL_SIMON_GROUP_REWARD        = 41952,            // group punishment
+
+    // quest rewards
+    SPELL_APEXIS_VIBRATIONS         = 40310,            // quest complete spell
+    SPELL_APEXIS_EMANATIONS         = 40311,            // quest complete spell
+    SPELL_APEXIS_ENLIGHTENMENT      = 40312,            // quest complete spell
+
+    // other
+    NPC_SIMON_GAME_BUNNY            = 22923,
+
+    GO_APEXIS_RELIC                 = 185890,
+    GO_APEXIS_MONUMENT              = 185944,
+
+    QUEST_AN_APEXIS_RELIC           = 11058,
+    QUEST_RELICS_EMANATION          = 11080,
+
+    // colors
+    COLOR_IDX_BLUE                  = 0,
+    COLOR_IDX_GREEN                 = 1,
+    COLOR_IDX_RED                   = 2,
+    COLOR_IDX_YELLOW                = 3,
+
+    // phases
+    PHASE_LEVEL_PREPARE             = 1,
+    PHASE_AI_GAME                   = 2,
+    PHASE_PLAYER_PREPARE            = 3,
+    PHASE_PLAYER_GAME               = 4,
+    PHASE_LEVEL_FINISHED            = 5,
+
+    MAX_SIMON_LEVELS                = 8,                // counts the max levels of the game
+    MAX_SIMON_FAIL_TIMER            = 5,                // counts the delay in which the player is allowed to click
+};
+
+struct SimonGame
+{
+    uint8 m_uiColor;
+    uint32 m_uiVisual, m_uiIntrospection, m_uiSoundId;
+};
+
+static const SimonGame aApexisGameData[4] =
+{
+    {COLOR_IDX_BLUE,    SPELL_BUTTON_PUSH_BLUE,     SPELL_INTROSPECTION_BLUE,   SOUND_ID_BLUE},
+    {COLOR_IDX_GREEN,   SPELL_BUTTON_PUSH_GREEN,    SPELL_INTROSPECTION_GREEN,  SOUND_ID_GREEN},
+    {COLOR_IDX_RED,     SPELL_BUTTON_PUSH_RED,      SPELL_INTROSPECTION_RED,    SOUND_ID_RED},
+    {COLOR_IDX_YELLOW,  SPELL_BUTTON_PUSH_YELLOW,   SPELL_INTROSPECTION_YELLOW, SOUND_ID_YELLOW}
+};
+
+struct MANGOS_DLL_DECL npc_simon_game_bunnyAI : public ScriptedAI
+{
+    npc_simon_game_bunnyAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint8 m_uiGamePhase;
+
+    uint32 m_uiLevelCount;
+    uint32 m_uiLevelStage;
+    uint32 m_uiPlayerStage;
+
+    std::vector<uint8> m_vColors;
+    bool m_bIsLargeEvent;
+    bool m_bIsEventStarted;
+
+    ObjectGuid m_masterPlayerGuid;
+
+    void Reset() override
+    {
+        m_uiGamePhase  = PHASE_LEVEL_PREPARE;
+        m_bIsEventStarted = false;
+
+        m_uiLevelCount = 0;
+        m_uiLevelStage = 0;
+        m_uiPlayerStage = 0;
+    }
+
+    void GetAIInformation(ChatHandler& reader) override
+    {
+        reader.PSendSysMessage("Simon Game Bunny, current game phase = %u, current level = %u", m_uiGamePhase, m_uiLevelCount);
+    }
+
+    // Prepare levels
+    void DoPrepareLevel()
+    {
+        // this visual is cast only after the first level
+        if (m_uiLevelCount)
+            DoCastSpellIfCan(m_creature, SPELL_VISUAL_GAME_START, CAST_TRIGGERED);
+        // this part is done only on the first tick
+        else
+        {
+            // lock apexis
+            DoCastSpellIfCan(m_creature, SPELL_SWITCHED_ON, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_PRE_EVENT_TIMER, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+
+            // Get original summoner
+            if (m_creature->IsTemporarySummon())
+                m_masterPlayerGuid = ((TemporarySummon*)m_creature)->GetSummonerGuid();
+
+            // Get closest apexis
+            if (GameObject* pGo = GetClosestGameObjectWithEntry(m_creature, GO_APEXIS_RELIC, 5.0f))
+                m_bIsLargeEvent = false;
+            else if (GameObject* pGo = GetClosestGameObjectWithEntry(m_creature, GO_APEXIS_MONUMENT, 17.0f))
+                m_bIsLargeEvent = true;
+        }
+
+        // prepare the buttons and summon the visual auras
+        DoCastSpellIfCan(m_creature, m_bIsLargeEvent ? SPELL_PRE_GAME_BLUE_LARGE : SPELL_PRE_GAME_BLUE_AURA, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, m_bIsLargeEvent ? SPELL_PRE_GAME_GREEN_LARGE : SPELL_PRE_GAME_GREEN_AURA, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, m_bIsLargeEvent ? SPELL_PRE_GAME_RED_LARGE : SPELL_PRE_GAME_RED_AURA, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, m_bIsLargeEvent ? SPELL_PRE_GAME_YELLOW_LARGE : SPELL_PRE_GAME_YELLOW_AURA, CAST_TRIGGERED);
+
+        m_vColors.clear();
+        ++m_uiLevelCount;
+    }
+
+    // Setup the color sequence
+    void DoSetupLevel()
+    {
+        uint8 uiIndex = urand(COLOR_IDX_BLUE, COLOR_IDX_YELLOW);
+        m_vColors.push_back(uiIndex);
+
+        DoCastSpellIfCan(m_creature, aApexisGameData[uiIndex].m_uiVisual);
+        DoPlaySoundToSet(m_creature, aApexisGameData[uiIndex].m_uiSoundId);
+    }
+
+    // Setup the player level - called at the beginning at each player level
+    void DoSetupPlayerLevel()
+    {
+        // allow the buttons to be used and despawn the visual auras
+        DoCastSpellIfCan(m_creature, SPELL_GAME_START_RED, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_START_BLUE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_START_GREEN, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_START_YELLOW, CAST_TRIGGERED);
+    }
+
+    // Complete level - called when one level is completed succesfully
+    void DoCompleteLevel()
+    {
+        // lock the buttons
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_RED, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_BLUE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_GREEN, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_YELLOW, CAST_TRIGGERED);
+
+        // Complete game if all the levels
+        if (m_uiLevelCount == MAX_SIMON_LEVELS)
+            DoCompleteGame();
+    }
+
+    // Complete event - called when the game has been completed succesfully
+    void DoCompleteGame()
+    {
+        // ToDo: not sure if the quest reward spells are implemented right. They all give the same buff but with a different duration
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_masterPlayerGuid))
+        {
+            if (Group* pGroup = pPlayer->GetGroup())
+            {
+                for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
+                {
+                    if (Player* pMember = pRef->getSource())
+                    {
+                        // distance check - they need to be close to the Apexis
+                        if (!pMember->IsWithinDistInMap(m_creature, 20.0f))
+                            continue;
+
+                        // on group event cast Enlightment on daily quest and Emanations on normal quest
+                        if (pMember->GetQuestStatus(QUEST_AN_APEXIS_RELIC) == QUEST_STATUS_INCOMPLETE)
+                            DoCastSpellIfCan(pMember, SPELL_APEXIS_EMANATIONS, CAST_TRIGGERED);
+                        else if (pMember->GetQuestStatus(QUEST_RELICS_EMANATION) == QUEST_STATUS_INCOMPLETE)
+                            DoCastSpellIfCan(pMember, SPELL_APEXIS_ENLIGHTENMENT, CAST_TRIGGERED);
+                    }
+                }
+            }
+            else
+            {
+                // solo event - cast Emanations on daily quest and vibrations on normal quest
+                if (pPlayer->GetQuestStatus(QUEST_AN_APEXIS_RELIC) == QUEST_STATUS_INCOMPLETE)
+                    DoCastSpellIfCan(pPlayer, SPELL_APEXIS_VIBRATIONS, CAST_TRIGGERED);
+                else if (pPlayer->GetQuestStatus(QUEST_RELICS_EMANATION) == QUEST_STATUS_INCOMPLETE)
+                    DoCastSpellIfCan(pPlayer, SPELL_APEXIS_EMANATIONS, CAST_TRIGGERED);
+            }
+        }
+
+        // cleanup event after quest is finished
+        DoCastSpellIfCan(m_creature, SPELL_SWITCHED_OFF, CAST_TRIGGERED);
+        DoPlaySoundToSet(m_creature, SOUND_ID_DISABLE_NODE);
+        m_creature->ForcedDespawn();
+    }
+
+    // Cleanup event - called when event fails
+    void DoCleanupGame()
+    {
+        // lock the buttons
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_RED, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_BLUE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_GREEN, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_GAME_END_YELLOW, CAST_TRIGGERED);
+
+        //  unlock apexis and despawn
+        DoCastSpellIfCan(m_creature, SPELL_SWITCHED_OFF, CAST_TRIGGERED);
+        DoPlaySoundToSet(m_creature, SOUND_ID_DISABLE_NODE);
+        m_creature->ForcedDespawn();
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        switch (m_uiGamePhase)
+        {
+            case PHASE_LEVEL_PREPARE:
+                // delay before each level - handled by big timer aura
+                if (eventType == AI_EVENT_CUSTOM_A)
+                    m_uiGamePhase = PHASE_AI_GAME;
+                break;
+            case PHASE_AI_GAME:
+                // AI game - handled by small timer aura
+                if (eventType == AI_EVENT_CUSTOM_B)
+                {
+                    // Move to next phase if the level is setup
+                    if (m_uiLevelStage == m_uiLevelCount)
+                    {
+                        m_uiGamePhase = PHASE_PLAYER_PREPARE;
+                        m_uiLevelStage = 0;
+                        return;
+                    }
+
+                    DoSetupLevel();
+                    ++m_uiLevelStage;
+                }
+                break;
+            case PHASE_PLAYER_PREPARE:
+                // Player prepare - handled by small timer aura
+                if (eventType == AI_EVENT_CUSTOM_B)
+                {
+                    DoCastSpellIfCan(m_creature, SPELL_VISUAL_LEVEL_START, CAST_TRIGGERED);
+                    DoSetupPlayerLevel();
+
+                    m_uiGamePhase = PHASE_PLAYER_GAME;
+                    m_uiPlayerStage = 0;
+                }
+                break;
+            case PHASE_PLAYER_GAME:
+                // Player game - listen to the player moves
+                if (eventType == AI_EVENT_CUSTOM_C)
+                {
+                    // good button pressed
+                    if (uiMiscValue == aApexisGameData[m_vColors[m_uiLevelStage]].m_uiIntrospection)
+                    {
+                        DoCastSpellIfCan(m_creature, SPELL_GOOD_PRESS, CAST_TRIGGERED);
+                        DoCastSpellIfCan(m_creature, aApexisGameData[m_vColors[m_uiLevelStage]].m_uiVisual, CAST_TRIGGERED);
+
+                        DoPlaySoundToSet(m_creature, aApexisGameData[m_vColors[m_uiLevelStage]].m_uiSoundId);
+
+                        // increase the level stage and reset the event counter
+                        ++m_uiLevelStage;
+                        m_uiPlayerStage = 0;
+
+                        // if all buttons were pressed succesfully, then move to next level
+                        if (m_uiLevelStage == m_vColors.size())
+                        {
+                            DoCompleteLevel();
+
+                            m_uiLevelStage = 0;
+                            m_uiGamePhase = PHASE_LEVEL_FINISHED;
+                        }
+                        // cast tick sound
+                        else
+                            DoCastSpellIfCan(pInvoker, m_bIsLargeEvent ? SPELL_VISUAL_GAME_TICK_LARGE : SPELL_VISUAL_GAME_TICK, CAST_TRIGGERED);
+                    }
+                    // bad button pressed
+                    else
+                    {
+                        DoCastSpellIfCan(pInvoker, m_bIsLargeEvent ? SPELL_SIMON_GROUP_REWARD : SPELL_BAD_PRESS, CAST_TRIGGERED);
+                        DoCastSpellIfCan(m_creature, SPELL_VISUAL_GAME_FAILED, CAST_TRIGGERED);
+                        DoCleanupGame();
+                    }
+                }
+                // AI ticks which handle the player timeout
+                else if (eventType == AI_EVENT_CUSTOM_B)
+                {
+                    // if it takes too much time, the event will fail
+                    if (m_uiPlayerStage == MAX_SIMON_FAIL_TIMER)
+                    {
+                        DoCastSpellIfCan(m_creature, SPELL_VISUAL_GAME_FAILED, CAST_TRIGGERED);
+                        DoCleanupGame();
+                    }
+
+                    // Not sure if this is right, but we need to keep the buttons unlocked on every tick
+                    DoSetupPlayerLevel();
+                    ++m_uiPlayerStage;
+                }
+                break;
+            case PHASE_LEVEL_FINISHED:
+                // small delay until the next level
+                if (eventType == AI_EVENT_CUSTOM_A)
+                {
+                    DoPrepareLevel();
+                    m_uiGamePhase = PHASE_LEVEL_PREPARE;
+                }
+                break;
+        }
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void UpdateAI(const uint32 /*uiDiff*/) override
+    {
+        // Start game on first update tick - don't wait for dummy auras
+        if (!m_bIsEventStarted)
+        {
+            DoPrepareLevel();
+            m_bIsEventStarted = true;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_simon_game_bunny(Creature* pCreature)
+{
+    return new npc_simon_game_bunnyAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_simon_game_bunny(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    if (pCreatureTarget->GetEntry() != NPC_SIMON_GAME_BUNNY)
+        return false;
+
+    if (uiSpellId == SPELL_SIMON_GAME_START && uiEffIndex == EFFECT_INDEX_0)
+    {
+        pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pCaster, pCreatureTarget);
+        return true;
+    }
+    else if (uiSpellId == SPELL_PRE_EVENT_TIMER && uiEffIndex == EFFECT_INDEX_0)
+    {
+        pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_B, pCaster, pCreatureTarget);
+        return true;
+    }
+
+    return false;
+}
+
+bool EffectScriptEffectCreature_npc_simon_game_bunny(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid originalCasterGuid)
+{
+    if ((uiSpellId == SPELL_INTROSPECTION_BLUE || uiSpellId == SPELL_INTROSPECTION_GREEN || uiSpellId == SPELL_INTROSPECTION_RED ||
+        uiSpellId == SPELL_INTROSPECTION_YELLOW) && uiEffIndex == EFFECT_INDEX_1)
+    {
+        if (pCreatureTarget->GetEntry() == NPC_SIMON_GAME_BUNNY && pCaster->GetTypeId() == TYPEID_PLAYER && originalCasterGuid.IsGameObject())
+            pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_C, pCaster, pCreatureTarget, uiSpellId);
+
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_blades_edge_mountains()
 {
     Script* pNewScript;
@@ -389,5 +811,12 @@ void AddSC_blades_edge_mountains()
     pNewScript = new Script;
     pNewScript->Name = "npc_bloodmaul_stout_trigger";
     pNewScript->GetAI = &GetAI_npc_bloodmaul_stout_trigger;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_simon_game_bunny";
+    pNewScript->GetAI = &GetAI_npc_simon_game_bunny;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_simon_game_bunny;
+    pNewScript->pEffectScriptEffectNPC = &EffectScriptEffectCreature_npc_simon_game_bunny;
     pNewScript->RegisterSelf();
 }
