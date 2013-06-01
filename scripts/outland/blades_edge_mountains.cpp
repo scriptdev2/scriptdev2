@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL npc_simon_game_bunnyAI : public ScriptedAI
         uint8 uiIndex = urand(COLOR_IDX_BLUE, COLOR_IDX_YELLOW);
         m_vColors.push_back(uiIndex);
 
-        DoCastSpellIfCan(m_creature, aApexisGameData[uiIndex].m_uiVisual);
+        DoCastSpellIfCan(m_creature, aApexisGameData[uiIndex].m_uiVisual, CAST_TRIGGERED);
         DoPlaySoundToSet(m_creature, aApexisGameData[uiIndex].m_uiSoundId);
     }
 
