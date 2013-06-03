@@ -51,127 +51,13 @@ void SystemMgr::LoadVersion()
 void SystemMgr::LoadScriptTexts()
 {
     outstring_log("SD2: Loading Script Texts...");
-    LoadMangosStrings(SD2Database, "script_texts", TEXT_SOURCE_TEXT_START, TEXT_SOURCE_TEXT_END);
-
-    QueryResult* pResult = SD2Database.PQuery("SELECT entry, sound, type, language, emote FROM script_texts WHERE entry BETWEEN %i AND %i", TEXT_SOURCE_GOSSIP_END, TEXT_SOURCE_TEXT_START);
-
-    outstring_log("SD2: Loading Script Texts additional data...");
-
-    if (pResult)
-    {
-        BarGoLink bar(pResult->GetRowCount());
-        uint32 uiCount = 0;
-
-        do
-        {
-            bar.step();
-            Field* pFields = pResult->Fetch();
-            StringTextData pTemp;
-
-            int32 iId           = pFields[0].GetInt32();
-            pTemp.uiSoundId     = pFields[1].GetUInt32();
-            pTemp.uiType        = pFields[2].GetUInt32();
-            pTemp.uiLanguage    = pFields[3].GetUInt32();
-            pTemp.uiEmote       = pFields[4].GetUInt32();
-
-            if (iId >= 0)
-            {
-                error_db_log("SD2: Entry %i in table `script_texts` is not a negative value.", iId);
-                continue;
-            }
-
-            if (pTemp.uiSoundId)
-            {
-                if (!GetSoundEntriesStore()->LookupEntry(pTemp.uiSoundId))
-                    error_db_log("SD2: Entry %i in table `script_texts` has soundId %u but sound does not exist.", iId, pTemp.uiSoundId);
-            }
-
-            if (!GetLanguageDescByID(pTemp.uiLanguage))
-                error_db_log("SD2: Entry %i in table `script_texts` using Language %u but Language does not exist.", iId, pTemp.uiLanguage);
-
-            if (pTemp.uiType > CHAT_TYPE_ZONE_YELL)
-                error_db_log("SD2: Entry %i in table `script_texts` has Type %u but this Chat Type does not exist.", iId, pTemp.uiType);
-
-            m_mTextDataMap[iId] = pTemp;
-            ++uiCount;
-        }
-        while (pResult->NextRow());
-
-        delete pResult;
-
-        outstring_log("");
-        outstring_log(">> Loaded %u additional Script Texts data.", uiCount);
-    }
-    else
-    {
-        BarGoLink bar(1);
-        bar.step();
-        outstring_log("");
-        outstring_log(">> Loaded 0 additional Script Texts data. DB table `script_texts` is empty.");
-    }
+    LoadMangosStrings(SD2Database, "script_texts", TEXT_SOURCE_TEXT_START, TEXT_SOURCE_TEXT_END, true);
 }
 
 void SystemMgr::LoadScriptTextsCustom()
 {
     outstring_log("SD2: Loading Custom Texts...");
-    LoadMangosStrings(SD2Database, "custom_texts", TEXT_SOURCE_CUSTOM_START, TEXT_SOURCE_CUSTOM_END);
-
-    QueryResult* pResult = SD2Database.PQuery("SELECT entry, sound, type, language, emote FROM custom_texts WHERE entry BETWEEN %i AND %i", TEXT_SOURCE_CUSTOM_END, TEXT_SOURCE_CUSTOM_START);
-
-    outstring_log("SD2: Loading Custom Texts additional data...");
-
-    if (pResult)
-    {
-        BarGoLink bar(pResult->GetRowCount());
-        uint32 uiCount = 0;
-
-        do
-        {
-            bar.step();
-            Field* pFields = pResult->Fetch();
-            StringTextData pTemp;
-
-            int32 iId              = pFields[0].GetInt32();
-            pTemp.uiSoundId        = pFields[1].GetUInt32();
-            pTemp.uiType           = pFields[2].GetUInt32();
-            pTemp.uiLanguage       = pFields[3].GetUInt32();
-            pTemp.uiEmote          = pFields[4].GetUInt32();
-
-            if (iId >= 0)
-            {
-                error_db_log("SD2: Entry %i in table `custom_texts` is not a negative value.", iId);
-                continue;
-            }
-
-            if (pTemp.uiSoundId)
-            {
-                if (!GetSoundEntriesStore()->LookupEntry(pTemp.uiSoundId))
-                    error_db_log("SD2: Entry %i in table `custom_texts` has soundId %u but sound does not exist.", iId, pTemp.uiSoundId);
-            }
-
-            if (!GetLanguageDescByID(pTemp.uiLanguage))
-                error_db_log("SD2: Entry %i in table `custom_texts` using Language %u but Language does not exist.", iId, pTemp.uiLanguage);
-
-            if (pTemp.uiType > CHAT_TYPE_ZONE_YELL)
-                error_db_log("SD2: Entry %i in table `custom_texts` has Type %u but this Chat Type does not exist.", iId, pTemp.uiType);
-
-            m_mTextDataMap[iId] = pTemp;
-            ++uiCount;
-        }
-        while (pResult->NextRow());
-
-        delete pResult;
-
-        outstring_log("");
-        outstring_log(">> Loaded %u additional Custom Texts data.", uiCount);
-    }
-    else
-    {
-        BarGoLink bar(1);
-        bar.step();
-        outstring_log("");
-        outstring_log(">> Loaded 0 additional Custom Texts data. DB table `custom_texts` is empty.");
-    }
+    LoadMangosStrings(SD2Database, "custom_texts", TEXT_SOURCE_CUSTOM_START, TEXT_SOURCE_CUSTOM_END, true);
 }
 
 void SystemMgr::LoadScriptGossipTexts()

@@ -160,81 +160,8 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
         return;
     }
 
-    const StringTextData* pData = pSystemMgr.GetTextData(iTextEntry);
-    if (!pData)
-    {
-        script_error_log("DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.",
-                         pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), iTextEntry);
-
-        return;
-    }
-
-    debug_log("SD2: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",
-              iTextEntry, pData->uiSoundId, pData->uiType, pData->uiLanguage, pData->uiEmote);
-
-    if (pData->uiSoundId)
-    {
-        if (GetSoundEntriesStore()->LookupEntry(pData->uiSoundId))
-        {
-            if (pData->uiType == CHAT_TYPE_ZONE_YELL)
-                pSource->GetMap()->PlayDirectSoundToMap(pData->uiSoundId, pSource->GetZoneId());
-            else if (pData->uiType == CHAT_TYPE_WHISPER || pData->uiType == CHAT_TYPE_BOSS_WHISPER)
-            {
-                // An error will be displayed for the text
-                if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                    pSource->PlayDirectSound(pData->uiSoundId, (Player*)pTarget);
-            }
-            else
-                pSource->PlayDirectSound(pData->uiSoundId);
-        }
-        else
-            script_error_log("DoScriptText entry %i tried to process invalid sound id %u.", iTextEntry, pData->uiSoundId);
-    }
-
-    if (pData->uiEmote)
-    {
-        if (pSource->GetTypeId() == TYPEID_UNIT || pSource->GetTypeId() == TYPEID_PLAYER)
-            ((Unit*)pSource)->HandleEmote(pData->uiEmote);
-        else
-            script_error_log("DoScriptText entry %i tried to process emote for invalid TypeId (%u).", iTextEntry, pSource->GetTypeId());
-    }
-
-    switch (pData->uiType)
-    {
-        case CHAT_TYPE_SAY:
-            pSource->MonsterSay(iTextEntry, pData->uiLanguage, pTarget);
-            break;
-        case CHAT_TYPE_YELL:
-            pSource->MonsterYell(iTextEntry, pData->uiLanguage, pTarget);
-            break;
-        case CHAT_TYPE_TEXT_EMOTE:
-            pSource->MonsterTextEmote(iTextEntry, pTarget);
-            break;
-        case CHAT_TYPE_BOSS_EMOTE:
-            pSource->MonsterTextEmote(iTextEntry, pTarget, true);
-            break;
-        case CHAT_TYPE_WHISPER:
-        {
-            if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                pSource->MonsterWhisper(iTextEntry, pTarget);
-            else
-                script_error_log("DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
-
-            break;
-        }
-        case CHAT_TYPE_BOSS_WHISPER:
-        {
-            if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                pSource->MonsterWhisper(iTextEntry, pTarget, true);
-            else
-                script_error_log("DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
-
-            break;
-        }
-        case CHAT_TYPE_ZONE_YELL:
-            pSource->MonsterYellToZone(iTextEntry, pData->uiLanguage, pTarget);
-            break;
-    }
+    DoDisplayText(pSource, iTextEntry, pTarget);
+    // TODO - maybe add some call-stack like error output if above function returns false
 }
 
 /**
@@ -267,7 +194,7 @@ void DoOrSimulateScriptTextForMap(int32 iTextEntry, uint32 uiCreatureEntry, Map*
         return;
     }
 
-    const StringTextData* pData = pSystemMgr.GetTextData(iTextEntry);
+    MangosStringLocale const* pData = GetMangosStringData(iTextEntry);
     if (!pData)
     {
         script_error_log("DoOrSimulateScriptTextForMap with source entry %u for map %u could not find text entry %i.", uiCreatureEntry, pMap->GetId(), iTextEntry);
@@ -275,26 +202,21 @@ void DoOrSimulateScriptTextForMap(int32 iTextEntry, uint32 uiCreatureEntry, Map*
     }
 
     debug_log("SD2: DoOrSimulateScriptTextForMap: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",
-              iTextEntry, pData->uiSoundId, pData->uiType, pData->uiLanguage, pData->uiEmote);
+              iTextEntry, pData->SoundId, pData->Type, pData->Language, pData->Emote);
 
-    if (pData->uiType != CHAT_TYPE_ZONE_YELL)
+    if (pData->Type != CHAT_TYPE_ZONE_YELL)
     {
-        script_error_log("DoSimulateScriptTextForMap entry %i has not supported chat type %u.", iTextEntry, pData->uiType);
+        script_error_log("DoSimulateScriptTextForMap entry %i has not supported chat type %u.", iTextEntry, pData->Type);
         return;
     }
 
-    if (pData->uiSoundId)
-    {
-        if (GetSoundEntriesStore()->LookupEntry(pData->uiSoundId))
-            pMap->PlayDirectSoundToMap(pData->uiSoundId);
-        else
-            script_error_log("DoOrSimulateScriptTextForMap entry %i tried to process invalid sound id %u.", iTextEntry, pData->uiSoundId);
-    }
+    if (pData->SoundId)
+        pMap->PlayDirectSoundToMap(pData->SoundId);
 
     if (pCreatureSource)                                // If provided pointer for sayer, use direct version
-        pMap->MonsterYellToMap(pCreatureSource->GetObjectGuid(), iTextEntry, pData->uiLanguage, pTarget);
+        pMap->MonsterYellToMap(pCreatureSource->GetObjectGuid(), iTextEntry, pData->Language, pTarget);
     else                                                // Simulate yell
-        pMap->MonsterYellToMap(pInfo, iTextEntry, pData->uiLanguage, pTarget);
+        pMap->MonsterYellToMap(pInfo, iTextEntry, pData->Language, pTarget);
 }
 
 //*********************************

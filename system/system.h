@@ -29,14 +29,6 @@ struct ScriptPointMove
     uint32 uiWaitTime;
 };
 
-struct StringTextData
-{
-    uint32 uiSoundId;
-    uint8  uiType;
-    uint32 uiLanguage;
-    uint32 uiEmote;
-};
-
 #define pSystemMgr SystemMgr::Instance()
 
 class SystemMgr
@@ -47,8 +39,6 @@ class SystemMgr
 
         static SystemMgr& Instance();
 
-        // Maps and lists
-        typedef UNORDERED_MAP<int32, StringTextData> TextDataMap;
         typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
 
         // Database
@@ -57,17 +47,6 @@ class SystemMgr
         void LoadScriptTextsCustom();
         void LoadScriptGossipTexts();
         void LoadScriptWaypoints();
-
-        // Retrive from storage
-        StringTextData const* GetTextData(int32 uiTextId) const
-        {
-            TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);
-
-            if (itr == m_mTextDataMap.end())
-                return NULL;
-
-            return &itr->second;
-        }
 
         std::vector<ScriptPointMove> const& GetPointMoveList(uint32 uiCreatureEntry) const
         {
@@ -82,7 +61,6 @@ class SystemMgr
         }
 
     protected:
-        TextDataMap     m_mTextDataMap;                     // additional data for text strings
         PointMoveMap    m_mPointMoveMap;                    // coordinates for waypoints
 };
 
