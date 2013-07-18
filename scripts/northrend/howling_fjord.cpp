@@ -26,6 +26,7 @@ npc_ancient_male_vrykul
 at_ancient_male_vrykul
 npc_daegarn
 npc_silvermoon_harry
+npc_lich_king_village
 EndContentData */
 
 #include "precompiled.h"
@@ -420,6 +421,135 @@ bool GossipSelect_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature, uin
     return true;
 }
 
+/*######
+## npc_lich_king_village
+######*/
+
+enum
+{
+    EMOTE_LICH_KING_FACE            = -1000920,
+    SAY_LICH_KING_1                 = -1000921,
+    SAY_PREPARE                     = -1000922,
+    SAY_LICH_KING_2                 = -1000923,
+    SAY_LICH_KING_3                 = -1000924,
+    SAY_LICH_KING_4                 = -1000925,
+    SAY_LICH_KING_5                 = -1000926,
+    SAY_PERSISTANCE                 = -1000927,
+
+    SPELL_GRASP_OF_THE_LICH_KING    = 43489,
+    SPELL_MAGNETIC_PULL             = 29661,
+    SPELL_WRATH_LICH_KING_FIRST     = 43488,
+    SPELL_WRATH_LICH_KING           = 50156,
+
+    NPC_VALKYR_SOULCLAIMER          = 24327,
+    NPC_LICH_KING_WYRMSKULL         = 24248,
+
+    QUEST_ID_LK_FLAG                = 12485,            // Server side dummy quest
+};
+
+static const DialogueEntry aLichDialogue[] =
+{
+    // first time dialogue only
+    {EMOTE_LICH_KING_FACE,          NPC_LICH_KING_WYRMSKULL, 4000},
+    {QUEST_ID_LK_FLAG,              0,                       3000},
+    {SAY_LICH_KING_1,               NPC_LICH_KING_WYRMSKULL, 20000},
+    {NPC_VALKYR_SOULCLAIMER,        0,                       4000},
+    {SAY_LICH_KING_2,               NPC_LICH_KING_WYRMSKULL, 10000},
+    {SAY_LICH_KING_3,               NPC_LICH_KING_WYRMSKULL, 25000},
+    {SAY_LICH_KING_4,               NPC_LICH_KING_WYRMSKULL, 25000},
+    {SAY_LICH_KING_5,               NPC_LICH_KING_WYRMSKULL, 20000},
+    {SPELL_WRATH_LICH_KING_FIRST,   0,                       10000},
+    {NPC_LICH_KING_WYRMSKULL,       0,                       0},
+    // if the player persists...
+    {SAY_PERSISTANCE,               NPC_LICH_KING_WYRMSKULL, 15000},
+    {SPELL_WRATH_LICH_KING,         0,                       10000},
+    {NPC_LICH_KING_WYRMSKULL,       0,                       0},
+    {0, 0, 0},
+};
+
+struct MANGOS_DLL_DECL npc_lich_king_villageAI : public ScriptedAI, private DialogueHelper
+{
+    npc_lich_king_villageAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aLichDialogue)
+    {
+        Reset();
+    }
+
+    ObjectGuid m_pHeldPlayer;
+    bool m_bEventInProgress;
+
+    void Reset() override
+    {
+        m_bEventInProgress = false;
+    }
+
+    void JustDidDialogueStep(int32 iEntry) override
+    {
+        switch (iEntry)
+        {
+            case QUEST_ID_LK_FLAG:
+                m_creature->HandleEmote(EMOTE_ONESHOT_LAUGH);
+                break;
+            case NPC_VALKYR_SOULCLAIMER:
+                if (Creature* pCreature = GetClosestCreatureWithEntry(m_creature, NPC_VALKYR_SOULCLAIMER, 20.0f))
+                    DoScriptText(SAY_PREPARE, pCreature);
+                break;
+            case SPELL_WRATH_LICH_KING_FIRST:
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pHeldPlayer))
+                {
+                    DoCastSpellIfCan(pPlayer, SPELL_WRATH_LICH_KING_FIRST);
+                    // handle spell scriptEffect in the script
+                    m_creature->DealDamage(pPlayer, pPlayer->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                }
+                break;
+            case SPELL_WRATH_LICH_KING:
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pHeldPlayer))
+                {
+                    DoCastSpellIfCan(pPlayer, SPELL_WRATH_LICH_KING);
+                    // handle spell scriptEffect in the script
+                    m_creature->DealDamage(pPlayer, pPlayer->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                }
+                break;
+            case NPC_LICH_KING_WYRMSKULL:
+                EnterEvadeMode();
+                break;
+        }
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_bEventInProgress && pWho->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (pWho->isAlive() && m_creature->IsWithinDistInMap(pWho, 15.0) && pWho->HasAura(SPELL_ECHO_OF_YMIRON))
+            {
+                m_pHeldPlayer = pWho->GetObjectGuid();
+                m_bEventInProgress = true;
+
+                DoCastSpellIfCan(pWho, SPELL_MAGNETIC_PULL, CAST_TRIGGERED);
+                DoCastSpellIfCan(pWho, SPELL_GRASP_OF_THE_LICH_KING, CAST_TRIGGERED);
+
+                if (((Player*)pWho)->GetQuestStatus(QUEST_ID_LK_FLAG) == QUEST_STATUS_COMPLETE)
+                    StartNextDialogueText(SAY_PERSISTANCE);
+                else
+                    StartNextDialogueText(EMOTE_LICH_KING_FACE);
+            }
+        }
+    }
+
+    Creature* GetSpeakerByEntry(uint32 uiEntry) override
+    {
+        if (uiEntry == NPC_LICH_KING_WYRMSKULL)
+            return m_creature;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override { DialogueUpdate(uiDiff); }
+};
+
+CreatureAI* GetAI_npc_lich_king_village(Creature* pCreature)
+{
+    return new npc_lich_king_villageAI(pCreature);
+}
+
 void AddSC_howling_fjord()
 {
     Script* pNewScript;
@@ -445,5 +575,10 @@ void AddSC_howling_fjord()
     pNewScript->GetAI = &GetAI_npc_silvermoon_harry;
     pNewScript->pGossipHello = &GossipHello_npc_silvermoon_harry;
     pNewScript->pGossipSelect = &GossipSelect_npc_silvermoon_harry;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lich_king_village";
+    pNewScript->GetAI = &GetAI_npc_lich_king_village;
     pNewScript->RegisterSelf();
 }
