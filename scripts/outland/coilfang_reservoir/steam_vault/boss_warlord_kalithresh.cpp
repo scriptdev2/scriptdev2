@@ -39,7 +39,6 @@ enum
     SPELL_IMPALE                = 39061,
     SPELL_WARLORDS_RAGE         = 37081,        // triggers 36453
     SPELL_WARLORDS_RAGE_NAGA    = 31543,        // triggers 37076
-    SPELL_WARLORDS_RAGE_AURA    = 36453,
 };
 
 struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
@@ -150,31 +149,21 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         }
 
         // Move to closest distiller
-        if (m_uiRageTimer)
+        if (m_uiRageTimer < uiDiff)
         {
-            if (m_uiRageTimer <= uiDiff)
+            if (Creature* pDistiller = GetClosestCreatureWithEntry(m_creature, NPC_NAGA_DISTILLER, 100.0f))
             {
-                // If the boss already has the rage aura we don't have to do this again
-                if (m_creature->HasAura(SPELL_WARLORDS_RAGE_AURA))
-                {
-                    m_uiRageTimer = 0;
-                    return;
-                }
-
-                if (Creature* pDistiller = GetClosestCreatureWithEntry(m_creature, NPC_NAGA_DISTILLER, 100.0f))
-                {
-                    float fX, fY, fZ;
-                    pDistiller->GetContactPoint(m_creature, fX, fY, fZ, INTERACTION_DISTANCE);
-                    m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
-                    SetCombatMovement(false);
-                    m_distillerGuid = pDistiller->GetObjectGuid();
-                }
-
-                m_uiRageTimer = urand(35000, 45000);
+                float fX, fY, fZ;
+                pDistiller->GetContactPoint(m_creature, fX, fY, fZ, INTERACTION_DISTANCE);
+                m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                SetCombatMovement(false);
+                m_distillerGuid = pDistiller->GetObjectGuid();
             }
-            else
-                m_uiRageTimer -= uiDiff;
+
+            m_uiRageTimer = urand(35000, 45000);
         }
+        else
+            m_uiRageTimer -= uiDiff;
 
         // Reflection_Timer
         if (m_uiReflectionTimer < uiDiff)
