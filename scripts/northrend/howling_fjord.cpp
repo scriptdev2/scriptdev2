@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Howling_Fjord
 SD%Complete: ?
-SDComment: Quest support: 11300, 11464, 11343
+SDComment: Quest support: 11300, 11343, 11344, 11464.
 SDCategory: Howling Fjord
 EndScriptData */
 
@@ -27,6 +27,7 @@ at_ancient_male_vrykul
 npc_daegarn
 npc_silvermoon_harry
 npc_lich_king_village
+npc_king_ymiron
 EndContentData */
 
 #include "precompiled.h"
@@ -34,7 +35,7 @@ EndContentData */
 enum
 {
     SPELL_ECHO_OF_YMIRON                    = 42786,
-    SPELL_SECRET_OF_NIFFELVAR               = 43458,
+    SPELL_SECRET_OF_WYRMSKULL               = 43458,
     QUEST_ECHO_OF_YMIRON                    = 11343,
     NPC_MALE_VRYKUL                         = 24314,
     NPC_FEMALE_VRYKUL                       = 24315,
@@ -109,7 +110,7 @@ struct MANGOS_DLL_DECL npc_ancient_male_vrykulAI : public ScriptedAI
                     DoScriptText(SAY_VRYKUL_HIDE, pFemale);
                 break;
             case 5:
-                DoCastSpellIfCan(m_creature, SPELL_SECRET_OF_NIFFELVAR);
+                DoCastSpellIfCan(m_creature, SPELL_SECRET_OF_WYRMSKULL);
                 break;
             case 6:
                 Reset();
@@ -540,6 +541,8 @@ struct MANGOS_DLL_DECL npc_lich_king_villageAI : public ScriptedAI, private Dial
     {
         if (uiEntry == NPC_LICH_KING_WYRMSKULL)
             return m_creature;
+
+        return NULL;
     }
 
     void UpdateAI(const uint32 uiDiff) override { DialogueUpdate(uiDiff); }
@@ -548,6 +551,190 @@ struct MANGOS_DLL_DECL npc_lich_king_villageAI : public ScriptedAI, private Dial
 CreatureAI* GetAI_npc_lich_king_village(Creature* pCreature)
 {
     return new npc_lich_king_villageAI(pCreature);
+}
+
+/*######
+## npc_king_ymiron
+######*/
+
+enum
+{
+    EMOTE_KING_SILENCE                      = -1000928,
+    SAY_KING_YMIRON_SPEECH_1                = -1000929,
+    SAY_KING_YMIRON_SPEECH_2                = -1000930,
+    EMOTE_YMIRON_CROWD_1                    = -1000931,
+    SAY_KING_YMIRON_SPEECH_3                = -1000932,
+    SAY_KING_YMIRON_SPEECH_4                = -1000933,
+    SAY_KING_YMIRON_SPEECH_5                = -1000934,
+    SAY_KING_YMIRON_SPEECH_6                = -1000935,
+    SAY_KING_YMIRON_SPEECH_7                = -1000936,
+    EMOTE_YMIRON_CROWD_2                    = -1000937,
+    SAY_KING_YMIRON_SPEECH_8                = -1000938,
+    EMOTE_YMIRON_CROWD_3                    = -1000939,
+    SAY_KING_YMIRON_SPEECH_9                = -1000940,
+
+    SPELL_ECHO_OF_YMIRON_NIFFLEVAR          = 43466,
+    SPELL_SECRETS_OF_NIFFLEVAR              = 43468,
+
+    NPC_CITIZEN_OF_NIFFLEVAR_MALE           = 24322,
+    NPC_CITIZEN_OF_NIFFLEVAR_FEMALE         = 24323,
+    NPC_KING_YMIRON                         = 24321,
+
+    QUEST_ID_ANGUISH_OF_NIFFLEVAR           = 11344,
+
+    MAX_CROWD_TEXT_ENTRIES                  = 7
+};
+
+static const DialogueEntry aNifflevarDialogue[] =
+{
+    {EMOTE_KING_SILENCE,            NPC_KING_YMIRON,    3000},
+    {SAY_KING_YMIRON_SPEECH_1,      NPC_KING_YMIRON,    5000},
+    {SAY_KING_YMIRON_SPEECH_2,      NPC_KING_YMIRON,    2000},
+    {EMOTE_YMIRON_CROWD_1,          NPC_KING_YMIRON,    5000},
+    {SAY_KING_YMIRON_SPEECH_3,      NPC_KING_YMIRON,    10000},
+    {SAY_KING_YMIRON_SPEECH_4,      NPC_KING_YMIRON,    9000},
+    {SAY_KING_YMIRON_SPEECH_5,      NPC_KING_YMIRON,    7000},
+    {SAY_KING_YMIRON_SPEECH_6,      NPC_KING_YMIRON,    5000},
+    {SAY_KING_YMIRON_SPEECH_7,      NPC_KING_YMIRON,    9000},
+    {EMOTE_YMIRON_CROWD_2,          NPC_KING_YMIRON,    5000},
+    {SAY_KING_YMIRON_SPEECH_8,      NPC_KING_YMIRON,    8000},
+    {EMOTE_YMIRON_CROWD_3,          NPC_KING_YMIRON,    4000},
+    {SAY_KING_YMIRON_SPEECH_9,      NPC_KING_YMIRON,    10000},
+    {SPELL_SECRETS_OF_NIFFLEVAR,    0,                  10000},
+    {QUEST_ID_ANGUISH_OF_NIFFLEVAR, 0,                  0},
+    {0, 0, 0},
+};
+
+static const int32 aRandomTextEntries[MAX_CROWD_TEXT_ENTRIES] = { -1000941, -1000942, -1000943, -1000944, -1000945, -1000946, -1000947};
+
+struct MANGOS_DLL_DECL npc_king_ymironAI : public ScriptedAI, private DialogueHelper
+{
+    npc_king_ymironAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aNifflevarDialogue)
+    {
+        Reset();
+    }
+
+    uint32 m_uiCrowdSpeechTimer;
+
+    bool m_bEventInProgress;
+    bool m_bEventInit;
+
+    GuidList m_lCrowdGuidList;
+
+    void Reset() override
+    {
+        m_uiCrowdSpeechTimer = 0;
+        m_bEventInit = false;
+        m_bEventInProgress = false;
+        m_lCrowdGuidList.clear();
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_bEventInit && pWho->GetTypeId() == TYPEID_PLAYER)
+        {
+            // Get all the citizen around the king for future use
+            if (pWho->isAlive() && m_creature->IsWithinDistInMap(pWho, 60.0) && ((Player*)pWho)->GetQuestStatus(QUEST_ID_ANGUISH_OF_NIFFLEVAR) == QUEST_STATUS_INCOMPLETE
+                && pWho->HasAura(SPELL_ECHO_OF_YMIRON_NIFFLEVAR))
+            {
+                std::list<Creature*> lCrowdList;
+                GetCreatureListWithEntryInGrid(lCrowdList, m_creature, NPC_CITIZEN_OF_NIFFLEVAR_MALE, 60.0f);
+                GetCreatureListWithEntryInGrid(lCrowdList, m_creature, NPC_CITIZEN_OF_NIFFLEVAR_FEMALE, 60.0f);
+
+                for (std::list<Creature*>::const_iterator itr = lCrowdList.begin(); itr != lCrowdList.end(); ++itr)
+                    m_lCrowdGuidList.push_back( (*itr)->GetObjectGuid() );
+
+                m_uiCrowdSpeechTimer = 1000;
+                m_bEventInit = true;
+            }
+        }
+    }
+
+    void JustDidDialogueStep(int32 iEntry) override
+    {
+        switch (iEntry)
+        {
+            case SPELL_SECRETS_OF_NIFFLEVAR:
+                DoCastSpellIfCan(m_creature, SPELL_SECRETS_OF_NIFFLEVAR);
+                break;
+            case QUEST_ID_ANGUISH_OF_NIFFLEVAR:
+                EnterEvadeMode();
+                break;
+        }
+    }
+
+    Creature* GetSpeakerByEntry(uint32 uiEntry) override
+    {
+        if (uiEntry == NPC_KING_YMIRON)
+            return m_creature;
+
+        return NULL;
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (m_bEventInProgress)
+                return;
+
+            StartNextDialogueText(EMOTE_KING_SILENCE);
+            m_uiCrowdSpeechTimer = 0;
+            m_bEventInProgress = true;
+        }
+    }
+
+    ObjectGuid SelectRandomCrowdNpc()
+    {
+        if (m_lCrowdGuidList.empty())
+            return ObjectGuid();
+
+        GuidList::iterator iter = m_lCrowdGuidList.begin();
+        advance(iter, urand(0, m_lCrowdGuidList.size() - 1));
+
+        return *iter;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        DialogueUpdate(uiDiff);
+
+        if (m_uiCrowdSpeechTimer)
+        {
+            if (m_uiCrowdSpeechTimer <= uiDiff)
+            {
+                // only 15% chance to yell (guessed)
+                if (roll_chance_i(15))
+                {
+                    if (Creature* pCitizen = m_creature->GetMap()->GetCreature(SelectRandomCrowdNpc()))
+                        DoScriptText(aRandomTextEntries[urand(0, MAX_CROWD_TEXT_ENTRIES - 1)], pCitizen);
+                }
+
+                m_uiCrowdSpeechTimer = 1000;
+            }
+            else
+                m_uiCrowdSpeechTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_king_ymiron(Creature* pCreature)
+{
+    return new npc_king_ymironAI(pCreature);
+}
+
+bool AreaTrigger_at_nifflevar(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_ID_ANGUISH_OF_NIFFLEVAR) == QUEST_STATUS_INCOMPLETE && pPlayer->HasAura(SPELL_ECHO_OF_YMIRON_NIFFLEVAR))
+    {
+        if (Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, NPC_KING_YMIRON, 30.0f))
+            pCreature->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pPlayer, pCreature);
+
+        return true;
+    }
+
+    return false;
 }
 
 void AddSC_howling_fjord()
@@ -580,5 +767,15 @@ void AddSC_howling_fjord()
     pNewScript = new Script;
     pNewScript->Name = "npc_lich_king_village";
     pNewScript->GetAI = &GetAI_npc_lich_king_village;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_king_ymiron";
+    pNewScript->GetAI = &GetAI_npc_king_ymiron;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_nifflevar";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_nifflevar;
     pNewScript->RegisterSelf();
 }

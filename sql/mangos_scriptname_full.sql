@@ -658,12 +658,15 @@ UPDATE creature_template SET ScriptName='npc_00x09hl' WHERE entry=7806;
 UPDATE creature_template SET ScriptName='npc_rinji' WHERE entry=7780;
 
 /* HOWLING FJORD */
-DELETE FROM scripted_areatrigger WHERE entry=4778;
-INSERT INTO scripted_areatrigger VALUES (4778,'at_ancient_male_vrykul');
+DELETE FROM scripted_areatrigger WHERE entry IN (4778,4779);
+INSERT INTO scripted_areatrigger VALUES
+(4778,'at_ancient_male_vrykul'),
+(4779,'at_nifflevar');
 UPDATE creature_template SET ScriptName='npc_ancient_male_vrykul' WHERE entry=24314;
 UPDATE creature_template SET ScriptName='npc_daegarn' WHERE entry=24151;
 UPDATE creature_template SET ScriptName='npc_silvermoon_harry' WHERE entry=24539;
 UPDATE creature_template SET ScriptName='npc_lich_king_village' WHERE entry=24248;
+UPDATE creature_template SET ScriptName='npc_king_ymiron' WHERE entry=24321;
 
 /*  */
 /* ICECROWN CITADEL */
