@@ -30,6 +30,16 @@ enum
     // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,
     NPC_NIGHTBANE_HELPER            = 17260,
+    NPC_ECHO_MEDIVH                 = 16816,
+    NPC_INVISIBLE_STALKER           = 22519,                    // placeholder for dead chess npcs
+    NPC_CHESS_STATUS_BAR            = 22520,                    // npc that controlls the transformation of dead pieces
+    NPC_CHESS_VICTORY_CONTROLLER    = 22524,
+    // NPC_CHESS_SOUND_BUNNY        = 21921,                    // npc that handles the encounter sounds
+    // NPC_WAITING_ROOM_STALKER     = 17459,                    // trigger which marks the teleport location of the players; also used to cast some control spells during the game
+    NPC_SQUARE_WHITE                = 17208,                    // chess white square
+    NPC_SQUARE_BLACK                = 17305,                    // chess black square
+    // NPC_SQUARE_OUTSIDE_BLACK     = 17316,                    // outside chess black square
+    // NPC_SQUARE_OUTSIDE_WHITE     = 17317,                    // outside chess white square
 
     // Moroes event related
     NPC_LADY_KEIRA_BERRYBUCK        = 17007,
@@ -53,6 +63,20 @@ enum
     NPC_IMAGE_OF_MEDIVH             = 17651,
     NPC_IMAGE_OF_ARCANAGOS          = 17652,
 
+    // Chess event
+    NPC_ORC_GRUNT                   = 17469,                    // pawn
+    NPC_ORC_WOLF                    = 21748,                    // knight
+    NPC_ORC_WARLOCK                 = 21750,                    // queen
+    NPC_ORC_NECROLYTE               = 21747,                    // bishop
+    NPC_SUMMONED_DAEMON             = 21726,                    // rook
+    NPC_WARCHIEF_BLACKHAND          = 21752,                    // king
+    NPC_HUMAN_FOOTMAN               = 17211,                    // pawn
+    NPC_HUMAN_CHARGER               = 21664,                    // knight
+    NPC_HUMAN_CONJURER              = 21683,                    // queen
+    NPC_HUMAN_CLERIC                = 21682,                    // bishop
+    NPC_CONJURED_WATER_ELEMENTAL    = 21160,                    // rook
+    NPC_KING_LLANE                  = 21684,                    // king
+
     GO_STAGE_CURTAIN                = 183932,
     GO_STAGE_DOOR_LEFT              = 184278,
     GO_STAGE_DOOR_RIGHT             = 184279,
@@ -75,6 +99,16 @@ enum
     GO_RAJ_BACKDROP                 = 183443,
     GO_RAJ_MOON                     = 183494,
     GO_RAJ_BALCONY                  = 183495,
+
+    // Chess event spells
+    SPELL_CLEAR_BOARD               = 37366,                    // spell cast to clear the board at the end of the event
+    SPELL_GAME_IN_SESSION           = 39331,                    // debuff on players received while the game is in session
+    SPELL_FORCE_KILL_BUNNY          = 45260,                    // triggers 45259
+    SPELL_GAME_OVER                 = 39401,                    // cast by Medivh on game end
+    SPELL_VICTORY_VISUAL            = 39395,                    // cast by the Victory controller on game end
+
+    FACTION_ID_CHESS_HORDE          = 1689,
+    FACTION_ID_CHESS_ALLIANCE       = 1690,
 };
 
 enum OperaEvents
@@ -123,22 +157,45 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
+        uint32 GetPlayerTeam() { return m_uiTeam; }
+        void DoMoveChessPieceToSides(uint32 uiSpellId, uint32 uiFaction, bool bGameEnd = false);
+        void GetChessPiecesByFaction(GuidList& lList, uint32 uiFaction) { lList = uiFaction == FACTION_ID_CHESS_ALLIANCE ? m_lChessPiecesAlliance : m_lChessPiecesHorde; }
+
         void GetNightbaneTriggers(GuidList& lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
 
         void Load(const char* chrIn) override;
         const char* Save() const override { return m_strInstData.c_str(); }
 
+        void Update(uint32 uiDiff) override;
+
     private:
+        void DoPrepareChessEvent();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         uint32 m_uiOperaEvent;
         uint32 m_uiOzDeathCount;
+        uint32 m_uiTeam;                                    // Team of first entered player, used for the Chess event
+        uint32 m_uiChessResetTimer;
+
+        uint8 m_uiAllianceStalkerCount;
+        uint8 m_uiHordeStalkerCount;
+
+        ObjectGuid m_HordeStatusGuid;
+        ObjectGuid m_AllianceStatusGuid;
 
         GuidList m_lOperaTreeGuidList;
         GuidList m_lOperaHayGuidList;
         GuidList m_lNightbaneGroundTriggers;
         GuidList m_lNightbaneAirTriggers;
+
+        GuidList m_lChessHordeStalkerList;
+        GuidList m_lChessAllianceStalkerList;
+        GuidList m_lChessPiecesAlliance;
+        GuidList m_lChessPiecesHorde;
+        GuidVector m_vHordeStalkers;
+        GuidVector m_vAllianceStalkers;
 };
 
 #endif
