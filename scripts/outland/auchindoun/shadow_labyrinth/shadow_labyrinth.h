@@ -7,24 +7,26 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 5,
+    MAX_ENCOUNTER           = 4,
 
     TYPE_HELLMAW            = 1,
-    TYPE_OVERSEER           = 2,
+    // TYPE_OVERSEER        = 2,                            // obsolete id used by acid
     TYPE_INCITER            = 3,
     TYPE_VORPIL             = 4,
     TYPE_MURMUR             = 5,
 
+    DATA_CABAL_RITUALIST    = 1,                            // DO NOT CHANGE! Used by Acid. - used to check the Cabal Ritualists alive
+
     NPC_HELLMAW             = 18731,
     NPC_VORPIL              = 18732,
-    NPC_FEL_OVERSEER        = 18796,
+    NPC_CABAL_RITUALIST     = 18794,
 
     GO_REFECTORY_DOOR       = 183296,                       // door opened when blackheart the inciter dies
     GO_SCREAMING_HALL_DOOR  = 183295,                       // door opened when grandmaster vorpil dies
 
     SAY_HELLMAW_INTRO       = -1555000,
 
-    SPELL_BANISH            = 30231,
+    SPELL_BANISH            = 30231,                        // spell is handled in creature_template_addon;
 };
 
 class MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
@@ -37,17 +39,23 @@ class MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo) override;
         void OnCreatureCreate(Creature* pCreature) override;
 
+        void OnCreatureDeath(Creature* pCreature) override;
+
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
+        void SetData64(uint32 uiType, uint64 uiGuid) override;
+
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
+
+        bool IsHellmawUnbanished() { return m_sRitualistsAliveGUIDSet.empty(); }
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        uint32 m_uiFelOverseerCount;
+        GuidSet m_sRitualistsAliveGUIDSet;
 };
 
 #endif

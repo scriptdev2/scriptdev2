@@ -31,8 +31,7 @@ EndScriptData */
 4 - Murmur event
 */
 
-instance_shadow_labyrinth::instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap),
-    m_uiFelOverseerCount(0)
+instance_shadow_labyrinth::instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -70,10 +69,6 @@ void instance_shadow_labyrinth::OnCreatureCreate(Creature* pCreature)
         case NPC_HELLMAW:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
-        case NPC_FEL_OVERSEER:
-            ++m_uiFelOverseerCount;                         // TODO should actually only count alive ones
-            debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
-            break;
     }
 }
 
@@ -85,54 +80,20 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[0] = uiData;
             break;
 
-        case TYPE_OVERSEER:
-            if (uiData != DONE)
-            {
-                script_error_log("Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
-                return;
-            }
-            if (m_uiFelOverseerCount)
-            {
-                --m_uiFelOverseerCount;
-
-                if (m_uiFelOverseerCount)
-                {
-                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
-
-                    // Skip save call
-                    return;
-                }
-                else
-                {
-                    if (Creature* pHellmaw = GetSingleCreatureFromStorage(NPC_HELLMAW))
-                    {
-                        // yell intro and remove banish aura
-                        DoScriptText(SAY_HELLMAW_INTRO, pHellmaw);
-                        pHellmaw->GetMotionMaster()->MoveWaypoint();
-                        if (pHellmaw->HasAura(SPELL_BANISH))
-                            pHellmaw->RemoveAurasDueToSpell(SPELL_BANISH);
-                    }
-
-                    m_auiEncounter[1] = DONE;
-                    debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
-                }
-            }
-            break;
-
         case TYPE_INCITER:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_REFECTORY_DOOR);
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[1] = uiData;
             break;
 
         case TYPE_VORPIL:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_SCREAMING_HALL_DOOR);
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[2] = uiData;
             break;
 
         case TYPE_MURMUR:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[3] = uiData;
             break;
     }
 
@@ -142,7 +103,7 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " "
-                   << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
+                   << m_auiEncounter[2] << " " << m_auiEncounter[3];
 
         m_strInstData = saveStream.str();
 
@@ -156,10 +117,44 @@ uint32 instance_shadow_labyrinth::GetData(uint32 uiType) const
     switch (uiType)
     {
         case TYPE_HELLMAW:  return m_auiEncounter[0];
-        case TYPE_OVERSEER: return m_auiEncounter[1];
+        case TYPE_INCITER:  return m_auiEncounter[1];
+        case TYPE_VORPIL:   return m_auiEncounter[2];
+        case TYPE_MURMUR:   return m_auiEncounter[3];
 
         default:
             return 0;
+    }
+}
+
+void instance_shadow_labyrinth::SetData64(uint32 uiData, uint64 uiGuid)
+{
+    // If Hellmaw already completed, just ignore
+    if (GetData(TYPE_HELLMAW) == DONE)
+        return;
+
+    // Note: this is handled in Acid. The purpose is check which Cabal Ritualists is alive, in case of server reset
+    // The function is triggered by eventAI on generic timer
+    if (uiData == DATA_CABAL_RITUALIST)
+        m_sRitualistsAliveGUIDSet.insert(ObjectGuid(uiGuid));
+}
+
+void instance_shadow_labyrinth::OnCreatureDeath(Creature* pCreature)
+{
+    // unbanish Hellmaw when all Cabal Ritualists are dead
+    if (pCreature->GetEntry() == NPC_CABAL_RITUALIST)
+    {
+        m_sRitualistsAliveGUIDSet.erase(pCreature->GetObjectGuid());
+
+        if (m_sRitualistsAliveGUIDSet.empty())
+        {
+            if (Creature* pHellmaw = GetSingleCreatureFromStorage(NPC_HELLMAW))
+            {
+                // yell intro and remove banish aura
+                DoScriptText(SAY_HELLMAW_INTRO, pHellmaw);
+                pHellmaw->GetMotionMaster()->MoveWaypoint();
+                pHellmaw->RemoveAurasDueToSpell(SPELL_BANISH);
+            }
+        }
     }
 }
 
@@ -174,7 +169,7 @@ void instance_shadow_labyrinth::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
