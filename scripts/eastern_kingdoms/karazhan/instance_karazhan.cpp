@@ -281,7 +281,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
                         pPlayer->RemoveAurasDueToSpell(SPELL_GAME_IN_SESSION);
                 }
 
-                m_uiChessResetTimer = 5000;
+                m_uiChessResetTimer = 35000;
             }
             else if (uiData == IN_PROGRESS)
                 DoPrepareChessEvent();
@@ -390,7 +390,7 @@ void instance_karazhan::DoPrepareChessEvent()
                 pSquare = GetClosestCreatureWithEntry(pChessPiece, NPC_SQUARE_WHITE, 2.0f);
             if (!pSquare)
             {
-                script_error_log("Instance Karazhan: ERROR Failed to properly load the Chess square for %s.", pChessPiece->GetGuidStr());
+                script_error_log("Instance Karazhan: ERROR Failed to properly load the Chess square for %s.", pChessPiece->GetGuidStr().c_str());
                 return;
             }
 
@@ -408,7 +408,7 @@ void instance_karazhan::DoPrepareChessEvent()
                 pSquare = GetClosestCreatureWithEntry(pChessPiece, NPC_SQUARE_WHITE, 2.0f);
             if (!pSquare)
             {
-                script_error_log("Instance Karazhan: ERROR Failed to properly load the Chess square for %s.", pChessPiece->GetGuidStr());
+                script_error_log("Instance Karazhan: ERROR Failed to properly load the Chess square for %s.", pChessPiece->GetGuidStr().c_str());
                 return;
             }
 
