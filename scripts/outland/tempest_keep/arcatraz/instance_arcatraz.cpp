@@ -453,7 +453,7 @@ void instance_arcatraz::Update(uint32 uiDiff)
                 pTemp->SetWalk(false);
                 pTemp->GetMotionMaster()->MovePoint(0, aEntranceMoveLoc[0], aEntranceMoveLoc[1], aEntranceMoveLoc[2]);
             }
-            m_uiEntranceEventTimer = urand(0, 10) ? urand(1000, 2000) : urand(5000, 7000);
+            m_uiEntranceEventTimer = urand(0, 10) ? urand(2000, 3500) : urand(5000, 7000);
         }
         else
             m_uiEntranceEventTimer -= uiDiff;
