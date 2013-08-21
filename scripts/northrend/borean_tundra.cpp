@@ -23,13 +23,13 @@ EndScriptData */
 
 /* ContentData
 npc_nesingwary_trapper
-go_caribou_trap
 npc_sinkhole_kill_credit
 npc_lurgglbr
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "TemporarySummon.h"
 
 /*######
 ## npc_nesingwary_trapper
@@ -63,25 +63,49 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
         m_trapGuid.Clear();
     }
 
-    void StartAction(Player* pPlayer, GameObject* pTrap)
+    void MoveInLineOfSight(Unit* pWho) override
     {
-        m_uiPhase = 1;
-        m_uiPhaseTimer = 3000;
-        m_playerGuid = pPlayer->GetObjectGuid();
-        m_trapGuid = pTrap->GetObjectGuid();
-
-        switch (urand(0, 3))
+        if (!m_uiPhase && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 20.0f))
         {
-            case 0: DoScriptText(SAY_PHRASE_1, m_creature); break;
-            case 1: DoScriptText(SAY_PHRASE_2, m_creature); break;
-            case 2: DoScriptText(SAY_PHRASE_3, m_creature); break;
-            case 3: DoScriptText(SAY_PHRASE_4, m_creature); break;
+            m_uiPhase = 1;
+            m_uiPhaseTimer = 1000;
+            m_playerGuid = pWho->GetObjectGuid();
+
+            if (m_creature->IsTemporarySummon())
+            {
+                // Get the summoner trap
+                if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(((TemporarySummon*)m_creature)->GetSummonerGuid()))
+                    m_trapGuid = pTrap->GetObjectGuid();
+            }
         }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
+        {
+            // respawn the Quality Fur
+            if (GameObject* pGoFur = GetClosestGameObjectWithEntry(pTrap, GO_QUALITY_FUR, INTERACTION_DISTANCE))
+            {
+                if (!pGoFur->isSpawned())
+                {
+                    pGoFur->SetRespawnTime(10);
+                    pGoFur->Refresh();
+                }
+            }
+        }
+
+        m_uiPhaseTimer = 2000;
     }
 
     void UpdateAI(const uint32 uiDiff) override
     {
-        if (!m_creature->getVictim() && m_uiPhase)
+        if (!m_creature->getVictim() && m_uiPhaseTimer)
         {
             if (m_uiPhaseTimer <= uiDiff)
             {
@@ -90,39 +114,44 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
                     case 1:
                         if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
                         {
-                            if (pTrap->isSpawned())
-                                m_creature->GetMotionMaster()->MovePoint(0, pTrap->GetPositionX(), pTrap->GetPositionY(), pTrap->GetPositionZ());
+                            float fX, fY, fZ;
+                            pTrap->GetContactPoint(m_creature, fX, fY, fZ);
+
+                            m_creature->SetWalk(false);
+                            m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                         }
+                        m_uiPhaseTimer = 0;
                         break;
                     case 2:
+                        switch (urand(0, 3))
+                        {
+                            case 0: DoScriptText(SAY_PHRASE_1, m_creature); break;
+                            case 1: DoScriptText(SAY_PHRASE_2, m_creature); break;
+                            case 2: DoScriptText(SAY_PHRASE_3, m_creature); break;
+                            case 3: DoScriptText(SAY_PHRASE_4, m_creature); break;
+                        }
+                        m_creature->HandleEmote(EMOTE_ONESHOT_LOOT);
+                        m_uiPhaseTimer = 3000;
+                        break;
+                    case 3:
                         if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
                         {
-                            if (pTrap->isSpawned())
-                            {
-                                pTrap->Use(m_creature);
+                            pTrap->Use(m_creature);
 
-                                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
-                                {
-                                    if (pPlayer->isAlive())
-                                        pPlayer->KilledMonsterCredit(m_creature->GetEntry());
-                                }
+                            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+                            {
+                                if (pPlayer->isAlive())
+                                    pPlayer->KilledMonsterCredit(m_creature->GetEntry());
                             }
                         }
+                        m_uiPhaseTimer = 0;
                         break;
                 }
-
-                m_uiPhase = 0;
+                ++m_uiPhase;
             }
             else
                 m_uiPhaseTimer -= uiDiff;
         }
-    }
-
-    void MovementInform(uint32 /*uiType*/, uint32 /*uiPointId*/) override
-    {
-        m_creature->HandleEmote(EMOTE_ONESHOT_LOOT);
-        m_uiPhaseTimer = 2000;
-        m_uiPhase = 2;
     }
 };
 
@@ -253,34 +282,6 @@ bool EffectAuraDummy_npc_oil_stained_wolf(const Aura* pAura, bool bApply)
     return false;
 }
 
-/*######
-## go_caribou_trap
-######*/
-
-bool GOUse_go_caribou_trap(Player* pPlayer, GameObject* pGo)
-{
-    float fX, fY, fZ;
-    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), 2 * INTERACTION_DISTANCE, frand(0, M_PI_F * 2));
-
-    if (Creature* pCreature = pGo->SummonCreature(NPC_NESINGWARY_TRAPPER, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 10000))
-    {
-        if (npc_nesingwary_trapperAI* pTrapperAI = dynamic_cast<npc_nesingwary_trapperAI*>(pCreature->AI()))
-            pTrapperAI->StartAction(pPlayer, pGo);
-
-        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
-
-        if (GameObject* pGoFur = GetClosestGameObjectWithEntry(pGo, GO_QUALITY_FUR, INTERACTION_DISTANCE))
-        {
-            if (!pGoFur->isSpawned())
-            {
-                pGoFur->SetRespawnTime(10);
-                pGoFur->Refresh();
-            }
-        }
-    }
-
-    return true;
-}
 /*#####
 # npc_sinkhole_kill_credit
 #####*/
@@ -531,11 +532,6 @@ void AddSC_borean_tundra()
     pNewScript->GetAI = &GetAI_npc_oil_stained_wolf;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_oil_stained_wolf;
     pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_oil_stained_wolf;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "go_caribou_trap";
-    pNewScript->pGOUse = &GOUse_go_caribou_trap;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
