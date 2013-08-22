@@ -68,7 +68,8 @@ enum
     SPELL_FROST_BREATH              = 45065,
     SPELL_ENCAPSULATE               = 44883,
     SPELL_FEL_FIREBALL              = 44844,                // Brutallus' spells
-    SPELL_FLAME_RING                = 44873,                // this spell should have a fire explosion when removed
+    SPELL_CLEAR_DEBUFFS             = 34098,
+    SPELL_FLAME_RING                = 44874,                // this spell should have a fire explosion when removed
     SPELL_CHARGE                    = 44884,
     SPELL_BREAK_ICE                 = 46637,                // Break the ice, open the door - dummy spell for 46638 and 47030
 
@@ -95,6 +96,10 @@ static const DialogueEntry aIntroDialogue[] =
     {YELL_INTRO_TAUNT,          NPC_BRUTALLUS,  0},
     {0, 0, 0},
 };
+
+/*######
+## boss_brutallus
+######*/
 
 struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHelper
 {
@@ -217,7 +222,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         {
             pSummoned->SetWalk(false);
             pSummoned->SetLevitate(true);
-            pSummoned->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2], false);
+            pSummoned->GetMotionMaster()->MovePoint(0, aMadrigosaLoc[1].m_fX, aMadrigosaLoc[1].m_fY, aMadrigosaLoc[1].m_fZ, false);
         }
         else if (pSummoned->GetEntry() == NPC_BRUTALLUS_DEATH_CLOUD)
             pSummoned->CastSpell(pSummoned, SPELL_BRUTALLUS_DEATH_CLOUD, true);
@@ -274,7 +279,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
                 break;
             case YELL_MADR_INTRO:
                 if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
-                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_GROUND, aMadrigosaGroundLoc[0], aMadrigosaGroundLoc[1], aMadrigosaGroundLoc[2]);
+                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_GROUND, aMadrigosaLoc[0].m_fX, aMadrigosaLoc[0].m_fY, aMadrigosaLoc[0].m_fZ);
                 break;
             case YELL_INTRO:
                 if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
@@ -291,7 +296,8 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
                 m_bCanDoMeleeAttack = false;
                 if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
                 {
-                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_ICE_BLOCK, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2]);
+                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_ICE_BLOCK, aMadrigosaLoc[1].m_fX, aMadrigosaLoc[1].m_fY, aMadrigosaLoc[1].m_fZ);
+                    pMadrigosa->HandleEmote(EMOTE_ONESHOT_LIFTOFF);
                     pMadrigosa->SetLevitate(true);
                 }
                 // Temporary! This will make Brutallus not follow Madrigosa through the air until mmaps are implemented
@@ -303,6 +309,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
                 m_uiMadrigosaSpellTimer = 2000;
                 break;
             case SPELL_FLAME_RING:
+                DoCastSpellIfCan(m_creature, SPELL_CLEAR_DEBUFFS, CAST_TRIGGERED);
                 DoCastSpellIfCan(m_creature, SPELL_FLAME_RING, CAST_TRIGGERED);
                 break;
             case YELL_INTRO_BREAK_ICE:
@@ -314,7 +321,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
                 break;
             case POINT_MOVE_GROUND:
                 if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
-                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_GROUND, aMadrigosaGroundLoc[0], aMadrigosaGroundLoc[1], aMadrigosaGroundLoc[2]);
+                    pMadrigosa->GetMotionMaster()->MovePoint(POINT_MOVE_GROUND, aMadrigosaLoc[0].m_fX, aMadrigosaLoc[0].m_fY, aMadrigosaLoc[0].m_fZ);
                 m_uiMadrigosaSpellTimer = 0;
                 break;
             case YELL_MADR_TRAP:
@@ -450,6 +457,10 @@ CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
     return new boss_brutallusAI(pCreature);
 }
 
+/*######
+## spell_aura_dummy_npc_brutallus_cloud
+######*/
+
 bool EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud(const Aura* pAura, bool bApply)
 {
     // On Aura removal start Felmyst summon visuals
@@ -472,6 +483,10 @@ bool EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud(const Aura* pAura, boo
     }
     return true;
 }
+
+/*######
+## at_madrigosa
+######*/
 
 bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {

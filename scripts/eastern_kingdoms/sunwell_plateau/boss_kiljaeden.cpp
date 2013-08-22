@@ -93,6 +93,7 @@ enum
     SPELL_RING_BLUE_FLAME       = 45825,        // cast by the orb targets when activated
     SPELL_ANVEENA_PRISON        = 46367,
     SPELL_SACRIFICE_ANVEENA     = 46474,
+    SPELL_ARCANE_BOLT           = 45670,        // used by Kalec
     SPELL_SINISTER_REFL_CLASS   = 45893,        // increase the size of the clones
     SPELL_SINISTER_REFL_CLONE   = 45785,        // clone the player
     SPELL_VENGEANCE_BLUE_FLIGHT = 45839,        // possess the dragon
@@ -118,14 +119,15 @@ enum
     EVENT_DRAGON_ORB            = 9,
 
     // outro
-    SPELL_TELEPORT_VISUAL       = 41232,
+    SPELL_TELEPORT_VISUAL       = 12980,
     SPELL_KALEC_TELEPORT        = 46473,            // teleports and transforms Kalec in human form
+    SPELL_ARCANE_PORTAL         = 42047,
     SPELL_CALL_ENTROPIUS        = 46818,
     SPELL_ENTROPIUS_BODY        = 46819,
     SPELL_BLAZE_TO_LIGHT        = 46821,
     SPELL_SUNWELL_IGNITION      = 46822,
 
-    NPC_BOSS_PORTAL             = 24925,
+    NPC_INERT_PORTAL            = 26254,
     NPC_CORE_ENTROPIUS          = 26262,
     NPC_SOLDIER                 = 26259,            // summoned in 2 waves before Velen. Should move into 2 circle formations
     NPC_RIFTWALKER              = 26289,
@@ -167,7 +169,7 @@ static const DialogueEntry aOutroDialogue[] =
 {
     {NPC_KALECGOS,          0,              15000},
     {SAY_KALECGOS_GOODBYE,  NPC_KALECGOS,   40000},
-    {NPC_BOSS_PORTAL,       0,              10000},
+    {NPC_INERT_PORTAL,      0,              10000},
     {POINT_SUMMON_SOLDIERS, 0,              18000},
     {NPC_VELEN,             0,              1000},
     {NPC_LIADRIN,           0,              4000},
@@ -190,19 +192,18 @@ static const DialogueEntry aOutroDialogue[] =
     {0, 0, 0},
 };
 
-struct EventLocations
-{
-    float m_fX, m_fY, m_fZ, m_fO;
-};
-
 static const EventLocations aOutroLocations[] =
 {
-    {1727.854f, 656.060f, 28.31f, 3.86f},       // portal summon loc
-    {1716.969f, 646.407f, 28.05f, 3.91f},       // velen summon loc
-    {1718.862f, 644.528f, 28.05f, 3.87f},       // liadrin summon loc
+    {1725.469f, 650.939f, 30.314f, 3.78f},      // portal summon loc
+    {1717.776f, 645.178f, 28.223f, 3.83f},      // velen summon loc
+    {1720.024f, 643.233f, 28.133f, 3.76f},      // liadrin summon loc
     {1712.110f, 641.044f, 27.80f},              // velen move forward
-    {1711.537f, 637.600f, 27.34f}               // liadrin move forward
+    {1711.537f, 637.600f, 27.34f},              // liadrin move forward
+    {1698.946f, 628.206f, 83.003f, 0.76f},      // entropius core summon loc
 };
+
+// Note: the Z loc should be 143.69 but currently we are not using it because it's too far away
+static const float aKalegSpawnLoc[4] = {1734.431f, 593.1974f, 130.6977f, 4.55f};
 
 /*######
 ## npc_kiljaeden_controller
@@ -239,14 +240,16 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
             case NPC_KALECGOS:
                 if (Creature* pKalec = m_pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS))
                 {
+                    pKalec->GetMotionMaster()->Clear();
+                    pKalec->GetMotionMaster()->MoveIdle();
                     pKalec->CastSpell(pKalec, SPELL_KALEC_TELEPORT, true);
                     pKalec->SetLevitate(false);
                 }
-                m_creature->SummonCreature(NPC_CORE_ENTROPIUS, m_creature->GetPositionX(), m_creature->GetPositionY(), 85.0f, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                m_creature->SummonCreature(NPC_CORE_ENTROPIUS, aOutroLocations[5].m_fX, aOutroLocations[5].m_fY, aOutroLocations[5].m_fZ, aOutroLocations[5].m_fO, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 break;
-            case NPC_BOSS_PORTAL:
+            case NPC_INERT_PORTAL:
                 // ToDo: summon soldiers to the right
-                m_creature->SummonCreature(NPC_BOSS_PORTAL, aOutroLocations[0].m_fX, aOutroLocations[0].m_fY, aOutroLocations[0].m_fZ, aOutroLocations[0].m_fO, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                m_creature->SummonCreature(NPC_INERT_PORTAL, aOutroLocations[0].m_fX, aOutroLocations[0].m_fY, aOutroLocations[0].m_fZ, aOutroLocations[0].m_fO, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 break;
             case POINT_SUMMON_SOLDIERS:
                 // ToDo: summon soldiers to the left
@@ -303,8 +306,9 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
                 pSummoned->SetLevitate(true);
                 m_EntropiusGuid = pSummoned->GetObjectGuid();
                 break;
-            case NPC_BOSS_PORTAL:
+            case NPC_INERT_PORTAL:
                 m_PortalGuid = pSummoned->GetObjectGuid();
+                pSummoned->CastSpell(pSummoned, SPELL_ARCANE_PORTAL, true);
                 break;
         }
     }
@@ -452,7 +456,11 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
     void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_KALECGOS)
+        {
             DoScriptText(SAY_KALECGOS_INTRO, pSummoned);
+            pSummoned->CastSpell(pSummoned, SPELL_ARCANE_BOLT, true);
+            pSummoned->GetMotionMaster()->MoveRandomAroundPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), pSummoned->GetPositionZ(), 30.0f);
+        }
         else if (pSummoned->GetEntry() == NPC_SHIELD_ORB)
         {
             pSummoned->CastSpell(pSummoned, SPELL_SHADOW_BOLT_AURA, true);
@@ -639,7 +647,7 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 {
                     if (m_uiKalecSummonTimer <= uiDiff)
                     {
-                        m_creature->SummonCreature(NPC_KALECGOS, m_creature->GetPositionX(), m_creature->GetPositionY(), 85.0f, 3.80f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        m_creature->SummonCreature(NPC_KALECGOS, aKalegSpawnLoc[0], aKalegSpawnLoc[1], aKalegSpawnLoc[2], aKalegSpawnLoc[3], TEMPSUMMON_CORPSE_DESPAWN, 0);
                         m_uiKalecSummonTimer = 0;
                     }
                     else

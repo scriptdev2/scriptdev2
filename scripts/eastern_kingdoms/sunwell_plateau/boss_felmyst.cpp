@@ -187,6 +187,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
 
         float fGroundZ = m_creature->GetMap()->GetHeight(m_creature->GetPhaseMask(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
         m_creature->GetMotionMaster()->MovePoint(PHASE_TRANSITION, pWho->GetPositionX(), pWho->GetPositionY(), fGroundZ, false);
+        m_creature->HandleEmote(EMOTE_ONESHOT_LAND);
     }
 
     void KilledUnit(Unit* /*pVictim*/) override

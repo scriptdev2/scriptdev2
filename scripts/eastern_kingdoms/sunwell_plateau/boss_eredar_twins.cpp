@@ -89,6 +89,10 @@ static const DialogueEntry aIntroDialogue[] =
     {0, 0, 0},
 };
 
+/*######
+## boss_alythess
+######*/
+
 struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
 {
     boss_alythessAI(Creature* pCreature) : ScriptedAI(pCreature),
@@ -282,6 +286,10 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
             m_uiBlazeTimer -= uiDiff;
     }
 };
+
+/*######
+## boss_sacrolash
+######*/
 
 struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
 {
@@ -502,6 +510,10 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
     }
 };
+
+/*######
+## npc_shadow_image
+######*/
 
 struct MANGOS_DLL_DECL npc_shadow_imageAI : public ScriptedAI
 {
