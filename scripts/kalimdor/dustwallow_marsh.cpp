@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 1173, 1273, 1324, 11209, 11180.
+SDComment: Quest support: 1173, 1222, 1270, 1273, 1324, 11209, 11180.
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -27,6 +27,8 @@ npc_restless_apparition
 npc_morokk
 npc_ogron
 npc_private_hendel
+npc_stinky_ignatz
+at_nats_landing
 EndContentData */
 
 #include "precompiled.h"
@@ -664,6 +666,102 @@ CreatureAI* GetAI_npc_private_hendel(Creature* pCreature)
     return new npc_private_hendelAI(pCreature);
 }
 
+/*#####
+## npc_stinky_ignatz
+## TODO Note: Possible some dynamic behaviour is missing. Faction change is guessed
+#####*/
+
+enum
+{
+    QUEST_ID_STINKYS_ESCAPE_ALLIANCE    = 1222,
+    QUEST_ID_STINKYS_ESCAPE_HORDE       = 1270,
+
+    SAY_STINKY_BEGIN                    = -1000958,
+    SAY_STINKY_FIRST_STOP               = -1000959,
+    SAY_STINKY_2_MONSTERS               = -1000960,
+    SAY_STINKY_GATHERING                = -1000961,
+    SAY_STINKY_END                      = -1000962,
+
+    GO_BOGBEAN_PLANT                    = 20939,
+};
+
+struct MANGOS_DLL_DECL npc_stinky_ignatzAI : public npc_escortAI
+{
+    npc_stinky_ignatzAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        Reset();
+    }
+
+    ObjectGuid m_bogbeanPlantGuid;
+
+    void Reset() override {}
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_START_ESCORT && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoScriptText(SAY_STINKY_BEGIN, m_creature);
+            Start(false, (Player*)pInvoker, GetQuestTemplateStore(uiMiscValue));
+            m_creature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+        }
+    }
+
+    void WaypointReached(uint32 uiPointId) override
+    {
+        switch (uiPointId)
+        {
+            case 11:
+                DoScriptText(SAY_STINKY_FIRST_STOP, m_creature);
+                break;
+            case 17:
+                // TODO Note: This text would imply some waiting till two mobs are killed, such behaviour is neither confirmed nor implemented. Input welcome!
+                DoScriptText(SAY_STINKY_2_MONSTERS, m_creature);
+
+                if (GameObject* pBogbeanPlant = GetClosestGameObjectWithEntry(m_creature, GO_BOGBEAN_PLANT, DEFAULT_VISIBILITY_DISTANCE))
+                {
+                    m_bogbeanPlantGuid = pBogbeanPlant->GetObjectGuid();
+                    m_creature->SetFacingToObject(pBogbeanPlant);
+                }
+
+                break;
+            case 19:
+                DoScriptText(SAY_STINKY_GATHERING, m_creature);
+                break;
+            case 24:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(pPlayer->GetTeam() == ALLIANCE ? QUEST_ID_STINKYS_ESCAPE_ALLIANCE : QUEST_ID_STINKYS_ESCAPE_HORDE, m_creature);
+
+                DoScriptText(SAY_STINKY_END, m_creature);
+                break;
+        }
+    }
+
+    void WaypointStart(uint32 uiPointId)
+    {
+        if (uiPointId == 20)
+        {
+            if (GameObject* pBogbeanPlant = m_creature->GetMap()->GetGameObject(m_bogbeanPlantGuid))
+                pBogbeanPlant->Use(m_creature);
+            m_bogbeanPlantGuid.Clear();
+            m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_stinky_ignatz(Creature* pCreature)
+{
+    return new npc_stinky_ignatzAI(pCreature);
+}
+
+bool QuestAccept_npc_stinky_ignatz(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ID_STINKYS_ESCAPE_ALLIANCE || pQuest->GetQuestId() == QUEST_ID_STINKYS_ESCAPE_HORDE)
+        pCreature->AI()->SendAIEvent(AI_EVENT_START_ESCORT, pPlayer, pCreature, pQuest->GetQuestId());
+
+    return true;
+}
+
 /*######
 ## at_nats_landing
 ######*/
@@ -719,6 +817,12 @@ void AddSC_dustwallow_marsh()
     pNewScript->Name = "npc_private_hendel";
     pNewScript->GetAI = &GetAI_npc_private_hendel;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_private_hendel;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_stinky_ignatz";
+    pNewScript->GetAI = &GetAI_npc_stinky_ignatz;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_stinky_ignatz;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
