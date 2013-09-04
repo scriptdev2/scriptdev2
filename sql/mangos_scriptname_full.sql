@@ -188,6 +188,7 @@ INSERT INTO world_template VALUES
 
 /* ARATHI HIGHLANDS */
 UPDATE creature_template SET ScriptName='npc_professor_phizzlethorpe' WHERE entry=2768;
+UPDATE creature_template SET ScriptName='npc_kinelory' WHERE entry=2713;
 
 /* ASHENVALE */
 UPDATE creature_template SET ScriptName='npc_muglash' WHERE entry=12717;

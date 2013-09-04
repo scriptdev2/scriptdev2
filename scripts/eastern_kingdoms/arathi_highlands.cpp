@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Arathi Highlands
 SD%Complete: 100
-SDComment: Quest support: 665
+SDComment: Quest support: 660, 665
 SDCategory: Arathi Highlands
 EndScriptData */
 
 /* ContentData
 npc_professor_phizzlethorpe
+npc_kinelory
 EndContentData */
 
 #include "precompiled.h"
@@ -114,6 +115,125 @@ CreatureAI* GetAI_npc_professor_phizzlethorpe(Creature* pCreature)
     return new npc_professor_phizzlethorpeAI(pCreature);
 }
 
+/*######
+## npc_kinelory
+######*/
+
+enum
+{
+    SAY_START               = -1000948,
+    SAY_REACH_BOTTOM        = -1000949,
+    SAY_AGGRO_KINELORY      = -1000950,
+    SAY_AGGRO_JORELL        = -1000951,
+    SAY_WATCH_BACK          = -1000952,
+    EMOTE_BELONGINGS        = -1000953,
+    SAY_DATA_FOUND          = -1000954,
+    SAY_ESCAPE              = -1000955,
+    SAY_FINISH              = -1000956,
+    EMOTE_HAND_PACK         = -1000957,
+
+    // ToDo: find the healing spell id!
+    SPELL_BEAR_FORM         = 4948,
+
+    NPC_JORELL              = 2733,
+    NPC_QUAE                = 2712,
+
+    QUEST_HINTS_NEW_PLAGUE  = 660
+};
+
+struct MANGOS_DLL_DECL npc_kineloryAI : public npc_escortAI
+{
+    npc_kineloryAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    uint32 m_uiBearFormTimer;
+
+    void Reset() override
+    {
+        m_uiBearFormTimer = urand(1000, 5000);
+    }
+
+    void WaypointReached(uint32 uiPointId) override
+    {
+        switch (uiPointId)
+        {
+            case 9:
+                DoScriptText(SAY_REACH_BOTTOM, m_creature);
+                break;
+            case 16:
+                DoScriptText(SAY_WATCH_BACK, m_creature);
+                DoScriptText(EMOTE_BELONGINGS, m_creature);
+                break;
+            case 17:
+                DoScriptText(SAY_DATA_FOUND, m_creature);
+                break;
+            case 18:
+                DoScriptText(SAY_ESCAPE, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    m_creature->SetFacingToObject(pPlayer);
+                SetRun();
+                break;
+            case 33:
+                DoScriptText(SAY_FINISH, m_creature);
+                if (Creature* pQuae = GetClosestCreatureWithEntry(m_creature, NPC_QUAE, 10.0f))
+                {
+                    DoScriptText(EMOTE_HAND_PACK, m_creature, pQuae);
+                    m_creature->SetFacingToObject(pQuae);
+                }
+                break;
+            case 34:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_HINTS_NEW_PLAGUE, m_creature);
+                break;
+        }
+    }
+
+    void Aggro(Unit* pWho) override
+    {
+        if (pWho->GetEntry() == NPC_JORELL)
+            DoScriptText(SAY_AGGRO_JORELL, pWho, m_creature);
+        else if (roll_chance_i(10))
+            DoScriptText(SAY_AGGRO_KINELORY, m_creature);
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_START_ESCORT && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoScriptText(SAY_START, m_creature);
+            Start(false, (Player*)pInvoker, GetQuestTemplateStore(uiMiscValue), true);
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiBearFormTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_BEAR_FORM) == CAST_OK)
+                m_uiBearFormTimer = urand(25000, 30000);
+        }
+        else
+            m_uiBearFormTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_kinelory(Creature* pCreature)
+{
+    return new npc_kineloryAI(pCreature);
+}
+
+bool QuestAccept_npc_kinelory(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_HINTS_NEW_PLAGUE)
+        pCreature->AI()->SendAIEvent(AI_EVENT_START_ESCORT, pPlayer, pCreature, pQuest->GetQuestId());
+
+    return true;
+}
+
 void AddSC_arathi_highlands()
 {
     Script* pNewScript;
@@ -122,5 +242,11 @@ void AddSC_arathi_highlands()
     pNewScript->Name = "npc_professor_phizzlethorpe";
     pNewScript->GetAI = &GetAI_npc_professor_phizzlethorpe;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_professor_phizzlethorpe;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kinelory";
+    pNewScript->GetAI = &GetAI_npc_kinelory;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_kinelory;
     pNewScript->RegisterSelf();
 }
