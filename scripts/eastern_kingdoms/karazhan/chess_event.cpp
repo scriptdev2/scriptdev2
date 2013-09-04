@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: chess_event
-SD%Complete: 75
-SDComment: Friendly game NYI; Chess AI could use some improvements.
+SD%Complete: 80
+SDComment: Chess AI could use some improvements.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -176,6 +176,7 @@ enum
     GOSSIP_ITEM_HUMAN_CONJURER      = -3532015,
     GOSSIP_ITEM_HUMAN_CLERIC        = -3532016,
     GOSSIP_ITEM_KING_LLANE          = -3532017,
+    GOSSIP_ITEM_RESET_BOARD         = -3532018,
 
     // gossip menu
     GOSSIP_MENU_ID_GRUNT            = 10425,
@@ -190,6 +191,8 @@ enum
     GOSSIP_MENU_ID_CLERIC           = 10416,
     GOSSIP_MENU_ID_ELEMENTAL        = 10413,
     GOSSIP_MENU_ID_LLANE            = 10418,
+    GOSSIP_MENU_ID_MEDIVH           = 10506,
+    GOSSIP_MENU_ID_MEDIVH_BEATEN    = 10718,
 
     // misc
     TARGET_TYPE_RANDOM              = 1,
@@ -256,6 +259,40 @@ CreatureAI* GetAI_npc_echo_of_medivh(Creature* pCreature)
     return new npc_echo_of_medivhAI(pCreature);
 }
 
+bool GossipHello_npc_echo_of_medivh(Player* pPlayer, Creature* pCreature)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_CHESS) != DONE && pInstance->GetData(TYPE_CHESS) != SPECIAL)
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ID_MEDIVH, pCreature->GetObjectGuid());
+        else
+        {
+            if (pInstance->GetData(TYPE_CHESS) == SPECIAL)
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RESET_BOARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ID_MEDIVH_BEATEN, pCreature->GetObjectGuid());
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+bool GossipSelect_npc_echo_of_medivh(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+    {
+        // reset the board
+        if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+            pInstance->SetData(TYPE_CHESS, DONE);
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
 /*######
 ## npc_chess_piece_generic
 ######*/
@@ -286,11 +323,12 @@ struct MANGOS_DLL_DECL npc_chess_piece_genericAI : public ScriptedAI
         m_uiSpellCommandTimer = m_creature->HasAura(SPELL_CONTROL_PIECE) ? 0 : 1000;
         m_bIsPrimarySpell = true;
 
-        // cancel move timer for player faction npcs
+        // cancel move timer for player faction npcs or for friendly games
         if (m_pInstance)
         {
             if ((m_pInstance->GetPlayerTeam() == ALLIANCE && m_creature->getFaction() == FACTION_ID_CHESS_ALLIANCE) ||
-                (m_pInstance->GetPlayerTeam() == HORDE && m_creature->getFaction() == FACTION_ID_CHESS_HORDE))
+                (m_pInstance->GetPlayerTeam() == HORDE && m_creature->getFaction() == FACTION_ID_CHESS_HORDE) ||
+                m_pInstance->GetData(TYPE_CHESS) == DONE)
                 m_uiMoveCommandTimer = 0;
         }
     }
@@ -546,6 +584,8 @@ bool GossipSelect_npc_chess_generic(Player* pPlayer, Creature* pCreature, uint32
 
             if (pInstance->GetData(TYPE_CHESS) == NOT_STARTED)
                 pInstance->SetData(TYPE_CHESS, IN_PROGRESS);
+            else if (pInstance->GetData(TYPE_CHESS) == DONE)
+                pInstance->SetData(TYPE_CHESS, SPECIAL);
         }
 
         pPlayer->CLOSE_GOSSIP_MENU();
@@ -647,17 +687,22 @@ struct MANGOS_DLL_DECL npc_king_llaneAI : public npc_chess_piece_genericAI
         if (!pMedivh)
             return;
 
-        if (m_pInstance->GetPlayerTeam() == HORDE)
-        {
-            DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_PLAYER);
-            DoScriptText(EMOTE_LIFT_CURSE, pMedivh);
-
+        if (m_pInstance->GetData(TYPE_CHESS) == SPECIAL)
             m_pInstance->SetData(TYPE_CHESS, DONE);
-        }
         else
         {
-            DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_MEDIVH);
-            m_pInstance->SetData(TYPE_CHESS, NOT_STARTED);
+            if (m_pInstance->GetPlayerTeam() == HORDE)
+            {
+                DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_PLAYER);
+                DoScriptText(EMOTE_LIFT_CURSE, pMedivh);
+
+                m_pInstance->SetData(TYPE_CHESS, DONE);
+            }
+            else
+            {
+                DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_MEDIVH);
+                m_pInstance->SetData(TYPE_CHESS, FAIL);
+            }
         }
 
         m_pInstance->DoMoveChessPieceToSides(SPELL_TRANSFORM_KING_LLANE, FACTION_ID_CHESS_ALLIANCE, true);
@@ -702,9 +747,9 @@ bool GossipHello_npc_king_llane(Player* pPlayer, Creature* pCreature)
     if (pPlayer->HasAura(SPELL_RECENTLY_IN_GAME) || pCreature->HasAura(SPELL_CONTROL_PIECE))
         return true;
 
-    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+    if (instance_karazhan* pInstance = (instance_karazhan*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) != DONE && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) != DONE && pPlayer->GetTeam() == ALLIANCE) || pInstance->IsFriendlyGameReady())
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KING_LLANE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -753,17 +798,22 @@ struct MANGOS_DLL_DECL npc_warchief_blackhandAI : public npc_chess_piece_generic
         if (!pMedivh)
             return;
 
-        if (m_pInstance->GetPlayerTeam() == ALLIANCE)
-        {
-            DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_PLAYER);
-            DoScriptText(EMOTE_LIFT_CURSE, pMedivh);
-
+        if (m_pInstance->GetData(TYPE_CHESS) == SPECIAL)
             m_pInstance->SetData(TYPE_CHESS, DONE);
-        }
         else
         {
-            DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_MEDIVH);
-            m_pInstance->SetData(TYPE_CHESS, NOT_STARTED);
+            if (m_pInstance->GetPlayerTeam() == ALLIANCE)
+            {
+                DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_PLAYER);
+                DoScriptText(EMOTE_LIFT_CURSE, pMedivh);
+
+                m_pInstance->SetData(TYPE_CHESS, DONE);
+            }
+            else
+            {
+                DoPlaySoundToSet(pMedivh, SOUND_ID_WIN_MEDIVH);
+                m_pInstance->SetData(TYPE_CHESS, FAIL);
+            }
         }
 
         m_pInstance->DoMoveChessPieceToSides(SPELL_TRANSFORM_BLACKHAND, FACTION_ID_CHESS_HORDE, true);
@@ -808,9 +858,9 @@ bool GossipHello_npc_warchief_blackhand(Player* pPlayer, Creature* pCreature)
     if (pPlayer->HasAura(SPELL_RECENTLY_IN_GAME) || pCreature->HasAura(SPELL_CONTROL_PIECE))
         return true;
 
-    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+    if (instance_karazhan* pInstance = (instance_karazhan*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) != DONE && pPlayer->GetTeam() == HORDE)
+        if (pInstance->GetData(TYPE_CHESS) != DONE && pPlayer->GetTeam() == HORDE || pInstance->IsFriendlyGameReady())
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WARCHIEF_BLACKHAND, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -886,7 +936,7 @@ bool GossipHello_npc_human_conjurer(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HUMAN_CONJURER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -962,7 +1012,7 @@ bool GossipHello_npc_orc_warlock(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ORC_WARLOCK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1052,7 +1102,7 @@ bool GossipHello_npc_human_footman(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HUMAN_FOOTMAN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1142,7 +1192,7 @@ bool GossipHello_npc_orc_grunt(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ORC_GRUNT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1218,7 +1268,7 @@ bool GossipHello_npc_water_elemental(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WATER_ELEMENTAL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1294,7 +1344,7 @@ bool GossipHello_npc_summoned_daemon(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMONED_DEAMON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1370,7 +1420,7 @@ bool GossipHello_npc_human_charger(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HUMAN_CHARGER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1446,7 +1496,7 @@ bool GossipHello_npc_orc_wolf(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ORC_WOLF, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1522,7 +1572,7 @@ bool GossipHello_npc_human_cleric(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == ALLIANCE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HUMAN_CLERIC, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1598,7 +1648,7 @@ bool GossipHello_npc_orc_necrolyte(Player* pPlayer, Creature* pCreature)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE)
+        if ((pInstance->GetData(TYPE_CHESS) == IN_PROGRESS && pPlayer->GetTeam() == HORDE) || pInstance->GetData(TYPE_CHESS) == SPECIAL)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ORC_NECROLYTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -1613,6 +1663,8 @@ void AddSC_chess_event()
     pNewScript = new Script;
     pNewScript->Name = "npc_echo_of_medivh";
     pNewScript->GetAI = GetAI_npc_echo_of_medivh;
+    pNewScript->pGossipHello = GossipHello_npc_echo_of_medivh;
+    pNewScript->pGossipSelect = GossipSelect_npc_echo_of_medivh;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

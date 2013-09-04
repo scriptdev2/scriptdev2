@@ -44,7 +44,8 @@ instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
     m_uiTeam(0),
     m_uiChessResetTimer(0),
     m_uiAllianceStalkerCount(0),
-    m_uiHordeStalkerCount(0)
+    m_uiHordeStalkerCount(0),
+    m_bFriendlyGame(false)
 {
     Initialize();
 }
@@ -241,15 +242,20 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
         case TYPE_CHESS:
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(GO_GAMESMANS_HALL_EXIT_DOOR);
-                DoRespawnGameObject(GO_DUST_COVERED_CHEST, DAY);
-                DoToggleGameObjectFlags(GO_DUST_COVERED_CHEST, GO_FLAG_NO_INTERACT, false);
+                // doors and loot are not handled for friendly games
+                if (GetData(TYPE_CHESS) != SPECIAL)
+                {
+                    DoUseDoorOrButton(GO_GAMESMANS_HALL_EXIT_DOOR);
+                    DoRespawnGameObject(GO_DUST_COVERED_CHEST, DAY);
+                    DoToggleGameObjectFlags(GO_DUST_COVERED_CHEST, GO_FLAG_NO_INTERACT, false);
+                }
 
                 // cast game end spells
                 if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_ECHO_MEDIVH))
                 {
                     pMedivh->CastSpell(pMedivh, SPELL_FORCE_KILL_BUNNY, true);
                     pMedivh->CastSpell(pMedivh, SPELL_GAME_OVER, true);
+                    pMedivh->CastSpell(pMedivh, SPELL_CLEAR_BOARD, true);
                 }
                 if (Creature* pController = GetSingleCreatureFromStorage(NPC_CHESS_VICTORY_CONTROLLER))
                     pController->CastSpell(pController, SPELL_VICTORY_VISUAL, true);
@@ -262,9 +268,10 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
                         pPlayer->RemoveAurasDueToSpell(SPELL_GAME_IN_SESSION);
                 }
 
-                // ToDo: reset board for friendly game!
+                m_bFriendlyGame = false;
+                m_uiChessResetTimer = 35000;
             }
-            else if (uiData == NOT_STARTED)
+            else if (uiData == FAIL)
             {
                 // clean the board for reset
                 if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_ECHO_MEDIVH))
@@ -283,7 +290,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
 
                 m_uiChessResetTimer = 35000;
             }
-            else if (uiData == IN_PROGRESS)
+            else if (uiData == IN_PROGRESS || uiData == SPECIAL)
                 DoPrepareChessEvent();
             m_auiEncounter[uiType] = uiData;
             break;
@@ -582,6 +589,11 @@ void instance_karazhan::Update(uint32 uiDiff)
                     pTemp->HandleEmote(EMOTE_STATE_NONE);
                 }
             }
+
+            if (GetData(TYPE_CHESS) == FAIL)
+                SetData(TYPE_CHESS, NOT_STARTED);
+            else if (GetData(TYPE_CHESS) == DONE)
+                m_bFriendlyGame = true;
 
             m_uiChessResetTimer = 0;
         }

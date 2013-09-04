@@ -158,6 +158,7 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         void DoPrepareOperaStage(Creature* pOrganizer);
 
         uint32 GetPlayerTeam() { return m_uiTeam; }
+        bool IsFriendlyGameReady() { return m_bFriendlyGame; }
         void DoMoveChessPieceToSides(uint32 uiSpellId, uint32 uiFaction, bool bGameEnd = false);
         void GetChessPiecesByFaction(GuidList& lList, uint32 uiFaction) { lList = uiFaction == FACTION_ID_CHESS_ALLIANCE ? m_lChessPiecesAlliance : m_lChessPiecesHorde; }
 
@@ -181,6 +182,8 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         uint8 m_uiAllianceStalkerCount;
         uint8 m_uiHordeStalkerCount;
+
+        bool m_bFriendlyGame;
 
         ObjectGuid m_HordeStatusGuid;
         ObjectGuid m_AllianceStatusGuid;
