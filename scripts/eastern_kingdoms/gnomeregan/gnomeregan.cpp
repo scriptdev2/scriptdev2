@@ -16,18 +16,20 @@
 
 /* ScriptData
 SDName: gnomeregan
-SD%Complete: 100
-SDComment:  Grubbis Encounter
+SD%Complete: 90
+SDComment:  Grubbis Encounter, quest 2904 (A fine mess)
 SDCategory: Gnomeregan
 EndScriptData */
 
 /* ContentData
 npc_blastmaster_emi_shortfuse
+npc_kernobee
 EndContentData */
 
 #include "precompiled.h"
 #include "gnomeregan.h"
 #include "escort_ai.h"
+#include "follower_ai.h"
 
 /*######
 ## npc_blastmaster_emi_shortfuse
@@ -625,6 +627,82 @@ bool GossipSelect_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* pCrea
     return true;
 }
 
+/*######
+## npc_kernobee
+## TODO: It appears there are some things missing, including his? alarm-bot
+######*/
+
+enum
+{
+    QUEST_A_FINE_MESS           = 2904,
+    TRIGGER_GNOME_EXIT          = 324,                      // Add scriptlib support for it, atm simply use hardcoded values
+};
+
+static const float aKernobeePositions[2][3] =
+{
+    {-330.92f, -3.03f, -152.85f},                           // End position
+    {-297.32f, -7.32f, -152.85f}                            // Walk out of the door
+};
+
+struct MANGOS_DLL_DECL npc_kernobeeAI : public FollowerAI
+{
+    npc_kernobeeAI(Creature* pCreature) : FollowerAI(pCreature)
+    {
+        m_uiCheckEndposTimer = 10000;
+        Reset();
+    }
+
+    uint32 m_uiCheckEndposTimer;
+
+    void Reset() override {}
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_START_EVENT && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            // No idea why he has UNIT_STAND_STATE_DEAD in UDB ..
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+            StartFollow((Player*)pInvoker, 0, GetQuestTemplateStore(uiMiscValue));
+        }
+    }
+
+    void UpdateFollowerAI(const uint32 uiDiff)
+    {
+        FollowerAI::UpdateFollowerAI(uiDiff);               // Do combat handling
+
+        if (m_creature->isInCombat() || !HasFollowState(STATE_FOLLOW_INPROGRESS) || HasFollowState(STATE_FOLLOW_COMPLETE))
+            return;
+
+        if (m_uiCheckEndposTimer < uiDiff)
+        {
+            m_uiCheckEndposTimer = 500;
+            if (m_creature->IsWithinDist3d(aKernobeePositions[0][0], aKernobeePositions[0][1], aKernobeePositions[0][2], 2 * INTERACTION_DISTANCE))
+            {
+                SetFollowComplete(true);
+                if (Player* pPlayer = GetLeaderForFollower())
+                    pPlayer->GroupEventHappens(QUEST_A_FINE_MESS, m_creature);
+                m_creature->GetMotionMaster()->MovePoint(1, aKernobeePositions[1][0], aKernobeePositions[1][1], aKernobeePositions[1][2], false);
+                m_creature->ForcedDespawn(2000);
+            }
+        }
+        else
+            m_uiCheckEndposTimer -= uiDiff;
+    }
+};
+
+CreatureAI* GetAI_npc_kernobee(Creature* pCreature)
+{
+    return new npc_kernobeeAI(pCreature);
+}
+
+bool QuestAccept_npc_kernobee(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_A_FINE_MESS)
+        pCreature->AI()->SendAIEvent(AI_EVENT_START_EVENT, pPlayer, pCreature, pQuest->GetQuestId());
+
+    return true;
+}
+
 void AddSC_gnomeregan()
 {
     Script* pNewScript;
@@ -634,5 +712,11 @@ void AddSC_gnomeregan()
     pNewScript->GetAI = &GetAI_npc_blastmaster_emi_shortfuse;
     pNewScript->pGossipHello = &GossipHello_npc_blastmaster_emi_shortfuse;
     pNewScript->pGossipSelect = &GossipSelect_npc_blastmaster_emi_shortfuse;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kernobee";
+    pNewScript->GetAI = &GetAI_npc_kernobee;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_kernobee;
     pNewScript->RegisterSelf();
 }
