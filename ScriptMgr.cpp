@@ -365,7 +365,7 @@ uint32 GetNPCDialogStatus(Player* pPlayer, Creature* pCreature)
     Script* pTempScript = m_scripts[pCreature->GetScriptId()];
 
     if (!pTempScript || !pTempScript->pDialogStatusNPC)
-        return 100;
+        return DIALOG_STATUS_UNDEFINED;
 
     pPlayer->PlayerTalkClass->ClearMenus();
 
@@ -378,7 +378,7 @@ uint32 GetGODialogStatus(Player* pPlayer, GameObject* pGo)
     Script* pTempScript = m_scripts[pGo->GetGOInfo()->ScriptId];
 
     if (!pTempScript || !pTempScript->pDialogStatusGO)
-        return 100;
+        return DIALOG_STATUS_UNDEFINED;
 
     pPlayer->PlayerTalkClass->ClearMenus();
 
