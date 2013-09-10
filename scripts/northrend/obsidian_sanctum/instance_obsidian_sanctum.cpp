@@ -37,6 +37,9 @@ instance_obsidian_sanctum::instance_obsidian_sanctum(Map* pMap) : ScriptedInstan
 void instance_obsidian_sanctum::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+    for (uint8 i = 0; i < MAX_TWILIGHT_DRAGONS; ++i)
+        m_bPortalActive[i] = false;
 }
 
 void instance_obsidian_sanctum::OnCreatureCreate(Creature* pCreature)

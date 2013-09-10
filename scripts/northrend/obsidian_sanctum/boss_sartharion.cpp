@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss Sartharion
-SD%Complete: 80%
-SDComment: Portal events need to be implemented
+SD%Complete: 95%
+SDComment: Portal event may be incomplete - additional reseach required.
 SDCategory: Obsidian Sanctum
 EndScriptData */
 
@@ -42,12 +42,11 @@ enum
     SAY_SARTHARION_SLAY_2                       = -1615030,
     SAY_SARTHARION_SLAY_3                       = -1615031,
 
-    WHISPER_LAVA_CHURN                          = -1615032,
-
-    WHISPER_SHADRON_DICIPLE                     = -1615008,
-    WHISPER_VESPERON_DICIPLE                    = -1615041,
-    WHISPER_HATCH_EGGS                          = -1615017,
-    WHISPER_OPEN_PORTAL                         = -1615042, // whisper, shared by two dragons
+    EMOTE_LAVA_CHURN                            = -1615032,
+    EMOTE_SHADRON_DICIPLE                       = -1615008,
+    EMOTE_VESPERON_DICIPLE                      = -1615041,
+    EMOTE_HATCH_EGGS                            = -1615017,
+    EMOTE_OPEN_PORTAL                           = -1615042, // emote shared by two dragons
 
     // Sartharion Spells
     SPELL_BERSERK                               = 61632,    // Increases the caster's attack speed by 150% and all damage it deals by 500% for 5 min.
@@ -62,63 +61,73 @@ enum
     SPELL_PYROBUFFET                            = 56916,    // currently used for hard enrage after 15 minutes
     SPELL_PYROBUFFET_RANGE                      = 58907,    // possibly used when player get too far away from dummy creatures (2x creature entry 30494)
 
-    SPELL_TWILIGHT_SHIFT_ENTER                  = 57620,    // enter phase. Player get this when click GO
+    // phase spells
+    // SPELL_TWILIGHT_SHIFT_ENTER               = 57620,    // enter phase. Player get this when click GO
     SPELL_TWILIGHT_SHIFT_REMOVAL                = 61187,    // leave phase
     SPELL_TWILIGHT_SHIFT_REMOVAL_ALL            = 61190,    // leave phase (probably version to make all leave)
 
     // Mini bosses common spells
-    SPELL_TWILIGHT_RESIDUE                      = 61885,    // makes immune to shadow damage, applied when leave phase
+    // SPELL_TWILIGHT_RESIDUE                   = 61885,    // makes immune to shadow damage, applied when leave phase (handled in core)
 
     // Miniboses (Vesperon, Shadron, Tenebron)
     SPELL_SHADOW_BREATH_H                       = 59126,    // Inflicts 8788 to 10212 Fire damage to enemies in a cone in front of the caster.
     SPELL_SHADOW_BREATH                         = 57570,    // Inflicts 6938 to 8062 Fire damage to enemies in a cone in front of the caster.
-
     SPELL_SHADOW_FISSURE_H                      = 59127,    // Deals 9488 to 13512 Shadow damage to any enemy within the Shadow fissure after 5 sec.
     SPELL_SHADOW_FISSURE                        = 57579,    // Deals 6188 to 8812 Shadow damage to any enemy within the Shadow fissure after 5 sec.
 
     // Vesperon
     // In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
-    NPC_DISCIPLE_OF_VESPERON                    = 30858,    // Disciple of Vesperon
-    NPC_ACOLYTE_OF_VESPERON                     = 31219,    // Acolyte of Vesperon - summoned during Sartharion event
     SPELL_POWER_OF_VESPERON                     = 61251,    // Vesperon's presence decreases the maximum health of all enemies by 25%.
     SPELL_TWILIGHT_TORMENT_VESP                 = 57948,    // (Shadow only) trigger 57935 then 57988
     SPELL_TWILIGHT_TORMENT_VESP_ACO             = 58853,    // (Fire and Shadow) trigger 58835 then 57988
 
+    // Vesperon related npcs
+    NPC_DISCIPLE_OF_VESPERON                    = 30858,    // Disciple of Vesperon
+    NPC_ACOLYTE_OF_VESPERON                     = 31219,    // Acolyte of Vesperon - summoned during Sartharion event
+    // NPC_VESPERON_CONTROLLER                  = 30878,    // not clear how to use this; used only to cast 61190 to eject players to normal realm
+    // NPC_VESPERON_CONTROLLER_DEBUFF_CLEAR     = 32694,    // not used
+
     // Shadron
     // In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
-    NPC_DISCIPLE_OF_SHADRON                     = 30688,    // Disciple of Shadron
-    NPC_ACOLYTE_OF_SHADRON                      = 31218,    // Acolyte of Shadron - summoned during Sartharion event
     SPELL_POWER_OF_SHADRON                      = 58105,    // Shadron's presence increases Fire damage taken by all enemies by 100%.
     SPELL_GIFT_OF_TWILIGTH_SHA                  = 57835,    // TARGET_SCRIPT shadron
     SPELL_GIFT_OF_TWILIGTH_SAR                  = 58766,    // TARGET_SCRIPT sartharion
 
+    // Shadron related npcs
+    NPC_DISCIPLE_OF_SHADRON                     = 30688,    // Disciple of Shadron
+    NPC_ACOLYTE_OF_SHADRON                      = 31218,    // Acolyte of Shadron - summoned during Sartharion event
+    // NPC_SHADRON_PORTAL                       = 30741,    // not used
+    // NPC_SHADRON_PORTAL_VISUAL                = 30650,    // not used
+
     // Tenebron
     // in the portal spawns 6 eggs, if not killed in time (approx. 20s)  they will hatch,  whelps can cast 60708
     SPELL_POWER_OF_TENEBRON                     = 61248,    // Tenebron's presence increases Shadow damage taken by all enemies by 100%.
-    // Tenebron, dummy spell
-    SPELL_SUMMON_TWILIGHT_WHELP                 = 58035,    // doesn't work, will spawn NPC_TWILIGHT_WHELP
-    SPELL_SUMMON_SARTHARION_TWILIGHT_WHELP      = 58826,    // doesn't work, will spawn NPC_SHARTHARION_TWILIGHT_WHELP
+    SPELL_HATCH_EGGS_MAIN                       = 58793,    // Tenebron's hatch eggs spell - not used because core can't target other phase creatures
 
-    NPC_TWILIGHT_EGG                            = 30882,    // Twilight Egg - summoned during Tenebron event
-    NPC_SARTHARION_TWILIGHT_EGG                 = 31204,    // Twilight Egg - summoned during Sartharion event
-    NPC_TWILIGHT_EGG_CONTROLLER                 = 31138,
-
+    // other hatch eggs spells - currently it's unknown how to use them
     SPELL_HATCH_EGGS_H                          = 59189,
     SPELL_HATCH_EGGS                            = 58542,
     SPELL_HATCH_EGGS_EFFECT_H                   = 59190,
     SPELL_HATCH_EGGS_EFFECT                     = 58685,
 
-    // Whelps
+    // Tenebron related npcs
+    NPC_TWILIGHT_EGG                            = 30882,    // Twilight Egg - summoned during Tenebron event
+    NPC_SARTHARION_TWILIGHT_EGG                 = 31204,    // Twilight Egg - summoned during Sartharion event
+    NPC_TWILIGHT_EGG_CONTROLLER                 = 31138,    // not clear how to use this; used only to eject players to normal realm
+
+    // Twilight eggs spells
+    SPELL_SUMMON_TWILIGHT_WHELP                 = 58035,    // will spawn 30890
+    SPELL_SUMMON_SARTHARION_TWILIGHT_WHELP      = 58826,    // will spawn 31214
+
     NPC_TWILIGHT_WHELP                          = 30890,
     NPC_SHARTHARION_TWILIGHT_WHELP              = 31214,
-    SPELL_FADE_ARMOR                            = 60708,    // Reduces the armor of an enemy by 1500 for 15s
 
-    // flame tsunami
+    // Flame tsunami
     SPELL_FLAME_TSUNAMI                         = 57494,    // the visual dummy
     // SPELL_FLAME_TSUNAMI_LEAP                 = 60241,    // SPELL_EFFECT_138 some leap effect, causing caster to move in direction
     SPELL_FLAME_TSUNAMI_DMG_AURA                = 57492,    // periodic damage, npc has this aura
 
-    // fire cyclone
+    // Fire cyclone
     // SPELL_LAVA_STRIKE                        = 57578,    // triggers 57571 then trigger visual missile, then summon Lava Blaze on impact(spell 57572)
     SPELL_LAVA_STRIKE_IMPACT                    = 57591,
     // SPELL_CYCLONE_AURA                       = 57560,    // in creature_template_addon
@@ -127,10 +136,9 @@ enum
     NPC_FLAME_TSUNAMI                           = 30616,    // for the flame waves
     NPC_LAVA_BLAZE                              = 30643,    // adds spawning from flame strike
 
-    NPC_VESPERON_CONTROLLER                     = 30878,
-    NPC_VESPERON_CONTROLLER_DEBUFF_CLEAR        = 32694,
-    NPC_SHADRON_PORTAL                          = 30741,
-    NPC_SHADRON_PORTAL_VISUAL                   = 30650,
+    // other
+    MAX_TWILIGHT_EGGS                           = 6,
+    PHASEMASK_TWILIGHT_REALM                    = 16,
 
     // using these custom points for dragons start and end
     POINT_ID_INIT                               = 100,
@@ -362,21 +370,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
     void SendFlameTsunami()
     {
-        Map* pMap = m_creature->GetMap();
-
-        if (pMap && pMap->IsDungeon())
-        {
-            Map::PlayerList const& PlayerList = pMap->GetPlayers();
-
-            if (!PlayerList.isEmpty())
-            {
-                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                {
-                    if (i->getSource()->isAlive())
-                        DoScriptText(WHISPER_LAVA_CHURN, m_creature, i->getSource());
-                }
-            }
-        }
+        DoScriptText(EMOTE_LAVA_CHURN, m_creature);
 
         uint8 uiTsunamiStartLoc = 0;
         uint8 uiTsunamiEndLoc = 3;
@@ -573,21 +567,24 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 {
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_obsidian_sanctum*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_obsidian_sanctum* m_pInstance;
     bool m_bIsRegularMode;
+    uint8 m_uiPortalId;
 
     uint32 m_uiWaypointId;
     uint32 m_uiMoveNextTimer;
     bool m_bCanMoveFree;
 
-    uint32 m_iPortalRespawnTime;
+    uint32 m_uiPortalRespawnTimer;
     uint32 m_uiShadowBreathTimer;
     uint32 m_uiShadowFissureTimer;
+
+    ObjectGuid m_portalOwnerGuid;
 
     void Reset() override
     {
@@ -595,7 +592,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         m_uiMoveNextTimer       = 500;
         m_bCanMoveFree          = false;
 
-        m_iPortalRespawnTime    = 30000;
+        m_uiPortalRespawnTimer  = 20000;
         m_uiShadowBreathTimer   = 20000;
         m_uiShadowFissureTimer  = 5000;
     }
@@ -608,6 +605,24 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         // Despawn portal
         if (GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature, GO_TWILIGHT_PORTAL, 50.0f))
             pPortal->SetLootState(GO_JUST_DEACTIVATED);
+
+        // reset portal events (in case some remain active); summons cleanup handled by creature linking
+        if (m_pInstance)
+            m_pInstance->SetPortalStatus(m_uiPortalId, false);
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        // despawn portal if Sartharion is not in combat
+        if (GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature, GO_TWILIGHT_PORTAL, 50.0f))
+            pPortal->SetLootState(GO_JUST_DEACTIVATED);
+
+        // eject players and despawn portal owner
+        if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_portalOwnerGuid))
+        {
+            pTemp->CastSpell(pTemp, SPELL_TWILIGHT_SHIFT_REMOVAL_ALL, true);
+            pTemp->ForcedDespawn(1000);
+        }
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId) override
@@ -648,54 +663,27 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         m_uiMoveNextTimer = 500;
     }
 
-    // used when open portal and spawn mobs in phase
-    void DoRaidWhisper(int32 iTextId)
-    {
-        Map* pMap = m_creature->GetMap();
-
-        if (pMap && pMap->IsDungeon())
-        {
-            Map::PlayerList const& PlayerList = pMap->GetPlayers();
-
-            if (!PlayerList.isEmpty())
-            {
-                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                    DoScriptText(iTextId, m_creature, i->getSource());
-            }
-        }
-    }
-
     //"opens" the portal and does the "opening" whisper
     void DoOpenPortal()
     {
-        int32 iTextId = 0;
-
         // there are 4 portal spawn locations, each are expected to be spawned with negative spawntimesecs in database
 
         // using a grid search here seem to be more efficient than caching all four guids
         // in instance script and calculate range to each.
         GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature, GO_TWILIGHT_PORTAL, 50.0f);
-
-        switch (m_creature->GetEntry())
-        {
-            case NPC_TENEBRON:
-                iTextId = WHISPER_HATCH_EGGS;
-                break;
-            case NPC_SHADRON:
-            case NPC_VESPERON:
-                iTextId = WHISPER_OPEN_PORTAL;
-                break;
-        }
-
-        DoRaidWhisper(iTextId);
+        DoScriptText(EMOTE_OPEN_PORTAL, m_creature);
 
         // By using SetRespawnTime() we will actually "spawn" the object with our defined time.
         // Once time is up, portal will disappear again.
         if (pPortal && !pPortal->isSpawned())
         {
-            pPortal->SetRespawnTime(m_iPortalRespawnTime);
+            pPortal->SetRespawnTime(HOUR * IN_MILLISECONDS);
             pPortal->Refresh();
         }
+
+        // set portal status as active when Sartharion is in progress
+        if (m_pInstance && m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+            m_pInstance->SetPortalStatus(m_uiPortalId, true);
 
         // Unclear what are expected to happen if one drake has a portal open already
         // Refresh respawnTime so time again are set to 30secs?
@@ -718,6 +706,21 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
                 if (i->getSource()->isAlive() && i->getSource()->HasAura(uiSpellId))
                     i->getSource()->RemoveAurasDueToSpell(uiSpellId);
             }
+        }
+    }
+
+    // Eject players from Twilight realm if no other portal event is active
+    void DoEjectTwilightPlayersIfCan(Creature* pCreature)
+    {
+        if (!m_pInstance || !pCreature)
+            return;
+
+        if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) != IN_PROGRESS || !m_pInstance->IsActivePortal())
+        {
+            pCreature->CastSpell(pCreature, SPELL_TWILIGHT_SHIFT_REMOVAL_ALL, true);
+
+            if (GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature, GO_TWILIGHT_PORTAL, 50.0f))
+                pPortal->SetLootState(GO_JUST_DEACTIVATED);
         }
     }
 
@@ -751,16 +754,18 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         UpdateDragonAI(uiDiff);
 
         // respawn portal
-        if (m_iPortalRespawnTime)
+        if (m_uiPortalRespawnTimer < uiDiff)
         {
-            if (m_iPortalRespawnTime <= uiDiff)
-            {
-                DoOpenPortal();
-                m_iPortalRespawnTime = 0;
-            }
+            if (m_pInstance && m_pInstance->IsActivePortal())
+                m_uiPortalRespawnTimer = 10000;
             else
-                m_iPortalRespawnTime -= uiDiff;
+            {
+                m_uiPortalRespawnTimer = 60000;
+                DoOpenPortal();
+            }
         }
+        else
+            m_uiPortalRespawnTimer -= uiDiff;
 
         // shadow fissure
         if (m_uiShadowFissureTimer < uiDiff)
@@ -796,13 +801,17 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
 {
-    mob_tenebronAI(Creature* pCreature) : dummy_dragonAI(pCreature) { Reset(); }
+    mob_tenebronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
+    {
+        m_uiPortalId = TYPE_PORTAL_TENEBRON;
+        Reset();
+    }
 
-    uint32 m_uiHatchEggTimer;
+    uint32 m_uiSpawnEggsTimer;
 
     void Reset() override
     {
-        m_uiHatchEggTimer = 30000;
+        m_uiSpawnEggsTimer = 20000;
 
         dummy_dragonAI::Reset();
     }
@@ -818,13 +827,38 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
         DoScriptText(urand(0, 1) ? SAY_TENEBRON_SLAY_1 : SAY_TENEBRON_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* /*pKiller*/) override
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_TENEBRON_DEATH, m_creature);
 
-        // Cast Twilight Revent - script target on Sartharion
-        if (m_pInstance && m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
-            DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+        if (m_pInstance)
+        {
+            // Cast Twilight Revent - script target on Sartharion
+            if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+            else
+                dummy_dragonAI::JustDied(pKiller);
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_TWILIGHT_EGG_CONTROLLER)
+            m_portalOwnerGuid = pSummoned->GetObjectGuid();
+
+        // update phasemask manually
+        pSummoned->SetPhaseMask(PHASEMASK_TWILIGHT_REALM, true);
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetEntry() == NPC_TWILIGHT_EGG_CONTROLLER)
+        {
+            if (m_pInstance)
+                m_pInstance->SetPortalStatus(m_uiPortalId, false);
+
+            DoEjectTwilightPlayersIfCan((Creature*)pInvoker);
+        }
     }
 
     void DoHandleBreathYell()
@@ -834,13 +868,38 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
 
     void UpdateDragonAI(const uint32 uiDiff)
     {
-        if (m_uiHatchEggTimer < uiDiff)
+        if (m_uiSpawnEggsTimer < uiDiff)
         {
-            // ToDo:
-            m_uiHatchEggTimer = 30000;
+            uint32 uiSpawnEntry = NPC_TWILIGHT_EGG;
+            if (m_pInstance)
+            {
+                if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                    uiSpawnEntry = NPC_SARTHARION_TWILIGHT_EGG;
+            }
+
+            float fX, fY, fZ;
+            for (uint8 i = 0; i < MAX_TWILIGHT_EGGS; ++i)
+            {
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+                m_creature->SummonCreature(uiSpawnEntry, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+
+            // spawn the controller as well in order to eject players from twilight realm
+            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+            m_creature->SummonCreature(NPC_TWILIGHT_EGG_CONTROLLER, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+
+            // used only for visual - the result is handled by the Twilight eggs script
+            if (DoCastSpellIfCan(m_creature, SPELL_HATCH_EGGS_MAIN) == CAST_OK)
+            {
+                DoScriptText(EMOTE_HATCH_EGGS, m_creature);
+                if (urand(0, 1))
+                    DoScriptText(urand(0, 1) ? SAY_TENEBRON_SPECIAL_1 : SAY_TENEBRON_SPECIAL_2, m_creature);
+            }
+
+            m_uiSpawnEggsTimer = 60000;
         }
         else
-            m_uiHatchEggTimer -= uiDiff;
+            m_uiSpawnEggsTimer -= uiDiff;
     }
 };
 
@@ -855,19 +914,17 @@ CreatureAI* GetAI_mob_tenebron(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
 {
-    mob_shadronAI(Creature* pCreature) : dummy_dragonAI(pCreature) { Reset(); }
+    mob_shadronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
+    {
+        m_uiPortalId = TYPE_PORTAL_SHADRON;
+        Reset();
+    }
 
     uint32 m_uiAcolyteShadronTimer;
 
     void Reset() override
     {
-        m_uiAcolyteShadronTimer = 60000;
-
-        if (m_creature->HasAura(SPELL_TWILIGHT_TORMENT_VESP))
-            m_creature->RemoveAurasDueToSpell(SPELL_TWILIGHT_TORMENT_VESP);
-
-        if (m_creature->HasAura(SPELL_GIFT_OF_TWILIGTH_SHA))
-            m_creature->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SHA);
+        m_uiAcolyteShadronTimer = 25000;
 
         dummy_dragonAI::Reset();
     }
@@ -883,26 +940,51 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
         DoScriptText(urand(0, 1) ? SAY_SHADRON_SLAY_1 : SAY_SHADRON_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* /*pKiller*/) override
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_SHADRON_DEATH, m_creature);
 
-        // Cast Twilight Revent - script target on Sartharion
-        if (m_pInstance && m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
-            DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+        if (m_pInstance)
+        {
+            // Cast Twilight Revent - script target on Sartharion
+            if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+            else
+                dummy_dragonAI::JustDied(pKiller);
+        }
     }
 
     void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_DISCIPLE_OF_SHADRON)
+        {
             pSummoned->CastSpell(pSummoned, SPELL_GIFT_OF_TWILIGTH_SHA, true);
+            m_portalOwnerGuid = pSummoned->GetObjectGuid();
+        }
         else if (pSummoned->GetEntry() == NPC_ACOLYTE_OF_SHADRON)
             pSummoned->CastSpell(pSummoned, SPELL_GIFT_OF_TWILIGTH_SAR, true);
+
+        // update phasemask manually
+        pSummoned->SetPhaseMask(PHASEMASK_TWILIGHT_REALM, true);
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned) override
     {
-        pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_SHIFT_REMOVAL_ALL, true);
+        if (m_pInstance)
+        {
+            m_pInstance->SetPortalStatus(m_uiPortalId, false);
+
+            if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+            {
+                if (Creature* pSartharion = m_pInstance->GetSingleCreatureFromStorage(NPC_SARTHARION))
+                    pSartharion->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SAR);
+            }
+            else
+                m_creature->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SHA);
+        }
+
+        DoEjectTwilightPlayersIfCan(pSummoned);
+        m_uiAcolyteShadronTimer = m_uiPortalRespawnTimer + 5000;
     }
 
     void DoHandleBreathYell()
@@ -912,13 +994,30 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
 
     void UpdateDragonAI(const uint32 uiDiff)
     {
-        if (m_uiAcolyteShadronTimer < uiDiff)
+        if (m_uiAcolyteShadronTimer)
         {
-            // ToDo:
-            m_uiAcolyteShadronTimer = 60000;
+            if (m_uiAcolyteShadronTimer <= uiDiff)
+            {
+                DoScriptText(EMOTE_SHADRON_DICIPLE, m_creature);
+                if (urand(0, 1))
+                    DoScriptText(urand(0, 1) ? SAY_SHADRON_SPECIAL_1 : SAY_SHADRON_SPECIAL_2, m_creature);
+
+                uint32 uiSpawnEntry = NPC_DISCIPLE_OF_SHADRON;
+                if (m_pInstance)
+                {
+                    if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                        uiSpawnEntry = NPC_ACOLYTE_OF_SHADRON;
+                }
+
+                float fX, fY, fZ;
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+                m_creature->SummonCreature(uiSpawnEntry, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+
+                m_uiAcolyteShadronTimer = 0;
+            }
+            else
+                m_uiAcolyteShadronTimer -= uiDiff;
         }
-        else
-            m_uiAcolyteShadronTimer -= uiDiff;
     }
 };
 
@@ -933,13 +1032,17 @@ CreatureAI* GetAI_mob_shadron(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
 {
-    mob_vesperonAI(Creature* pCreature) : dummy_dragonAI(pCreature) { Reset(); }
+    mob_vesperonAI(Creature* pCreature) : dummy_dragonAI(pCreature)
+    {
+        m_uiPortalId = TYPE_PORTAL_VESPERON;
+        Reset();
+    }
 
     uint32 m_uiAcolyteVesperonTimer;
 
     void Reset() override
     {
-        m_uiAcolyteVesperonTimer = 60000;
+        m_uiAcolyteVesperonTimer = 25000;
 
         dummy_dragonAI::Reset();
     }
@@ -955,27 +1058,43 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
         DoScriptText(urand(0, 1) ? SAY_VESPERON_SLAY_1 : SAY_VESPERON_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* /*pKiller*/) override
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_VESPERON_DEATH, m_creature);
 
-        // Cast Twilight Revent - script target on Sartharion
-        if (m_pInstance && m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
-            DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+        if (m_pInstance)
+        {
+            // Cast Twilight Revent - script target on Sartharion
+            if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_REVENGE, CAST_TRIGGERED);
+            else
+                dummy_dragonAI::JustDied(pKiller);
+        }
     }
 
     void JustSummoned(Creature* pSummoned) override
     {
+        // ToDo: these spells may break the encounter and make it unplayable. More research is required!!!
         if (pSummoned->GetEntry() == NPC_DISCIPLE_OF_VESPERON)
-            pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_TORMENT_VESP, true);
-        else if (pSummoned->GetEntry() == NPC_ACOLYTE_OF_VESPERON)
-            pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_TORMENT_VESP_ACO, true);
+        {
+            //pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_TORMENT_VESP, true);
+            m_portalOwnerGuid = pSummoned->GetObjectGuid();
+        }
+        //else if (pSummoned->GetEntry() == NPC_ACOLYTE_OF_VESPERON)
+        //    pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_TORMENT_VESP_ACO, true);
+
+        // update phasemask manually
+        pSummoned->SetPhaseMask(PHASEMASK_TWILIGHT_REALM, true);
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         // ToDo: remove Twilight Torment debuff
-        pSummoned->CastSpell(pSummoned, SPELL_TWILIGHT_SHIFT_REMOVAL_ALL, true);
+        if (m_pInstance)
+            m_pInstance->SetPortalStatus(m_uiPortalId, false);
+
+        DoEjectTwilightPlayersIfCan(pSummoned);
+        m_uiAcolyteVesperonTimer = m_uiPortalRespawnTimer + 5000;
     }
 
     void DoHandleBreathYell()
@@ -985,13 +1104,30 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
 
     void UpdateDragonAI(const uint32 uiDiff)
     {
-        if (m_uiAcolyteVesperonTimer < uiDiff)
+        if (m_uiAcolyteVesperonTimer)
         {
-            // ToDo:
-            m_uiAcolyteVesperonTimer = 60000;
+            if (m_uiAcolyteVesperonTimer <= uiDiff)
+            {
+                DoScriptText(EMOTE_VESPERON_DICIPLE, m_creature);
+                if (urand(0, 1))
+                    DoScriptText(urand(0, 1) ? SAY_VESPERON_SPECIAL_1 : SAY_VESPERON_SPECIAL_2, m_creature);
+
+                uint32 uiSpawnEntry = NPC_DISCIPLE_OF_VESPERON;
+                if (m_pInstance)
+                {
+                    if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                        uiSpawnEntry = NPC_ACOLYTE_OF_VESPERON;
+                }
+
+                float fX, fY, fZ;
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+                m_creature->SummonCreature(uiSpawnEntry, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+
+                m_uiAcolyteVesperonTimer = 0;
+            }
+            else
+                m_uiAcolyteVesperonTimer -= uiDiff;
         }
-        else
-            m_uiAcolyteVesperonTimer -= uiDiff;
     }
 };
 
@@ -1004,16 +1140,46 @@ CreatureAI* GetAI_mob_vesperon(Creature* pCreature)
 ## Mob Twilight Eggs
 ######*/
 
-struct MANGOS_DLL_DECL mob_twilight_eggsAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_twilight_eggsAI : public Scripted_NoMovementAI
 {
-    mob_twilight_eggsAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    mob_twilight_eggsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    uint32 m_uiHatchTimer;
 
     void Reset() override
     {
+        m_uiHatchTimer = 20000;
     }
 
     void AttackStart(Unit* /*pWho*/) override { }
     void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_TWILIGHT_WHELP || pSummoned->GetEntry() == NPC_SHARTHARION_TWILIGHT_WHELP)
+            pSummoned->SetInCombatWithZone();
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiHatchTimer < uiDiff)
+        {
+            uint32 uiSpellEntry = 0;
+            switch (m_creature->GetEntry())
+            {
+                case NPC_TWILIGHT_EGG: uiSpellEntry = SPELL_SUMMON_TWILIGHT_WHELP; break;
+                case NPC_SARTHARION_TWILIGHT_EGG: uiSpellEntry = SPELL_SUMMON_SARTHARION_TWILIGHT_WHELP; break;
+            }
+
+            m_creature->SetPhaseMask(PHASEMASK_NORMAL, true);
+            DoCastSpellIfCan(m_creature, uiSpellEntry, CAST_TRIGGERED);
+
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+            m_uiHatchTimer = 0;
+        }
+        else
+            m_uiHatchTimer -= uiDiff;
+    }
 };
 
 CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)
@@ -1022,42 +1188,53 @@ CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)
 }
 
 /*######
-## Mob Twilight Whelps
+## npc_tenebron_egg_controller
 ######*/
 
-struct MANGOS_DLL_DECL mob_twilight_whelpAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_tenebron_egg_controllerAI : public Scripted_NoMovementAI
 {
-    mob_twilight_whelpAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_tenebron_egg_controllerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 m_uiFadeArmorTimer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiHatchTimer;
 
     void Reset() override
     {
-        m_uiFadeArmorTimer = 1000;
+        m_uiHatchTimer = 20000;
     }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void UpdateAI(const uint32 uiDiff) override
     {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // twilight torment
-        if (m_uiFadeArmorTimer < uiDiff)
+        if (m_uiHatchTimer)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FADE_ARMOR) == CAST_OK)
-                m_uiFadeArmorTimer = urand(5000, 10000);
+            if (m_uiHatchTimer < uiDiff)
+            {
+                if (m_pInstance)
+                {
+                    // Inform Tenebron to hatch the eggs
+                    if (Creature* pTenebron = m_pInstance->GetSingleCreatureFromStorage(NPC_TENEBRON))
+                        m_creature->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pTenebron);
+                }
+                m_creature->ForcedDespawn(1000);
+                m_uiHatchTimer = 0;
+            }
+            else
+                m_uiHatchTimer -= uiDiff;
         }
-        else
-            m_uiFadeArmorTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_mob_twilight_whelp(Creature* pCreature)
+CreatureAI* GetAI_npc_tenebron_egg_controller(Creature* pCreature)
 {
-    return new mob_twilight_whelpAI(pCreature);
+    return new npc_tenebron_egg_controllerAI(pCreature);
 }
 
 /*######
@@ -1181,8 +1358,8 @@ void AddSC_boss_sartharion()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "mob_twilight_whelp";
-    pNewScript->GetAI = &GetAI_mob_twilight_whelp;
+    pNewScript->Name = "npc_tenebron_egg_controller";
+    pNewScript->GetAI = &GetAI_npc_tenebron_egg_controller;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

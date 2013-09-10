@@ -927,8 +927,8 @@ UPDATE creature_template SET ScriptName='boss_sartharion' WHERE entry=28860;
 UPDATE creature_template SET ScriptName='mob_vesperon' WHERE entry=30449;
 UPDATE creature_template SET ScriptName='mob_shadron' WHERE entry=30451;
 UPDATE creature_template SET ScriptName='mob_tenebron' WHERE entry=30452;
-UPDATE creature_template SET ScriptName='mob_twilight_eggs' WHERE entry=30882;
-UPDATE creature_template SET ScriptName='mob_twilight_whelp' WHERE entry IN (30890, 31214);
+UPDATE creature_template SET ScriptName='mob_twilight_eggs' WHERE entry IN (30882,31204);
+UPDATE creature_template SET ScriptName='npc_tenebron_egg_controller' WHERE entry=31138;
 UPDATE creature_template SET ScriptName='npc_flame_tsunami' WHERE entry=30616;
 UPDATE creature_template SET ScriptName='npc_fire_cyclone' WHERE entry=30648;
 

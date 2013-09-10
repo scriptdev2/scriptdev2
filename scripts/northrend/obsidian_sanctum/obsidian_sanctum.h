@@ -14,6 +14,12 @@ enum
     TYPE_ALIVE_DRAGONS          = 2,
     TYPE_VOLCANO_BLOW_FAILED    = 3,
 
+    MAX_TWILIGHT_DRAGONS        = 3,
+
+    TYPE_PORTAL_TENEBRON        = 0,
+    TYPE_PORTAL_SHADRON         = 1,
+    TYPE_PORTAL_VESPERON        = 2,
+
     NPC_SARTHARION              = 28860,
     NPC_TENEBRON                = 30452,
     NPC_SHADRON                 = 30451,
@@ -48,11 +54,26 @@ class MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
 
         ObjectGuid SelectRandomFireCycloneGuid();
 
+        bool IsActivePortal()
+        {
+            for (uint8 i = 0; i < MAX_TWILIGHT_DRAGONS; ++i)
+            {
+                if (m_bPortalActive[i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        void SetPortalStatus(uint8 uiType, bool bStatus) { m_bPortalActive[uiType] = bStatus; }
+        bool GetPortaStatus(uint8 uiType) { return m_bPortalActive[uiType]; }
+
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
         bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
+        bool m_bPortalActive[MAX_TWILIGHT_DRAGONS];
 
         uint8 m_uiAliveDragons;
 

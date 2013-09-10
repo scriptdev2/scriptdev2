@@ -3919,7 +3919,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1615005,'I will take pity on you Sartharion, just this once.',14117,1,0,0,'shadron SAY_SHADRON_RESPOND'),
 (-1615006,'Father tought me well!',14115,1,0,0,'shadron SAY_SHADRON_SPECIAL_1'),
 (-1615007,'On your knees!',14116,1,0,0,'shadron SAY_SHADRON_SPECIAL_2'),
-(-1615008,'A Shadron Disciple appears in the Twilight!',0,5,0,0,'shadron WHISPER_SHADRON_DICIPLE'),
+(-1615008,'A Shadron Disciple appears in the Twilight!',0,3,0,0,'shadron WHISPER_SHADRON_DICIPLE'),
 
 (-1615009,'You have no place here. Your place is among the departed.',14122,1,0,0,'tenebron SAY_TENEBRON_AGGRO'),
 (-1615010,'No contest.',14123,1,0,0,'tenebron SAY_TENEBRON_SLAY_1'),
@@ -3929,7 +3929,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1615014,'It is amusing to watch you struggle. Very well, witness how it is done.',14128,1,0,0,'tenebron SAY_TENEBRON_RESPOND'),
 (-1615015,'Arrogant little creatures! To challenge powers you do not yet understand...',14126,1,0,0,'tenebron SAY_TENEBRON_SPECIAL_1'),
 (-1615016,'I am no mere dragon! You will find I am much, much, more...',14127,1,0,0,'tenebron SAY_TENEBRON_SPECIAL_2'),
-(-1615017,'%s begins to hatch eggs in the twilight!',0,5,0,0,'tenebron WHISPER_HATCH_EGGS'),
+(-1615017,'%s begins to hatch eggs in the twilight!',0,3,0,0,'tenebron WHISPER_HATCH_EGGS'),
 
 (-1615018,'It is my charge to watch over these eggs. I will see you burn before any harm comes to them!',14093,1,0,0,'sartharion SAY_SARTHARION_AGGRO'),
 (-1615019,'This pathetic siege ends NOW!',14103,1,0,0,'sartharion SAY_SARTHARION_BERSERK'),
@@ -3945,7 +3945,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1615029,'You will make a fine meal for the hatchlings.',14094,1,0,0,'sartharion SAY_SARTHARION_SLAY_1'),
 (-1615030,'You are the grave disadvantage.',14096,1,0,0,'sartharion SAY_SARTHARION_SLAY_2'),
 (-1615031,'This is why we call you lesser beeings.',14097,1,0,0,'sartharion SAY_SARTHARION_SLAY_3'),
-(-1615032,'The lava surrounding %s churns!',0,5,0,0,'sartharion WHISPER_LAVA_CHURN'),
+(-1615032,'The lava surrounding %s churns!',0,3,0,0,'sartharion WHISPER_LAVA_CHURN'),
 
 (-1615033,'You pose no threat, lesser beings...give me your worst!',14133,1,0,0,'vesperon SAY_VESPERON_AGGRO'),
 (-1615034,'The least you could do is put up a fight...',14134,1,0,0,'vesperon SAY_VESPERON_SLAY_1'),
@@ -3955,9 +3955,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1615038,'Father was right about you, Sartharion...You are a weakling!',14139,1,0,0,'vesperon SAY_VESPERON_RESPOND'),
 (-1615039,'Aren\'t you tricky...I have a few tricks of my own...',14137,1,0,0,'vesperon SAY_VESPERON_SPECIAL_1'),
 (-1615040,'Unlike, I have many talents.',14138,1,0,0,'vesperon SAY_VESPERON_SPECIAL_2'),
-(-1615041,'A Vesperon Disciple appears in the Twilight!',0,5,0,0,'shadron WHISPER_VESPERON_DICIPLE'),
+(-1615041,'A Vesperon Disciple appears in the Twilight!',0,3,0,0,'shadron WHISPER_VESPERON_DICIPLE'),
 
-(-1615042,'%s begins to open a Twilight Portal!',0,5,0,0,'sartharion drake WHISPER_OPEN_PORTAL');
+(-1615042,'%s begins to open a Twilight Portal!',0,3,0,0,'sartharion drake WHISPER_OPEN_PORTAL');
 
 -- -1 616 000 EYE OF ETERNITY
 INSERT INTO script_texts (entry,content_default,sound,type,LANGUAGE,emote,comment) VALUES
