@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Netherspite
-SD%Complete: 50
-SDComment: Nether portals NYI. Find spell ID for tail swipe added in patch 3.0.2
+SD%Complete: 75
+SDComment: Nether portals partially implemented. Find spell ID for tail swipe added in patch 3.0.2
 SDCategory: Karazhan
 EndScriptData */
 
@@ -40,6 +40,7 @@ enum
     // void zone spells
     SPELL_CONSUMPTION           = 28865,
 
+    // ***** Netherspite portals spells ***** //
     // beam buffs
     SPELL_SERENITY_NS           = 30467,
     SPELL_SERENITY_PLR          = 30422,
@@ -48,12 +49,12 @@ enum
     SPELL_PERSEVERENCE_NS       = 30466,
     SPELL_PERSEVERENCE_PLR      = 30421,
 
-    // beam debuffs
+    // beam debuffs (player with this aura cannot gain the same color buff)
     SPELL_EXHAUSTION_SER        = 38638,
     SPELL_EXHAUSTION_DOM        = 38639,
     SPELL_EXHAUSTION_PER        = 38637,
 
-    // spells which hit players
+    // spells which hit players (used only for visual - as seen from spell description)
     SPELL_BEAM_SER              = 30401,
     SPELL_BEAM_DOM              = 30402,
     SPELL_BEAM_PER              = 30400,
@@ -67,6 +68,13 @@ enum
     SPELL_GREEN_PORTAL          = 30490,
     SPELL_BLUE_PORTAL           = 30491,
     SPELL_RED_PORTAL            = 30487,
+
+    // passive auras
+    SPELL_SERENITY_PASSIVE      = 30397,
+    SPELL_DOMINANCE_PASSIVE     = 30398,
+    // note: for Perseverence, there isn't any passive spell - currently we use script timer
+    SPELL_NETHER_BEAM           = 30469,                // spell triggered by the passive auras
+    // SPELL_CLEAR_NETHER_BEAM  = 37072,                // not clear how to use this
 
     // emotes
     EMOTE_PHASE_BEAM            = -1532089,
@@ -106,6 +114,10 @@ static const uint32 auiPortals[MAX_PORTALS] =
     NPC_PORTAL_BLUE,
     NPC_PORTAL_RED,
 };
+
+/*######
+## boss_netherspite
+######*/
 
 struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
 {
@@ -300,6 +312,110 @@ CreatureAI* GetAI_boss_netherspite(Creature* pCreature)
     return new boss_netherspiteAI(pCreature);
 }
 
+/*######
+## npc_netherspite_portal
+######*/
+
+struct MANGOS_DLL_DECL npc_netherspite_portalAI : public Scripted_NoMovementAI
+{
+    npc_netherspite_portalAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiPassiveSpellTimer;
+    uint32 m_uiOrientationTimer;
+
+    void Reset()
+    {
+        m_uiPassiveSpellTimer = 0;
+        m_uiOrientationTimer = 0;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A)
+        {
+            if (pInvoker->GetEntry() != NPC_NETHERSPITE)
+                return;
+
+            // update orientation every second to focus on Netherspite
+            m_uiOrientationTimer = 1000;
+            m_creature->SetFacingToObject(pInvoker);
+
+            switch (m_creature->GetEntry())
+            {
+                case NPC_PORTAL_GREEN:
+                    if (!m_creature->HasAura(SPELL_SERENITY_PASSIVE))
+                        DoCastSpellIfCan(m_creature, SPELL_SERENITY_PASSIVE, CAST_TRIGGERED);
+                    break;
+                case NPC_PORTAL_BLUE:
+                    if (!m_creature->HasAura(SPELL_DOMINANCE_PASSIVE))
+                        DoCastSpellIfCan(m_creature, SPELL_DOMINANCE_PASSIVE, CAST_TRIGGERED);
+                    break;
+                case NPC_PORTAL_RED:
+                    // Red portal spell is missing - handled in script
+                    if (!m_uiPassiveSpellTimer)
+                        m_uiPassiveSpellTimer = 1000;
+                    break;
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiPassiveSpellTimer)
+        {
+            if (m_uiPassiveSpellTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_NETHER_BEAM, CAST_TRIGGERED) == CAST_OK)
+                    m_uiPassiveSpellTimer = 1000;
+            }
+            else
+                m_uiPassiveSpellTimer -= uiDiff;
+        }
+
+        if (m_uiOrientationTimer)
+        {
+            if (m_uiOrientationTimer <= uiDiff)
+            {
+                if (m_pInstance)
+                {
+                    if (Creature* pNetherspite = m_pInstance->GetSingleCreatureFromStorage(NPC_NETHERSPITE))
+                        m_creature->SetFacingToObject(pNetherspite);
+                }
+                m_uiOrientationTimer = 1000;
+            }
+            else
+                m_uiOrientationTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_netherspite_portal(Creature* pCreature)
+{
+    return new npc_netherspite_portalAI(pCreature);
+}
+
+bool EffectScriptEffectCreature_spell_portal_attunement(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    if (uiSpellId == SPELL_PORTAL_ATTUNEMENT && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (pCreatureTarget->GetEntry() == NPC_PORTAL_RED || pCreatureTarget->GetEntry() == NPC_PORTAL_GREEN || pCreatureTarget->GetEntry() == NPC_PORTAL_BLUE)
+            pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pCaster, pCreatureTarget);
+
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_boss_netherspite()
 {
     Script* pNewScript;
@@ -307,5 +423,11 @@ void AddSC_boss_netherspite()
     pNewScript = new Script;
     pNewScript->Name = "boss_netherspite";
     pNewScript->GetAI = &GetAI_boss_netherspite;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_netherspite_portal";
+    pNewScript->GetAI = &GetAI_npc_netherspite_portal;
+    pNewScript->pEffectScriptEffectNPC = &EffectScriptEffectCreature_spell_portal_attunement;
     pNewScript->RegisterSelf();
 }

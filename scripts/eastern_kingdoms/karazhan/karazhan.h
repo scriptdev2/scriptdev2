@@ -30,6 +30,7 @@ enum
     // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,
     NPC_NIGHTBANE_HELPER            = 17260,
+    NPC_NETHERSPITE                 = 15689,
     NPC_ECHO_MEDIVH                 = 16816,
     NPC_INVISIBLE_STALKER           = 22519,                    // placeholder for dead chess npcs
     NPC_CHESS_STATUS_BAR            = 22520,                    // npc that controlls the transformation of dead pieces

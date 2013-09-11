@@ -88,6 +88,7 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
         case NPC_MOROES:
         case NPC_BARNES:
         case NPC_NIGHTBANE:
+        case NPC_NETHERSPITE:
         case NPC_JULIANNE:
         case NPC_ROMULO:
         case NPC_LADY_KEIRA_BERRYBUCK:
