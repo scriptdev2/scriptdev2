@@ -278,6 +278,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_IGNIS:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+            {
+                DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_IGNIS_ID);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_SHATTERED, false);
+            }
             break;
         case TYPE_RAZORSCALE:
             m_auiEncounter[uiType] = uiData;
@@ -622,15 +627,59 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_STUNNED_MOLG_H:
             if (GetData(TYPE_ASSEMBLY) == SPECIAL)
                 return m_abAchievCriteria[TYPE_ACHIEV_STUNNED];
+        case ACHIEV_CRIT_SHATTERED_N:
+        case ACHIEV_CRIT_SHATTERED_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_SHATTERED];
 
         default:
             return false;
     }
 }
 
+void instance_ulduar::DoProcessShatteredEvent()
+{
+    // If timer is already running set achiev criteria to true, else start the timer
+    if (m_uiShatterAchievTimer)
+        SetSpecialAchievementCriteria(TYPE_ACHIEV_SHATTERED, true);
+    else
+        m_uiShatterAchievTimer = 5000;
+}
+
+void instance_ulduar::Update(uint32 uiDiff)
+{
+    if (GetData(TYPE_IGNIS) == IN_PROGRESS)
+    {
+        if (m_uiShatterAchievTimer)
+        {
+            // Just set the timer to 0 when it expires
+            if (m_uiShatterAchievTimer <= uiDiff)
+                m_uiShatterAchievTimer = 0;
+            else
+                m_uiShatterAchievTimer -= uiDiff;
+        }
+    }
+}
+
 InstanceData* GetInstanceData_instance_ulduar(Map* pMap)
 {
     return new instance_ulduar(pMap);
+}
+
+bool ProcessEventId_event_ulduar(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (uiEventId == EVENT_ID_SPELL_SHATTER)
+    {
+        if (pSource->GetTypeId() == TYPEID_UNIT)
+        {
+            if (instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData())
+            {
+                pInstance->DoProcessShatteredEvent();
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void AddSC_instance_ulduar()
@@ -640,5 +689,10 @@ void AddSC_instance_ulduar()
     pNewScript = new Script;
     pNewScript->Name = "instance_ulduar";
     pNewScript->GetInstanceData = &GetInstanceData_instance_ulduar;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_ulduar";
+    pNewScript->pProcessEventId = &ProcessEventId_event_ulduar;
     pNewScript->RegisterSelf();
 }

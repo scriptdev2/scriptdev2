@@ -1269,9 +1269,13 @@ UPDATE creature_template SET ScriptName='boss_feral_defender' WHERE entry=34035;
 UPDATE creature_template SET ScriptName='boss_brundir' WHERE entry=32857;
 UPDATE creature_template SET ScriptName='boss_molgeim' WHERE entry=32927;
 UPDATE creature_template SET ScriptName='boss_steelbreaker' WHERE entry=32867;
-DELETE FROM scripted_event_id WHERE id=9735;
+UPDATE creature_template SET ScriptName='boss_ignis' WHERE entry=33118;
+UPDATE creature_template SET ScriptName='npc_iron_construct' WHERE entry=33121;
+UPDATE creature_template SET ScriptName='npc_scorch' WHERE entry=33221;
+DELETE FROM scripted_event_id WHERE id IN (9735,21620);
 INSERT INTO scripted_event_id VALUES
-(9735,'event_spell_saronite_barrier');
+(9735,'event_spell_saronite_barrier'),
+(21620,'event_ulduar');
 
 /* UN'GORO CRATER */
 UPDATE creature_template SET ScriptName='npc_ame01' WHERE entry=9623;

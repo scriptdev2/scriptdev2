@@ -101,7 +101,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 6,
+    MAX_SPECIAL_ACHIEV_CRITS    = 7,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -109,6 +109,7 @@ enum
     TYPE_ACHIEV_BRUNDIR         = 3,
     TYPE_ACHIEV_MOLGEIM         = 4,
     TYPE_ACHIEV_STUNNED         = 5,
+    TYPE_ACHIEV_SHATTERED       = 6,
 
     // Loot chests
     // Kologarn
@@ -199,7 +200,12 @@ enum
     WORLD_STATE_TIMER           = 4132,
     WORLD_STATE_TIMER_COUNT     = 4131,
 
+    // events
+    EVENT_ID_SPELL_SHATTER      = 21620,
+
     // Achievement related
+    ACHIEV_START_IGNIS_ID       = 20951,                    // Ignis timed achievs 2930, 2929
+
     ACHIEV_CRIT_SARONITE_N      = 10451,                    // General Vezax, achievs 3181, 3188
     ACHIEV_CRIT_SARONITE_H      = 10462,
     ACHIEV_CRIT_CAT_LADY_N      = 10400,                    // Auriaya, achievs 3006, 3007
@@ -218,6 +224,8 @@ enum
     ACHIEV_CRIT_STUNNED_BRUND_H = 10091,                    // Iron council, achiev 2948
     ACHIEV_CRIT_STUNNED_STEEL_H = 10424,
     ACHIEV_CRIT_STUNNED_MOLG_H  = 10425,
+    ACHIEV_CRIT_SHATTERED_N     = 10068,                    // Ignis, achievs 2925, 2926
+    ACHIEV_CRIT_SHATTERED_H     = 10069,
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
@@ -248,12 +256,18 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 
         void SpawnFriendlyKeeper(uint32 uiWho);
 
+        void DoProcessShatteredEvent();
+
+        void Update(uint32 uiDiff);
+
     protected:
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 m_auiHardBoss[HARD_MODE_ENCOUNTER];
         uint32 m_auiUlduarKeepers[KEEPER_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
+
+        uint32 m_uiShatterAchievTimer;
 };
 
 #endif
