@@ -4,24 +4,16 @@
 * Start implementing 4.x scripts for dungeons and quests
 
 == WotLK content ==
-* Implement missing scripts for the Death Knigh area quests
-* Implement script for Ruby Sanctum
-* Finish script for Ulduar, Trial of the Crusader, Icecrown Citadel, Eye of Eternity and Obsidian Sanctum
-* Implement dungeon scripts for Halls of Reflection, Trial of the Champion, Pit of Saron and Culling of Stratholme (requires core proper waipoint movement support)
-* Finish dungeon scripts for Utgarde Pinnacle, Ahn'kahet and Azjol Nerub
-* Implement Year event bosses - Ahune, Headless Horseman
+* Finish script for Ulduar, Trial of the Crusader, Icecrown Citadel, Eye of Eternity and Ruby Sanctum
+* Implement dungeon scripts for Halls of Reflection, Trial of the Champion and Culling of Stratholme (requires core proper waipoint movement support)
+* Implement Year event boss - Headless Horseman
 * Implement various missing quest scripts
 
 == TBC content ==
-* Various quests which still require script (examples: 5821, 5943, 9729, 9879, 9446, 10310, 10512, 10584, 11085, 10985)
-* Karazhan - Missing scripts: Chess event
+* Various quests which still require script (examples: 5821, 5943, 9729, 9879, 10310, 11085, 10985)
 * Hyjal Summit - Optimize game event.
 * Black Temple - Teron Gorefiend script improvement (requires core proper mind control support)
-* Sunwell Plateau - Felmyst - phase II script missing
 
 == Classic content ==
-* Various quests which still require script (examples: 660, 667, 1222, 1270, 3367, 5721)
-* Zul'farrak (requires core proper waipoint movement support).
-* Blackwing Lair - Razorgore (requires core proper mind control support).
-* Ruins of AQ - Add missing script parts for Buru and Ossirian
+* Various quests which still require script (examples: 667, 3367, 5721)
 * Temple of AQ - Add missing script part for Viscidus

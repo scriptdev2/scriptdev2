@@ -1,6 +1,6 @@
 = ScriptDev2 Milestones =
 
-*Current Version: <<currentMS, ScriptDev2 - 0.6  (18 November 2012)>>*
+*Current Version: <<currentMS, ScriptDev2 - 0.7  (11 September 2013)>>*
 
 *Supports:*
 
@@ -10,6 +10,34 @@
 * Cata (4.3.4), see  https://github.com/scriptdev2/scriptdev2-cata
 
 [[currentMS]]
+== Milestone ScriptDev2 - 0.7 ==
+
+=== General ===
+* Unify texts loading with the core
+* Implemented support for ScriptEffect spell hooks
+* Implemented various missing quest scripts and similar events
+
+=== WotLK content ===
+* Finished script content for Death Knight area and Obsidian Sanctum
+* Implemented full script for Oculus and Pit of Saron instances
+* Improved script for the following dungeons or bosses: Ruby Sanctum, Halls of Stone, Ormorok, Hadronox, Herald Volazj, Skadi and Sapphiron
+* Implemented various missing achievements
+
+=== TBC content ===
+* Implemented script support for the Chess event, SSC water and Simon game
+* Improved script for the following dungeons or bosses: Felmyst, Kil'jaeden, Zul'jin, Al'ar, Shadow Labyrinth, Black Temple, Nazan and Vazruden and Netherspite
+* Implemented Year event boss - Ahune
+* Implemented Zul'Aman and Shattered Halls loot modes.
+
+=== Classic content ===
+* Improve script for the following dungeons or bosses: Razorgore, Archaedas, Zul'farrak, Ruins of AQ, Baroness Anastari and Zul'gurub
+* Implemented Dire Maul loot modes (tribute run event)
+
+==== Statistics ====
+* Total number of changes: over 166 revisions (183 commits)
+* Lots of bugs from forum and issues from github fixed
+
+
 == Milestone ScriptDev2 - 0.6 ==
 
 === General ===
