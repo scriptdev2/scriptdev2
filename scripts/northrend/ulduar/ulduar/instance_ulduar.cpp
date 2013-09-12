@@ -71,6 +71,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_RAZORSCALE:
         case NPC_COMMANDER:
         case NPC_XT002:
+        case NPC_HEART_DECONSTRUCTOR:
         case NPC_STEELBREAKER:
         case NPC_MOLGEIM:
         case NPC_BRUNDIR:
@@ -290,6 +291,8 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_XT002:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_XT002_GATE);
+            if (uiData == IN_PROGRESS)
+                DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_XT002_ID);
             break;
         case TYPE_ASSEMBLY:
             // Don't set the same encounter data twice
@@ -630,6 +633,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_SHATTERED_N:
         case ACHIEV_CRIT_SHATTERED_H:
             return m_abAchievCriteria[TYPE_ACHIEV_SHATTERED];
+        case ACHIEV_CRIT_HEARTBREAKER_N:
+        case ACHIEV_CRIT_HEARTBREAKER_H:
+            return GetData(TYPE_XT002_HARD) == DONE;
 
         default:
             return false;

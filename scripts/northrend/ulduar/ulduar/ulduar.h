@@ -50,6 +50,7 @@ enum
     NPC_RAZORSCALE              = 33186,
     NPC_COMMANDER               = 33210,
     NPC_XT002                   = 33293,
+    NPC_HEART_DECONSTRUCTOR     = 33329,
 
     // The antechamber of ulduar
     NPC_STEELBREAKER            = 32867,
@@ -205,6 +206,7 @@ enum
 
     // Achievement related
     ACHIEV_START_IGNIS_ID       = 20951,                    // Ignis timed achievs 2930, 2929
+    ACHIEV_START_XT002_ID       = 21027,                    // XT-002 timed achievs 2937, 2938
 
     ACHIEV_CRIT_SARONITE_N      = 10451,                    // General Vezax, achievs 3181, 3188
     ACHIEV_CRIT_SARONITE_H      = 10462,
@@ -226,6 +228,12 @@ enum
     ACHIEV_CRIT_STUNNED_MOLG_H  = 10425,
     ACHIEV_CRIT_SHATTERED_N     = 10068,                    // Ignis, achievs 2925, 2926
     ACHIEV_CRIT_SHATTERED_H     = 10069,
+    ACHIEV_CRIT_HEARTBREAKER_N  = 10221,                    // XT-002, achievs 3058, 3059
+    ACHIEV_CRIT_HEARTBREAKER_H  = 10220,
+    ACHIEV_CRIT_NERF_ENG_N      = 10074,                    // XT-002, achievs 2931, 2932
+    ACHIEV_CRIT_NERF_ENG_H      = 10075,
+    ACHIEV_CRIT_NERF_GRAVITY_N  = 10077,                    // XT-002, achievs 2934, 2936
+    ACHIEV_CRIT_NERF_GRAVITY_H  = 10079,
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance

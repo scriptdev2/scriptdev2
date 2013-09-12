@@ -1272,6 +1272,7 @@ UPDATE creature_template SET ScriptName='boss_steelbreaker' WHERE entry=32867;
 UPDATE creature_template SET ScriptName='boss_ignis' WHERE entry=33118;
 UPDATE creature_template SET ScriptName='npc_iron_construct' WHERE entry=33121;
 UPDATE creature_template SET ScriptName='npc_scorch' WHERE entry=33221;
+UPDATE creature_template SET ScriptName='boss_xt_002' WHERE entry=33293;
 DELETE FROM scripted_event_id WHERE id IN (9735,21620);
 INSERT INTO scripted_event_id VALUES
 (9735,'event_spell_saronite_barrier'),
