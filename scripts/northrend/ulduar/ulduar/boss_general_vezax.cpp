@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_general_vezax
-SD%Complete: 80%
-SDComment:
+SD%Complete: 90%
+SDComment: Some details may need some small adjustments
 SDCategory: Ulduar
 EndScriptData */
 
@@ -56,6 +56,10 @@ enum
 
     NPC_SARONITE_VAPOR                  = 33488,
 };
+
+/*######
+## boss_general_vezax
+######*/
 
 struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
 {
@@ -133,9 +137,8 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
             if (m_lVaporsGuids.size() == MAX_HARD_MODE_VAPORS)
                 DoPrepareAnimusIfCan();
         }
-        // ToDo: faction should be set in DB
         else if (pSummoned->GetEntry() == NPC_SARONITE_ANIMUS)
-            pSummoned->setFaction(14);
+            pSummoned->SetInCombatWithZone();
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned) override

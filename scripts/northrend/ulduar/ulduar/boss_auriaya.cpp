@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_auriaya
-SD%Complete: 0%
-SDComment: Aura Remove for Feral Defender needs love
+SD%Complete: 100%
+SDComment:
 SDCategory: Ulduar
 EndScriptData */
 
@@ -50,19 +50,24 @@ enum
     SPELL_FERAL_ESSENCE_REMOVAL         = 64456,            // remove 1 stack of 64455
     SPELL_FERAL_POUNCE                  = 64478,
     SPELL_FERAL_POUNCE_H                = 64669,
-    SPELL_FERAL_RUSH                    = 64489,            // should trigger repeatedly on random targets 64496 - 64674
+    SPELL_FERAL_RUSH                    = 64489,            // triggers 64496
+    SPELL_FERAL_RUSH_H                  = 64673,            // triggers 64674
     SPELL_SEEPING_FERAL_ESSENCE_SUMMON  = 64457,
-    SPELL_FEIGN_DEATH                   = 64461,            // dummy - possible related to the feral defender feign death - not used
+    SPELL_FEIGN_DEATH                   = 64461,            // related to the feral defender feign death
     SPELL_FULL_HEAL                     = 64460,            // on feign death remove
 
     // Seeping Feral Essence
     SPELL_SEEPING_FERAL_ESSENCE         = 64458,
     SPELL_SEEPING_FERAL_ESSENCE_H       = 64676,
 
-    // NPC_SEEPING_FERAL_ESSENCE           = 34098,         // summoned by the feral defender on feign death
-    // NPC_GUARDIAN_SWARN                  = 34034,         // summoned by spell
+    NPC_SEEPING_FERAL_ESSENCE           = 34098,            // summoned by the feral defender on feign death
+    // NPC_GUARDIAN_SWARN               = 34034,            // summoned by spell
     NPC_FERAL_DEFENDER_STALKER          = 34096,
 };
+
+/*######
+## boss_auriaya
+######*/
 
 struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
 {
@@ -204,28 +209,38 @@ CreatureAI* GetAI_boss_auriaya(Creature* pCreature)
     return new boss_auriayaAI(pCreature);
 }
 
+/*######
+## boss_feral_defender
+######*/
+
 struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
 {
     boss_feral_defenderAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_uiMaxFeralRush = m_bIsRegularMode ? 6 : 10;
         Reset();
     }
 
     instance_ulduar* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiFeralRushCount;
+    uint8 m_uiMaxFeralRush;
     uint32 m_uiPounceTimer;
     uint32 m_uiFeralRushTimer;
     uint32 m_uiReviveDelayTimer;
+    uint32 m_uiAttackDelayTimer;
     uint32 m_uiKilledCount;
 
     void Reset() override
     {
+        m_uiFeralRushCount      = 0;
         m_uiReviveDelayTimer    = 0;
-        m_uiPounceTimer         = 5000;
-        m_uiFeralRushTimer      = 10000;
+        m_uiAttackDelayTimer    = 0;
+        m_uiPounceTimer         = urand(9000, 12000);
+        m_uiFeralRushTimer      = urand(3000, 5000);
         m_uiKilledCount         = 0;
 
         DoCastSpellIfCan(m_creature, SPELL_FERAL_ESSENCE);
@@ -254,11 +269,14 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
         {
             uiDamage = 0;
 
-            m_creature->InterruptNonMeleeSpells(true);
+            // Set Feign death, remove one aura stack and summon a feral essence
+            DoCastSpellIfCan(m_creature, SPELL_FEIGN_DEATH, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_FERAL_ESSENCE_REMOVAL, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SEEPING_FERAL_ESSENCE_SUMMON, CAST_TRIGGERED);
+
+            // the feign death aura doesn't do everything, so keep the following here as well
             m_creature->SetHealth(0);
-            m_creature->StopMoving();
             m_creature->ClearComboPointHolders();
-            // m_creature->RemoveAllAurasOnDeath(); // TODO Should only remove negative auras
             m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
             m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -266,10 +284,6 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-
-            // Remove one aura stack and summon a feral essence
-            DoCastSpellIfCan(m_creature, SPELL_FERAL_ESSENCE_REMOVAL, CAST_TRIGGERED);
-            DoCastSpellIfCan(m_creature, SPELL_SEEPING_FERAL_ESSENCE_SUMMON, CAST_TRIGGERED);
 
             m_uiReviveDelayTimer = 30000;
             ++m_uiKilledCount;
@@ -279,7 +293,8 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned) override
     {
         // Cast seeping feral essence on the summoned
-        pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_SEEPING_FERAL_ESSENCE : SPELL_SEEPING_FERAL_ESSENCE_H, true, NULL, NULL, m_creature->GetObjectGuid());
+        if (pSummoned->GetEntry() == NPC_SEEPING_FERAL_ESSENCE)
+            pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_SEEPING_FERAL_ESSENCE : SPELL_SEEPING_FERAL_ESSENCE_H, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -291,21 +306,34 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
         {
             if (m_uiReviveDelayTimer <= uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature, SPELL_FULL_HEAL) == CAST_OK)
-                {
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-
-                    DoResetThreat();
-                    m_uiReviveDelayTimer = 0;
-
-                    // Assume Attack - it should jump to victim
-                    if (m_creature->getVictim())
-                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-                }
+                // ToDo: figure out how to enable the ressurrect animation
+                DoCastSpellIfCan(m_creature, SPELL_FULL_HEAL, CAST_TRIGGERED);
+                m_uiReviveDelayTimer = 0;
+                m_uiAttackDelayTimer = 3000;
             }
             else
                 m_uiReviveDelayTimer -= uiDiff;
+
+            // No Further action while faking
+            return;
+        }
+
+        if (m_uiAttackDelayTimer)
+        {
+            if (m_uiAttackDelayTimer <= uiDiff)
+            {
+                DoResetThreat();
+                m_creature->RemoveAurasDueToSpell(SPELL_FEIGN_DEATH);
+                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                m_uiPounceTimer = urand(9000, 10000);
+                m_uiFeralRushCount = 0;
+                m_uiFeralRushTimer = 1000;
+                m_uiAttackDelayTimer = 0;
+            }
+            else
+                m_uiAttackDelayTimer -= uiDiff;
 
             // No Further action while faking
             return;
@@ -316,7 +344,7 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_FERAL_POUNCE : SPELL_FERAL_POUNCE_H) == CAST_OK)
-                    m_uiPounceTimer = 5000;
+                    m_uiPounceTimer = urand(13000, 16000);
             }
         }
         else
@@ -324,8 +352,18 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
 
         if (m_uiFeralRushTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature, SPELL_FERAL_RUSH) == CAST_OK)
-                m_uiFeralRushTimer = 35000;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FERAL_RUSH : SPELL_FERAL_RUSH_H) == CAST_OK)
+            {
+                ++m_uiFeralRushCount;
+
+                if (m_uiFeralRushCount == m_uiMaxFeralRush)
+                {
+                    m_uiFeralRushCount = 0;
+                    m_uiFeralRushTimer = 12000;
+                }
+                else
+                    m_uiFeralRushTimer = 400;
+            }
         }
         else
             m_uiFeralRushTimer -= uiDiff;
