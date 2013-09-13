@@ -51,6 +51,7 @@ enum
     NPC_COMMANDER               = 33210,
     NPC_XT002                   = 33293,
     NPC_HEART_DECONSTRUCTOR     = 33329,
+    NPC_XT_TOY_PILE             = 33337,
 
     // The antechamber of ulduar
     NPC_STEELBREAKER            = 32867,
@@ -266,6 +267,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 
         void DoProcessShatteredEvent();
 
+        void GetToyPileGuids(GuidVector& vToyPiles) { vToyPiles = m_vToyPileGuidVector; }
+
         void Update(uint32 uiDiff);
 
     protected:
@@ -276,6 +279,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
         uint32 m_uiShatterAchievTimer;
+
+        GuidVector m_vToyPileGuidVector;
 };
 
 #endif

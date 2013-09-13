@@ -112,6 +112,10 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
                 SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
 
+        case NPC_XT_TOY_PILE:
+            m_vToyPileGuidVector.push_back(pCreature->GetObjectGuid());
+            return;
+
         default:
             return;
     }

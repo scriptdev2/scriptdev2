@@ -3413,8 +3413,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603051,'So tired. I will rest for just a moment!',15725,1,0,0,'xt-002 SAY_HEART_OPEN'),
 (-1603052,'I\'m ready to play!',15726,1,0,0,'xt-002 SAY_HEART_CLOSE'),
 (-1603053,'NO! NO! NO! NO! NO!',15727,1,0,0,'xt-002 SAY_TANCTRUM'),
-(-1603054,'XT-002 Deconstructor\'s heart is exposed and leaking energy!',0,3,0,0,'xt-002 EMOTE_EXPOSE_HEART'),
-(-1603055,'XT-002 Deconstructor consumes a scrapbot to repair himself.',0,3,0,0,'xt-002 EMOTE_REPAIR'),
+(-1603054,'%s\'s heart is exposed and leaking energy.',0,3,0,0,'xt-002 EMOTE_EXPOSE_HEART'),
+(-1603055,'%s consumes a scrapbot to repair himself!',0,3,0,0,'xt-002 EMOTE_REPAIR'),
 
 (-1603056,'Whether the world\'s greatest gnats or the world\'s greatest heroes, you\'re still only mortal.',15684,1,0,0,'brundir SAY_BRUNDIR_AGGRO'),
 (-1603057,'Stand still and stare into the light!',15687,1,0,0,'brundir SAY_BRUNDIR_WHIRL'),
@@ -3627,7 +3627,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603233,'Your petty quarrels only make me stronger!',15764,0,0,0,'yogg SAY_YOGG_V1_3'),
 
 (-1603234,'Portals open into Yogg-Saron\'s mind!',0,3,0,0,'yogg EMOTE_VISION_BLAST'),
-(-1603235,'The illusion shatters and a path to the central chamber opens!',0,3,0,0,'yogg EMOTE_SHATTER_BLAST');
+(-1603235,'The illusion shatters and a path to the central chamber opens!',0,3,0,0,'yogg EMOTE_SHATTER_BLAST'),
+
+(-1603236,'%s\'s heart is severed from his body.',0,3,0,0,'xt-002 EMOTE_KILL_HEART'),
+(-1603237,'%s begins to cause the earth to quake.',0,3,0,0,'xt-002 EMOTE_EARTH_QUAKE');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
