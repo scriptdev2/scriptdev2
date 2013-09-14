@@ -3398,7 +3398,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603037,'Give us a moment to prepare to build the turrets.',0,1,0,0,'razorscale SAY_INTRO_1'),
 (-1603038,'Be on the lookout! Mole machines will be surfacing soon with those nasty Iron dwarves aboard!',0,1,0,0,'razorscale SAY_INTRO_2'),
 (-1603039,'Ready to move out, keep those dwarves off of our backs!',0,1,0,0,'razorscale SAY_INTRO_3'),
-(-1603040,'Move! Quickly! She won\'t remain grounded for long.',0,1,0,0,'razorscale SAY_GROUNDED'),
+(-1603040,'Move quickly! She won\'t remain grounded for long!',15648,1,0,0,'razorscale SAY_GROUNDED'),
 (-1603041,'Razorscale takes a deep breath...',0,3,0,0,'razorscale EMOTE_BREATH'),
 (-1603042,'Fires out! Let\'s rebuild those turrets!',0,1,0,0,'razorscale SAY_EXTINGUISH_FIRE'),
 (-1603043,'Harpoon Turret is ready for use!',0,3,0,0,'razorscale EMOTE_HARPOON_READY'),
@@ -3630,7 +3630,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603235,'The illusion shatters and a path to the central chamber opens!',0,3,0,0,'yogg EMOTE_SHATTER_BLAST'),
 
 (-1603236,'%s\'s heart is severed from his body.',0,3,0,0,'xt-002 EMOTE_KILL_HEART'),
-(-1603237,'%s begins to cause the earth to quake.',0,3,0,0,'xt-002 EMOTE_EARTH_QUAKE');
+(-1603237,'%s begins to cause the earth to quake.',0,3,0,0,'xt-002 EMOTE_EARTH_QUAKE'),
+(-1603238,'%s is extinguished by the water!',0,2,0,0,'ignis EMOTE_EXTINGUISH_SCORCH');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4690,7 +4691,9 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3603005,'Teleport to the Shattered Walkway.','GOSSIP_ITEM_TELE_WALKWAY'),
 (-3603006,'Teleport to the Conservatory of Life.','GOSSIP_ITEM_TELE_CONSERVATORY'),
 (-3603007,'Teleport to the Spark of Imagination.','GOSSIP_ITEM_TELE_SPARK_IMAGINATION'),
-(-3603008,'Teleport to the Prison of Yogg-Saron.','GOSSIP_ITEM_TELE_YOGG_SARON');
+(-3603008,'Teleport to the Prison of Yogg-Saron.','GOSSIP_ITEM_TELE_YOGG_SARON'),
+
+(-3603009,'We are ready to help!','Expedition Commander GOSSIP_ITEM_START_RAZORSCALE');
 
 -- -3 608 000 VIOLET HOLD
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

@@ -29,7 +29,7 @@ enum
     SAY_AGGRO                           = -1603026,
     SAY_SLAGPOT_1                       = -1603027,
     SAY_SLAGPOT_2                       = -1603028,
-    SAY_SLAGPOT_3                       = -1603029,
+    SAY_FLAME_JETS                      = -1603029,
     SAY_ADDS                            = -1603030,
     SAY_SLAY_1                          = -1603031,
     SAY_SLAY_2                          = -1603032,
@@ -37,6 +37,7 @@ enum
     SAY_DEATH                           = -1603034,
 
     EMOTE_FLAME_JETS                    = -1603035,
+    EMOTE_EXTINGUISH_SCORCH             = -1603238,
 
     // spells
     SPELL_FLAME_JETS                    = 62680,
@@ -176,6 +177,7 @@ struct MANGOS_DLL_DECL boss_ignisAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FLAME_JETS : SPELL_FLAME_JETS_H) == CAST_OK)
             {
                 DoScriptText(EMOTE_FLAME_JETS, m_creature);
+                DoScriptText(SAY_FLAME_JETS, m_creature);
                 m_uiFlameJetsTimer = 35000;
             }
         }
@@ -188,12 +190,7 @@ struct MANGOS_DLL_DECL boss_ignisAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_GRAB) == CAST_OK)
                 {
-                    switch (urand(0, 2))
-                    {
-                        case 0: DoScriptText(SAY_SLAGPOT_1, m_creature); break;
-                        case 1: DoScriptText(SAY_SLAGPOT_2, m_creature); break;
-                        case 2: DoScriptText(SAY_SLAGPOT_3, m_creature); break;
-                    }
+                    DoScriptText(urand(0, 1) ? SAY_SLAGPOT_1 : SAY_SLAGPOT_2, m_creature);
                     m_uiSlagPotTimer = 30000;
                 }
             }

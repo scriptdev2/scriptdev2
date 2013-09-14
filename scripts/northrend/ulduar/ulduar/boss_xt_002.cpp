@@ -48,6 +48,7 @@ enum
     SPELL_GRAVITY_BOMB                  = 63024,
     SPELL_GRAVITY_BOMB_H                = 64234,
     SPELL_BERSERK                       = 26662,
+    // SPELL_SUBMERGED                  = 37751,            // cast before a heart phase. not used because it's unk purpose
     // SPELL_STAND                      = 37752,            // cast after a heart phase. not used because it's unk purpose
 
     // hard mode spells

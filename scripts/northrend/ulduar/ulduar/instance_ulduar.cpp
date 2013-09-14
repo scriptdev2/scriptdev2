@@ -67,11 +67,11 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_LEVIATHAN:
-        case NPC_IGNIS:
         case NPC_RAZORSCALE:
-        case NPC_COMMANDER:
+        case NPC_EXPEDITION_COMMANDER:
         case NPC_XT002:
         case NPC_HEART_DECONSTRUCTOR:
+
         case NPC_STEELBREAKER:
         case NPC_MOLGEIM:
         case NPC_BRUNDIR:
@@ -80,6 +80,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_LEFT_ARM:
         case NPC_AURIAYA:
         case NPC_FERAL_DEFENDER:
+
         case NPC_LEVIATHAN_MK:
         case NPC_RUNIC_COLOSSUS:
         case NPC_RUNE_GIANT:
@@ -290,6 +291,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_RAZORSCALE:
+            if (uiData == FAIL)
+            {
+                if (Creature* pCommander = GetSingleCreatureFromStorage(NPC_EXPEDITION_COMMANDER))
+                    pCommander->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_XT002:

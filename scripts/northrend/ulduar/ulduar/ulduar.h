@@ -46,12 +46,18 @@ enum
 
     // The siege of ulduar
     NPC_LEVIATHAN               = 33113,
-    NPC_IGNIS                   = 33118,
+    // NPC_IGNIS                = 33118,
     NPC_RAZORSCALE              = 33186,
-    NPC_COMMANDER               = 33210,
+    NPC_RAZORSCALE_SPAWNER      = 33245,                    // dwarf spawner npc for Razorscale
     NPC_XT002                   = 33293,
     NPC_HEART_DECONSTRUCTOR     = 33329,
-    NPC_XT_TOY_PILE             = 33337,
+    NPC_XT_TOY_PILE             = 33337,                    // robot spawner npc for XT002
+
+    // Razorscale helper npcs
+    NPC_EXPEDITION_COMMANDER    = 33210,
+    NPC_EXPEDITION_ENGINEER     = 33287,
+    // NPC_EXPEDITION_TRAPPER   = 33259,                    // npc used in Razorscale intro
+    NPC_EXPEDITION_DEFENDER     = 33816,
 
     // The antechamber of ulduar
     NPC_STEELBREAKER            = 32867,
@@ -235,6 +241,8 @@ enum
     ACHIEV_CRIT_NERF_ENG_H      = 10075,
     ACHIEV_CRIT_NERF_GRAVITY_N  = 10077,                    // XT-002, achievs 2934, 2936
     ACHIEV_CRIT_NERF_GRAVITY_H  = 10079,
+    ACHIEV_CRIT_QUICK_SHAVE_N   = 10062,                    // Razorscale, achievs 2919, 2921
+    ACHIEV_CRIT_QUICK_SHAVE_H   = 10063,
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
