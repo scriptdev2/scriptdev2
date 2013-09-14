@@ -59,6 +59,11 @@ enum
     NPC_JULIANNE                    = 17534,
     NPC_ROMULO                      = 17533,
 
+    // Netherspite portals
+    NPC_PORTAL_GREEN                = 17367,
+    NPC_PORTAL_BLUE                 = 17368,
+    NPC_PORTAL_RED                  = 17369,
+
     // The Master's Terrace quest related
     NPC_IMAGE_OF_MEDIVH             = 17651,
     NPC_IMAGE_OF_ARCANAGOS          = 17652,
