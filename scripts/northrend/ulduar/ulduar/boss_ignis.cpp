@@ -55,14 +55,16 @@ enum
 
     // iron construct
     SPELL_CONSTRUCT_HITTING_YA          = 65110,        // procs on melee damage; purpose unk
-    SPELL_STONED                        = 62468,
+    SPELL_STONED                        = 62468,        // mechanical stun aura
     SPELL_HEAT                          = 65667,        // stackable aura which heats the construct
-    SPELL_MOLTEN                        = 62373,
-    SPELL_BRITTLE                       = 62382,
+    SPELL_MOLTEN                        = 62373,        // aura gained by the construct when heated to 10 stacks in Scorch
+    SPELL_CHILL                         = 62381,        // chill a construct when moved in water
+    SPELL_BRITTLE                       = 62382,        // stun a construct when chilled in water
     SPELL_BRITTLE_H                     = 67114,
     SPELL_SHATTER                       = 62383,        // sends event 21620 for the achiev check
-    SPELL_STRENGTH_REMOVE               = 64475,
-    // SPELL_WATER                      = 64502,        // cast by world triggers, in order to check when the constructs reach the water (handled in core)
+    SPELL_STRENGTH_REMOVE               = 64475,        // remove 1 stack of the Strength of Creator on construct death
+    SPELL_WATER_EFFECT                  = 64503,        // spell effect which cools the heated constructs and scorch npcs
+    // SPELL_WATER                      = 64502,        // cast by world triggers, in order to check when the constructs reach the water
 
     // scorch target
     SPELL_SCORCH_AURA                   = 62548,
@@ -70,6 +72,7 @@ enum
 
     // NPC ids
     NPC_SCORCH                          = 33221,
+    NPC_IRON_CONSTRUCT                  = 33121,        // constructs which are activated on demand by Ignis
 
     MAX_HEAT_STACKS                     = 10,
 };
@@ -309,6 +312,20 @@ CreatureAI* GetAI_npc_iron_construct(Creature* pCreature)
     return new npc_iron_constructAI(pCreature);
 }
 
+bool EffectScriptEffectCreature_npc_iron_construct(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    if (uiSpellId == SPELL_WATER_EFFECT && uiEffIndex == EFFECT_INDEX_0 && pCreatureTarget->GetEntry() == NPC_IRON_CONSTRUCT)
+    {
+        // chill the iron construct if molten (effect handled in core)
+        if (pCreatureTarget->HasAura(SPELL_MOLTEN))
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_CHILL, true);
+
+        return true;
+    }
+
+    return false;
+}
+
 /*######
 ## npc_scorch
 ######*/
@@ -329,6 +346,19 @@ CreatureAI* GetAI_npc_scorch(Creature* pCreature)
     return new npc_scorchAI(pCreature);
 }
 
+bool EffectScriptEffectCreature_npc_scorch(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    if (uiSpellId == SPELL_WATER_EFFECT && uiEffIndex == EFFECT_INDEX_0 && pCreatureTarget->GetEntry() == NPC_SCORCH)
+    {
+        // despawn the Scorch in water
+        DoScriptText(EMOTE_EXTINGUISH_SCORCH, pCreatureTarget);
+        pCreatureTarget->ForcedDespawn();
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_boss_ignis()
 {
     Script* pNewScript;
@@ -341,10 +371,12 @@ void AddSC_boss_ignis()
     pNewScript = new Script;
     pNewScript->Name = "npc_iron_construct";
     pNewScript->GetAI = &GetAI_npc_iron_construct;
+    pNewScript->pEffectScriptEffectNPC = &EffectScriptEffectCreature_npc_iron_construct;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_scorch";
     pNewScript->GetAI = &GetAI_npc_scorch;
+    pNewScript->pEffectScriptEffectNPC = &EffectScriptEffectCreature_npc_scorch;
     pNewScript->RegisterSelf();
 }
