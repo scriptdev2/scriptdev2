@@ -113,6 +113,23 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
                 SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
 
+        case NPC_EXPEDITION_DEFENDER:
+            m_lDefendersGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_EXPEDITION_ENGINEER:
+            m_lEngineersGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_EXPEDITION_TRAPPER:
+            m_lTrappersGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_RAZORSCALE_CONTROLLER:
+            // sort the controllers which are assigned to harpoons and allow the central one into the mail guid store
+            if (pCreature->GetPositionY() > -145.0f)
+            {
+                m_lHarpoonDummyGuids.push_back(pCreature->GetObjectGuid());
+                return;
+            }
+            break;
         case NPC_XT_TOY_PILE:
             m_vToyPileGuidVector.push_back(pCreature->GetObjectGuid());
             return;
@@ -141,9 +158,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             if (m_auiEncounter[TYPE_LEVIATHAN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
-        case GO_BROKEN_HARPOON:
-            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
 
             // Archivum
@@ -253,6 +267,16 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_GIFT_OF_OBSERVER_25:
             break;
 
+        case GO_BROKEN_HARPOON:
+            m_vBrokenHarpoonsGuids.push_back(pGo->GetObjectGuid());
+            return;
+        case GO_HARPOON_GUN_1:
+        case GO_HARPOON_GUN_2:
+        case GO_HARPOON_GUN_3:
+        case GO_HARPOON_GUN_4:
+            m_lRepairedHarpoonsGuids.push_back(pGo->GetObjectGuid());
+            return;
+
         default:
             return;
     }
@@ -291,10 +315,68 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_RAZORSCALE:
-            if (uiData == FAIL)
+            if (uiData == IN_PROGRESS)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_QUICK_SHAVE, true);
+            else if (uiData == FAIL)
             {
+                // reset the commander
                 if (Creature* pCommander = GetSingleCreatureFromStorage(NPC_EXPEDITION_COMMANDER))
                     pCommander->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+                // reset all creatures
+                for (GuidList::const_iterator itr = m_lDefendersGuids.begin(); itr != m_lDefendersGuids.end(); ++itr)
+                {
+                    if (Creature* pDefender = instance->GetCreature(*itr))
+                    {
+                        if (!pDefender->isAlive())
+                            pDefender->Respawn();
+                        else
+                            pDefender->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+                for (GuidList::const_iterator itr = m_lEngineersGuids.begin(); itr != m_lEngineersGuids.end(); ++itr)
+                {
+                    if (Creature* pEngineer = instance->GetCreature(*itr))
+                    {
+                        if (!pEngineer->isAlive())
+                            pEngineer->Respawn();
+                        else
+                            pEngineer->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+                for (GuidList::const_iterator itr = m_lTrappersGuids.begin(); itr != m_lTrappersGuids.end(); ++itr)
+                {
+                    if (Creature* pTrapper = instance->GetCreature(*itr))
+                    {
+                        if (!pTrapper->isAlive())
+                            pTrapper->Respawn();
+                        else
+                            pTrapper->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+                for (GuidList::const_iterator itr = m_lHarpoonDummyGuids.begin(); itr != m_lHarpoonDummyGuids.end(); ++itr)
+                {
+                    if (Creature* pHarpoon = instance->GetCreature(*itr))
+                        pHarpoon->InterruptNonMeleeSpells(false);
+                }
+
+                // reset Harpoons: respawn the broken ones and despawn the repaired ones
+                for (GuidVector::const_iterator itr = m_vBrokenHarpoonsGuids.begin(); itr != m_vBrokenHarpoonsGuids.end(); ++itr)
+                {
+                    if (GameObject* pHarpoon = instance->GetGameObject(*itr))
+                    {
+                        if (!pHarpoon->isSpawned())
+                            pHarpoon->Respawn();
+                    }
+                }
+                for (GuidList::const_iterator itr = m_lRepairedHarpoonsGuids.begin(); itr != m_lRepairedHarpoonsGuids.end(); ++itr)
+                {
+                    if (GameObject* pHarpoon = instance->GetGameObject(*itr))
+                    {
+                        if (pHarpoon->isSpawned())
+                            pHarpoon->SetLootState(GO_JUST_DEACTIVATED);
+                    }
+                }
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -646,6 +728,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_HEARTBREAKER_N:
         case ACHIEV_CRIT_HEARTBREAKER_H:
             return GetData(TYPE_XT002_HARD) == DONE;
+        case ACHIEV_CRIT_QUICK_SHAVE_N:
+        case ACHIEV_CRIT_QUICK_SHAVE_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_QUICK_SHAVE];
 
         default:
             return false;

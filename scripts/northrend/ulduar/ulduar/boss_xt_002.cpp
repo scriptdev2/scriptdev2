@@ -379,11 +379,6 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
     void Reset() override
     {
         m_uiRobotTimer = 0;
-
-        // load the toy piles guids
-        m_vToyPileGuids.clear();
-        if (m_pInstance)
-            m_pInstance->GetToyPileGuids(m_vToyPileGuids);
     }
 
     void JustDied(Unit* pKiller) override
@@ -420,6 +415,10 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
             DoCastSpellIfCan(m_creature, SPELL_HEART_OVERLOAD, CAST_TRIGGERED);
             DoCastSpellIfCan(m_creature, SPELL_EXPOSED_HEART, CAST_TRIGGERED);
             m_uiRobotTimer = 1000;
+
+            // load the toy piles guids
+            if (m_pInstance && m_vToyPileGuids.empty())
+                m_pInstance->GetToyPileGuids(m_vToyPileGuids);
         }
     }
 

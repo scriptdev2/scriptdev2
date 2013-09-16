@@ -48,16 +48,16 @@ enum
     NPC_LEVIATHAN               = 33113,
     // NPC_IGNIS                = 33118,
     NPC_RAZORSCALE              = 33186,
-    NPC_RAZORSCALE_SPAWNER      = 33245,                    // dwarf spawner npc for Razorscale
     NPC_XT002                   = 33293,
     NPC_HEART_DECONSTRUCTOR     = 33329,
     NPC_XT_TOY_PILE             = 33337,                    // robot spawner npc for XT002
 
     // Razorscale helper npcs
     NPC_EXPEDITION_COMMANDER    = 33210,
-    NPC_EXPEDITION_ENGINEER     = 33287,
-    // NPC_EXPEDITION_TRAPPER   = 33259,                    // npc used in Razorscale intro
-    NPC_EXPEDITION_DEFENDER     = 33816,
+    NPC_EXPEDITION_ENGINEER     = 33287,                    // npc used to repair the Harpoons
+    NPC_EXPEDITION_TRAPPER      = 33259,                    // npc used in Razorscale grounding phase
+    NPC_EXPEDITION_DEFENDER     = 33816,                    // used to fight Razorscale
+    NPC_RAZORSCALE_CONTROLLER   = 33233,                    // harpoon shot trigger npc for phase
 
     // The antechamber of ulduar
     NPC_STEELBREAKER            = 32867,
@@ -109,7 +109,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 7,
+    MAX_SPECIAL_ACHIEV_CRITS    = 8,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -118,6 +118,7 @@ enum
     TYPE_ACHIEV_MOLGEIM         = 4,
     TYPE_ACHIEV_STUNNED         = 5,
     TYPE_ACHIEV_SHATTERED       = 6,
+    TYPE_ACHIEV_QUICK_SHAVE     = 7,
 
     // Loot chests
     // Kologarn
@@ -153,6 +154,10 @@ enum
     GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this will be broken when the boss enters the arena
     GO_XT002_GATE               = 194631,                   // Gate before Xt002
     GO_BROKEN_HARPOON           = 194565,                   // Broken harpoon from Razorscale
+    GO_HARPOON_GUN_1            = 194542,                   // usable harpoonS - respawn when the broken one is repaired
+    GO_HARPOON_GUN_2            = 194541,
+    GO_HARPOON_GUN_3            = 194543,
+    GO_HARPOON_GUN_4            = 194519,
 
     // Antechamber
     GO_KOLOGARN_BRIDGE          = 194232,
@@ -275,6 +280,10 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 
         void DoProcessShatteredEvent();
 
+        void GetDefenderGuids(GuidList& lDefenders) { lDefenders = m_lDefendersGuids; }
+        void GetEngineersGuids(GuidList& lEngineers) { lEngineers = m_lEngineersGuids; }
+        void GetTrappersGuids(GuidList& lTrappers) { lTrappers = m_lTrappersGuids; }
+        void GetHarpoonsGuids(GuidVector& vHarpoons) { vHarpoons = m_vBrokenHarpoonsGuids; }
         void GetToyPileGuids(GuidVector& vToyPiles) { vToyPiles = m_vToyPileGuidVector; }
 
         void Update(uint32 uiDiff);
@@ -289,6 +298,12 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         uint32 m_uiShatterAchievTimer;
 
         GuidVector m_vToyPileGuidVector;
+        GuidVector m_vBrokenHarpoonsGuids;
+        GuidList m_lEngineersGuids;
+        GuidList m_lTrappersGuids;
+        GuidList m_lDefendersGuids;
+        GuidList m_lHarpoonDummyGuids;
+        GuidList m_lRepairedHarpoonsGuids;
 };
 
 #endif

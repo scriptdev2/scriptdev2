@@ -1277,10 +1277,13 @@ UPDATE creature_template SET ScriptName='boss_heart_deconstructor' WHERE entry=3
 UPDATE creature_template SET ScriptName='npc_xt_toy_pile' WHERE entry=33337;
 UPDATE creature_template SET ScriptName='boss_razorscale' WHERE entry=33186;
 UPDATE creature_template SET ScriptName='npc_expedition_commander' WHERE entry=33210;
-DELETE FROM scripted_event_id WHERE id IN (9735,21620);
+UPDATE creature_template SET ScriptName='npc_razorscale_spawner' WHERE entry=33245;
+UPDATE creature_template SET ScriptName='npc_harpoon_fire_state' WHERE entry=33282;
+DELETE FROM scripted_event_id WHERE id IN (9735,20964,21620);
 INSERT INTO scripted_event_id VALUES
-(9735,'event_spell_saronite_barrier'),
-(21620,'event_ulduar');
+(9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
+(20964,'event_spell_harpoon_shot'),     -- Razorscale harpoon event
+(21620,'event_ulduar');                 -- Ignis construct shatter event
 
 /* UN'GORO CRATER */
 UPDATE creature_template SET ScriptName='npc_ame01' WHERE entry=9623;
