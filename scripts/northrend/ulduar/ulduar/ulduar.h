@@ -52,6 +52,10 @@ enum
     NPC_HEART_DECONSTRUCTOR     = 33329,
     NPC_XT_TOY_PILE             = 33337,                    // robot spawner npc for XT002
 
+    // Leviathan other npcs
+    NPC_ULDUAR_COLOSSUS         = 33237,
+    NPC_BRONZEBEARD_RADIO       = 34054,
+
     // Razorscale helper npcs
     NPC_EXPEDITION_COMMANDER    = 33210,
     NPC_EXPEDITION_ENGINEER     = 33287,                    // npc used to repair the Harpoons
@@ -150,7 +154,7 @@ enum
     // Doors and other Objects
     // The siege
     GO_SHIELD_WALL              = 194416,                   // Gate before Leviathan
-    GO_LIGHTNING_FIELD          = 194559,                   // Lightning gate after the Leviathan. It closes after the boss enters the arena
+    GO_LIGHTNING_DOOR           = 194905,                   // Lightning gate after the Leviathan. It closes after the boss enters the arena
     GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this will be broken when the boss enters the arena
     GO_XT002_GATE               = 194631,                   // Gate before Xt002
     GO_BROKEN_HARPOON           = 194565,                   // Broken harpoon from Razorscale
@@ -198,7 +202,7 @@ enum
     GO_DARK_IRON_PORTCULIS      = 194560,                   // Door from the arena to the hallway
     GO_RUNED_STONE_DOOR         = 194557,                   // Door after the runic colossus
     GO_THORIM_STONE_DOOR        = 194558,                   // Door after the ancient rune giant
-    GO_LIGHTNING_DOOR           = 194905,                   // Arena exit door
+    GO_LIGHTNING_FIELD          = 194559,                   // Arena exit door
     GO_DOOR_LEVER               = 194264,                   // In front of the door
 
     // Descent to madness
@@ -248,9 +252,25 @@ enum
     ACHIEV_CRIT_NERF_GRAVITY_H  = 10079,
     ACHIEV_CRIT_QUICK_SHAVE_N   = 10062,                    // Razorscale, achievs 2919, 2921
     ACHIEV_CRIT_QUICK_SHAVE_H   = 10063,
+    ACHIEV_CRIT_ORB_BOMB_N      = 10056,                    // Flame Leviathan, achievs 2913, 2918 (one tower)
+    ACHIEV_CRIT_ORB_BOMB_H      = 10061,
+    ACHIEV_CRIT_ORB_DEV_N       = 10057,                    // Flame Leviathan, achievs 2914, 2916 (two towers)
+    ACHIEV_CRIT_ORB_DEV_H       = 10059,
+    ACHIEV_CRIT_ORB_NUKED_N     = 10058,                    // Flame Leviathan, achievs 2915, 2917 (three towers)
+    ACHIEV_CRIT_ORB_NUKED_H     = 10060,
+    ACHIEV_CRIT_ORBITUARY_N     = 10218,                    // Flame Leviathan, achievs 3056, 3057 (four towers)
+    ACHIEV_CRIT_ORBITUARY_H     = 10219,
+    ACHIEV_CRIT_SHUTOUT_N       = 10054,                    // Flame Leviathan, achievs 2911, 2913
+    ACHIEV_CRIT_SHUTOUT_H       = 10055,
+    ACHIEV_CRIT_UNBROKEN_N      = 10044,                    // Flame Leviathan, achievs 2905, 2906
+    ACHIEV_CRIT_UNBROKEN_H      = 10045,
 };
 
-class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
+// note: original spawn loc is 607.9199f, -12.90516f, 409.887f but we won't use it because it's too far and grid won't be loaded that far
+static const float afLeviathanSpawnPos[4] = { 422.8898f, -13.32677f, 409.8839f, 3.12f };
+static const float afLeviathanMovePos[4] = { 296.5809f, -11.55668f, 409.8278f, 3.12f };
+
+class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_ulduar(Map* pMap);
@@ -259,6 +279,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         void Initialize() override;
         bool IsEncounterInProgress() const override;
 
+        void OnPlayerEnter(Player* pPlayer) override;
         void OnCreatureCreate(Creature* pCreature) override;
         void OnCreatureDeath(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
@@ -289,6 +310,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         void Update(uint32 uiDiff);
 
     protected:
+        void JustDidDialogueStep(int32 iEntry) override;
+
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 m_auiHardBoss[HARD_MODE_ENCOUNTER];
@@ -304,6 +327,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         GuidList m_lDefendersGuids;
         GuidList m_lHarpoonDummyGuids;
         GuidList m_lRepairedHarpoonsGuids;
+        GuidSet m_sColossusGuidSet;
 };
 
 #endif

@@ -24,6 +24,22 @@ EndScriptData */
 #include "precompiled.h"
 #include "ulduar.h"
 
+enum
+{
+    SAY_PRE_LEVIATHAN_1                     = -1603239,
+    SAY_PRE_LEVIATHAN_2                     = -1603240,
+    SAY_PRE_LEVIATHAN_3                     = -1603241,
+};
+
+static const DialogueEntry aUlduarDialogue[] =
+{
+    {SAY_PRE_LEVIATHAN_1,       NPC_BRONZEBEARD_RADIO,      7000},
+    {SAY_PRE_LEVIATHAN_2,       NPC_BRONZEBEARD_RADIO,      5000},
+    {SAY_PRE_LEVIATHAN_3,       NPC_BRONZEBEARD_RADIO,      2000},
+    {NPC_LEVIATHAN,             0,                          0},
+    {0, 0, 0}
+};
+
 struct sSpawnLocation
 {
     float m_fX, m_fY, m_fZ, m_fO;
@@ -37,7 +53,7 @@ static sSpawnLocation m_aKeepersSpawnLocs[] =
     {2036.674f, -73.814f, 411.355f, 2.51f},                 // Thorim
 };
 
-instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap)
+instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue)
 {
     Initialize();
 }
@@ -48,8 +64,19 @@ void instance_ulduar::Initialize()
     memset(&m_auiHardBoss, 0, sizeof(m_auiHardBoss));
     memset(&m_auiUlduarKeepers, 0, sizeof(m_auiUlduarKeepers));
 
+    InitializeDialogueHelper(this, true);
+
     for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
         m_abAchievCriteria[i] = false;
+}
+
+void instance_ulduar::OnPlayerEnter(Player* pPlayer)
+{
+    if (GetData(TYPE_LEVIATHAN) == SPECIAL)
+    {
+        if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN))
+            pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+    }
 }
 
 bool instance_ulduar::IsEncounterInProgress() const
@@ -113,6 +140,10 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
                 SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
 
+        case NPC_ULDUAR_COLOSSUS:
+            if (pCreature->GetPositionX() > 300.0f)
+                m_sColossusGuidSet.insert(pCreature->GetObjectGuid());
+            return;
         case NPC_EXPEDITION_DEFENDER:
             m_lDefendersGuids.push_back(pCreature->GetObjectGuid());
             return;
@@ -148,8 +179,12 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             // The siege
         case GO_SHIELD_WALL:
             break;
+        case GO_LIGHTNING_DOOR:
+            if (m_auiEncounter[TYPE_LEVIATHAN] == SPECIAL)
+                pGo->SetGoState(GO_STATE_READY);
+            break;
         case GO_LEVIATHAN_GATE:
-            if (m_auiEncounter[TYPE_LEVIATHAN] == DONE)
+            if (m_auiEncounter[TYPE_LEVIATHAN] == DONE || m_auiEncounter[TYPE_LEVIATHAN] == SPECIAL)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_XT002_GATE:
@@ -299,8 +334,18 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_LEVIATHAN:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(GO_SHIELD_WALL);
-            if (uiData == DONE)
+            if (uiData != SPECIAL)
+                DoUseDoorOrButton(GO_SHIELD_WALL);
+            if (uiData == IN_PROGRESS)
+            {
+                // mare sure that the Lightning door is closed when engaged in combat
+                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_LIGHTNING_DOOR))
+                {
+                    if (pDoor->GetGoState() != GO_STATE_READY)
+                        DoUseDoorOrButton(GO_LIGHTNING_DOOR);
+                }
+            }
+            else if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_XT002_GATE);
                 DoUseDoorOrButton(GO_LIGHTNING_FIELD);
@@ -531,7 +576,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
     DoOpenMadnessDoorIfCan();
 
-    if (uiData == DONE || uiData == FAIL)
+    if (uiData == DONE || uiData == SPECIAL)
     {
         OUT_SAVE_INST_DATA;
 
@@ -654,6 +699,20 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
             if (GetData(TYPE_AURIAYA) == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_CAT_LADY, false);
             break;
+        case NPC_ULDUAR_COLOSSUS:
+            {
+                if (m_sColossusGuidSet.find(pCreature->GetObjectGuid()) != m_sColossusGuidSet.end())
+                    m_sColossusGuidSet.erase(pCreature->GetObjectGuid());
+
+                // start pre Leviathan event
+                if (m_sColossusGuidSet.empty())
+                {
+                    StartNextDialogueText(SAY_PRE_LEVIATHAN_1);
+                    SetData(TYPE_LEVIATHAN, SPECIAL);
+                    pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                }
+            }
+            break;
     }
 }
 
@@ -746,8 +805,37 @@ void instance_ulduar::DoProcessShatteredEvent()
         m_uiShatterAchievTimer = 5000;
 }
 
+void instance_ulduar::JustDidDialogueStep(int32 iEntry)
+{
+    switch (iEntry)
+    {
+        case NPC_LEVIATHAN:
+            // move the leviathan in the arena
+            if (Creature* pLeviathan = GetSingleCreatureFromStorage(NPC_LEVIATHAN))
+            {
+                // the boss has increased speed for this move; handled as custom
+                float fSpeedRate = pLeviathan->GetSpeedRate(MOVE_RUN);
+                pLeviathan->SetWalk(false);
+                pLeviathan->SetSpeedRate(MOVE_RUN, 5);
+                pLeviathan->GetMotionMaster()->MovePoint(1, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2]);
+                pLeviathan->SetSpeedRate(MOVE_RUN, fSpeedRate);
+
+                // modify respawn / home position to the center of arena
+                pLeviathan->SetRespawnCoord(afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3]);
+            }
+
+            // Note: starting 4.x this gate is a GO 33 and it's destroyed at this point
+            DoUseDoorOrButton(GO_LEVIATHAN_GATE);
+
+            // ToDo: spawn the vehicle backups behind the Leviathan combat gate
+            break;
+    }
+}
+
 void instance_ulduar::Update(uint32 uiDiff)
 {
+    DialogueUpdate(uiDiff);
+
     if (GetData(TYPE_IGNIS) == IN_PROGRESS)
     {
         if (m_uiShatterAchievTimer)

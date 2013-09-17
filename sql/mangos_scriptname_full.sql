@@ -1279,6 +1279,7 @@ UPDATE creature_template SET ScriptName='boss_razorscale' WHERE entry=33186;
 UPDATE creature_template SET ScriptName='npc_expedition_commander' WHERE entry=33210;
 UPDATE creature_template SET ScriptName='npc_razorscale_spawner' WHERE entry=33245;
 UPDATE creature_template SET ScriptName='npc_harpoon_fire_state' WHERE entry=33282;
+UPDATE creature_template SET ScriptName='boss_flame_leviathan' WHERE entry=33113;
 DELETE FROM scripted_event_id WHERE id IN (9735,20964,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
