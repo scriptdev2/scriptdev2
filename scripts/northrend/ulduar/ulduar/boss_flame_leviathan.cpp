@@ -108,6 +108,12 @@ enum
     // freya's ward summons
     NPC_WRITHING_LASHER                     = 33387,                    // both spam spell 65062 on target
     NPC_WARD_OF_LIFE                        = 34275,
+
+    // other npcs (spawned at epilogue)
+    SPELL_RIDE_VEHICLE                      = 43671,
+    NPC_BRANN_FLYING_MACHINE                = 34120,
+    NPC_BRANN_BRONZEBEARD                   = 34119,
+    NPC_ARCHMANGE_RHYDIAN                   = 33696,
 };
 
 /*######
@@ -137,6 +143,16 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LEVIATHAN, DONE);
 
         DoScriptText(SAY_DEATH, m_creature);
+
+        // start epilogue event
+        if (Creature* pFlyMachine = m_creature->SummonCreature(NPC_BRANN_FLYING_MACHINE, 175.2838f, -210.4325f, 501.2375f, 1.42f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+        {
+            if (Creature* pBrann = m_creature->SummonCreature(NPC_BRANN_BRONZEBEARD, 175.2554f, -210.6305f, 500.7375f, 1.42f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                pBrann->CastSpell(pFlyMachine, SPELL_RIDE_VEHICLE, true);
+
+            pFlyMachine->SetWalk(false);
+            pFlyMachine->GetMotionMaster()->MovePoint(1, 229.9419f, -130.3764f, 409.5681f);
+        }
     }
 
     void Aggro(Unit* pWho) override
@@ -160,6 +176,33 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned) override
     {
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId) override
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        if (pSummoned->GetEntry() == NPC_BRANN_FLYING_MACHINE)
+        {
+            // spawn the Archmange and eject Brann
+            if (Creature* pArchmage = m_creature->SummonCreature(NPC_ARCHMANGE_RHYDIAN, 235.5596f, -136.1876f, 409.6508f, 1.78f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            {
+                pArchmage->SetWalk(false);
+                pArchmage->GetMotionMaster()->MovePoint(1, 239.3158f, -123.6443f, 409.8174f);
+            }
+
+            pSummoned->RemoveAllAuras();
+        }
+        else if (pSummoned->GetEntry() == NPC_ARCHMANGE_RHYDIAN)
+        {
+            if (Creature* pBrann = GetClosestCreatureWithEntry(pSummoned, NPC_BRANN_BRONZEBEARD, 30.0f))
+            {
+                // rest will be handled by DB scripts
+                pBrann->SetWalk(false);
+                pBrann->GetMotionMaster()->MoveWaypoint();
+            }
+        }
     }
 
     void MovementInform(uint32 uiMoveType, uint32 uiPointId) override

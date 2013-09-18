@@ -348,7 +348,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             else if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_XT002_GATE);
-                DoUseDoorOrButton(GO_LIGHTNING_FIELD);
+                DoUseDoorOrButton(GO_LIGHTNING_DOOR);
             }
             break;
         case TYPE_IGNIS:
