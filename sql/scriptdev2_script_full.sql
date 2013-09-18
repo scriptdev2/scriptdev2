@@ -4697,7 +4697,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3603007,'Teleport to the Spark of Imagination.','GOSSIP_ITEM_TELE_SPARK_IMAGINATION'),
 (-3603008,'Teleport to the Prison of Yogg-Saron.','GOSSIP_ITEM_TELE_YOGG_SARON'),
 
-(-3603009,'We are ready to help!','Expedition Commander GOSSIP_ITEM_START_RAZORSCALE');
+(-3603009,'We are ready to help!','Expedition Commander GOSSIP_ITEM_START_RAZORSCALE'),
+(-3603010,'Activate secondary defensive systems.','Lore Keeper of Norgannon GOSSIP_ITEM_ACTIVATE_SYSTEMS'),
+(-3603011,'Confirmed.','Lore Keeper of Norgannon GOSSIP_ITEM_CONFIRMED'),
+(-3603012,'We\'re ready. Begin the assault!','Brann Bronzebeard GOSSIP_ITEM_BEGIN_ASSAULT');
 
 -- -3 608 000 VIOLET HOLD
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

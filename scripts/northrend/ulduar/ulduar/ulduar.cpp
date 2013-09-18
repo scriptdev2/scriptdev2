@@ -23,6 +23,9 @@ EndScriptData */
 
 /* ContentData
 go_ulduar_teleporter
+npc_brann_ulduar
+npc_keeper_norgannon
+event_go_ulduar_tower
 EndContentData */
 
 #include "precompiled.h"
@@ -183,6 +186,151 @@ bool GossipSelect_go_ulduar_teleporter(Player* pPlayer, GameObject* pGO, uint32 
     return true;
 }
 
+/*######
+## npc_brann_ulduar
+######*/
+
+enum
+{
+    GOSSIP_ITEM_BEGIN_ASSAULT                   = -3603012,
+    GOSSIP_TEXT_ID_BRANN                        = 14369,
+};
+
+bool GossipHello_npc_brann_ulduar(Player* pPlayer, Creature* pCreature)
+{
+    if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_LEVIATHAN_GAUNTLET) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN) == NOT_STARTED)
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN_ASSAULT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_BRANN, pCreature->GetObjectGuid());
+    }
+    return true;
+}
+
+bool GossipSelect_npc_brann_ulduar(Player* pPlayer, Creature* pCreature, uint32 /*sender*/, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+        {
+            // if encounter is started by Brann then hard mode is failed
+            pInstance->SetData(TYPE_TOWER_FREYA, FAIL);
+            pInstance->SetData(TYPE_TOWER_HODIR, FAIL);
+            pInstance->SetData(TYPE_TOWER_MIMIRON, FAIL);
+            pInstance->SetData(TYPE_TOWER_THORIM, FAIL);
+            pInstance->SetData(TYPE_LEVIATHAN_HARD, FAIL);
+
+            // set gauntlet in progress; rest of the event is done by DB scripts
+            pInstance->SetData(TYPE_LEVIATHAN_GAUNTLET, IN_PROGRESS);
+            pCreature->GetMotionMaster()->MoveWaypoint();
+        }
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
+/*######
+## npc_keeper_norgannon
+######*/
+
+enum
+{
+    GOSSIP_ITEM_ACTIVATE_SYSTEMS                = -3603010,
+    GOSSIP_ITEM_CONFIRMED                       = -3603011,
+
+    GOSSIP_TEXT_ID_GREET                        = 14375,
+    GOSSIP_TEXT_ID_DEFENSES                     = 14496,
+    GOSSIP_TEXT_ID_ACTIVATED                    = 14497,
+};
+
+bool GossipHello_npc_keeper_norgannon(Player* pPlayer, Creature* pCreature)
+{
+    if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_LEVIATHAN_GAUNTLET) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN_HARD) == NOT_STARTED)
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ACTIVATE_SYSTEMS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_GREET, pCreature->GetObjectGuid());
+    }
+    return true;
+}
+
+bool GossipSelect_npc_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 /*sender*/, uint32 uiAction)
+{
+    switch (uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CONFIRMED, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_DEFENSES, pCreature->GetObjectGuid());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+            {
+                // if hard mode is triggered all towers become active and encounter starts automatically
+                pInstance->SetData(TYPE_TOWER_FREYA, DONE);
+                pInstance->SetData(TYPE_TOWER_HODIR, DONE);
+                pInstance->SetData(TYPE_TOWER_MIMIRON, DONE);
+                pInstance->SetData(TYPE_TOWER_THORIM, DONE);
+                pInstance->SetData(TYPE_LEVIATHAN_HARD, DONE);
+
+                // set gauntlet in progress and despawn the Lorekeeper; rest of the event is done by DB scripts
+                pInstance->SetData(TYPE_LEVIATHAN_GAUNTLET, IN_PROGRESS);
+                pCreature->ForcedDespawn(10000);
+
+                if (Creature* pDellorah = pInstance->GetSingleCreatureFromStorage(NPC_EXPLORER_DELLORAH))
+                    pDellorah->GetMotionMaster()->MoveWaypoint();
+                if (Creature* pBrann = pInstance->GetSingleCreatureFromStorage(NPC_BRANN_BRONZEBEARD))
+                    pBrann->GetMotionMaster()->MoveWaypoint();
+            }
+
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_ACTIVATED, pCreature->GetObjectGuid());
+            break;
+    }
+
+    return true;
+}
+
+/*######
+## event_go_ulduar_tower
+######*/
+
+bool ProcessEventId_event_go_ulduar_tower(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
+{
+    if (pSource->GetTypeId() == TYPEID_GAMEOBJECT && ((GameObject*)pSource)->GetGoType() == GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING)
+    {
+        instance_ulduar* pInstance = (instance_ulduar*)((GameObject*)pSource)->GetInstanceData();
+        if (!pInstance)
+            return true;
+
+        // Towers can be deactivated by destroying them. Notify instance data in case they get destroyed.
+        switch (uiEventId)
+        {
+            case EVENT_ID_TOWER_LIFE:
+                pInstance->SetData(TYPE_TOWER_FREYA, FAIL);
+                break;
+            case EVENT_ID_TOWER_FLAME:
+                pInstance->SetData(TYPE_TOWER_MIMIRON, FAIL);
+                break;
+            case EVENT_ID_TOWER_FROST:
+                pInstance->SetData(TYPE_TOWER_HODIR, FAIL);
+                break;
+            case EVENT_ID_TOWER_STORMS:
+                pInstance->SetData(TYPE_TOWER_THORIM, FAIL);
+                break;
+            default:
+                return false;
+        }
+
+        // allow further DB processing
+        return false;
+    }
+
+    return false;
+}
+
 void AddSC_ulduar()
 {
     Script* pNewScript;
@@ -191,5 +339,22 @@ void AddSC_ulduar()
     pNewScript->Name = "go_ulduar_teleporter";
     pNewScript->pGossipHelloGO = &GossipHello_go_ulduar_teleporter;
     pNewScript->pGossipSelectGO = &GossipSelect_go_ulduar_teleporter;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_brann_ulduar";
+    pNewScript->pGossipHello = &GossipHello_npc_brann_ulduar;
+    pNewScript->pGossipSelect = &GossipSelect_npc_brann_ulduar;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_keeper_norgannon";
+    pNewScript->pGossipHello = &GossipHello_npc_keeper_norgannon;
+    pNewScript->pGossipSelect = &GossipSelect_npc_keeper_norgannon;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_go_ulduar_tower";
+    pNewScript->pProcessEventId = &ProcessEventId_event_go_ulduar_tower;
     pNewScript->RegisterSelf();
 }

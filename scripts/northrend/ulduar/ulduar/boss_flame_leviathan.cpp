@@ -112,7 +112,7 @@ enum
     // other npcs (spawned at epilogue)
     SPELL_RIDE_VEHICLE                      = 43671,
     NPC_BRANN_FLYING_MACHINE                = 34120,
-    NPC_BRANN_BRONZEBEARD                   = 34119,
+    NPC_BRANN_BRONZEBEARD_LEVIATHAN         = 34119,
     NPC_ARCHMANGE_RHYDIAN                   = 33696,
 };
 
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         // start epilogue event
         if (Creature* pFlyMachine = m_creature->SummonCreature(NPC_BRANN_FLYING_MACHINE, 175.2838f, -210.4325f, 501.2375f, 1.42f, TEMPSUMMON_CORPSE_DESPAWN, 0))
         {
-            if (Creature* pBrann = m_creature->SummonCreature(NPC_BRANN_BRONZEBEARD, 175.2554f, -210.6305f, 500.7375f, 1.42f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            if (Creature* pBrann = m_creature->SummonCreature(NPC_BRANN_BRONZEBEARD_LEVIATHAN, 175.2554f, -210.6305f, 500.7375f, 1.42f, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 pBrann->CastSpell(pFlyMachine, SPELL_RIDE_VEHICLE, true);
 
             pFlyMachine->SetWalk(false);
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         }
         else if (pSummoned->GetEntry() == NPC_ARCHMANGE_RHYDIAN)
         {
-            if (Creature* pBrann = GetClosestCreatureWithEntry(pSummoned, NPC_BRANN_BRONZEBEARD, 30.0f))
+            if (Creature* pBrann = GetClosestCreatureWithEntry(pSummoned, NPC_BRANN_BRONZEBEARD_LEVIATHAN, 30.0f))
             {
                 // rest will be handled by DB scripts
                 pBrann->SetWalk(false);

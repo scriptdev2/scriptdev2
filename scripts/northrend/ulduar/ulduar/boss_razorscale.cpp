@@ -892,7 +892,7 @@ bool EffectDummyCreature_npc_harpoon_fire_state(Unit* /*pCaster*/, uint32 uiSpel
 ## event_spell_harpoon_shot
 ######*/
 
-bool ProcessEventId_event_spell_harpoon_shot(uint32 /*uiEventId*/, Object* pSource, Object* pTarget, bool /*bIsStart*/)
+bool ProcessEventId_event_spell_harpoon_shot(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (((Creature*)pSource)->GetEntry() == NPC_RAZORSCALE_CONTROLLER)
     {

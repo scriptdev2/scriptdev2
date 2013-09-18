@@ -53,7 +53,9 @@ static sSpawnLocation m_aKeepersSpawnLocs[] =
     {2036.674f, -73.814f, 411.355f, 2.51f},                 // Thorim
 };
 
-instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue)
+instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
+    m_uiShatterAchievTimer(0),
+    m_uiGauntletStatus(0)
 {
     Initialize();
 }
@@ -63,8 +65,9 @@ void instance_ulduar::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     memset(&m_auiHardBoss, 0, sizeof(m_auiHardBoss));
     memset(&m_auiUlduarKeepers, 0, sizeof(m_auiUlduarKeepers));
+    memset(&m_auiUlduarTowers, 0, sizeof(m_auiUlduarTowers));
 
-    InitializeDialogueHelper(this, true);
+    InitializeDialogueHelper(this);
 
     for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
         m_abAchievCriteria[i] = false;
@@ -94,6 +97,8 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_LEVIATHAN:
+        case NPC_EXPLORER_DELLORAH:
+        case NPC_BRANN_BRONZEBEARD:
         case NPC_RAZORSCALE:
         case NPC_EXPEDITION_COMMANDER:
         case NPC_XT002:
@@ -192,6 +197,22 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[TYPE_XT002] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             if (m_auiEncounter[TYPE_LEVIATHAN] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_HODIR_CRYSTAL:
+            if (m_auiUlduarTowers[0] == FAIL)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_THORIM_CRYSTAL:
+            if (m_auiUlduarTowers[1] == FAIL)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_FREYA_CRYSTAL:
+            if (m_auiUlduarTowers[2] == FAIL)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_MIMIRON_CRYSTAL:
+            if (m_auiUlduarTowers[3] == FAIL)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
 
@@ -572,6 +593,41 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_KEEPER_MIMIRON:
             m_auiUlduarKeepers[3] = uiData;
             break;
+
+            // Ulduar towers
+        case TYPE_TOWER_HODIR:
+            if (m_auiUlduarTowers[0] == uiData)
+                return;
+            if (uiData == FAIL)
+                DoUseDoorOrButton(GO_HODIR_CRYSTAL);
+            m_auiUlduarTowers[0] = uiData;
+            break;
+        case TYPE_TOWER_THORIM:
+            if (m_auiUlduarTowers[1] == uiData)
+                return;
+            if (uiData == FAIL)
+                DoUseDoorOrButton(GO_THORIM_CRYSTAL);
+            m_auiUlduarTowers[1] = uiData;
+            break;
+        case TYPE_TOWER_FREYA:
+            if (m_auiUlduarTowers[2] == uiData)
+                return;
+            if (uiData == FAIL)
+                DoUseDoorOrButton(GO_FREYA_CRYSTAL);
+            m_auiUlduarTowers[2] = uiData;
+            break;
+        case TYPE_TOWER_MIMIRON:
+            if (m_auiUlduarTowers[3] == uiData)
+                return;
+            if (uiData == FAIL)
+                DoUseDoorOrButton(GO_MIMIRON_CRYSTAL);
+            m_auiUlduarTowers[3] = uiData;
+            break;
+
+            // Other types - not saved
+        case TYPE_LEVIATHAN_GAUNTLET:
+            m_uiGauntletStatus = uiData;
+            return;
     }
 
     DoOpenMadnessDoorIfCan();
@@ -589,7 +645,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                    << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
                    << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
                    << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
-                   << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3];
+                   << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " "
+                   << m_auiUlduarKeepers[3] << " " << m_auiUlduarTowers[0] << " " << m_auiUlduarTowers[1] << " "
+                   << m_auiUlduarTowers[2] << " " << m_auiUlduarTowers[3];
 
         m_strInstData = saveStream.str();
 
@@ -598,13 +656,19 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-// TODO: implement all hard mode loot here!
 bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
 {
     switch (uiInstanceConditionId)
     {
-        case TYPE_XT002_HARD:
+        case INSTANCE_CONDITION_ID_NORMAL_MODE:
+        case INSTANCE_CONDITION_ID_HARD_MODE:
+        case INSTANCE_CONDITION_ID_HARD_MODE_2:
+        case INSTANCE_CONDITION_ID_HARD_MODE_3:
+        case INSTANCE_CONDITION_ID_HARD_MODE_4:
+            // TODO: implement all hard mode loot here!
             break;
+
+            // ToDo: handle vehicle spell clicks - should be available only after the gauntlet was started by gossip!
     }
 
     script_error_log("instance_ulduar::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
@@ -670,6 +734,19 @@ uint32 instance_ulduar::GetData(uint32 uiType) const
             return m_auiUlduarKeepers[2];
         case TYPE_KEEPER_MIMIRON:
             return m_auiUlduarKeepers[3];
+
+            // Ulduar Towers
+        case TYPE_TOWER_HODIR:
+            return m_auiUlduarTowers[0];
+        case TYPE_TOWER_THORIM:
+            return m_auiUlduarTowers[1];
+        case TYPE_TOWER_FREYA:
+            return m_auiUlduarTowers[2];
+        case TYPE_TOWER_MIMIRON:
+            return m_auiUlduarTowers[3];
+
+        case TYPE_LEVIATHAN_GAUNTLET:
+            return m_uiGauntletStatus;
     }
 
     return 0;
@@ -731,7 +808,8 @@ void instance_ulduar::Load(const char* strIn)
                >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
                >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11] >> m_auiEncounter[12] >> m_auiEncounter[13]
                >> m_auiHardBoss[0] >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5] >> m_auiHardBoss[6]
-               >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3];
+               >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3] >> m_auiUlduarTowers[0]
+               >> m_auiUlduarTowers[1] >> m_auiUlduarTowers[2] >> m_auiUlduarTowers[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -809,6 +887,11 @@ void instance_ulduar::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
     {
+        case SAY_PRE_LEVIATHAN_1:
+        case SAY_PRE_LEVIATHAN_2:
+        case SAY_PRE_LEVIATHAN_3:
+            DoOrSimulateScriptTextForThisInstance(iEntry, NPC_BRONZEBEARD_RADIO);
+            break;
         case NPC_LEVIATHAN:
             // move the leviathan in the arena
             if (Creature* pLeviathan = GetSingleCreatureFromStorage(NPC_LEVIATHAN))

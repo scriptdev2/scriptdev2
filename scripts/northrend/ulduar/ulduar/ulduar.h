@@ -44,6 +44,16 @@ enum
     TYPE_KEEPER_THORIM          = 25,
     TYPE_KEEPER_MIMIRON         = 26,
 
+    // Tower types
+    // Used to store the towers which will be used at Leviathan encounter
+    TYPE_TOWER_HODIR            = 27,
+    TYPE_TOWER_FREYA            = 28,
+    TYPE_TOWER_THORIM           = 29,
+    TYPE_TOWER_MIMIRON          = 30,
+
+    // Other types - not saved
+    TYPE_LEVIATHAN_GAUNTLET     = 31,
+
     // The siege of ulduar
     NPC_LEVIATHAN               = 33113,
     // NPC_IGNIS                = 33118,
@@ -55,6 +65,8 @@ enum
     // Leviathan other npcs
     NPC_ULDUAR_COLOSSUS         = 33237,
     NPC_BRONZEBEARD_RADIO       = 34054,
+    NPC_EXPLORER_DELLORAH       = 33701,
+    NPC_BRANN_BRONZEBEARD       = 33579,
 
     // Razorscale helper npcs
     NPC_EXPEDITION_COMMANDER    = 33210,
@@ -162,6 +174,10 @@ enum
     GO_HARPOON_GUN_2            = 194541,
     GO_HARPOON_GUN_3            = 194543,
     GO_HARPOON_GUN_4            = 194519,
+    GO_FREYA_CRYSTAL            = 194704,                   // crystals which can be active during Leviathan encounter if hard mode towers are active
+    GO_MIMIRON_CRYSTAL          = 194705,
+    GO_THORIM_CRYSTAL           = 194706,
+    GO_HODIR_CRYSTAL            = 194707,
 
     // Antechamber
     GO_KOLOGARN_BRIDGE          = 194232,
@@ -219,6 +235,13 @@ enum
 
     // events
     EVENT_ID_SPELL_SHATTER      = 21620,
+    EVENT_ID_TOWER_LIFE         = 21030,                    // events checked when a tower is destroyed
+    EVENT_ID_TOWER_FLAME        = 21033,
+    EVENT_ID_TOWER_FROST        = 21032,
+    EVENT_ID_TOWER_STORMS       = 21031,
+
+    // area triggers
+    AREATRIGGER_ID_INTRO        = 5388,                     // starts the intro dialogue
 
     // Achievement related
     ACHIEV_START_IGNIS_ID       = 20951,                    // Ignis timed achievs 2930, 2929
@@ -292,7 +315,6 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
         void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
-        // Dummy, leave till correct solution for hardmode found
         bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
         void DoOpenMadnessDoorIfCan();
@@ -316,9 +338,11 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 m_auiHardBoss[HARD_MODE_ENCOUNTER];
         uint32 m_auiUlduarKeepers[KEEPER_ENCOUNTER];
+        uint32 m_auiUlduarTowers[KEEPER_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
         uint32 m_uiShatterAchievTimer;
+        uint32 m_uiGauntletStatus;
 
         GuidVector m_vToyPileGuidVector;
         GuidVector m_vBrokenHarpoonsGuids;
