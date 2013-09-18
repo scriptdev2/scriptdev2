@@ -1263,6 +1263,7 @@ UPDATE creature_template SET ScriptName='npc_searing_gaze' WHERE entry=28265;
 
 /* ULDUAR */
 UPDATE instance_template SET ScriptName='instance_ulduar' WHERE map=603;
+UPDATE gameobject_template SET ScriptName='go_ulduar_teleporter' WHERE entry=194569;
 UPDATE creature_template SET ScriptName='boss_general_vezax' WHERE entry=33271;
 UPDATE creature_template SET ScriptName='boss_auriaya' WHERE entry=33515;
 UPDATE creature_template SET ScriptName='boss_feral_defender' WHERE entry=34035;

@@ -72,7 +72,7 @@ void instance_ulduar::Initialize()
 
 void instance_ulduar::OnPlayerEnter(Player* pPlayer)
 {
-    if (GetData(TYPE_LEVIATHAN) == SPECIAL)
+    if (GetData(TYPE_LEVIATHAN) == SPECIAL || GetData(TYPE_LEVIATHAN) == FAIL)
     {
         if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN))
             pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
@@ -180,11 +180,11 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_SHIELD_WALL:
             break;
         case GO_LIGHTNING_DOOR:
-            if (m_auiEncounter[TYPE_LEVIATHAN] == SPECIAL)
+            if (m_auiEncounter[TYPE_LEVIATHAN] == SPECIAL || m_auiEncounter[TYPE_LEVIATHAN] == FAIL)
                 pGo->SetGoState(GO_STATE_READY);
             break;
         case GO_LEVIATHAN_GATE:
-            if (m_auiEncounter[TYPE_LEVIATHAN] == DONE || m_auiEncounter[TYPE_LEVIATHAN] == SPECIAL)
+            if (m_auiEncounter[TYPE_LEVIATHAN] != NOT_STARTED)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_XT002_GATE:
@@ -576,7 +576,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
     DoOpenMadnessDoorIfCan();
 
-    if (uiData == DONE || uiData == SPECIAL)
+    if (uiData == DONE || uiData == FAIL || uiData == SPECIAL)
     {
         OUT_SAVE_INST_DATA;
 
