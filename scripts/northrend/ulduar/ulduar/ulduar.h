@@ -68,6 +68,15 @@ enum
     NPC_EXPLORER_DELLORAH       = 33701,
     NPC_BRANN_BRONZEBEARD       = 33579,
 
+    // Leviathan reinforcements
+    // NPC_HIRED_ENGINEER       = 33626,
+    // NPC_HIRED_DEMOLITIONIST  = 33627,
+    // NPC_BATTLE_MAGE          = 33662,
+    NPC_SALVAGED_SIEGE_ENGINE   = 33060,
+    NPC_SALVAGED_CHOPPER        = 33062,
+    NPC_SALVAGED_DEMOLISHER     = 33109,
+    // NPC_LIQUID_PYRITE        = 33189,
+
     // Razorscale helper npcs
     NPC_EXPEDITION_COMMANDER    = 33210,
     NPC_EXPEDITION_ENGINEER     = 33287,                    // npc used to repair the Harpoons
@@ -242,6 +251,8 @@ enum
 
     // area triggers
     AREATRIGGER_ID_INTRO        = 5388,                     // starts the intro dialogue
+    AREATRIGGER_ID_REPAIR_1     = 5369,                     // related to vehicle repair
+    AREATRIGGER_ID_REPAIR_2     = 5423,
 
     // Achievement related
     ACHIEV_START_IGNIS_ID       = 20951,                    // Ignis timed achievs 2930, 2929
@@ -289,6 +300,36 @@ enum
     ACHIEV_CRIT_UNBROKEN_H      = 10045,
 };
 
+struct UlduarSpawns
+{
+    float fX, fY, fZ, fO;
+    uint32 uiEntry;
+};
+
+// Note: coordinates are guessed, but pretty close to what they should be
+// ToDo: spawn additional Engineers, Demolitionists, Mages and Liquid Pyrite near the columns
+static const UlduarSpawns afReinforcementsNormal[] =
+{
+    {118.797f, -26.9963f,409.80f, 3.14f, NPC_SALVAGED_SIEGE_ENGINE},
+    {118.847f, -43.758f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
+    {116.602f, 8.464f, 409.80f, 3.10f, NPC_SALVAGED_CHOPPER},
+    {116.859f, -4.199f, 409.80f, 3.12f, NPC_SALVAGED_CHOPPER},
+    {122.479f, 25.093f, 410.60f, 3.10f, NPC_SALVAGED_DEMOLISHER},
+    {123.022f, 39.671f, 409.80f, 3.10f, NPC_SALVAGED_DEMOLISHER},
+};
+static const UlduarSpawns afReinforcementsHeroic[] =
+{
+    {106.359f, -35.269f, 409.80f, 3.12f, NPC_SALVAGED_SIEGE_ENGINE},
+    {135.351f, -20.767f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
+    {135.408f, -50.178f, 409.80f, 3.12f, NPC_SALVAGED_SIEGE_ENGINE},
+    {116.429f, 4.036f, 409.79f, 3.10f, NPC_SALVAGED_CHOPPER},
+    {116.272f, -0.013f, 409.79f, 3.10f, NPC_SALVAGED_CHOPPER},
+    {116.948f, -8.351f, 409.79f, 3.10f, NPC_SALVAGED_CHOPPER},
+    {137.523f, 32.346f, 409.80f, 3.12f, NPC_SALVAGED_DEMOLISHER},
+    {112.818f, 18.981f, 409.83f, 3.10f, NPC_SALVAGED_DEMOLISHER},
+    {112.700f, 47.884f, 409.79f, 3.10f, NPC_SALVAGED_DEMOLISHER},
+};
+
 // note: original spawn loc is 607.9199f, -12.90516f, 409.887f but we won't use it because it's too far and grid won't be loaded that far
 static const float afLeviathanSpawnPos[4] = { 422.8898f, -13.32677f, 409.8839f, 3.12f };
 static const float afLeviathanMovePos[4] = { 296.5809f, -11.55668f, 409.8278f, 3.12f };
@@ -333,6 +374,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
+        void DoCallLeviathanHelp();
 
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];

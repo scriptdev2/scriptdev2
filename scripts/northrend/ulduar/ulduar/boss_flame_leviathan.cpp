@@ -71,6 +71,7 @@ enum
 
     // tower buffs to Leviathan (applied on combat start if the towers are alive)
     SPELL_TOWER_OF_FROST                    = 65077,
+    // SPELL_TOWER_OF_FROST_DEBUFF          = 65079,                    // removed by hotfix
     SPELL_TOWER_OF_LIFE                     = 64482,
     SPELL_TOWER_OF_STORMS                   = 65076,
     SPELL_TOWER_OF_FLAMES                   = 65075,

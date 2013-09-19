@@ -78,7 +78,10 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
     if (GetData(TYPE_LEVIATHAN) == SPECIAL || GetData(TYPE_LEVIATHAN) == FAIL)
     {
         if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN))
-            pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+        {
+            pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
+            DoCallLeviathanHelp();
+        }
     }
 }
 
@@ -359,7 +362,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_SHIELD_WALL);
             if (uiData == IN_PROGRESS)
             {
-                // mare sure that the Lightning door is closed when engaged in combat
+                // make sure that the Lightning door is closed when engaged in combat
                 if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_LIGHTNING_DOOR))
                 {
                     if (pDoor->GetGoState() != GO_STATE_READY)
@@ -371,6 +374,8 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_XT002_GATE);
                 DoUseDoorOrButton(GO_LIGHTNING_DOOR);
             }
+            else if (uiData == FAIL)
+                DoCallLeviathanHelp();
             break;
         case TYPE_IGNIS:
             m_auiEncounter[uiType] = uiData;
@@ -786,7 +791,7 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
                 {
                     StartNextDialogueText(SAY_PRE_LEVIATHAN_1);
                     SetData(TYPE_LEVIATHAN, SPECIAL);
-                    pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                    pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
                 }
             }
             break;
@@ -874,6 +879,23 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
     }
 }
 
+// function which will handle the Flame Leviathan backup spawns
+void instance_ulduar::DoCallLeviathanHelp()
+{
+    Creature* pLeviathan = GetSingleCreatureFromStorage(NPC_LEVIATHAN);
+    if (!pLeviathan)
+        return;
+
+    for (uint8 i = 0; i < countof(afReinforcementsNormal); ++i)
+        pLeviathan->SummonCreature(afReinforcementsNormal[i].uiEntry, afReinforcementsNormal[i].fX, afReinforcementsNormal[i].fY, afReinforcementsNormal[i].fZ, afReinforcementsNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+
+    if (!instance->IsRegularDifficulty())
+    {
+        for (uint8 i = 0; i < countof(afReinforcementsHeroic); ++i)
+            pLeviathan->SummonCreature(afReinforcementsHeroic[i].uiEntry, afReinforcementsHeroic[i].fX, afReinforcementsHeroic[i].fY, afReinforcementsHeroic[i].fZ, afReinforcementsHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+    }
+}
+
 void instance_ulduar::DoProcessShatteredEvent()
 {
     // If timer is already running set achiev criteria to true, else start the timer
@@ -909,8 +931,6 @@ void instance_ulduar::JustDidDialogueStep(int32 iEntry)
 
             // Note: starting 4.x this gate is a GO 33 and it's destroyed at this point
             DoUseDoorOrButton(GO_LEVIATHAN_GATE);
-
-            // ToDo: spawn the vehicle backups behind the Leviathan combat gate
             break;
     }
 }
