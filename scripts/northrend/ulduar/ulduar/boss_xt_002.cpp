@@ -422,7 +422,7 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
         }
     }
 
-     // TODO: Use the dummy effect on target when proper targeting will be supported in core
+    // TODO: Use the dummy effect on target when proper targeting will be supported in core
     void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
     {
         if (pTarget->GetEntry() == NPC_XT_TOY_PILE && pSpellEntry->Id == SPELL_ENERGY_ORB)

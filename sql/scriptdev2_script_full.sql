@@ -3635,7 +3635,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1603239,'You\'ve done it! You\'ve broken the defenses of Ulduar. In a few moments, we will be dropping in to...',15804,0,0,0,'bronzebeard radio SAY_PRE_LEVIATHAN_1'),
 (-1603240,'What is that? Be careful! Something\'s headed your way!',15805,0,0,0,'bronzebeard radio SAY_PRE_LEVIATHAN_2'),
-(-1603241,'Quickly! Evasive action! Evasive act--',15806,0,0,0,'bronzebeard radio SAY_PRE_LEVIATHAN_3');
+(-1603241,'Quickly! Evasive action! Evasive act--',15806,0,0,0,'bronzebeard radio SAY_PRE_LEVIATHAN_3'),
+
+(-1603242,'%s activates Hodir\'s Fury.',0,3,0,0,'leviathan EMOTE_HODIR_FURY'),
+(-1603243,'%s activates Freya\'s Ward.',0,3,0,0,'leviathan EMOTE_FREYA_WARD'),
+(-1603244,'%s activates Mimiron\'s Inferno.',0,3,0,0,'leviathan EMOTE_MIMIRON_INFERNO'),
+(-1603245,'%s activates Thorim\'s Hammer.',0,3,0,0,'leviathan EMOTE_THORIM_HAMMER');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

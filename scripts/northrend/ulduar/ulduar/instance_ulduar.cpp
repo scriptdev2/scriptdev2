@@ -77,7 +77,7 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
 {
     if (GetData(TYPE_LEVIATHAN) == SPECIAL || GetData(TYPE_LEVIATHAN) == FAIL)
     {
-        if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN))
+        if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN, true))
         {
             pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
             DoCallLeviathanHelp();
@@ -102,6 +102,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_LEVIATHAN:
         case NPC_EXPLORER_DELLORAH:
         case NPC_BRANN_BRONZEBEARD:
+        case NPC_ORBITAL_SUPPORT:
         case NPC_RAZORSCALE:
         case NPC_EXPEDITION_COMMANDER:
         case NPC_XT002:
@@ -368,6 +369,8 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                     if (pDoor->GetGoState() != GO_STATE_READY)
                         DoUseDoorOrButton(GO_LIGHTNING_DOOR);
                 }
+
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_SHUTOUT, true);
             }
             else if (uiData == DONE)
             {
@@ -873,6 +876,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_QUICK_SHAVE_N:
         case ACHIEV_CRIT_QUICK_SHAVE_H:
             return m_abAchievCriteria[TYPE_ACHIEV_QUICK_SHAVE];
+        case ACHIEV_CRIT_SHUTOUT_N:
+        case ACHIEV_CRIT_SHUTOUT_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_SHUTOUT];
 
         default:
             return false;
@@ -957,7 +963,7 @@ InstanceData* GetInstanceData_instance_ulduar(Map* pMap)
     return new instance_ulduar(pMap);
 }
 
-bool ProcessEventId_event_ulduar(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_ulduar(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
 {
     if (uiEventId == EVENT_ID_SPELL_SHATTER)
     {
@@ -966,6 +972,17 @@ bool ProcessEventId_event_ulduar(uint32 uiEventId, Object* pSource, Object* pTar
             if (instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData())
             {
                 pInstance->DoProcessShatteredEvent();
+                return true;
+            }
+        }
+    }
+    else if (uiEventId == EVENT_ID_SHUTDOWN)
+    {
+        if (pSource->GetTypeId() == TYPEID_UNIT)
+        {
+            if (instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData())
+            {
+                pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_SHUTOUT, false);
                 return true;
             }
         }

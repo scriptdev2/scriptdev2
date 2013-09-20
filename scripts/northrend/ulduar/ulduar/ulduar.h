@@ -67,6 +67,7 @@ enum
     NPC_BRONZEBEARD_RADIO       = 34054,
     NPC_EXPLORER_DELLORAH       = 33701,
     NPC_BRANN_BRONZEBEARD       = 33579,
+    NPC_ORBITAL_SUPPORT         = 34286,
 
     // Leviathan reinforcements
     // NPC_HIRED_ENGINEER       = 33626,
@@ -134,7 +135,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 8,
+    MAX_SPECIAL_ACHIEV_CRITS    = 9,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -144,6 +145,7 @@ enum
     TYPE_ACHIEV_STUNNED         = 5,
     TYPE_ACHIEV_SHATTERED       = 6,
     TYPE_ACHIEV_QUICK_SHAVE     = 7,
+    TYPE_ACHIEV_SHUTOUT         = 8,
 
     // Loot chests
     // Kologarn
@@ -243,6 +245,7 @@ enum
     WORLD_STATE_TIMER_COUNT     = 4131,
 
     // events
+    EVENT_ID_SHUTDOWN           = 21605,
     EVENT_ID_SPELL_SHATTER      = 21620,
     EVENT_ID_TOWER_LIFE         = 21030,                    // events checked when a tower is destroyed
     EVENT_ID_TOWER_FLAME        = 21033,

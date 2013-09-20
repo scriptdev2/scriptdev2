@@ -1283,7 +1283,11 @@ UPDATE creature_template SET ScriptName='npc_harpoon_fire_state' WHERE entry=332
 UPDATE creature_template SET ScriptName='npc_keeper_norgannon' WHERE entry=33686;
 UPDATE creature_template SET ScriptName='npc_brann_ulduar' WHERE entry=33579;
 UPDATE creature_template SET ScriptName='boss_flame_leviathan' WHERE entry=33113;
-DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21620);
+UPDATE creature_template SET ScriptName='npc_hodir_fury_reticle' WHERE entry=33108;
+UPDATE creature_template SET ScriptName='npc_hodir_fury' WHERE entry=33212;
+UPDATE creature_template SET ScriptName='npc_freya_ward' WHERE entry=33367;
+UPDATE creature_template SET ScriptName='npc_mimiron_inferno' WHERE entry=33370;
+DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
 (20964,'event_spell_harpoon_shot'),     -- Razorscale harpoon event
@@ -1291,6 +1295,7 @@ INSERT INTO scripted_event_id VALUES
 (21031,'event_go_ulduar_tower'),        -- Tower of Storms destroyed event
 (21032,'event_go_ulduar_tower'),        -- Tower of Frost destroyed event
 (21033,'event_go_ulduar_tower'),        -- Tower of Flame destroyed event
+(21605,'event_ulduar'),                 -- Flame Leviathan shutdown event
 (21620,'event_ulduar');                 -- Ignis construct shatter event
 
 /* UN'GORO CRATER */
