@@ -69,6 +69,8 @@ enum
     NPC_EXPLORER_DELLORAH       = 33701,
     NPC_BRANN_BRONZEBEARD       = 33579,
     NPC_ORBITAL_SUPPORT         = 34286,
+    // NPC_GENERATOR            = 33571,                    // spawns iron dwarfs from Storm Beacons
+    NPC_GENERATOR_SMALL         = 34159,                    // spawns iron dwarfs from hard mode towers
 
     // Leviathan reinforcements
     // NPC_HIRED_ENGINEER       = 33626,
