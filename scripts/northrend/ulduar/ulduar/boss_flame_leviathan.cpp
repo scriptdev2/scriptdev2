@@ -179,8 +179,6 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
     bool m_bInitTowers;
     bool m_bUlduarTower[KEEPER_ENCOUNTER];
 
-    uint8 m_uiActiveTowers;
-
     uint32 m_uiBatteringRamTimer;
     uint32 m_uiFlameVentsTimer;
     uint32 m_uiMissileBarrageTimer;
@@ -199,8 +197,6 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
 
         for (uint8 i = 0; i < KEEPER_ENCOUNTER; ++i)
             m_bUlduarTower[i] = false;
-
-        m_uiActiveTowers        = 0;
 
         m_uiBatteringRamTimer   = 10000;
         m_uiFlameVentsTimer     = 30000;
@@ -338,11 +334,13 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         if (!pOrbital)
             return;
 
+        uint8 uiActiveTowers = 0;
+
         // check the states twice: at reset and at aggro to make sure that some towers were not destroyed in the meanwhile
         if (m_pInstance->GetData(TYPE_TOWER_HODIR) == DONE)
         {
             pOrbital->CastSpell(pOrbital, SPELL_TOWER_OF_FROST, true);
-            ++m_uiActiveTowers;
+            ++uiActiveTowers;
             m_bUlduarTower[TOWER_ID_HODIR] = true;
         }
         else
@@ -350,7 +348,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         if (m_pInstance->GetData(TYPE_TOWER_FREYA) == DONE)
         {
             pOrbital->CastSpell(pOrbital, SPELL_TOWER_OF_LIFE, true);
-            ++m_uiActiveTowers;
+            ++uiActiveTowers;
             m_bUlduarTower[TOWER_ID_FREYA] = true;
         }
         else
@@ -358,7 +356,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         if (m_pInstance->GetData(TYPE_TOWER_MIMIRON) == DONE)
         {
             pOrbital->CastSpell(pOrbital, SPELL_TOWER_OF_FLAMES, true);
-            ++m_uiActiveTowers;
+            ++uiActiveTowers;
             m_bUlduarTower[TOWER_ID_MIMIRON] = true;
         }
         else
@@ -366,13 +364,14 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         if (m_pInstance->GetData(TYPE_TOWER_THORIM) == DONE)
         {
             pOrbital->CastSpell(pOrbital, SPELL_TOWER_OF_STORMS, true);
-            ++m_uiActiveTowers;
+            ++uiActiveTowers;
             m_bUlduarTower[TOWER_ID_THORIM] = true;
         }
         else
             pOrbital->RemoveAurasDueToSpell(SPELL_TOWER_OF_STORMS);
 
-        // ToDo: inform instance about all active towers for future use in achievements and hard mode loot
+        // inform instance about all active towers for future use in achievements and hard mode loot
+        m_pInstance->SetData(TYPE_LEVIATHAN_TOWERS, uiActiveTowers);
     }
 
     // Functions which handle the spawn of each type of add

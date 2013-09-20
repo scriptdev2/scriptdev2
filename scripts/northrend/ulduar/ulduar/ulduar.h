@@ -53,6 +53,7 @@ enum
 
     // Other types - not saved
     TYPE_LEVIATHAN_GAUNTLET     = 31,
+    TYPE_LEVIATHAN_TOWERS       = 32,
 
     // The siege of ulduar
     NPC_LEVIATHAN               = 33113,
@@ -388,6 +389,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
+        uint8 m_uiActiveTowers;
 
         GuidVector m_vToyPileGuidVector;
         GuidVector m_vBrokenHarpoonsGuids;

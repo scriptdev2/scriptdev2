@@ -55,7 +55,8 @@ static sSpawnLocation m_aKeepersSpawnLocs[] =
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
     m_uiShatterAchievTimer(0),
-    m_uiGauntletStatus(0)
+    m_uiGauntletStatus(0),
+    m_uiActiveTowers(0)
 {
     Initialize();
 }
@@ -636,6 +637,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_LEVIATHAN_GAUNTLET:
             m_uiGauntletStatus = uiData;
             return;
+        case TYPE_LEVIATHAN_TOWERS:
+            m_uiActiveTowers = uiData;
+            return;
     }
 
     DoOpenMadnessDoorIfCan();
@@ -673,10 +677,36 @@ bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 u
         case INSTANCE_CONDITION_ID_HARD_MODE_2:
         case INSTANCE_CONDITION_ID_HARD_MODE_3:
         case INSTANCE_CONDITION_ID_HARD_MODE_4:
-            // TODO: implement all hard mode loot here!
-            break;
+        {
+            if (!pConditionSource)
+                break;
 
-            // ToDo: handle vehicle spell clicks - should be available only after the gauntlet was started by gossip!
+            uint32 uiCondId = 0;
+            switch (pConditionSource->GetEntry())
+            {
+                case NPC_LEVIATHAN:
+                    uiCondId = m_uiActiveTowers;
+                    break;
+                case NPC_XT002:
+                    if (GetData(TYPE_XT002_HARD) == DONE)
+                        uiCondId = 1;
+                    break;
+                case NPC_VEZAX:
+                    if (GetData(TYPE_VEZAX_HARD) == DONE)
+                        uiCondId = 1;
+                    break;
+            }
+
+            return uiCondId == uiInstanceConditionId;
+        }
+        case INSTANCE_CONDITION_ID_ULDUAR:
+        {
+            if (!pConditionSource)
+                break;
+
+            // handle vehicle spell clicks - are available only after the gauntlet was started by gossip or when Leviathan is active
+            return GetData(TYPE_LEVIATHAN_GAUNTLET) == IN_PROGRESS || GetData(TYPE_LEVIATHAN) == SPECIAL || GetData(TYPE_LEVIATHAN) == FAIL;
+        }
     }
 
     script_error_log("instance_ulduar::CheckConditionCriteriaMeet called with unsupported Id %u. Called with param plr %s, src %s, condition source type %u",
@@ -794,6 +824,7 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
                 {
                     StartNextDialogueText(SAY_PRE_LEVIATHAN_1);
                     SetData(TYPE_LEVIATHAN, SPECIAL);
+                    SetData(TYPE_LEVIATHAN_GAUNTLET, DONE);
                     pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
                 }
             }
@@ -879,6 +910,18 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_SHUTOUT_N:
         case ACHIEV_CRIT_SHUTOUT_H:
             return m_abAchievCriteria[TYPE_ACHIEV_SHUTOUT];
+        case ACHIEV_CRIT_ORB_BOMB_N:
+        case ACHIEV_CRIT_ORB_BOMB_H:
+            return m_uiActiveTowers >= 1;
+        case ACHIEV_CRIT_ORB_DEV_N:
+        case ACHIEV_CRIT_ORB_DEV_H:
+            return m_uiActiveTowers >= 2;
+        case ACHIEV_CRIT_ORB_NUKED_N:
+        case ACHIEV_CRIT_ORB_NUKED_H:
+            return m_uiActiveTowers >= 3;
+        case ACHIEV_CRIT_ORBITUARY_N:
+        case ACHIEV_CRIT_ORBITUARY_H:
+            return m_uiActiveTowers == 4;
 
         default:
             return false;
