@@ -238,11 +238,8 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             break;
             // Shattered Hallway
         case GO_KOLOGARN_BRIDGE:
-            pGo->SetGoState(GO_STATE_ACTIVE);
             if (m_auiEncounter[TYPE_KOLOGARN] == DONE)
                 pGo->SetGoState(GO_STATE_READY);
-            break;
-        case GO_SHATTERED_DOOR:
             break;
 
             // -----------------    The Keepers    -----------------
@@ -485,12 +482,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_KOLOGARN:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(GO_SHATTERED_DOOR);
             if (uiData == DONE)
             {
+                DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, GO_FLAG_NO_INTERACT, false);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30 * MINUTE);
-                if (GameObject* pBridge = GetSingleGameObjectFromStorage(GO_KOLOGARN_BRIDGE))
-                    pBridge->SetGoState(GO_STATE_READY);
+                DoUseDoorOrButton(GO_KOLOGARN_BRIDGE);
             }
             break;
         case TYPE_AURIAYA:

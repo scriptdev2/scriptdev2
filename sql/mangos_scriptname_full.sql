@@ -1288,6 +1288,7 @@ UPDATE creature_template SET ScriptName='npc_hodir_fury_reticle' WHERE entry=331
 UPDATE creature_template SET ScriptName='npc_hodir_fury' WHERE entry=33212;
 UPDATE creature_template SET ScriptName='npc_freya_ward' WHERE entry=33367;
 UPDATE creature_template SET ScriptName='npc_mimiron_inferno' WHERE entry=33370;
+UPDATE creature_template SET ScriptName='boss_kologarn' WHERE entry=32930;
 DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event

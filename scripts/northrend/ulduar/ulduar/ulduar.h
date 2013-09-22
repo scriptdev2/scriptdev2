@@ -306,6 +306,14 @@ enum
     ACHIEV_CRIT_SHUTOUT_H       = 10055,
     ACHIEV_CRIT_UNBROKEN_N      = 10044,                    // Flame Leviathan, achievs 2905, 2906
     ACHIEV_CRIT_UNBROKEN_H      = 10045,
+    ACHIEV_CRIT_DISARMED_N      = 10284,                    // Kologarn, achievs 2953, 2954
+    ACHIEV_CRIT_DISARMED_H      = 10722,
+    ACHIEV_CRIT_LOOKS_KILL_N    = 10286,                    // Kologarn, achievs 2955, 2956
+    ACHIEV_CRIT_LOOKS_KILL_H    = 10099,
+    ACHIEV_CRIT_RUBBLE_ROLL_N   = 10290,                    // Kologarn, achievs 2959, 2960
+    ACHIEV_CRIT_RUBBLE_ROLL_H   = 10133,
+    ACHIEV_CRIT_OPEN_ARMS_N     = 10285,                    // Kologarn, achievs 2951, 2952
+    ACHIEV_CRIT_OPEN_ARMS_H     = 10095,
 };
 
 struct UlduarSpawns
