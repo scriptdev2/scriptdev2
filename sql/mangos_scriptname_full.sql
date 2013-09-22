@@ -1275,6 +1275,7 @@ UPDATE creature_template SET ScriptName='npc_iron_construct' WHERE entry=33121;
 UPDATE creature_template SET ScriptName='npc_scorch' WHERE entry=33221;
 UPDATE creature_template SET ScriptName='boss_xt_002' WHERE entry=33293;
 UPDATE creature_template SET ScriptName='boss_heart_deconstructor' WHERE entry=33329;
+UPDATE creature_template SET ScriptName='npc_scrapbot' WHERE entry=33343;
 UPDATE creature_template SET ScriptName='npc_xt_toy_pile' WHERE entry=33337;
 UPDATE creature_template SET ScriptName='boss_razorscale' WHERE entry=33186;
 UPDATE creature_template SET ScriptName='npc_expedition_commander' WHERE entry=33210;
@@ -1287,7 +1288,7 @@ UPDATE creature_template SET ScriptName='npc_hodir_fury_reticle' WHERE entry=331
 UPDATE creature_template SET ScriptName='npc_hodir_fury' WHERE entry=33212;
 UPDATE creature_template SET ScriptName='npc_freya_ward' WHERE entry=33367;
 UPDATE creature_template SET ScriptName='npc_mimiron_inferno' WHERE entry=33370;
-DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21620);
+DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
 (20964,'event_spell_harpoon_shot'),     -- Razorscale harpoon event
@@ -1296,6 +1297,7 @@ INSERT INTO scripted_event_id VALUES
 (21032,'event_go_ulduar_tower'),        -- Tower of Frost destroyed event
 (21033,'event_go_ulduar_tower'),        -- Tower of Flame destroyed event
 (21605,'event_ulduar'),                 -- Flame Leviathan shutdown event
+(21606,'event_ulduar'),                 -- XT-002 Scrap repair event
 (21620,'event_ulduar');                 -- Ignis construct shatter event
 
 /* UN'GORO CRATER */

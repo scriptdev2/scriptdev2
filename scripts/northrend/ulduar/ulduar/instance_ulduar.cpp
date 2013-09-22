@@ -459,7 +459,10 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_XT002_GATE);
             if (uiData == IN_PROGRESS)
+            {
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_XT002_ID);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_NERF_ENG, true);
+            }
             break;
         case TYPE_ASSEMBLY:
             // Don't set the same encounter data twice
@@ -922,6 +925,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_ORBITUARY_N:
         case ACHIEV_CRIT_ORBITUARY_H:
             return m_uiActiveTowers == 4;
+        case ACHIEV_CRIT_NERF_ENG_N:
+        case ACHIEV_CRIT_NERF_ENG_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_NERF_ENG];
 
         default:
             return false;
@@ -1026,6 +1032,17 @@ bool ProcessEventId_event_ulduar(uint32 uiEventId, Object* pSource, Object* /*pT
             if (instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData())
             {
                 pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_SHUTOUT, false);
+                return true;
+            }
+        }
+    }
+    else if (uiEventId == EVENT_ID_SCRAP_REPAIR)
+    {
+        if (pSource->GetTypeId() == TYPEID_UNIT)
+        {
+            if (instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData())
+            {
+                pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_NERF_ENG, false);
                 return true;
             }
         }

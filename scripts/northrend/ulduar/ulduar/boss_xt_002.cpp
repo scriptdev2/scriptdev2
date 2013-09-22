@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_xt_002
-SD%Complete: 70%
-SDComment: Timers may need adjustments; Scrapbot healing, achievements and hard mode abilities NYI.
+SD%Complete: 80%
+SDComment: Timers may need adjustments; Achievements and hard mode abilities NYI.
 SDCategory: Ulduar
 EndScriptData */
 
@@ -78,6 +78,8 @@ enum
     SPELL_ARCANE_POWER_STATE            = 49411,            // cast by the life spark
     SPELL_STATIC_CHARGED                = 64227,            // cast by the life spark (needs to be confirmed)
     SPELL_STATIC_CHARGED_H              = 64236,
+    SPELL_SCRAP_REPAIR                  = 62832,            // cast on scrapbot in range to heal XT002; sends event 21606
+    SPELL_RIDE_VEHICLE_SCRAPBOT         = 47020,            // cast by scrapbot on XT002 heal
 
     // NPC ids
     NPC_SCRAPBOT                        = 33343,
@@ -470,6 +472,39 @@ CreatureAI* GetAI_boss_heart_deconstructor(Creature* pCreature)
 }
 
 /*######
+## npc_scrapbot
+######*/
+
+struct MANGOS_DLL_DECL npc_scrapbotAI : public ScriptedAI
+{
+    npc_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    bool m_bIsHealed;
+
+    void Reset() override
+    {
+        m_bIsHealed = false;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_bIsHealed && pWho->GetEntry() == NPC_XT002 && pWho->isAlive() && pWho->IsWithinDistInMap(m_creature, 10.0f))
+        {
+            DoCastSpellIfCan(pWho, SPELL_RIDE_VEHICLE_SCRAPBOT, CAST_TRIGGERED);
+            pWho->CastSpell(m_creature, SPELL_SCRAP_REPAIR, true);
+            DoScriptText(EMOTE_REPAIR, pWho);
+            m_creature->ForcedDespawn(2000);
+            m_bIsHealed = true;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_scrapbot(Creature* pCreature)
+{
+    return new npc_scrapbotAI(pCreature);
+}
+
+/*######
 ## npc_xt_toy_pile
 ######*/
 
@@ -501,6 +536,11 @@ void AddSC_boss_xt_002()
     pNewScript = new Script;
     pNewScript->Name = "boss_heart_deconstructor";
     pNewScript->GetAI = GetAI_boss_heart_deconstructor;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_scrapbot";
+    pNewScript->GetAI = GetAI_npc_scrapbot;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
