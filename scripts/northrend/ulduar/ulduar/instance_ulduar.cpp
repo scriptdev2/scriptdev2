@@ -494,6 +494,13 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30 * MINUTE);
                 DoUseDoorOrButton(GO_KOLOGARN_BRIDGE);
             }
+            else if (uiData == IN_PROGRESS)
+            {
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_RUBBLE, false);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_DISARMED, false);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_LOOKS_KILL, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_OPEN_ARMS, true);
+            }
             break;
         case TYPE_AURIAYA:
             m_auiEncounter[uiType] = uiData;
@@ -930,6 +937,18 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_NERF_ENG_N:
         case ACHIEV_CRIT_NERF_ENG_H:
             return m_abAchievCriteria[TYPE_ACHIEV_NERF_ENG];
+        case ACHIEV_CRIT_RUBBLE_ROLL_N:
+        case ACHIEV_CRIT_RUBBLE_ROLL_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_RUBBLE];
+        case ACHIEV_CRIT_LOOKS_KILL_N:
+        case ACHIEV_CRIT_LOOKS_KILL_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_LOOKS_KILL];
+        case ACHIEV_CRIT_OPEN_ARMS_N:
+        case ACHIEV_CRIT_OPEN_ARMS_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_OPEN_ARMS];
+        case ACHIEV_CRIT_DISARMED_N:
+        case ACHIEV_CRIT_DISARMED_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_DISARMED];
 
         default:
             return false;

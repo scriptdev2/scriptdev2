@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_kologarn
-SD%Complete: 80%
-SDComment: Achievements NYI.
+SD%Complete: 100%
+SDComment:
 SDCategory: Ulduar
 EndScriptData */
 
@@ -91,6 +91,7 @@ enum
     // other
     SEAT_ID_LEFT                        = 1,
     SEAT_ID_RIGHT                       = 2,
+    MAX_ACHIEV_RUBBLE                   = 25,
 };
 
 static const float afKoloArmsLoc[4] = {1797.15f, -24.4027f, 448.741f, 3.1939f};
@@ -125,6 +126,9 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
 
     uint32 m_uiBerserkTimer;
 
+    uint8 m_uiRubbleCount;
+    uint32 m_uiDisarmedTimer;
+
     void Reset() override
     {
         m_uiMountArmsTimer          = 5000;
@@ -140,6 +144,9 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
 
         m_uiRespawnRightTimer       = 0;
         m_uiRespawnLeftTimer        = 0;
+
+        m_uiRubbleCount             = 0;
+        m_uiDisarmedTimer           = 0;
 
         DoCastSpellIfCan(m_creature, SPELL_REDUCE_PARRY_CHANCE, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
     }
@@ -205,10 +212,6 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
                     pSummoned->AI()->AttackStart(m_creature->getVictim());
                 break;
             }
-            case NPC_RUBBLE:
-                if (m_creature->getVictim())
-                    pSummoned->AI()->AttackStart(m_creature->getVictim());
-                break;
             case NPC_FOCUSED_EYEBEAM_RIGHT:
             case NPC_FOCUSED_EYEBEAM_LEFT:
                 // force despawn - if the npc gets in combat it won't despawn automatically
@@ -242,15 +245,26 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
                 if (Creature* pStalker = m_creature->GetMap()->GetCreature(m_pInstance->GetKoloRubbleStalker(false)))
                 {
                     pStalker->CastSpell(pStalker, m_bIsRegularMode ? SPELL_FALLING_RUBBLE : SPELL_FALLING_RUBBLE_H, true);
-                    pStalker->CastSpell(pStalker, SPELL_SUMMON_RUBBLE, true, NULL, NULL, m_creature->GetObjectGuid());
+                    pStalker->CastSpell(pStalker, SPELL_SUMMON_RUBBLE, true);
                     pStalker->CastSpell(pStalker, SPELL_CANCEL_STONE_GRIP, true);
                 }
+
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_OPEN_ARMS, false);
             }
 
             m_creature->RemoveAurasByCasterSpell(SPELL_RIDE_KOLOGARN_ARMS, pSummoned->GetObjectGuid());
             pSummoned->CastSpell(m_creature, m_bIsRegularMode ? SPELL_ARM_DEAD_DAMAGE_KOLOGARN : SPELL_ARM_DEAD_DAMAGE_KOLOGARN_H, true);
             DoScriptText(SAY_ARM_LOST_LEFT, m_creature);
             m_uiRespawnLeftTimer = 48000;
+
+            // start disarmed achiev timer or set achiev crit as true if timer already started
+            if (m_uiDisarmedTimer)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DISARMED, true);
+            }
+            else
+                m_uiDisarmedTimer = 12000;
         }
         else if (pSummoned->GetEntry() == NPC_RIGHT_ARM)
         {
@@ -260,15 +274,38 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
                 if (Creature* pStalker = m_creature->GetMap()->GetCreature(m_pInstance->GetKoloRubbleStalker(true)))
                 {
                     pStalker->CastSpell(pStalker, m_bIsRegularMode ? SPELL_FALLING_RUBBLE : SPELL_FALLING_RUBBLE_H, true);
-                    pStalker->CastSpell(pStalker, SPELL_SUMMON_RUBBLE, true, NULL, NULL, m_creature->GetObjectGuid());
+                    pStalker->CastSpell(pStalker, SPELL_SUMMON_RUBBLE, true);
                     pStalker->CastSpell(pStalker, SPELL_CANCEL_STONE_GRIP, true);
                 }
+
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_OPEN_ARMS, false);
             }
 
             m_creature->RemoveAurasByCasterSpell(SPELL_RIDE_KOLOGARN_ARMS, pSummoned->GetObjectGuid());
             pSummoned->CastSpell(m_creature, m_bIsRegularMode ? SPELL_ARM_DEAD_DAMAGE_KOLOGARN : SPELL_ARM_DEAD_DAMAGE_KOLOGARN_H, true);
             DoScriptText(SAY_ARM_LOST_RIGHT, m_creature);
             m_uiRespawnRightTimer = 48000;
+
+            // start disarmed achiev timer or set achiev crit as true if timer already started
+            if (m_uiDisarmedTimer)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DISARMED, true);
+            }
+            else
+                m_uiDisarmedTimer = 12000;
+        }
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        // count the summoned Rubble
+        if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetEntry() == NPC_RUBBLE_STALKER)
+        {
+            ++m_uiRubbleCount;
+
+            if (m_uiRubbleCount == MAX_ACHIEV_RUBBLE && m_pInstance)
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_RUBBLE, true);
         }
     }
 
@@ -401,6 +438,18 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
                 m_uiBerserkTimer -= uiDiff;
         }
 
+        if (m_uiDisarmedTimer)
+        {
+            if (m_uiDisarmedTimer <= uiDiff)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_DISARMED, false);
+                m_uiDisarmedTimer = 0;
+            }
+            else
+                m_uiDisarmedTimer -= uiDiff;
+        }
+
         // melee range check
         if (!m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
@@ -428,17 +477,66 @@ CreatureAI* GetAI_boss_kologarn(Creature* pCreature)
 
 struct MANGOS_DLL_DECL npc_focused_eyebeamAI : public ScriptedAI
 {
-    npc_focused_eyebeamAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_focused_eyebeamAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
 
     void Reset() override { }
     void AttackStart(Unit* /*pWho*/) override { }
     void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    {
+        if (pTarget->GetTypeId() == TYPEID_PLAYER && (pSpellEntry->Id == SPELL_EYEBEAM_DAMAGE || pSpellEntry->Id == SPELL_EYEBEAM_DAMAGE_H) && m_pInstance)
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_LOOKS_KILL, false);
+    }
+
     void UpdateAI(const uint32 /*uiDiff*/) override { }
 };
 
 CreatureAI* GetAI_npc_focused_eyebeam(Creature* pCreature)
 {
     return new npc_focused_eyebeamAI(pCreature);
+}
+
+/*######
+## npc_rubble_stalker
+######*/
+
+struct MANGOS_DLL_DECL npc_rubble_stalkerAI : public Scripted_NoMovementAI
+{
+    npc_rubble_stalkerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+
+    void Reset() override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_RUBBLE && m_pInstance)
+        {
+            if (Creature* pKologarn = m_pInstance->GetSingleCreatureFromStorage(NPC_KOLOGARN))
+                SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pKologarn);
+
+            pSummoned->SetInCombatWithZone();
+        }
+    }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_rubble_stalker(Creature* pCreature)
+{
+    return new npc_rubble_stalkerAI(pCreature);
 }
 
 void AddSC_boss_kologarn()
@@ -453,5 +551,10 @@ void AddSC_boss_kologarn()
     pNewScript = new Script;
     pNewScript->Name = "npc_focused_eyebeam";
     pNewScript->GetAI = GetAI_npc_focused_eyebeam;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rubble_stalker";
+    pNewScript->GetAI = GetAI_npc_rubble_stalker;
     pNewScript->RegisterSelf();
 }
