@@ -174,6 +174,12 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_XT_TOY_PILE:
             m_vToyPileGuidVector.push_back(pCreature->GetObjectGuid());
             return;
+        case NPC_RUBBLE_STALKER:
+            if (pCreature->GetPositionY() > -10.0f)
+                m_rightKoloStalkerGuid = pCreature->GetObjectGuid();
+            else
+                m_leftKoloStalkerGuid = pCreature->GetObjectGuid();
+            return;
 
         default:
             return;

@@ -95,6 +95,7 @@ enum
     NPC_KOLOGARN                = 32930,
     NPC_RIGHT_ARM               = 32934,
     NPC_LEFT_ARM                = 32933,
+    NPC_RUBBLE_STALKER          = 33809,                    // npc which spawns Rubble on Kologarn arms death
     NPC_AURIAYA                 = 33515,
     NPC_SANCTUM_SENTRY          = 34014,
     NPC_FERAL_DEFENDER          = 34035,
@@ -380,6 +381,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
         void DoProcessShatteredEvent();
 
+        ObjectGuid GetKoloRubbleStalker(bool bRightSide) { return bRightSide ? m_rightKoloStalkerGuid : m_leftKoloStalkerGuid; }
+
         void GetDefenderGuids(GuidList& lDefenders) { lDefenders = m_lDefendersGuids; }
         void GetEngineersGuids(GuidList& lEngineers) { lEngineers = m_lEngineersGuids; }
         void GetTrappersGuids(GuidList& lTrappers) { lTrappers = m_lTrappersGuids; }
@@ -402,6 +405,9 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
         uint8 m_uiActiveTowers;
+
+        ObjectGuid m_leftKoloStalkerGuid;
+        ObjectGuid m_rightKoloStalkerGuid;
 
         GuidVector m_vToyPileGuidVector;
         GuidVector m_vBrokenHarpoonsGuids;
