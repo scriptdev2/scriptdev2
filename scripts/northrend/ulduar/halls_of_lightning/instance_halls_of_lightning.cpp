@@ -106,9 +106,8 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_LOKEN_ID);
             else if (uiData == DONE)
             {
-                // Appears to be type 5 GO with animation. Need to figure out how this work, code below only placeholder
                 if (GameObject* pGlobe = GetSingleGameObjectFromStorage(GO_LOKEN_THRONE))
-                    pGlobe->SetGoState(GO_STATE_ACTIVE);
+                    pGlobe->SendGameObjectCustomAnim(pGlobe->GetObjectGuid());
             }
             m_auiEncounter[uiType] = uiData;
             break;

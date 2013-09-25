@@ -348,7 +348,7 @@ enum
     SPELL_FORKED_LIGHTNING          = 63541,
     SPELL_SEPARATION_ANXIETY        = 63539,                // cast when a buddy is too far away
     SPELL_VENGEFUL_SURGE            = 63630,                // cast when a buddy dies
-    SPELL_SUMMON_CHARGED_SPHERE     = 63527,                // summons npc 33715 (handled by eventAI)
+    SPELL_SUMMON_CHARGED_SPHERE     = 63527,                // summons npc 33715
 
     SPELL_CHARGED_SPERE             = 63537,                // charged sphere spells
     SPELL_SUPERCHARGED              = 63528,
