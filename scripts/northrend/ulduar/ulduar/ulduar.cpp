@@ -26,6 +26,8 @@ go_ulduar_teleporter
 npc_brann_ulduar
 npc_keeper_norgannon
 event_go_ulduar_tower
+npc_storm_tempered_keeper
+npc_charged_sphere
 EndContentData */
 
 #include "precompiled.h"
@@ -337,6 +339,171 @@ bool ProcessEventId_event_go_ulduar_tower(uint32 uiEventId, Object* pSource, Obj
     return false;
 }
 
+/*######
+## npc_storm_tempered_keeper
+######*/
+
+enum
+{
+    SPELL_FORKED_LIGHTNING          = 63541,
+    SPELL_SEPARATION_ANXIETY        = 63539,                // cast when a buddy is too far away
+    SPELL_VENGEFUL_SURGE            = 63630,                // cast when a buddy dies
+    SPELL_SUMMON_CHARGED_SPHERE     = 63527,                // summons npc 33715 (handled by eventAI)
+
+    SPELL_CHARGED_SPERE             = 63537,                // charged sphere spells
+    SPELL_SUPERCHARGED              = 63528,
+
+    NPC_TEMPERED_KEEPER_1           = 33699,
+    NPC_TEMPERED_KEEPER_2           = 33722,
+    NPC_CHARGED_SPHERE              = 33715,                // moves to buddy keeper location
+
+    MAX_KEEPER_DISTANCE             = 70,
+};
+
+struct MANGOS_DLL_DECL npc_storm_tempered_keeperAI : public ScriptedAI
+{
+    npc_storm_tempered_keeperAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiCheckBuddyTimer;
+    uint32 m_uiLightningTimer;
+    uint32 m_uiSphereTimer;
+
+    ObjectGuid m_buddyGuid;
+
+    void Reset() override
+    {
+        m_uiCheckBuddyTimer = 1000;
+        m_uiLightningTimer  = urand(5000, 10000);
+        m_uiSphereTimer     = urand(10000, 30000);
+    }
+
+    void Aggro(Unit* pWho) override
+    {
+        // initialize nearby buddy
+        if (Creature* pKeeper = GetClosestCreatureWithEntry(m_creature, m_creature->GetEntry() == NPC_TEMPERED_KEEPER_1 ? NPC_TEMPERED_KEEPER_2 : NPC_TEMPERED_KEEPER_1, 20))
+            m_buddyGuid = pKeeper->GetObjectGuid();
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_CHARGED_SPHERE)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_CHARGED_SPERE, true);
+
+            // move to buddy location and notify about buddy entry
+            if (Creature* pBuddy = m_creature->GetMap()->GetCreature(m_buddyGuid))
+            {
+                pSummoned->GetMotionMaster()->MoveFollow(pBuddy, 0, 0);
+                SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pSummoned, pBuddy->GetEntry());
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiCheckBuddyTimer)
+        {
+            if (m_uiCheckBuddyTimer <= uiDiff)
+            {
+                Creature* pBuddy = m_creature->GetMap()->GetCreature(m_buddyGuid);
+                if (!pBuddy)
+                {
+                    script_error_log("npc_storm_tempered_keeper for %s couldn't find its buddy.", m_creature->GetGuidStr().c_str());
+                    m_uiCheckBuddyTimer = 0;
+                    return;
+                }
+
+                // check if buddy is withind distance or alive
+                if (!pBuddy->IsWithinDistInMap(m_creature, MAX_KEEPER_DISTANCE))
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_SEPARATION_ANXIETY) == CAST_OK)
+                        m_uiCheckBuddyTimer = 5000;
+                }
+                else if (!pBuddy->isAlive())
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_VENGEFUL_SURGE) == CAST_OK)
+                        m_uiCheckBuddyTimer = 0;
+                }
+                else
+                    m_uiCheckBuddyTimer = 1000;
+            }
+            else
+                m_uiCheckBuddyTimer -= uiDiff;
+
+            // spawn a sphere only if the buddy is stil alive
+            if (m_uiSphereTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CHARGED_SPHERE) == CAST_OK)
+                    m_uiSphereTimer = urand(20000, 35000);
+            }
+            else
+                m_uiSphereTimer -= uiDiff;
+        }
+
+        if (m_uiLightningTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FORKED_LIGHTNING) == CAST_OK)
+                m_uiLightningTimer = urand(10000, 15000);
+        }
+        else
+            m_uiLightningTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_storm_tempered_keeper(Creature* pCreature)
+{
+    return new npc_storm_tempered_keeperAI(pCreature);
+}
+
+/*######
+## npc_charged_sphere
+######*/
+
+struct MANGOS_DLL_DECL npc_charged_sphereAI : public ScriptedAI
+{
+    npc_charged_sphereAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    bool m_bIsCharged;
+    uint32 m_uiBuddyEntry;
+
+    void Reset() override
+    {
+        m_bIsCharged = false;
+        m_uiBuddyEntry = 0;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        // cast supercharged if reached the buddy
+        if (!m_bIsCharged && pWho->GetEntry() == m_uiBuddyEntry && pWho->isAlive() && pWho->IsWithinDistInMap(m_creature, 5.0f))
+        {
+            DoCastSpellIfCan(pWho, SPELL_SUPERCHARGED, CAST_TRIGGERED);
+            m_creature->ForcedDespawn(1000);
+            m_bIsCharged = true;
+        }
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* /*pInvoker*/, uint32 uiMiscValue) override
+    {
+        // inity entry of the buddy keeper
+        if (eventType == AI_EVENT_CUSTOM_A)
+            m_uiBuddyEntry = uiMiscValue;
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_charged_sphere(Creature* pCreature)
+{
+    return new npc_charged_sphereAI(pCreature);
+}
+
 void AddSC_ulduar()
 {
     Script* pNewScript;
@@ -362,5 +529,15 @@ void AddSC_ulduar()
     pNewScript = new Script;
     pNewScript->Name = "event_go_ulduar_tower";
     pNewScript->pProcessEventId = &ProcessEventId_event_go_ulduar_tower;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_storm_tempered_keeper";
+    pNewScript->GetAI = &GetAI_npc_storm_tempered_keeper;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_charged_sphere";
+    pNewScript->GetAI = &GetAI_npc_charged_sphere;
     pNewScript->RegisterSelf();
 }
