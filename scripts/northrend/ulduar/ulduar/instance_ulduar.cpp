@@ -76,12 +76,23 @@ void instance_ulduar::Initialize()
 
 void instance_ulduar::OnPlayerEnter(Player* pPlayer)
 {
+    // spawn Flame Leviathan if necessary
     if (GetData(TYPE_LEVIATHAN) == SPECIAL || GetData(TYPE_LEVIATHAN) == FAIL)
     {
         if (!GetSingleCreatureFromStorage(NPC_LEVIATHAN, true))
         {
             pPlayer->SummonCreature(NPC_LEVIATHAN, afLeviathanMovePos[0], afLeviathanMovePos[1], afLeviathanMovePos[2], afLeviathanMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
             DoCallLeviathanHelp();
+        }
+    }
+
+    // spawn Brann at the archivum if necessary
+    if (GetData(TYPE_ASSEMBLY) == DONE)
+    {
+        if (!GetSingleCreatureFromStorage(NPC_BRANN_ARCHIVUM, true))
+        {
+            pPlayer->SummonCreature(NPC_BRANN_ARCHIVUM, afBrannArchivumSpawnPos[0], afBrannArchivumSpawnPos[1], afBrannArchivumSpawnPos[2], afBrannArchivumSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
+            pPlayer->SummonCreature(instance->IsRegularDifficulty() ? NPC_PROSPECTOR_DOREN : NPC_PROSPECTOR_DOREN_H, afProspectorSpawnPos[0], afProspectorSpawnPos[1], afProspectorSpawnPos[2], afProspectorSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
         }
     }
 }
@@ -117,6 +128,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_LEFT_ARM:
         case NPC_AURIAYA:
         case NPC_FERAL_DEFENDER:
+        case NPC_BRANN_ARCHIVUM:
 
         case NPC_LEVIATHAN_MK:
         case NPC_RUNIC_COLOSSUS:
@@ -234,8 +246,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[TYPE_ASSEMBLY])
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_ARCHIVUM_CONSOLE:
-        case GO_UNIVERSE_FLOOR_ARCHIVUM:
             // Celestial Planetarium
         case GO_CELESTIAL_ACCES:
         case GO_CELESTIAL_DOOR:
@@ -477,7 +487,15 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 return;
             DoUseDoorOrButton(GO_IRON_ENTRANCE_DOOR);
             if (uiData == DONE)
+            {
                 DoUseDoorOrButton(GO_ARCHIVUM_DOOR);
+
+                if (Player* pPlayer = GetPlayerInMap())
+                {
+                    pPlayer->SummonCreature(NPC_BRANN_ARCHIVUM, afBrannArchivumSpawnPos[0], afBrannArchivumSpawnPos[1], afBrannArchivumSpawnPos[2], afBrannArchivumSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
+                    pPlayer->SummonCreature(instance->IsRegularDifficulty() ? NPC_PROSPECTOR_DOREN : NPC_PROSPECTOR_DOREN_H, afProspectorSpawnPos[0], afProspectorSpawnPos[1], afProspectorSpawnPos[2], afProspectorSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
+                }
+            }
             else if (uiData == IN_PROGRESS)
             {
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_BRUNDIR, true);

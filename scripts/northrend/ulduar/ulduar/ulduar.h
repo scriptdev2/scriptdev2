@@ -100,6 +100,11 @@ enum
     NPC_SANCTUM_SENTRY          = 34014,
     NPC_FERAL_DEFENDER          = 34035,
 
+    // Archivum
+    NPC_BRANN_ARCHIVUM          = 33235,                    // npcs are spawned upon the Iron Council defeat; they handle specific quests
+    NPC_PROSPECTOR_DOREN        = 33956,
+    NPC_PROSPECTOR_DOREN_H      = 33957,
+
     // The keepers of ulduar
     NPC_MIMIRON                 = 33350,
     NPC_LEVIATHAN_MK            = 33432,
@@ -201,11 +206,11 @@ enum
 
     // Antechamber
     GO_KOLOGARN_BRIDGE          = 194232,
-    GO_SHATTERED_DOOR           = 194553,                   // Door before kologarn
+    // GO_SHATTERED_DOOR        = 194553,                   // Door before kologarn
     GO_IRON_ENTRANCE_DOOR       = 194554,                   // Door before iron council
     GO_ARCHIVUM_DOOR            = 194556,                   // Entrance door to the archivum
-    GO_ARCHIVUM_CONSOLE         = 194555,                   // Used at some sort of cinematic
-    GO_UNIVERSE_FLOOR_ARCHIVUM  = 194715,                   // Used for animation
+    // GO_ARCHIVUM_CONSOLE      = 194555,                   // Used at some sort of cinematic
+    // GO_FLOOR_ARCHIVUM        = 194715,                   // Used for animation
 
     // Planetarium
     GO_CELESTIAL_ACCES          = 194628,                   // Acces console for 10 man mode
@@ -354,6 +359,10 @@ static const UlduarSpawns afReinforcementsHeroic[] =
 // note: original spawn loc is 607.9199f, -12.90516f, 409.887f but we won't use it because it's too far and grid won't be loaded that far
 static const float afLeviathanSpawnPos[4] = { 422.8898f, -13.32677f, 409.8839f, 3.12f };
 static const float afLeviathanMovePos[4] = { 296.5809f, -11.55668f, 409.8278f, 3.12f };
+
+// spawn locations for Brann and Doren at the archivum
+static const float afBrannArchivumSpawnPos[4] = { 1554.274f, 142.1644f, 427.273f, 3.61f };
+static const float afProspectorSpawnPos[4] = { 1556.469f, 143.5023f, 427.2918f, 4.04f };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private DialogueHelper
 {
