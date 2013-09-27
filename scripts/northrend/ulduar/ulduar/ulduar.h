@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 14,
+    MAX_ENCOUNTER               = 15,
     HARD_MODE_ENCOUNTER         = 7,
     KEEPER_ENCOUNTER            = 4,
 
@@ -26,11 +26,12 @@ enum
     TYPE_VEZAX                  = 11,
     TYPE_YOGGSARON              = 12,
     TYPE_ALGALON                = 13,
+    TYPE_ALGALON_TIMER          = 14,
 
     // Hard mode boss types
     // Used for hard mode bosses only
-    TYPE_LEVIATHAN_HARD         = 14,
-    TYPE_XT002_HARD             = 15,
+    TYPE_LEVIATHAN_HARD         = 15,
+    TYPE_XT002_HARD             = 16,
     TYPE_MIMIRON_HARD           = 17,
     TYPE_HODIR_HARD             = 18,
     TYPE_THORIM_HARD            = 19,
@@ -104,6 +105,7 @@ enum
     NPC_BRANN_ARCHIVUM          = 33235,                    // npcs are spawned upon the Iron Council defeat; they handle specific quests
     NPC_PROSPECTOR_DOREN        = 33956,
     NPC_PROSPECTOR_DOREN_H      = 33957,
+    NPC_BRANN_ALGALON           = 34064,                    // Brann entry summoned for the Algalon intro and epilogue event
 
     // The keepers of ulduar
     NPC_MIMIRON                 = 33350,
@@ -215,7 +217,9 @@ enum
     // Planetarium
     GO_CELESTIAL_ACCES          = 194628,                   // Acces console for 10 man mode
     GO_CELESTIAL_ACCES_H        = 194752,                   // Acces console for 25 man mode
-    GO_CELESTIAL_DOOR           = 194767,                   // Entrance door to the planetarium
+    GO_CELESTIAL_DOOR_1         = 194767,                   // Entrance doors to the planetarium
+    GO_CELESTIAL_DOOR_2         = 194911,
+    GO_CELESTIAL_DOOR_COMBAT    = 194910,
     GO_UNIVERSE_FLOOR_CELESTIAL = 194716,                   // For animation
     GO_AZEROTH_GLOBE            = 194148,                   // For animation
 
@@ -324,6 +328,8 @@ enum
     ACHIEV_CRIT_RUBBLE_ROLL_H   = 10133,
     ACHIEV_CRIT_OPEN_ARMS_N     = 10285,                    // Kologarn, achievs 2951, 2952
     ACHIEV_CRIT_OPEN_ARMS_H     = 10095,
+    ACHIEV_CRIT_FEEDS_TEARS_N   = 10568,                    // Algalon, achievs 3004, 3005
+    ACHIEV_CRIT_FEEDS_TEARS_H   = 10570,
 };
 
 struct UlduarSpawns
@@ -363,6 +369,9 @@ static const float afLeviathanMovePos[4] = { 296.5809f, -11.55668f, 409.8278f, 3
 // spawn locations for Brann and Doren at the archivum
 static const float afBrannArchivumSpawnPos[4] = { 1554.274f, 142.1644f, 427.273f, 3.61f };
 static const float afProspectorSpawnPos[4] = { 1556.469f, 143.5023f, 427.2918f, 4.04f };
+
+// spawn location for Algalon in reload case
+static const float afAlgalonMovePos[4] = {1632.668f, -302.7656f, 417.3211f, 1.53f};
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private DialogueHelper
 {
@@ -415,6 +424,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_auiUlduarTowers[KEEPER_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
+        uint32 m_uiAlgalonTimer;
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
         uint8 m_uiActiveTowers;

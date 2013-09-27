@@ -3472,8 +3472,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603104,'General Vezax roars and surges with dark might!',0,3,0,0,'vezax EMOTE_SURGE'),
 (-1603105,'The saronite vapors mass and swirl violently, merging into a monstrous form!',0,3,0,0,'vezax EMOTE_ANIMUS'),
 
-(-1603106,'Trans-location complete. Commencing planetary analysis of Azeroth.',15405,1,0,0,'algalon SAY_INTRO_1'),
-(-1603107,'Stand back, mortals. I am not here to fight you.',15406,1,0,0,'algalon SAY_INTRO_2'),
+(-1603106,'Translocation complete. Commencing planetary analysis of Azeroth.',15405,1,0,0,'algalon SAY_INTRO_1'),
+(-1603107,'Stand back, mortals. I\'m not here to fight you.',15406,1,0,0,'algalon SAY_INTRO_2'),
 (-1603108,'It is in the universe\'s best interest to re-originate this planet should my analysis find systemic corruption. Do not interfere.',15407,1,0,0,'algalon SAY_INTRO_3'),
 
 (-1603109,'See your world through my eyes. A universe so vast as to be immeasurable. Incomprehensible even to your greatest minds.',15390,1,0,0,'algalon SAY_ENGAGE'),
@@ -3490,11 +3490,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603119,'Begin uplink: Reply Code: \'Omega\'. Planetary re-origination requested.',15399,1,0,0,'algalon SAY_DESPAWN_2'),
 (-1603120,'Farewell, mortals. Your bravery is admirable, for such flawed creatures.',15400,1,0,0,'algalon SAY_DESPAWN_3'),
 
-(-1603121,'I have seen worlds bathed in the Makers\' flames. Their denizens fading without so much as a whimper. Entire planetary systems born and raised in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart, devoid of emotion... of empathy. I... have... felt... NOTHING! A million, million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?',15393,1,0,0,'algalon SAY_OUTRO_1'),
-(-1603122,'Perhaps it is your imperfection that which grants you free will. That allows you to persevere against cosmically calculated odds. You prevailed where the Titans\' own perfect creations have failed.',15401,1,0,0,'algalon SAY_OUTRO_2'),
-(-1603123,'I\'ve rearranged the reply code. Your planet will be spared. I cannot be certain of my own calculations anymore.',15402,1,0,0,'algalon SAY_OUTRO_3'),
-(-1603124,'I lack the strength to transmit this signal. You must hurry. Find a place of power, close to the skies.',15403,1,0,0,'algalon SAY_OUTRO_4'),
-(-1603125,'Do not worry about my fate $n. If the signal is not transmitted in time re-origination will proceed regardless. Save. Your. World.',15404,1,0,0,'algalon SAY_OUTRO_5'),
+(-1603121,'I have seen worlds bathed in the Makers\' flames, their denizens fading without as much as a whimper. Entire planetary systems born and razed in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart devoid of emotion... of empathy. I. Have. Felt. Nothing. A million-million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?',15393,1,0,0,'algalon SAY_OUTRO_1'),
+(-1603122,'Perhaps it is your imperfections... that which grants you free will... that allows you to persevere against all cosmically calculated odds. You prevail where the Titan\'s own perfect creations have failed.',15401,1,0,0,'algalon SAY_OUTRO_2'),
+(-1603123,'I\'ve rearranged the reply code - your planet will be spared. I cannot be certain of my own calculations anymore.',15402,1,0,0,'algalon SAY_OUTRO_3'),
+(-1603124,'I lack the strength to transmit the signal. You must... hurry... find a place of power... close to the skies.',15403,1,0,0,'algalon SAY_OUTRO_4'),
+(-1603125,'Do not worry about my fate, Bronzen. If the signal is not transmitted in time, re-origination will proceed regardless. Save... your world...',15404,1,0,0,'algalon SAY_OUTRO_5'),
 
 (-1603126,'None shall pass!',15586,1,0,0,'kologarn SAY_AGGRO'),
 (-1603127,'OBLIVION!',15591,1,0,0,'kologarn SAY_SHOCKWAVE'),
@@ -3640,7 +3640,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603242,'%s activates Hodir\'s Fury.',0,3,0,0,'leviathan EMOTE_HODIR_FURY'),
 (-1603243,'%s activates Freya\'s Ward.',0,3,0,0,'leviathan EMOTE_FREYA_WARD'),
 (-1603244,'%s activates Mimiron\'s Inferno.',0,3,0,0,'leviathan EMOTE_MIMIRON_INFERNO'),
-(-1603245,'%s activates Thorim\'s Hammer.',0,3,0,0,'leviathan EMOTE_THORIM_HAMMER');
+(-1603245,'%s activates Thorim\'s Hammer.',0,3,0,0,'leviathan EMOTE_THORIM_HAMMER'),
+
+(-1603246,'I know just the place. Will you be all right?',15823,1,0,0,'brann SAY_BRANN_OUTRO');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

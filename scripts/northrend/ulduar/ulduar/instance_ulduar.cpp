@@ -54,6 +54,7 @@ static sSpawnLocation m_aKeepersSpawnLocs[] =
 };
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
+    m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
     m_uiGauntletStatus(0),
     m_uiActiveTowers(0)
@@ -95,6 +96,16 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
             pPlayer->SummonCreature(instance->IsRegularDifficulty() ? NPC_PROSPECTOR_DOREN : NPC_PROSPECTOR_DOREN_H, afProspectorSpawnPos[0], afProspectorSpawnPos[1], afProspectorSpawnPos[2], afProspectorSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
         }
     }
+
+    // spawn Algalon and init world states if necessary
+    if (GetData(TYPE_ALGALON_TIMER))
+    {
+        if (!GetSingleCreatureFromStorage(NPC_ALGALON, true))
+            pPlayer->SummonCreature(NPC_ALGALON, afAlgalonMovePos[0], afAlgalonMovePos[1], afAlgalonMovePos[2], afAlgalonMovePos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
+
+        pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER, 1);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER_COUNT, GetData(TYPE_ALGALON_TIMER));
+    }
 }
 
 bool instance_ulduar::IsEncounterInProgress() const
@@ -129,6 +140,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_AURIAYA:
         case NPC_FERAL_DEFENDER:
         case NPC_BRANN_ARCHIVUM:
+        case NPC_BRANN_ALGALON:
 
         case NPC_LEVIATHAN_MK:
         case NPC_RUNIC_COLOSSUS:
@@ -248,7 +260,16 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             break;
             // Celestial Planetarium
         case GO_CELESTIAL_ACCES:
-        case GO_CELESTIAL_DOOR:
+        case GO_CELESTIAL_ACCES_H:
+            // Note: weird, but unless flag is set, client will not respond as expected
+            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+            break;
+        case GO_CELESTIAL_DOOR_1:
+        case GO_CELESTIAL_DOOR_2:
+            if (m_auiEncounter[TYPE_ALGALON] != NOT_STARTED)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_CELESTIAL_DOOR_COMBAT:
         case GO_UNIVERSE_FLOOR_CELESTIAL:
         case GO_AZEROTH_GLOBE:
             break;
@@ -583,11 +604,30 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             // Celestial Planetarium
         case TYPE_ALGALON:
             m_auiEncounter[uiType] = uiData;
-            // TODO: need to find the proper way to use these
-            DoUseDoorOrButton(GO_CELESTIAL_DOOR);
-            DoUseDoorOrButton(GO_UNIVERSE_FLOOR_CELESTIAL);
+            if (uiData != SPECIAL)
+            {
+                DoUseDoorOrButton(GO_UNIVERSE_FLOOR_CELESTIAL);
+                DoUseDoorOrButton(GO_CELESTIAL_DOOR_COMBAT);
+            }
             if (uiData == DONE)
+            {
+                DoUpdateWorldState(WORLD_STATE_TIMER, 0);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_GIFT_OF_OBSERVER_10 : GO_GIFT_OF_OBSERVER_25, 30 * MINUTE);
+            }
+            else if (uiData == FAIL)
+            {
+                // only despawn when time is over
+                if (GetData(TYPE_ALGALON_TIMER) == 0)
+                {
+                    DoUpdateWorldState(WORLD_STATE_TIMER, 0);
+                    if (Creature* pAlgalon = GetSingleCreatureFromStorage(NPC_ALGALON))
+                        pAlgalon->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pAlgalon, pAlgalon);
+                }
+            }
+            break;
+        case TYPE_ALGALON_TIMER:
+            m_auiEncounter[uiType] = uiData;
+            DoUpdateWorldState(WORLD_STATE_TIMER_COUNT, m_auiEncounter[uiType]);
             break;
 
             // Hard modes
@@ -674,7 +714,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
     DoOpenMadnessDoorIfCan();
 
-    if (uiData == DONE || uiData == FAIL || uiData == SPECIAL)
+    if (uiData == DONE || uiData == FAIL || uiData == SPECIAL || uiType == TYPE_ALGALON_TIMER)
     {
         OUT_SAVE_INST_DATA;
 
@@ -684,12 +724,12 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                    << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
                    << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
                    << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
-                   << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
-                   << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
-                   << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
-                   << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " "
-                   << m_auiUlduarKeepers[3] << " " << m_auiUlduarTowers[0] << " " << m_auiUlduarTowers[1] << " "
-                   << m_auiUlduarTowers[2] << " " << m_auiUlduarTowers[3];
+                   << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiEncounter[14] << " "
+                   << m_auiHardBoss[0] << " " << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " "
+                   << m_auiHardBoss[3] << " " << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " "
+                   << m_auiHardBoss[6] << " " << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " "
+                   << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3] << " " << m_auiUlduarTowers[0] << " "
+                   << m_auiUlduarTowers[1] << " " << m_auiUlduarTowers[2] << " " << m_auiUlduarTowers[3];
 
         m_strInstData = saveStream.str();
 
@@ -776,6 +816,8 @@ uint32 instance_ulduar::GetData(uint32 uiType) const
             return m_auiEncounter[12];
         case TYPE_ALGALON:
             return m_auiEncounter[13];
+        case TYPE_ALGALON_TIMER:
+            return m_auiEncounter[14];
 
             // Hard modes
         case TYPE_LEVIATHAN_HARD:
@@ -874,11 +916,13 @@ void instance_ulduar::Load(const char* strIn)
 
     std::istringstream loadStream(strIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
-               >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11] >> m_auiEncounter[12] >> m_auiEncounter[13]
-               >> m_auiHardBoss[0] >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5] >> m_auiHardBoss[6]
-               >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3] >> m_auiUlduarTowers[0]
-               >> m_auiUlduarTowers[1] >> m_auiUlduarTowers[2] >> m_auiUlduarTowers[3];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+               >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11]
+               >> m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiEncounter[14] >> m_auiHardBoss[0]
+               >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5]
+               >> m_auiHardBoss[6] >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2]
+               >> m_auiUlduarKeepers[3] >> m_auiUlduarTowers[0] >> m_auiUlduarTowers[1] >> m_auiUlduarTowers[2]
+               >> m_auiUlduarTowers[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -1043,6 +1087,21 @@ void instance_ulduar::Update(uint32 uiDiff)
             else
                 m_uiShatterAchievTimer -= uiDiff;
         }
+    }
+
+    if (GetData(TYPE_ALGALON_TIMER))
+    {
+        if (m_uiAlgalonTimer <= uiDiff)
+        {
+            --m_auiEncounter[TYPE_ALGALON_TIMER];
+            SetData(TYPE_ALGALON_TIMER, m_auiEncounter[TYPE_ALGALON_TIMER]);
+            m_uiAlgalonTimer = MINUTE * IN_MILLISECONDS;
+
+            if (m_auiEncounter[TYPE_ALGALON_TIMER] == 0)
+                SetData(TYPE_ALGALON, FAIL);
+        }
+        else
+            m_uiAlgalonTimer -= uiDiff;
     }
 }
 
