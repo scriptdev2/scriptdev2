@@ -70,6 +70,8 @@ enum
 
     EMOTE_VISION_BLAST                          = -1603234,
     EMOTE_SHATTER_BLAST                         = -1603235,
+
+    SAY_HODIR_HELP                              = -1603093,
 };
 
 void AddSC_boss_yogg_saron()

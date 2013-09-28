@@ -283,9 +283,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             // -----------------    The Keepers    -----------------
             // Hodir
         case GO_HODIR_EXIT:
-            if (m_auiEncounter[TYPE_HODIR])
-                pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
         case GO_HODIR_ICE_WALL:
             if (m_auiEncounter[TYPE_HODIR])
                 pGo->SetGoState(GO_STATE_ACTIVE);
@@ -569,7 +566,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_HODIR_ICE_WALL);
                 DoUseDoorOrButton(GO_HODIR_EXIT);
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER_10 : GO_CACHE_OF_WINTER_25, 30 * MINUTE);
+
+                DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER_10 : GO_CACHE_OF_WINTER_25, GO_FLAG_NO_INTERACT, false);
+                if (GetData(TYPE_HODIR_HARD) == DONE)
+                    DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, GO_FLAG_NO_INTERACT, false);
+
                 SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             }
             break;

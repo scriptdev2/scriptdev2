@@ -331,6 +331,14 @@ enum
     ACHIEV_CRIT_OPEN_ARMS_H     = 10095,
     ACHIEV_CRIT_FEEDS_TEARS_N   = 10568,                    // Algalon, achievs 3004, 3005
     ACHIEV_CRIT_FEEDS_TEARS_H   = 10570,
+    ACHIEV_CRIT_CHEESE_N        = 10259,                    // Hodir, achievs 2961, 2962
+    ACHIEV_CRIT_CHEESE_H        = 10261,
+    ACHIEV_CRIT_GETTING_COLD_N  = 10247,                    // Hodir, achievs 2967, 2968
+    ACHIEV_CRIT_GETTING_COLD_H  = 10248,
+    ACHIEV_CRIT_COOL_FRIENDS_N  = 10258,                    // Hodir, achievs 2963, 2965
+    ACHIEV_CRIT_COOL_FRIENDS_H  = 10260,
+    ACHIEV_CRIT_RARE_CACHE_N    = 10452,                    // Hodir, achievs 3182, 3184
+    ACHIEV_CRIT_RARE_CACHE_H    = 10458,
 };
 
 struct UlduarSpawns
