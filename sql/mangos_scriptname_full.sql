@@ -1294,6 +1294,10 @@ UPDATE creature_template SET ScriptName='npc_rubble_stalker' WHERE entry=33809;
 UPDATE creature_template SET ScriptName='npc_storm_tempered_keeper' WHERE entry IN (33699,33722);
 UPDATE creature_template SET ScriptName='npc_charged_sphere' WHERE entry=33715;
 UPDATE creature_template SET ScriptName='boss_algalon' WHERE entry=32871;
+UPDATE creature_template SET ScriptName='npc_living_constellation' WHERE entry=33052;
+UPDATE creature_template SET ScriptName='npc_worm_hole' WHERE entry=34099;
+UPDATE creature_template SET ScriptName='npc_black_hole' WHERE entry=32953;
+UPDATE creature_template SET ScriptName='npc_collapsing_star' WHERE entry=32955;
 UPDATE gameobject_template SET ScriptName='go_celestial_access' WHERE entry IN (194628,194752);
 DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES

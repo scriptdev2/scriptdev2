@@ -197,7 +197,7 @@ enum
     GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this will be broken when the boss enters the arena
     GO_XT002_GATE               = 194631,                   // Gate before Xt002
     GO_BROKEN_HARPOON           = 194565,                   // Broken harpoon from Razorscale
-    GO_HARPOON_GUN_1            = 194542,                   // usable harpoonS - respawn when the broken one is repaired
+    GO_HARPOON_GUN_1            = 194542,                   // usable harpoons - respawn when the broken one is repaired
     GO_HARPOON_GUN_2            = 194541,
     GO_HARPOON_GUN_3            = 194543,
     GO_HARPOON_GUN_4            = 194519,
@@ -220,7 +220,8 @@ enum
     GO_CELESTIAL_DOOR_1         = 194767,                   // Entrance doors to the planetarium
     GO_CELESTIAL_DOOR_2         = 194911,
     GO_CELESTIAL_DOOR_COMBAT    = 194910,
-    GO_UNIVERSE_FLOOR_CELESTIAL = 194716,                   // For animation
+    GO_UNIVERSE_FLOOR           = 194716,                   // For animation
+    GO_UNIVERSE_FLOOR_COMBAT    = 194715,
     GO_AZEROTH_GLOBE            = 194148,                   // For animation
 
     // The keepers

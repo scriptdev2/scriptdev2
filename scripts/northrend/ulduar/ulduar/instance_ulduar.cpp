@@ -270,7 +270,8 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_CELESTIAL_DOOR_COMBAT:
-        case GO_UNIVERSE_FLOOR_CELESTIAL:
+        case GO_UNIVERSE_FLOOR:
+        case GO_UNIVERSE_FLOOR_COMBAT:
         case GO_AZEROTH_GLOBE:
             break;
             // Shattered Hallway
@@ -529,7 +530,6 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
-                DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, GO_FLAG_NO_INTERACT, false);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30 * MINUTE);
                 DoUseDoorOrButton(GO_KOLOGARN_BRIDGE);
             }
@@ -606,7 +606,10 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData != SPECIAL)
             {
-                DoUseDoorOrButton(GO_UNIVERSE_FLOOR_CELESTIAL);
+                // environment gameobjects
+                DoUseDoorOrButton(GO_AZEROTH_GLOBE);
+                DoUseDoorOrButton(GO_UNIVERSE_FLOOR);
+                DoUseDoorOrButton(GO_UNIVERSE_FLOOR_COMBAT);
                 DoUseDoorOrButton(GO_CELESTIAL_DOOR_COMBAT);
             }
             if (uiData == DONE)
