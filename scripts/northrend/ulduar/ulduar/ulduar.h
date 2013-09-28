@@ -132,15 +132,13 @@ enum
     // Celestial planetarium
     NPC_ALGALON                 = 32871,
 
-    // Keepers images
-    // They spawn in the central room after they are released from Yogg's enslavement
-    // You may talk to them and ask them to help you fight Yogg-Saron
-    NPC_THORIM_IMAGE            = 33413,
-    NPC_MIMIRON_IMAGE           = 33412,
-    NPC_HODIR_IMAGE             = 33411,
-    NPC_FREYA_IMAGE             = 33410,
+    // Keepers helpers spawned during Yogg Saron encounter
+    NPC_THORIM_HELPER           = 33413,
+    NPC_MIMIRON_HELPER          = 33412,
+    NPC_HODIR_HELPER            = 33411,
+    NPC_FREYA_HELPER            = 33410,
 
-    // Keepers used to fight Yogg-Saron
+    // Keepers spawned in the central hall after releaseed from Yogg's enslavement
     NPC_KEEPER_FREYA            = 33241,
     NPC_KEEPER_HODIR            = 33213,
     NPC_KEEPER_MIMIRON          = 33244,
@@ -406,10 +404,6 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
         bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
-        void DoOpenMadnessDoorIfCan();
-
-        void SpawnFriendlyKeeper(uint32 uiWho);
-
         void DoProcessShatteredEvent();
 
         ObjectGuid GetKoloRubbleStalker(bool bRightSide) { return bRightSide ? m_rightKoloStalkerGuid : m_leftKoloStalkerGuid; }
@@ -424,6 +418,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
+        void SpawnFriendlyKeeper(uint32 uiWho);
+        void DoOpenMadnessDoorIfCan();
         void DoCallLeviathanHelp();
 
         std::string m_strInstData;
@@ -432,6 +428,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_auiUlduarKeepers[KEEPER_ENCOUNTER];
         uint32 m_auiUlduarTowers[KEEPER_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
+
+        bool m_bKeepersLoaded;
 
         uint32 m_uiAlgalonTimer;
         uint32 m_uiShatterAchievTimer;

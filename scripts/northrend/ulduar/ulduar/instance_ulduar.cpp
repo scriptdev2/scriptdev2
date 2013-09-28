@@ -40,20 +40,22 @@ static const DialogueEntry aUlduarDialogue[] =
     {0, 0, 0}
 };
 
-struct sSpawnLocation
+struct UlduarKeeperSpawns
 {
-    float m_fX, m_fY, m_fZ, m_fO;
+    float fX, fY, fZ, fO;
+    uint32 uiEntry, uiType;
 };
 
-static sSpawnLocation m_aKeepersSpawnLocs[] =
+static UlduarKeeperSpawns m_aKeepersSpawnLocs[] =
 {
-    {2036.892f, 25.621f, 411.358f, 3.83f},                  // Freya
-    {1939.215f, 42.677f, 411.355f, 5.31f},                  // Mimiron
-    {1939.195f, -90.662f, 411.357f, 1.06f},                 // Hodir
-    {2036.674f, -73.814f, 411.355f, 2.51f},                 // Thorim
+    {1945.682f, 33.34201f,  411.4408f, 5.270f, NPC_KEEPER_FREYA,   TYPE_FREYA},
+    {2028.766f, 17.42014f,  411.4446f, 3.857f, NPC_KEEPER_MIMIRON, TYPE_MIMIRON},
+    {1945.761f, -81.52171f, 411.4407f, 1.029f, NPC_KEEPER_HODIR,   TYPE_HODIR},
+    {2028.822f, -65.73573f, 411.4426f, 2.460f, NPC_KEEPER_THORIM,  TYPE_THORIM},
 };
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
+    m_bKeepersLoaded(false),
     m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
     m_uiGauntletStatus(0),
@@ -106,6 +108,17 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
         pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER, 1);
         pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER_COUNT, GetData(TYPE_ALGALON_TIMER));
     }
+
+    // spawn frienly keepers in the central hall
+    if (!m_bKeepersLoaded)
+    {
+        for (uint8 i = 0; i < countof(m_aKeepersSpawnLocs); ++i)
+        {
+            if (GetData(m_aKeepersSpawnLocs[i].uiType) == DONE)
+                pPlayer->SummonCreature(m_aKeepersSpawnLocs[i].uiEntry, m_aKeepersSpawnLocs[i].fX, m_aKeepersSpawnLocs[i].fY, m_aKeepersSpawnLocs[i].fZ, m_aKeepersSpawnLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
+        }
+        m_bKeepersLoaded = true;
+    }
 }
 
 bool instance_ulduar::IsEncounterInProgress() const
@@ -155,23 +168,11 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_SARA:
         case NPC_YOGG_BRAIN:
         case NPC_ALGALON:
-            break;
 
         case NPC_MIMIRON:
-            if (m_auiEncounter[TYPE_MIMIRON] == DONE)
-                SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
-            break;
         case NPC_HODIR:
-            if (m_auiEncounter[TYPE_HODIR] == DONE)
-                SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
-            break;
         case NPC_THORIM:
-            if (m_auiEncounter[TYPE_THORIM] == DONE)
-                SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
-            break;
         case NPC_FREYA:
-            if (m_auiEncounter[TYPE_FREYA] == DONE)
-                SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
 
         case NPC_ULDUAR_COLOSSUS:
@@ -556,7 +557,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 if (GetData(TYPE_MIMIRON_HARD) != DONE)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30 * MINUTE);
-                SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
+                SpawnFriendlyKeeper(NPC_KEEPER_MIMIRON);
             }
             break;
         case TYPE_HODIR:
@@ -571,7 +572,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 if (GetData(TYPE_HODIR_HARD) == DONE)
                     DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, GO_FLAG_NO_INTERACT, false);
 
-                SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
+                SpawnFriendlyKeeper(NPC_KEEPER_HODIR);
             }
             break;
         case TYPE_THORIM:
@@ -583,13 +584,13 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 if (GetData(TYPE_THORIM_HARD) != DONE)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30 * MINUTE);
-                SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
+                SpawnFriendlyKeeper(NPC_KEEPER_THORIM);
             }
             break;
         case TYPE_FREYA:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
+                SpawnFriendlyKeeper(NPC_KEEPER_FREYA);
             break;
             // Prison
         case TYPE_VEZAX:
@@ -875,10 +876,10 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
 
     switch (uiWho)
     {
-        case NPC_MIMIRON_IMAGE: pPlayer->SummonCreature(NPC_MIMIRON_IMAGE, m_aKeepersSpawnLocs[1].m_fX, m_aKeepersSpawnLocs[1].m_fY, m_aKeepersSpawnLocs[1].m_fZ, m_aKeepersSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
-        case NPC_HODIR_IMAGE:   pPlayer->SummonCreature(NPC_HODIR_IMAGE,   m_aKeepersSpawnLocs[2].m_fX, m_aKeepersSpawnLocs[2].m_fY, m_aKeepersSpawnLocs[2].m_fZ, m_aKeepersSpawnLocs[2].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
-        case NPC_THORIM_IMAGE:  pPlayer->SummonCreature(NPC_THORIM_IMAGE,  m_aKeepersSpawnLocs[3].m_fX, m_aKeepersSpawnLocs[3].m_fY, m_aKeepersSpawnLocs[3].m_fZ, m_aKeepersSpawnLocs[3].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
-        case NPC_FREYA_IMAGE:   pPlayer->SummonCreature(NPC_FREYA_IMAGE,   m_aKeepersSpawnLocs[0].m_fX, m_aKeepersSpawnLocs[0].m_fY, m_aKeepersSpawnLocs[0].m_fZ, m_aKeepersSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+        case NPC_KEEPER_MIMIRON: pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[1].fX, m_aKeepersSpawnLocs[1].fY, m_aKeepersSpawnLocs[1].fZ, m_aKeepersSpawnLocs[1].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
+        case NPC_KEEPER_HODIR:   pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[2].fX, m_aKeepersSpawnLocs[2].fY, m_aKeepersSpawnLocs[2].fZ, m_aKeepersSpawnLocs[2].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
+        case NPC_KEEPER_THORIM:  pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[3].fX, m_aKeepersSpawnLocs[3].fY, m_aKeepersSpawnLocs[3].fZ, m_aKeepersSpawnLocs[3].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
+        case NPC_KEEPER_FREYA:   pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[0].fX, m_aKeepersSpawnLocs[0].fY, m_aKeepersSpawnLocs[0].fZ, m_aKeepersSpawnLocs[0].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
     }
 }
 
