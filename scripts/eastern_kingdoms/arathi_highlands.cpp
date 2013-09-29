@@ -132,7 +132,7 @@ enum
     SAY_FINISH              = -1000956,
     EMOTE_HAND_PACK         = -1000957,
 
-    // ToDo: find the healing spell id!
+    SPELL_REJUVENATION      = 3627,
     SPELL_BEAR_FORM         = 4948,
 
     NPC_JORELL              = 2733,
@@ -146,10 +146,12 @@ struct MANGOS_DLL_DECL npc_kineloryAI : public npc_escortAI
     npc_kineloryAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     uint32 m_uiBearFormTimer;
+    uint32 m_uiHealTimer;
 
     void Reset() override
     {
-        m_uiBearFormTimer = urand(1000, 5000);
+        m_uiBearFormTimer = urand(5000, 7000);
+        m_uiHealTimer     = urand(2000, 5000);
     }
 
     void WaypointReached(uint32 uiPointId) override
@@ -216,6 +218,17 @@ struct MANGOS_DLL_DECL npc_kineloryAI : public npc_escortAI
         }
         else
             m_uiBearFormTimer -= uiDiff;
+
+        if (m_uiHealTimer < uiDiff)
+        {
+            if (Unit* pTarget = DoSelectLowestHpFriendly(40.0f))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_REJUVENATION) == CAST_OK)
+                    m_uiHealTimer = urand(15000, 25000);
+            }
+        }
+        else
+            m_uiHealTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
