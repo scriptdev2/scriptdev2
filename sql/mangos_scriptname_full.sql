@@ -1300,14 +1300,18 @@ UPDATE creature_template SET ScriptName='npc_black_hole' WHERE entry=32953;
 UPDATE creature_template SET ScriptName='npc_collapsing_star' WHERE entry=32955;
 UPDATE gameobject_template SET ScriptName='go_celestial_access' WHERE entry IN (194628,194752);
 UPDATE creature_template SET ScriptName='boss_hodir' WHERE entry=32845;
-DELETE FROM scripted_event_id WHERE id IN (9735,20964,21030,21031,21032,21033,21605,21606,21620);
+UPDATE creature_template SET ScriptName='npc_flash_freeze' WHERE entry IN (32926,32938);
+UPDATE creature_template SET ScriptName='npc_icicle_target' WHERE entry=33174;
+DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
+(20907,'event_boss_hodir'),             -- Hodir shatter chest event
 (20964,'event_spell_harpoon_shot'),     -- Razorscale harpoon event
 (21030,'event_go_ulduar_tower'),        -- Tower of Life destroyed event
 (21031,'event_go_ulduar_tower'),        -- Tower of Storms destroyed event
 (21032,'event_go_ulduar_tower'),        -- Tower of Frost destroyed event
 (21033,'event_go_ulduar_tower'),        -- Tower of Flame destroyed event
+(21045,'event_boss_hodir'),             -- Hodir attack start event
 (21605,'event_ulduar'),                 -- Flame Leviathan shutdown event
 (21606,'event_ulduar'),                 -- XT-002 Scrap repair event
 (21620,'event_ulduar');                 -- Ignis construct shatter event

@@ -285,7 +285,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             // Hodir
         case GO_HODIR_EXIT:
         case GO_HODIR_ICE_WALL:
-            if (m_auiEncounter[TYPE_HODIR])
+            if (m_auiEncounter[TYPE_HODIR] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_HODIR_ENTER:
@@ -574,6 +574,13 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
                 SpawnFriendlyKeeper(NPC_KEEPER_HODIR);
             }
+            else if (uiData == FAIL)
+            {
+                if (GameObject* pChest = GetSingleGameObjectFromStorage(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25))
+                    pChest->Respawn();
+
+                SetData(TYPE_HODIR_HARD, FAIL);
+            }
             break;
         case TYPE_THORIM:
             m_auiEncounter[uiType] = uiData;
@@ -644,8 +651,6 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_HODIR_HARD:
             m_auiHardBoss[2] = uiData;
-            if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, 30 * MINUTE);
             break;
         case TYPE_THORIM_HARD:
             m_auiHardBoss[3] = uiData;
@@ -1016,6 +1021,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_DISARMED_N:
         case ACHIEV_CRIT_DISARMED_H:
             return m_abAchievCriteria[TYPE_ACHIEV_DISARMED];
+        case ACHIEV_CRIT_RARE_CACHE_N:
+        case ACHIEV_CRIT_RARE_CACHE_H:
+            return GetData(TYPE_HODIR_HARD) == DONE;
 
         default:
             return false;

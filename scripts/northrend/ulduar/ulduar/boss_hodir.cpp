@@ -16,13 +16,14 @@
 
 /* ScriptData
 SDName: boss_hodir
-SD%Complete: 20%
-SDComment: Basic script
+SD%Complete: 90%
+SDComment: Achievements NYI.
 SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
 #include "ulduar.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -40,7 +41,7 @@ enum
     // spells
     SPELL_BERSERK                       = 26662,
     SPELL_HODIR_CREDIT                  = 64899,                // kill credit spell; added in spell_template
-    SPELL_SHATTER_CHEST                 = 65272,                // hard mode timer until chest is shattered; triggers 62501
+    SPELL_SHATTER_CHEST                 = 65272,                // hard mode timer until chest is shattered; triggers 62501 which will send event 20907 if completed
     SPELL_FROZEN_BLOWS                  = 62478,
     SPELL_FROZEN_BLOWS_H                = 63512,
     SPELL_FREEZE                        = 62469,
@@ -55,15 +56,15 @@ enum
     SPELL_ICICLE_DUMMY                  = 62453,
 
     // snowpacked icicle spells
-    SPELL_ICICLE_ICE_SHARDS             = 62460,                // triggers the spell which summons npc 33174 and go 194173
+    // SPELL_ICICLE_ICE_SHARDS          = 62460,                // triggers the spell which summons npc 33174 and go 194173
 
     // snowpacked icicle target spells
     SPELL_SAFE_AREA                     = 65705,                // grant immunity from flash freeze
 
     // flash freeze related spells
-    SPELL_FLASH_FREEZE_VISUAL           = 62148,                // cast by npc 30298
-    SPELL_FLASH_FREEZE_SUMMON           = 61970,                // cast by all Flash Freeze targets; summons 32926
-    SPELL_FLASH_FREEZE_SUMMON_NPC       = 61989,                // used to flash freeze all npc targets before the encounter; summons 32938
+    // SPELL_FLASH_FREEZE_VISUAL        = 62148,                // cast by npc 30298 (handled by event 20896)
+    // SPELL_FLASH_FREEZE_SUMMON        = 61970,                // cast by all Flash Freeze targets; summons 32926
+    // SPELL_FLASH_FREEZE_SUMMON_NPC    = 61989,                // used to flash freeze all npc targets before the encounter; summons 32938
     // SPELL_FLASH_FREEZE_STUN          = 64175,                // use and purpose unk
     // SPELL_FLASH_FREEZE_FRIENDLY      = 64176,                // use and purpose unk
 
@@ -73,16 +74,18 @@ enum
 
     // flash freeze npc spells
     SPELL_FLASH_FREEZE_AURA_NPC         = 61990,                // stuns the summoner (npc)
-    SPELL_FLASH_FREEZE_INITIAL          = 62878,                // trigger aggro on Hodir if damaged
+    SPELL_FLASH_FREEZE_INITIAL          = 62878,                // trigger aggro on Hodir if damaged; sends event 21045
 
     // npcs
     NPC_ICICLE                          = 33169,
-    NPC_SNOWPACKED_ICICLE               = 33173,
-    NPC_SNOWPACKED_ICICLE_TARGET        = 33174,                // entry used to handle safe area aura from Flash Freeze
+    // NPC_SNOWPACKED_ICICLE            = 33173,                // entry used to generate npc 33173 and go 194173; handled in eventAI
+    // NPC_SNOWPACKED_ICICLE_TARGET     = 33174,                // entry used to handle safe area aura from Flash Freeze; handled in eventAI
     NPC_FLASH_FREEZE                    = 32926,                // entry used during the encounter
     NPC_FLASH_FREEZE_NPC                = 32938,                // entry which stuns the friendly npcs before the actual fight
 
-    GO_SNOWDRIFT                        = 194173,
+    // GO_SNOWDRIFT                     = 194173,
+    EVENT_ID_ATTACK_START               = 21045,
+    EVENT_ID_SHATTER_CHEST              = 20907,
     FACTION_ID_FRIENDLY                 = 35,
 };
 
@@ -97,6 +100,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_bEventFinished = false;
+        m_uiEpilogueTimer = 0;
         Reset();
     }
 
@@ -104,17 +108,27 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
     bool m_bIsRegularMode;
     bool m_bEventFinished;
 
+    uint32 m_uiEpilogueTimer;
     uint32 m_uiBerserkTimer;
+    uint32 m_uiFlashFreezeTimer;
+    uint32 m_uiFrozenBlowsTimer;
+    uint32 m_uiFreezeTimer;
 
     void Reset() override
     {
-        m_uiBerserkTimer = 8 * MINUTE * IN_MILLISECONDS;
+        m_uiBerserkTimer     = 8 * MINUTE * IN_MILLISECONDS;
+        m_uiFlashFreezeTimer = 50000;
+        m_uiFrozenBlowsTimer = 70000;
+        m_uiFreezeTimer      = urand(25000, 30000);
     }
 
     void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_HODIR, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_HODIR_HARD, DONE);
+        }
 
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_BITTING_COLD, CAST_TRIGGERED);
@@ -150,13 +164,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
 
             if (!m_bEventFinished)
             {
-                if (m_pInstance)
-                    m_pInstance->SetData(TYPE_HODIR, DONE);
-
-                DoScriptText(SAY_EPILOGUE, m_creature);
-                m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
-
-                m_creature->ForcedDespawn(10000);
+                m_uiEpilogueTimer = 10000;
                 m_creature->setFaction(FACTION_ID_FRIENDLY);
                 m_bEventFinished = true;
                 EnterEvadeMode();
@@ -174,10 +182,33 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned) override
     {
+        if (pSummoned->GetEntry() == NPC_ICICLE)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_ICICLE_DUMMY, false);
+            pSummoned->CastSpell(pSummoned, SPELL_ICICLE, true);
+            pSummoned->ForcedDespawn(5000);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff) override
     {
+        if (m_uiEpilogueTimer)
+        {
+            if (m_uiEpilogueTimer <= uiDiff)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_HODIR, DONE);
+
+                DoScriptText(SAY_EPILOGUE, m_creature);
+                m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
+
+                m_creature->ForcedDespawn(10000);
+                m_uiEpilogueTimer = 0;
+            }
+            else
+                m_uiEpilogueTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -195,6 +226,42 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
                 m_uiBerserkTimer -= uiDiff;
         }
 
+        if (m_uiFlashFreezeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FLASH_FREEZE) == CAST_OK)
+            {
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ICICLE_SNOWPACK : SPELL_ICICLE_SNOWPACK_H, CAST_TRIGGERED);
+                DoScriptText(EMOTE_FLASH_FREEZE, m_creature);
+                DoScriptText(SAY_FLASH_FREEZE, m_creature);
+                m_uiFlashFreezeTimer = 50000;
+            }
+        }
+        else
+            m_uiFlashFreezeTimer -= uiDiff;
+
+        if (m_uiFrozenBlowsTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FROZEN_BLOWS : SPELL_FROZEN_BLOWS_H) == CAST_OK)
+            {
+                DoScriptText(SAY_FROZEN_BLOWS, m_creature);
+                DoScriptText(EMOTE_FROZEN_BLOWS, m_creature);
+                m_uiFrozenBlowsTimer = 60000;
+            }
+        }
+        else
+            m_uiFrozenBlowsTimer -= uiDiff;
+
+        if (m_uiFreezeTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FREEZE) == CAST_OK)
+                    m_uiFreezeTimer = 15000;
+            }
+        }
+        else
+            m_uiFreezeTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -204,6 +271,137 @@ CreatureAI* GetAI_boss_hodir(Creature* pCreature)
     return new boss_hodirAI(pCreature);
 }
 
+/*######
+## npc_flash_freeze
+######*/
+
+struct MANGOS_DLL_DECL npc_flash_freezeAI : public Scripted_NoMovementAI
+{
+    npc_flash_freezeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+
+    bool m_bFreezeInit;
+
+    void Reset() override
+    {
+        m_bFreezeInit = false;
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        // On Flash Freeze death, the owner should attack Hodir
+        if (m_creature->GetEntry() == NPC_FLASH_FREEZE_NPC && m_creature->IsTemporarySummon() && m_pInstance)
+        {
+            if (Creature* pHodir = m_pInstance->GetSingleCreatureFromStorage(NPC_HODIR))
+            {
+                if (Creature* pSummoner = m_creature->GetMap()->GetCreature(((TemporarySummon*)m_creature)->GetSummonerGuid()))
+                    pSummoner->AI()->AttackStart(pHodir);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 /*uiDiff*/) override
+    {
+        // Flash Freeze npcs should be always be summoned
+        if (!m_creature->IsTemporarySummon())
+            return;
+
+        // do the freezing on the first update tick
+        if (!m_bFreezeInit)
+        {
+            // Flash Freeze npc will always stun or kill the summoner
+            if (m_creature->GetEntry() == NPC_FLASH_FREEZE_NPC)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_FLASH_FREEZE_AURA_NPC) == CAST_OK)
+                    DoCastSpellIfCan(m_creature, SPELL_FLASH_FREEZE_INITIAL, CAST_TRIGGERED);
+            }
+            else if (m_creature->GetEntry() == NPC_FLASH_FREEZE)
+            {
+                if (Unit* pSummoner = m_creature->GetMap()->GetUnit(((TemporarySummon*)m_creature)->GetSummonerGuid()))
+                {
+                    // kill frozen players
+                    if (pSummoner->HasAura(SPELL_FREEZE))
+                        DoCastSpellIfCan(pSummoner, SPELL_FLASH_FREEZE_KILL);
+                    else
+                        DoCastSpellIfCan(m_creature, SPELL_FLASH_FREEZE_AURA);
+                }
+            }
+
+            m_bFreezeInit = true;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_flash_freeze(Creature* pCreature)
+{
+    return new npc_flash_freezeAI(pCreature);
+}
+
+/*######
+## event_boss_hodir
+######*/
+
+bool ProcessEventId_event_boss_hodir(uint32 uiEventId, Object* pSource, Object* /*pTarget*/, bool /*bIsStart*/)
+{
+    if (pSource->GetTypeId() == TYPEID_UNIT)
+    {
+        instance_ulduar* pInstance = (instance_ulduar*)((Creature*)pSource)->GetInstanceData();
+        if (!pInstance)
+            return true;
+
+        if (uiEventId == EVENT_ID_SHATTER_CHEST)
+        {
+            // Mark hard mode as failed and despawn the Rare cache
+            pInstance->SetData(TYPE_HODIR_HARD, FAIL);
+
+            if (GameObject* pChest = pInstance->GetSingleGameObjectFromStorage(pInstance->instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25))
+                pChest->SetLootState(GO_JUST_DEACTIVATED);
+        }
+        else if (uiEventId == EVENT_ID_ATTACK_START)
+        {
+            // Start encounter
+            if (Creature* pHodir = pInstance->GetSingleCreatureFromStorage(NPC_HODIR))
+                pHodir->SetInCombatWithZone();
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## npc_icicle_target
+######*/
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_icicle_targetAI : public Scripted_NoMovementAI
+{
+    npc_icicle_targetAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_SAFE_AREA);
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_icicle_target(Creature* pCreature)
+{
+    return new npc_icicle_targetAI(pCreature);
+}
+
 void AddSC_boss_hodir()
 {
     Script* pNewScript;
@@ -211,5 +409,20 @@ void AddSC_boss_hodir()
     pNewScript = new Script;
     pNewScript->Name = "boss_hodir";
     pNewScript->GetAI = GetAI_boss_hodir;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_flash_freeze";
+    pNewScript->GetAI = GetAI_npc_flash_freeze;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_boss_hodir";
+    pNewScript->pProcessEventId = &ProcessEventId_event_boss_hodir;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_icicle_target";
+    pNewScript->GetAI = GetAI_npc_icicle_target;
     pNewScript->RegisterSelf();
 }
