@@ -371,7 +371,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
             pOrbital->RemoveAurasDueToSpell(SPELL_TOWER_OF_STORMS);
 
         // inform instance about all active towers for future use in achievements and hard mode loot
-        m_pInstance->SetData(TYPE_LEVIATHAN_TOWERS, uiActiveTowers);
+        m_pInstance->SetData(TYPE_LEVIATHAN_HARD, uiActiveTowers);
     }
 
     // Functions which handle the spawn of each type of add

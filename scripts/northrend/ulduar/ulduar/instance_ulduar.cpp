@@ -55,11 +55,10 @@ static UlduarKeeperSpawns m_aKeepersSpawnLocs[] =
 };
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
-    m_bKeepersLoaded(false),
+    m_bHelpersLoaded(false),
     m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
-    m_uiGauntletStatus(0),
-    m_uiActiveTowers(0)
+    m_uiGauntletStatus(0)
 {
     Initialize();
 }
@@ -109,15 +108,18 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
         pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER_COUNT, GetData(TYPE_ALGALON_TIMER));
     }
 
-    // spawn frienly keepers in the central hall
-    if (!m_bKeepersLoaded)
+    // spawn frienly keepers in the central hall and all the other faction npcs
+    if (!m_bHelpersLoaded)
     {
         for (uint8 i = 0; i < countof(m_aKeepersSpawnLocs); ++i)
         {
             if (GetData(m_aKeepersSpawnLocs[i].uiType) == DONE)
                 pPlayer->SummonCreature(m_aKeepersSpawnLocs[i].uiEntry, m_aKeepersSpawnLocs[i].fX, m_aKeepersSpawnLocs[i].fY, m_aKeepersSpawnLocs[i].fZ, m_aKeepersSpawnLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
         }
-        m_bKeepersLoaded = true;
+
+        DoSpawnHodirNpcs(pPlayer);
+        DoSpawnThorimNpcs(pPlayer);
+        m_bHelpersLoaded = true;
     }
 }
 
@@ -579,6 +581,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 if (GameObject* pChest = GetSingleGameObjectFromStorage(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25))
                     pChest->Respawn();
 
+                if (Player* pPlayer = GetPlayerInMap())
+                    DoSpawnHodirNpcs(pPlayer);
+
                 SetData(TYPE_HODIR_HARD, FAIL);
             }
             break;
@@ -592,6 +597,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 if (GetData(TYPE_THORIM_HARD) != DONE)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30 * MINUTE);
                 SpawnFriendlyKeeper(NPC_KEEPER_THORIM);
+            }
+            else if (uiData == FAIL)
+            {
+                if (Player* pPlayer = GetPlayerInMap())
+                    DoSpawnThorimNpcs(pPlayer);
             }
             break;
         case TYPE_FREYA:
@@ -644,29 +654,25 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
             // Hard modes
         case TYPE_LEVIATHAN_HARD:
-            m_auiHardBoss[0] = uiData;                      // TODO: add extra loot
+            m_auiHardBoss[0] = uiData;
             break;
         case TYPE_XT002_HARD:
-            m_auiHardBoss[1] = uiData;                      // TODO: add extra loot
+            m_auiHardBoss[1] = uiData;
             break;
         case TYPE_HODIR_HARD:
             m_auiHardBoss[2] = uiData;
             break;
         case TYPE_THORIM_HARD:
             m_auiHardBoss[3] = uiData;
-            if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, 30 * MINUTE);
             break;
         case TYPE_MIMIRON_HARD:
             m_auiHardBoss[4] = uiData;
-            if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10_H : GO_CACHE_OF_INOV_25_H, 30 * MINUTE);
             break;
         case TYPE_VEZAX_HARD:
-            m_auiHardBoss[5] = uiData;                      // TODO: add extra loot
+            m_auiHardBoss[5] = uiData;
             break;
         case TYPE_YOGGSARON_HARD:
-            m_auiHardBoss[6] = uiData;                      // TODO: add extra loot
+            m_auiHardBoss[6] = uiData;
             break;
 
             // Ulduar keepers
@@ -717,9 +723,6 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_LEVIATHAN_GAUNTLET:
             m_uiGauntletStatus = uiData;
             return;
-        case TYPE_LEVIATHAN_TOWERS:
-            m_uiActiveTowers = uiData;
-            return;
     }
 
     DoOpenMadnessDoorIfCan();
@@ -735,11 +738,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                    << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
                    << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
                    << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiEncounter[14] << " "
-                   << m_auiHardBoss[0] << " " << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " "
-                   << m_auiHardBoss[3] << " " << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " "
-                   << m_auiHardBoss[6] << " " << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " "
-                   << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3] << " " << m_auiUlduarTowers[0] << " "
-                   << m_auiUlduarTowers[1] << " " << m_auiUlduarTowers[2] << " " << m_auiUlduarTowers[3];
+                   << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " "
+                   << m_auiUlduarKeepers[3] << " " << m_auiUlduarTowers[0] << " " << m_auiUlduarTowers[1] << " "
+                   << m_auiUlduarTowers[2] << " " << m_auiUlduarTowers[3];
 
         m_strInstData = saveStream.str();
 
@@ -765,7 +766,7 @@ bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 u
             switch (pConditionSource->GetEntry())
             {
                 case NPC_LEVIATHAN:
-                    uiCondId = m_uiActiveTowers;
+                    uiCondId = GetData(TYPE_LEVIATHAN_HARD);
                     break;
                 case NPC_XT002:
                     if (GetData(TYPE_XT002_HARD) == DONE)
@@ -928,11 +929,9 @@ void instance_ulduar::Load(const char* strIn)
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
                >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
                >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11]
-               >> m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiEncounter[14] >> m_auiHardBoss[0]
-               >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5]
-               >> m_auiHardBoss[6] >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2]
-               >> m_auiUlduarKeepers[3] >> m_auiUlduarTowers[0] >> m_auiUlduarTowers[1] >> m_auiUlduarTowers[2]
-               >> m_auiUlduarTowers[3];
+               >> m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiEncounter[14] >> m_auiUlduarKeepers[0]
+               >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3] >> m_auiUlduarTowers[0]
+               >> m_auiUlduarTowers[1] >> m_auiUlduarTowers[2] >> m_auiUlduarTowers[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -996,16 +995,16 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
             return m_abAchievCriteria[TYPE_ACHIEV_SHUTOUT];
         case ACHIEV_CRIT_ORB_BOMB_N:
         case ACHIEV_CRIT_ORB_BOMB_H:
-            return m_uiActiveTowers >= 1;
+            return GetData(TYPE_LEVIATHAN_HARD) >= 1;
         case ACHIEV_CRIT_ORB_DEV_N:
         case ACHIEV_CRIT_ORB_DEV_H:
-            return m_uiActiveTowers >= 2;
+            return GetData(TYPE_LEVIATHAN_HARD) >= 2;
         case ACHIEV_CRIT_ORB_NUKED_N:
         case ACHIEV_CRIT_ORB_NUKED_H:
-            return m_uiActiveTowers >= 3;
+            return GetData(TYPE_LEVIATHAN_HARD) >= 3;
         case ACHIEV_CRIT_ORBITUARY_N:
         case ACHIEV_CRIT_ORBITUARY_H:
-            return m_uiActiveTowers == 4;
+            return GetData(TYPE_LEVIATHAN_HARD) == 4;
         case ACHIEV_CRIT_NERF_ENG_N:
         case ACHIEV_CRIT_NERF_ENG_H:
             return m_abAchievCriteria[TYPE_ACHIEV_NERF_ENG];
@@ -1038,12 +1037,12 @@ void instance_ulduar::DoCallLeviathanHelp()
         return;
 
     for (uint8 i = 0; i < countof(afReinforcementsNormal); ++i)
-        pLeviathan->SummonCreature(afReinforcementsNormal[i].uiEntry, afReinforcementsNormal[i].fX, afReinforcementsNormal[i].fY, afReinforcementsNormal[i].fZ, afReinforcementsNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+        pLeviathan->SummonCreature(afReinforcementsNormal[i].uiAllyEntry, afReinforcementsNormal[i].fX, afReinforcementsNormal[i].fY, afReinforcementsNormal[i].fZ, afReinforcementsNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
 
     if (!instance->IsRegularDifficulty())
     {
         for (uint8 i = 0; i < countof(afReinforcementsHeroic); ++i)
-            pLeviathan->SummonCreature(afReinforcementsHeroic[i].uiEntry, afReinforcementsHeroic[i].fX, afReinforcementsHeroic[i].fY, afReinforcementsHeroic[i].fZ, afReinforcementsHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+            pLeviathan->SummonCreature(afReinforcementsHeroic[i].uiAllyEntry, afReinforcementsHeroic[i].fX, afReinforcementsHeroic[i].fY, afReinforcementsHeroic[i].fZ, afReinforcementsHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
     }
 }
 
@@ -1054,6 +1053,30 @@ void instance_ulduar::DoProcessShatteredEvent()
         SetSpecialAchievementCriteria(TYPE_ACHIEV_SHATTERED, true);
     else
         m_uiShatterAchievTimer = 5000;
+}
+
+void instance_ulduar::DoSpawnHodirNpcs(Player* pSummoner)
+{
+    if (GetData(TYPE_HODIR) != DONE)
+    {
+        for (uint8 i = 0; i < countof(afHodirHelpersNormal); ++i)
+            pSummoner->SummonCreature(pSummoner->GetTeam() == ALLIANCE ? afHodirHelpersNormal[i].uiAllyEntry : afHodirHelpersNormal[i].uiHordeEntry, afHodirHelpersNormal[i].fX, afHodirHelpersNormal[i].fY, afHodirHelpersNormal[i].fZ, afHodirHelpersNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+
+        if (!instance->IsRegularDifficulty())
+        {
+            for (uint8 i = 0; i < countof(afHodirHelpersHeroic); ++i)
+                pSummoner->SummonCreature(pSummoner->GetTeam() == ALLIANCE ? afHodirHelpersHeroic[i].uiAllyEntry : afHodirHelpersHeroic[i].uiHordeEntry, afHodirHelpersHeroic[i].fX, afHodirHelpersHeroic[i].fY, afHodirHelpersHeroic[i].fZ, afHodirHelpersHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+        }
+    }
+}
+
+void instance_ulduar::DoSpawnThorimNpcs(Player* pSummoner)
+{
+    if (GetData(TYPE_THORIM) != DONE)
+    {
+        for (uint8 i = 0; i < countof(afThorimSpawns); ++i)
+            pSummoner->SummonCreature(pSummoner->GetTeam() == ALLIANCE ? afThorimSpawns[i].uiAllyEntry : afThorimSpawns[i].uiHordeEntry, afThorimSpawns[i].fX, afThorimSpawns[i].fY, afThorimSpawns[i].fZ, afThorimSpawns[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+    }
 }
 
 void instance_ulduar::JustDidDialogueStep(int32 iEntry)

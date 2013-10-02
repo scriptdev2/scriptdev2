@@ -221,7 +221,6 @@ bool GossipSelect_npc_brann_ulduar(Player* pPlayer, Creature* pCreature, uint32 
             pInstance->SetData(TYPE_TOWER_HODIR, FAIL);
             pInstance->SetData(TYPE_TOWER_MIMIRON, FAIL);
             pInstance->SetData(TYPE_TOWER_THORIM, FAIL);
-            pInstance->SetData(TYPE_LEVIATHAN_HARD, FAIL);
 
             // set gauntlet in progress; rest of the event is done by DB scripts
             pInstance->SetData(TYPE_LEVIATHAN_GAUNTLET, IN_PROGRESS);
@@ -252,7 +251,8 @@ bool GossipHello_npc_keeper_norgannon(Player* pPlayer, Creature* pCreature)
 {
     if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_LEVIATHAN_GAUNTLET) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN_HARD) == NOT_STARTED)
+        if (pInstance->GetData(TYPE_LEVIATHAN_GAUNTLET) == NOT_STARTED && pInstance->GetData(TYPE_LEVIATHAN) == NOT_STARTED && pInstance->GetData(TYPE_TOWER_HODIR) == NOT_STARTED &&
+                pInstance->GetData(TYPE_TOWER_FREYA) == NOT_STARTED && pInstance->GetData(TYPE_TOWER_MIMIRON) == NOT_STARTED && pInstance->GetData(TYPE_TOWER_THORIM) == NOT_STARTED)
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ACTIVATE_SYSTEMS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
         pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_GREET, pCreature->GetObjectGuid());
@@ -276,7 +276,6 @@ bool GossipSelect_npc_keeper_norgannon(Player* pPlayer, Creature* pCreature, uin
                 pInstance->SetData(TYPE_TOWER_HODIR, DONE);
                 pInstance->SetData(TYPE_TOWER_MIMIRON, DONE);
                 pInstance->SetData(TYPE_TOWER_THORIM, DONE);
-                pInstance->SetData(TYPE_LEVIATHAN_HARD, DONE);
 
                 // set gauntlet in progress and despawn the Lorekeeper; rest of the event is done by DB scripts
                 pInstance->SetData(TYPE_LEVIATHAN_GAUNTLET, IN_PROGRESS);

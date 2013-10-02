@@ -54,7 +54,6 @@ enum
 
     // Other types - not saved
     TYPE_LEVIATHAN_GAUNTLET     = 31,
-    TYPE_LEVIATHAN_TOWERS       = 32,
 
     // The siege of ulduar
     NPC_LEVIATHAN               = 33113,
@@ -114,13 +113,39 @@ enum
     NPC_AERIAL_UNIT             = 33670,
     NPC_HODIR                   = 32845,
     NPC_THORIM                  = 32865,
-    NPC_RUNIC_COLOSSUS          = 32872,
-    NPC_RUNE_GIANT              = 32873,
-    NPC_JORMUNGAR_BEHEMOTH      = 32882,
     NPC_FREYA                   = 32906,
+
+    // Freya elders
     NPC_ELDER_BRIGHTLEAF        = 32915,
     NPC_ELDER_IRONBRACH         = 32913,
     NPC_ELDER_STONEBARK         = 32914,
+
+    // Hodir helpers
+    NPC_DRUID_HORDE_N           = 32941,                    // Tor Greycloud
+    NPC_DRUID_HORDE_H           = 33333,                    // Kar Greycloud
+    NPC_SHAMAN_HORDE_N          = 32950,                    // Spiritwalker Yona
+    NPC_SHAMAN_HORDE_H          = 33332,                    // Spiritwalker Tara
+    NPC_MAGE_HORDE_N            = 32946,                    // Veesha Blazeweaver
+    NPC_MAGE_HORDE_H            = 33331,                    // Amira Blazeweaver
+    NPC_PRIEST_HORDE_N          = 32948,                    // Battle-Priest Eliza
+    NPC_PRIEST_HORDE_H          = 33330,                    // Battle-Priest Gina
+    NPC_DRUID_ALLIANCE_N        = 32901,                    // Ellie Nightfeather
+    NPC_DRUID_ALLIANCE_H        = 33325,                    // Eivi Nightfeather
+    NPC_SHAMAN_ALLIANCE_N       = 32900,                    // Elementalist Avuun
+    NPC_SHAMAN_ALLIANCE_H       = 33328,                    // Elementalist Mahfuun
+    NPC_MAGE_ALLIANCE_N         = 32893,                    // Missy Flamecuffs
+    NPC_MAGE_ALLIANCE_H         = 33327,                    // Sissy Flamecuffs
+    NPC_PRIEST_ALLIANCE_N       = 32897,                    // Field Medic Penny
+    NPC_PRIEST_ALLIANCE_H       = 33326,                    // Field Medic Jessi
+
+    // Thorim event npcs
+    NPC_RUNIC_COLOSSUS          = 32872,
+    NPC_RUNE_GIANT              = 32873,
+    NPC_JORMUNGAR_BEHEMOTH      = 32882,
+    NPC_SOLDIER_ALLIANCE        = 32885,
+    NPC_CAPTAIN_ALLIANCE        = 32908,
+    NPC_SOLDIER_HORDE           = 32883,
+    NPC_CAPTAIN_HORDE           = 32907,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
@@ -342,7 +367,7 @@ enum
 struct UlduarSpawns
 {
     float fX, fY, fZ, fO;
-    uint32 uiEntry;
+    uint32 uiAllyEntry, uiHordeEntry;
 };
 
 // Note: coordinates are guessed, but pretty close to what they should be
@@ -367,6 +392,30 @@ static const UlduarSpawns afReinforcementsHeroic[] =
     {137.523f, 32.346f, 409.80f, 3.12f, NPC_SALVAGED_DEMOLISHER},
     {112.818f, 18.981f, 409.83f, 3.10f, NPC_SALVAGED_DEMOLISHER},
     {112.700f, 47.884f, 409.79f, 3.10f, NPC_SALVAGED_DEMOLISHER},
+};
+
+static const UlduarSpawns afHodirHelpersNormal[] =
+{
+    {1999.903f, -230.4966f, 432.7581f, 1.53589f,  NPC_DRUID_ALLIANCE_N,  NPC_DRUID_HORDE_N},
+    {2010.058f, -243.4553f, 432.7672f, 1.361357f, NPC_SHAMAN_ALLIANCE_N, NPC_SHAMAN_HORDE_N},
+    {2021.118f, -236.6482f, 432.7672f, 1.937315f, NPC_MAGE_ALLIANCE_N,   NPC_MAGE_HORDE_N},
+    {1983.751f, -243.3579f, 432.7672f, 1.570796f, NPC_PRIEST_ALLIANCE_N, NPC_PRIEST_HORDE_N},
+};
+
+static const UlduarSpawns afHodirHelpersHeroic[] =
+{
+    {2013.37f, -240.331f, 432.687f, 1.80463f, NPC_DRUID_ALLIANCE_H,  NPC_DRUID_HORDE_H},
+    {1983.89f, -240.369f, 432.687f, 1.37658f, NPC_SHAMAN_ALLIANCE_H, NPC_SHAMAN_HORDE_H},
+    {2000.9f, -231.232f, 432.687f, 1.59846f,  NPC_MAGE_ALLIANCE_H,   NPC_MAGE_HORDE_H},
+    {1997.88f, -239.394f, 432.687f, 1.4237f,  NPC_PRIEST_ALLIANCE_H, NPC_PRIEST_HORDE_H},
+};
+
+static const UlduarSpawns afThorimSpawns[] =
+{
+    {2127.24f, -251.309f, 419.7935f, 5.899213f,   NPC_SOLDIER_HORDE, NPC_SOLDIER_ALLIANCE},
+    {2123.316f, -254.7708f, 419.7886f, 6.178465f, NPC_SOLDIER_HORDE, NPC_SOLDIER_ALLIANCE},
+    {2120.431f, -259.0431f, 419.6813f, 6.122538f, NPC_SOLDIER_HORDE, NPC_SOLDIER_ALLIANCE},
+    {2145.503f, -256.3357f, 419.7306f, 3.520873f, NPC_CAPTAIN_HORDE, NPC_CAPTAIN_ALLIANCE},
 };
 
 // note: original spawn loc is 607.9199f, -12.90516f, 409.887f but we won't use it because it's too far and grid won't be loaded that far
@@ -419,6 +468,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
         void SpawnFriendlyKeeper(uint32 uiWho);
+        void DoSpawnHodirNpcs(Player* pSummoner);
+        void DoSpawnThorimNpcs(Player* pSummoner);
         void DoOpenMadnessDoorIfCan();
         void DoCallLeviathanHelp();
 
@@ -429,12 +480,11 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_auiUlduarTowers[KEEPER_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
 
-        bool m_bKeepersLoaded;
+        bool m_bHelpersLoaded;
 
         uint32 m_uiAlgalonTimer;
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
-        uint8 m_uiActiveTowers;
 
         ObjectGuid m_leftKoloStalkerGuid;
         ObjectGuid m_rightKoloStalkerGuid;
