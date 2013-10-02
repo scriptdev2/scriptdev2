@@ -332,6 +332,9 @@ struct MANGOS_DLL_DECL npc_flash_freezeAI : public Scripted_NoMovementAI
                         DoCastSpellIfCan(pSummoner, SPELL_FLASH_FREEZE_KILL);
                     else
                         DoCastSpellIfCan(m_creature, SPELL_FLASH_FREEZE_AURA);
+
+                    if (pSummoner->GetTypeId() == TYPEID_PLAYER && m_pInstance)
+                        m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_CHEESE_FREEZE, false);
                 }
             }
 

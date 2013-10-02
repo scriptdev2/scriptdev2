@@ -586,6 +586,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
                 SetData(TYPE_HODIR_HARD, FAIL);
             }
+            else if (uiData == IN_PROGRESS)
+            {
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_CHEESE_FREEZE, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_COOL_FRIENDS, true);
+            }
             break;
         case TYPE_THORIM:
             m_auiEncounter[uiType] = uiData;
@@ -912,6 +917,25 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
                 }
             }
             break;
+        case NPC_DRUID_HORDE_N:
+        case NPC_DRUID_HORDE_H:
+        case NPC_SHAMAN_HORDE_N:
+        case NPC_SHAMAN_HORDE_H:
+        case NPC_MAGE_HORDE_N:
+        case NPC_MAGE_HORDE_H:
+        case NPC_PRIEST_HORDE_N:
+        case NPC_PRIEST_HORDE_H:
+        case NPC_DRUID_ALLIANCE_N:
+        case NPC_DRUID_ALLIANCE_H:
+        case NPC_SHAMAN_ALLIANCE_N:
+        case NPC_SHAMAN_ALLIANCE_H:
+        case NPC_MAGE_ALLIANCE_N:
+        case NPC_MAGE_ALLIANCE_H:
+        case NPC_PRIEST_ALLIANCE_N:
+        case NPC_PRIEST_ALLIANCE_H:
+            if (GetData(TYPE_HODIR) == IN_PROGRESS)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_COOL_FRIENDS, false);
+            break;
     }
 }
 
@@ -1023,6 +1047,12 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_RARE_CACHE_N:
         case ACHIEV_CRIT_RARE_CACHE_H:
             return GetData(TYPE_HODIR_HARD) == DONE;
+        case ACHIEV_CRIT_CHEESE_N:
+        case ACHIEV_CRIT_CHEESE_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_CHEESE_FREEZE];
+        case ACHIEV_CRIT_COOL_FRIENDS_N:
+        case ACHIEV_CRIT_COOL_FRIENDS_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_COOL_FRIENDS];
 
         default:
             return false;

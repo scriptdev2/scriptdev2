@@ -169,7 +169,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 14,
+    MAX_SPECIAL_ACHIEV_CRITS    = 16,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -185,6 +185,8 @@ enum
     TYPE_ACHIEV_LOOKS_KILL      = 11,
     TYPE_ACHIEV_OPEN_ARMS       = 12,
     TYPE_ACHIEV_DISARMED        = 13,
+    TYPE_ACHIEV_CHEESE_FREEZE   = 14,
+    TYPE_ACHIEV_COOL_FRIENDS    = 15,
 
     // Loot chests
     // Kologarn
