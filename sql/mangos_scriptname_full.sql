@@ -1302,6 +1302,7 @@ UPDATE gameobject_template SET ScriptName='go_celestial_access' WHERE entry IN (
 UPDATE creature_template SET ScriptName='boss_hodir' WHERE entry=32845;
 UPDATE creature_template SET ScriptName='npc_flash_freeze' WHERE entry IN (32926,32938);
 UPDATE creature_template SET ScriptName='npc_icicle_target' WHERE entry=33174;
+UPDATE creature_template SET ScriptName='boss_thorim' WHERE entry=32865;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event

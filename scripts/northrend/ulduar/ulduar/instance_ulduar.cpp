@@ -58,7 +58,8 @@ instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHe
     m_bHelpersLoaded(false),
     m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
-    m_uiGauntletStatus(0)
+    m_uiGauntletStatus(0),
+    m_uiSlayedArenaMobs(0)
 {
     Initialize();
 }
@@ -322,7 +323,8 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
 
             // Prison
         case GO_ANCIENT_GATE:
-            DoOpenMadnessDoorIfCan();
+            if (m_auiEncounter[TYPE_MIMIRON] == DONE && m_auiEncounter[TYPE_HODIR] == DONE && m_auiEncounter[TYPE_THORIM] == DONE && m_auiEncounter[TYPE_FREYA] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_VEZAX_GATE:
             pGo->SetGoState(GO_STATE_READY);
@@ -383,16 +385,14 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
 void instance_ulduar::DoOpenMadnessDoorIfCan()
 {
     if (m_auiEncounter[TYPE_MIMIRON] == DONE && m_auiEncounter[TYPE_HODIR] == DONE && m_auiEncounter[TYPE_THORIM] == DONE && m_auiEncounter[TYPE_FREYA] == DONE)
-    {
-        if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_ANCIENT_GATE))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
-    }
+        DoUseDoorOrButton(GO_ANCIENT_GATE);
 }
 
 void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
     {
+            // Siege of Ulduar
         case TYPE_LEVIATHAN:
             m_auiEncounter[uiType] = uiData;
             if (uiData != SPECIAL)
@@ -499,6 +499,8 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_NERF_ENG, true);
             }
             break;
+
+            // Antechamber of Ulduar
         case TYPE_ASSEMBLY:
             // Don't set the same encounter data twice
             if (uiData == m_auiEncounter[uiType])
@@ -549,7 +551,8 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_NINE_LIVES, false);
             }
             break;
-            // Keepers
+
+            // Keepers of Ulduar
         case TYPE_MIMIRON:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MIMIRON_DOOR_1);
@@ -559,7 +562,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 if (GetData(TYPE_MIMIRON_HARD) != DONE)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30 * MINUTE);
+
                 SpawnFriendlyKeeper(NPC_KEEPER_MIMIRON);
+                DoOpenMadnessDoorIfCan();
             }
             break;
         case TYPE_HODIR:
@@ -575,6 +580,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                     DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, GO_FLAG_NO_INTERACT, false);
 
                 SpawnFriendlyKeeper(NPC_KEEPER_HODIR);
+                DoOpenMadnessDoorIfCan();
             }
             else if (uiData == FAIL)
             {
@@ -597,24 +603,37 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_LIGHTNING_FIELD);
             if (uiData == IN_PROGRESS)
                 DoUseDoorOrButton(GO_DARK_IRON_PORTCULIS);
-            if (uiData == DONE)
+            else if (uiData == DONE)
             {
                 if (GetData(TYPE_THORIM_HARD) != DONE)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30 * MINUTE);
+
                 SpawnFriendlyKeeper(NPC_KEEPER_THORIM);
+                DoOpenMadnessDoorIfCan();
             }
             else if (uiData == FAIL)
             {
+                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_RUNED_STONE_DOOR))
+                    pDoor->ResetDoorOrButton();
+                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_THORIM_STONE_DOOR))
+                    pDoor->ResetDoorOrButton();
+
                 if (Player* pPlayer = GetPlayerInMap())
                     DoSpawnThorimNpcs(pPlayer);
+
+                m_uiSlayedArenaMobs = 0;
             }
             break;
         case TYPE_FREYA:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
+            {
                 SpawnFriendlyKeeper(NPC_KEEPER_FREYA);
+                DoOpenMadnessDoorIfCan();
+            }
             break;
-            // Prison
+
+            // Ulduar Prison
         case TYPE_VEZAX:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
@@ -657,28 +676,28 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUpdateWorldState(WORLD_STATE_TIMER_COUNT, m_auiEncounter[uiType]);
             break;
 
-            // Hard modes
+            // Hard modes (not saved)
         case TYPE_LEVIATHAN_HARD:
             m_auiHardBoss[0] = uiData;
-            break;
+            return;
         case TYPE_XT002_HARD:
             m_auiHardBoss[1] = uiData;
-            break;
+            return;
         case TYPE_HODIR_HARD:
             m_auiHardBoss[2] = uiData;
-            break;
+            return;
         case TYPE_THORIM_HARD:
             m_auiHardBoss[3] = uiData;
-            break;
+            return;
         case TYPE_MIMIRON_HARD:
             m_auiHardBoss[4] = uiData;
-            break;
+            return;
         case TYPE_VEZAX_HARD:
             m_auiHardBoss[5] = uiData;
-            break;
+            return;
         case TYPE_YOGGSARON_HARD:
             m_auiHardBoss[6] = uiData;
-            break;
+            return;
 
             // Ulduar keepers
         case TYPE_KEEPER_HODIR:
@@ -729,8 +748,6 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_uiGauntletStatus = uiData;
             return;
     }
-
-    DoOpenMadnessDoorIfCan();
 
     if (uiData == DONE || uiData == FAIL || uiData == SPECIAL || uiType == TYPE_ALGALON_TIMER)
     {
@@ -935,6 +952,26 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
         case NPC_PRIEST_ALLIANCE_H:
             if (GetData(TYPE_HODIR) == IN_PROGRESS)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_COOL_FRIENDS, false);
+            break;
+        case NPC_JORMUNGAR_BEHEMOTH:
+        case NPC_SOLDIER_ALLIANCE:
+        case NPC_CAPTAIN_ALLIANCE:
+        case NPC_SOLDIER_HORDE:
+        case NPC_CAPTAIN_HORDE:
+            ++m_uiSlayedArenaMobs;
+
+            // start combat when all 4 faction soldiers and the Jormungar are dead
+            if (m_uiSlayedArenaMobs == 5)
+            {
+                if (Creature* pThorim = GetSingleCreatureFromStorage(NPC_THORIM))
+                    pThorim->SetInCombatWithZone();
+            }
+            break;
+        case NPC_RUNIC_COLOSSUS:
+            DoUseDoorOrButton(GO_RUNED_STONE_DOOR);
+            break;
+        case NPC_RUNE_GIANT:
+            DoUseDoorOrButton(GO_THORIM_STONE_DOOR);
             break;
     }
 }

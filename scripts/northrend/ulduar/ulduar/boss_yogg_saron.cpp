@@ -71,6 +71,7 @@ enum
     EMOTE_VISION_BLAST                          = -1603234,
     EMOTE_SHATTER_BLAST                         = -1603235,
 
+    SAY_THORIM_HELP                             = -1603155,
     SAY_HODIR_HELP                              = -1603093,
 };
 

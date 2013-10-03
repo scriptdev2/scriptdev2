@@ -487,6 +487,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_uiAlgalonTimer;
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
+        uint8 m_uiSlayedArenaMobs;
 
         ObjectGuid m_leftKoloStalkerGuid;
         ObjectGuid m_rightKoloStalkerGuid;
