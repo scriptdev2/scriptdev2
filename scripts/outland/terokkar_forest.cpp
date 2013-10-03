@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Terokkar_Forest
 SD%Complete: 80
-SDComment: Quest support: 9889, 10009, 10873, 10896, 10446/10447, 10852, 10887, 10922, 11096, 11093, 10051, 10052, 10898.
+SDComment: Quest support: 9889, 10009, 10051, 10052, 10446/10447, 10852, 10873, 10887, 10896, 10898, 10922, 10988, 11093, 11096.
 SDCategory: Terokkar Forest
 EndScriptData */
 
@@ -33,6 +33,7 @@ go_veil_skith_cage
 npc_captive_child
 npc_isla_starmane
 npc_skywing
+npc_cenarion_sparrowhawk
 EndContentData */
 
 #include "precompiled.h"
@@ -1026,6 +1027,97 @@ CreatureAI* GetAI_npc_skywing(Creature* pCreature)
     return new npc_skywingAI(pCreature);
 }
 
+/*######
+## npc_cenarion_sparrowhawk
+######*/
+
+enum
+{
+    EMOTE_FOLLOW                = -1000963,
+    EMOTE_SURVEY                = -1000964,
+    EMOTE_LOCATE                = -1000965,
+
+    NPC_SKETTIS_RAVEN_STONE     = 22986,
+    GO_RAVEN_STONE              = 185541,
+};
+
+struct MANGOS_DLL_DECL npc_cenarion_sparrowhawkAI : public ScriptedAI
+{
+    npc_cenarion_sparrowhawkAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiSurveyTimer;
+    bool m_bFirstTimer;
+
+    ObjectGuid m_currentStone;
+
+    void Reset() override
+    {
+        m_uiSurveyTimer = 3000;
+        m_bFirstTimer   = true;
+        DoScriptText(EMOTE_FOLLOW, m_creature);
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        // despawn the trigger and spawn the nearby stone
+        if (Creature* pStoneTrigger = m_creature->GetMap()->GetCreature(m_currentStone))
+            pStoneTrigger->ForcedDespawn();
+
+        if (GameObject* pStone = GetClosestGameObjectWithEntry(m_creature, GO_RAVEN_STONE, 5.0f))
+        {
+            pStone->SetRespawnTime(pStone->GetRespawnDelay());
+            pStone->Refresh();
+        }
+        DoScriptText(EMOTE_LOCATE, m_creature);
+
+        // check if we still have other stones in range
+        m_uiSurveyTimer = 5000;
+    }
+
+    void DoFindNearbyStones()
+    {
+        float fX, fY, fZ;
+        if (Creature* pStoneTrigger = GetClosestCreatureWithEntry(m_creature, NPC_SKETTIS_RAVEN_STONE, 80.0f))
+        {
+            m_currentStone = pStoneTrigger->GetObjectGuid();
+            pStoneTrigger->GetContactPoint(m_creature, fX, fY, fZ);
+
+            m_creature->SetWalk(false);
+            m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+        }
+        else
+            m_creature->ForcedDespawn(10000);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiSurveyTimer)
+        {
+            if (m_uiSurveyTimer <= uiDiff)
+            {
+                if (m_bFirstTimer)
+                {
+                    DoScriptText(EMOTE_SURVEY, m_creature);
+                    m_bFirstTimer = false;
+                }
+
+                DoFindNearbyStones();
+                m_uiSurveyTimer = 0;
+            }
+            else
+                m_uiSurveyTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_cenarion_sparrowhawk(Creature* pCreature)
+{
+    return new npc_cenarion_sparrowhawkAI(pCreature);
+}
+
 void AddSC_terokkar_forest()
 {
     Script* pNewScript;
@@ -1087,5 +1179,10 @@ void AddSC_terokkar_forest()
     pNewScript->Name = "npc_skywing";
     pNewScript->GetAI = &GetAI_npc_skywing;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_skywing;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_cenarion_sparrowhawk";
+    pNewScript->GetAI = &GetAI_npc_cenarion_sparrowhawk;
     pNewScript->RegisterSelf();
 }
