@@ -141,6 +141,7 @@ enum
     // Thorim event npcs
     NPC_RUNIC_COLOSSUS          = 32872,
     NPC_RUNE_GIANT              = 32873,
+    NPC_SIF                     = 33196,
     NPC_JORMUNGAR_BEHEMOTH      = 32882,
     NPC_SOLDIER_ALLIANCE        = 32885,
     NPC_CAPTAIN_ALLIANCE        = 32908,
@@ -364,6 +365,10 @@ enum
     ACHIEV_CRIT_COOL_FRIENDS_H  = 10260,
     ACHIEV_CRIT_RARE_CACHE_N    = 10452,                    // Hodir, achievs 3182, 3184
     ACHIEV_CRIT_RARE_CACHE_H    = 10458,
+    ACHIEV_CRIT_LIGHTNING_N     = 10305,                    // Thorim, achievs 2971, 2972
+    ACHIEV_CRIT_LIGHTNING_H     = 10309,
+    ACHIEV_CRIT_LOSE_ILLUSION_N = 10440,                    // Thorim, achievs 3176, 3183
+    ACHIEV_CRIT_LOSE_ILLUSION_H = 10457,
 };
 
 struct UlduarSpawns

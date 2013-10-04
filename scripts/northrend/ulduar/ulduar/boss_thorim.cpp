@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_thorim
-SD%Complete: 20%
+SD%Complete: 50%
 SDComment: Basic script
 SDCategory: Ulduar
 EndScriptData */
@@ -43,7 +43,6 @@ enum
     SAY_OUTRO_1                             = -1603149,
     SAY_OUTRO_2                             = -1603150,
     SAY_OUTRO_3                             = -1603151,
-
     SAY_OUTRO_HARD_1                        = -1603152,
     SAY_OUTRO_HARD_2                        = -1603153,
     SAY_OUTRO_HARD_3                        = -1603154,
@@ -61,6 +60,7 @@ enum
     SPELL_TOUCH_OF_DOMINION                 = 62507,                    // hard mode timer; triggers 62565 after 2.5 min
     SPELL_BERSERK_1                         = 62560,
     SPELL_SUMMON_LIGHTNING_ORB              = 62391,                    // on berserk
+    SPELL_LIGHTNING_DESTRUCTION             = 62393,                    // cast by npc 33138 on berserk
 
     // phase 2 spells
     SPELL_CHAIN_LIGHTNING                   = 62131,
@@ -70,6 +70,8 @@ enum
     SPELL_UNBALANCING_STRIKE                = 62130,
     SPELL_BERSERK_2                         = 62555,
     SPELL_THORIM_CREDIT                     = 64985,                    // kill credit spell; added in spell_template
+    SPELL_STORMHAMMER_OUTRO                 = 64767,                    // target npc 33196 and trigger spells 62470, 64909 and 64778 and despawn target in 10 sec
+    SPELL_TELEPORT                          = 62940,
 
     // Lightning related spells
     SPELL_ACTIVATE_LIGHTNING_ORB_PERIODIC   = 62184,                    // cast by npc 32879; starts the whole lightning event
@@ -97,7 +99,7 @@ enum
     SPELL_CHARGE_H                          = 62614,
 
     // event npcs
-    NPC_SIF                                 = 33196,
+    NPC_LIGHTNING_ORB                       = 33138,                    // spawned on arena berserk
     NPC_DARK_RUNE_CHAMPION                  = 32876,                    // arena npcs
     NPC_DARK_RUNE_WARBRINGER                = 32877,
     NPC_DARK_RUNE_EVOKER                    = 32878,
@@ -112,18 +114,47 @@ enum
     NPC_TRAP_BUNNY_2                        = 33054,
 
     FACTION_ID_FRIENDLY                     = 35,
+    PHASE_ARENA                             = 1,
+    PHASE_SOLO                              = 2,
+    PHASE_TRANSITION                        = 3,
 };
+
+static const DialogueEntry aThorimDialogue[] =
+{
+    {SAY_AGGRO_1,               NPC_THORIM,     9000},
+    {SAY_AGGRO_2,               NPC_THORIM,     7000},
+    {NPC_SIF,                   0,              5000},
+    {SPELL_TOUCH_OF_DOMINION,   0,              0},
+    {SAY_JUMP,                  NPC_THORIM,     10000},
+    {PHASE_SOLO,                0,              0},
+    {SAY_DEFEATED,              NPC_THORIM,     3000},
+    {SAY_OUTRO_1,               NPC_THORIM,     10000},
+    {SAY_OUTRO_2,               NPC_THORIM,     12000},
+    {SAY_OUTRO_3,               NPC_THORIM,     10000},
+    {SPELL_TELEPORT,            0,              0},
+    {SPELL_STORMHAMMER_OUTRO,   0,              3000},
+    {SAY_OUTRO_HARD_1,          NPC_THORIM,     6000},
+    {SAY_OUTRO_HARD_2,          NPC_THORIM,     12000},
+    {SAY_OUTRO_HARD_3,          NPC_THORIM,     10000},
+    {SPELL_THORIM_CREDIT,       0,              0},
+    {0, 0, 0},
+};
+
+static const float afSifSpawnLoc[4] = {2148.301f, -297.8453f, 438.3308f, 2.68f};
+static const float afArenaCenterLoc[3] = {2134.8f, -263.056f, 419.983f};
 
 /*######
 ## boss_thorim
 ######*/
 
-struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 {
-    boss_thorimAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_thorimAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aThorimDialogue)
     {
         m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        InitializeDialogueHelper(m_pInstance);
         m_bEventFinished = false;
         Reset();
     }
@@ -133,10 +164,16 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
     bool m_bEventFinished;
 
     uint32 m_uiBerserkTimer;
+    uint8 m_uiPhase;
+
+    uint32 m_uiHardModeCheckTimer;
 
     void Reset() override
     {
-        m_uiBerserkTimer = 5 * MINUTE * IN_MILLISECONDS;
+        m_uiPhase               = PHASE_ARENA;
+        m_uiBerserkTimer        = 5 * MINUTE * IN_MILLISECONDS;
+
+        m_uiHardModeCheckTimer  = 0;
 
         SetCombatMovement(false);
     }
@@ -165,6 +202,24 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
 
     void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
+        // switch to phase 2 as soon as it's hit by any damage
+        if (m_uiPhase == PHASE_ARENA && uiDamage > 0)
+        {
+            StartNextDialogueText(SAY_JUMP);
+            m_uiPhase = PHASE_TRANSITION;
+
+            // prepare the hard mode if necessary
+            if (m_pInstance && m_pInstance->GetData(TYPE_THORIM_HARD) != FAIL)
+            {
+                if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+                    pSif->InterruptNonMeleeSpells(false);
+
+                m_pInstance->SetData(TYPE_THORIM_HARD, DONE);
+            }
+            return;
+        }
+
+        // handle outro
         if (uiDamage >= m_creature->GetHealth())
         {
             uiDamage = 0;
@@ -172,12 +227,17 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
             if (!m_bEventFinished)
             {
                 if (m_pInstance)
+                {
                     m_pInstance->SetData(TYPE_THORIM, DONE);
 
-                // ToDo: start outro dialogue
-                m_creature->CastSpell(m_creature, SPELL_THORIM_CREDIT, true);
+                    // start a different outro version for hard mode
+                    if (m_pInstance->GetData(TYPE_THORIM_HARD) == DONE)
+                        StartNextDialogueText(SPELL_STORMHAMMER_OUTRO);
+                    else
+                        StartNextDialogueText(SAY_DEFEATED);
+                }
 
-                m_creature->ForcedDespawn(10000);
+                m_creature->CastSpell(m_creature, SPELL_THORIM_CREDIT, true);
                 m_creature->setFaction(FACTION_ID_FRIENDLY);
                 m_bEventFinished = true;
                 EnterEvadeMode();
@@ -188,9 +248,12 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
     void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_THORIM, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_THORIM_HARD, NOT_STARTED);
+        }
 
-        // ToDo: start intro dialogue
+        StartNextDialogueText(SAY_AGGRO_1);
     }
 
     void JustReachedHome() override
@@ -199,12 +262,140 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_THORIM, FAIL);
     }
 
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
+    {
+        if (uiMotionType != EFFECT_MOTION_TYPE || !uiPointId)
+            return;
+
+        m_uiPhase = PHASE_SOLO;
+        SetCombatMovement(true);
+        DoStartMovement(m_creature->getVictim());
+        m_creature->RemoveAurasDueToSpell(SPELL_SHEAT_OF_LIGHTNING);
+
+        // make Sif attack too if hard mode is active
+        if (m_pInstance && m_pInstance->GetData(TYPE_THORIM_HARD) == DONE)
+        {
+            if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+            {
+                DoScriptText(SAY_SIF_EVENT, pSif);
+                pSif->AI()->AttackStart(m_creature->getVictim());
+            }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        // the lightning orb should clean out the whole hallway on arena berserk
+        if (pSummoned->GetEntry() == NPC_LIGHTNING_ORB)
+            pSummoned->CastSpell(pSummoned, SPELL_LIGHTNING_DESTRUCTION, true);
+    }
+
+    void JustDidDialogueStep(int32 iEntry) override
+    {
+        if (!m_pInstance)
+            return;
+
+        switch (iEntry)
+        {
+            case NPC_SIF:
+                DoCastSpellIfCan(m_creature, SPELL_SHEAT_OF_LIGHTNING, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+                if (Creature* pSif = m_creature->SummonCreature(NPC_SIF, afSifSpawnLoc[0], afSifSpawnLoc[1], afSifSpawnLoc[2], afSifSpawnLoc[3], TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    DoScriptText(SAY_SIF_BEGIN, pSif);
+                break;
+            case SPELL_TOUCH_OF_DOMINION:
+                if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+                    pSif->CastSpell(m_creature, SPELL_TOUCH_OF_DOMINION, false);
+                m_uiHardModeCheckTimer = 150000;
+                break;
+            case PHASE_SOLO:
+                m_creature->GetMotionMaster()->MoveJump(afArenaCenterLoc[0], afArenaCenterLoc[1], afArenaCenterLoc[2], 45.55969f, 5.0f, 1);
+                break;
+            case SPELL_STORMHAMMER_OUTRO:
+                DoScriptText(SAY_DEFEATED, m_creature);
+                break;
+            case SAY_OUTRO_HARD_1:
+                DoCastSpellIfCan(m_creature, SPELL_STORMHAMMER_OUTRO);
+                break;
+            case SPELL_TELEPORT:
+            case SPELL_THORIM_CREDIT:
+                if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
+                    m_creature->ForcedDespawn(2000);
+                break;
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
+        DialogueUpdate(uiDiff);
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        DoMeleeAttackIfReady();
+        switch (m_uiPhase)
+        {
+            // arena phase abilities
+            case PHASE_ARENA:
+
+                if (m_uiHardModeCheckTimer)
+                {
+                    if (m_uiHardModeCheckTimer <= uiDiff)
+                    {
+                        // hard mode is failed; despawn Sif
+                        if (m_pInstance)
+                        {
+                            m_pInstance->SetData(TYPE_THORIM_HARD, FAIL);
+
+                            if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+                            {
+                                DoScriptText(SAY_SIF_DESPAWN, pSif);
+                                pSif->ForcedDespawn(1000);
+                            }
+                        }
+                        m_uiHardModeCheckTimer = 0;
+                    }
+                    else
+                        m_uiHardModeCheckTimer -= uiDiff;
+                }
+
+                if (m_uiBerserkTimer)
+                {
+                    if (m_uiBerserkTimer <= uiDiff)
+                    {
+                        if (DoCastSpellIfCan(m_creature, SPELL_BERSERK_1) == CAST_OK)
+                        {
+                            DoCastSpellIfCan(m_creature, SPELL_SUMMON_LIGHTNING_ORB, CAST_TRIGGERED);
+                            DoScriptText(SAY_ARENA_WIPE, m_creature);
+                            m_uiBerserkTimer = 0;
+                        }
+                    }
+                    else
+                        m_uiBerserkTimer -= uiDiff;
+                }
+
+                // no break; same combat abilities, but in transition
+            case PHASE_TRANSITION:
+
+                break;
+                // solo phase abilities
+            case PHASE_SOLO:
+
+                if (m_uiBerserkTimer)
+                {
+                    if (m_uiBerserkTimer <= uiDiff)
+                    {
+                        if (DoCastSpellIfCan(m_creature, SPELL_BERSERK_2) == CAST_OK)
+                        {
+                            DoScriptText(SAY_BERSERK, m_creature);
+                            m_uiBerserkTimer = 0;
+                        }
+                    }
+                    else
+                        m_uiBerserkTimer -= uiDiff;
+                }
+
+                DoMeleeAttackIfReady();
+                break;
+        }
     }
 };
 

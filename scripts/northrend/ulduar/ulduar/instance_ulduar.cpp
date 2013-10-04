@@ -161,6 +161,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_LEVIATHAN_MK:
         case NPC_RUNIC_COLOSSUS:
         case NPC_RUNE_GIANT:
+        case NPC_SIF:
         case NPC_JORMUNGAR_BEHEMOTH:
         case NPC_ELDER_BRIGHTLEAF:
         case NPC_ELDER_IRONBRACH:
@@ -316,9 +317,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_RUNED_STONE_DOOR:
         case GO_THORIM_STONE_DOOR:
         case GO_LIGHTNING_FIELD:
-            break;
         case GO_DOOR_LEVER:
-            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
 
             // Prison
@@ -602,17 +601,26 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_LIGHTNING_FIELD);
             if (uiData == IN_PROGRESS)
-                DoUseDoorOrButton(GO_DARK_IRON_PORTCULIS);
+                DoToggleGameObjectFlags(GO_DOOR_LEVER, GO_FLAG_NO_INTERACT, false);
             else if (uiData == DONE)
             {
-                if (GetData(TYPE_THORIM_HARD) != DONE)
+                if (GetData(TYPE_THORIM_HARD) == DONE)
+                {
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, 30 * MINUTE);
+                    DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, GO_FLAG_NO_INTERACT, false);
+                }
+                else
+                {
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30 * MINUTE);
+                    DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, GO_FLAG_NO_INTERACT, false);
+                }
 
                 SpawnFriendlyKeeper(NPC_KEEPER_THORIM);
                 DoOpenMadnessDoorIfCan();
             }
             else if (uiData == FAIL)
             {
+                DoToggleGameObjectFlags(GO_DOOR_LEVER, GO_FLAG_NO_INTERACT, true);
                 if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_RUNED_STONE_DOOR))
                     pDoor->ResetDoorOrButton();
                 if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_THORIM_STONE_DOOR))
@@ -1090,6 +1098,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_COOL_FRIENDS_N:
         case ACHIEV_CRIT_COOL_FRIENDS_H:
             return m_abAchievCriteria[TYPE_ACHIEV_COOL_FRIENDS];
+        case ACHIEV_CRIT_LOSE_ILLUSION_N:
+        case ACHIEV_CRIT_LOSE_ILLUSION_H:
+            return GetData(TYPE_THORIM_HARD) == DONE;
 
         default:
             return false;
