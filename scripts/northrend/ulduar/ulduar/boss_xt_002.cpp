@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL boss_xt_002AI : public ScriptedAI
                 {
                     // inform the heart about the phase switch
                     if (Creature* pHeart = m_pInstance->GetSingleCreatureFromStorage(NPC_HEART_DECONSTRUCTOR))
-                        m_creature->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pHeart);
+                        SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pHeart);
 
                     DoScriptText(EMOTE_HEART, m_creature);
 
@@ -389,7 +389,7 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
         if (m_pInstance)
         {
             if (Creature* pDeconstructor = m_pInstance->GetSingleCreatureFromStorage(NPC_XT002))
-                m_creature->AI()->SendAIEvent(AI_EVENT_CUSTOM_B, m_creature, pDeconstructor);
+                SendAIEvent(AI_EVENT_CUSTOM_B, m_creature, pDeconstructor);
         }
     }
 

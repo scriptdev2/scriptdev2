@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_thorim
-SD%Complete: 50%
-SDComment: Basic script
+SD%Complete: 60%
+SDComment: Script is only partially complete.
 SDCategory: Ulduar
 EndScriptData */
 
@@ -52,45 +52,50 @@ enum
     SAY_SIF_DESPAWN                         = -1603158,
 
     // phase 1 spells
-    SPELL_SHEAT_OF_LIGHTNING                = 62276,
-    SPELL_STORMHAMMER                       = 62042,
-    SPELL_DEAFENING_THUNDER                 = 62470,
-    SPELL_LIGHTNING_SHOCK                   = 62017,
-    SPELL_CHARGE_ORB                        = 62016,
+    SPELL_SHEAT_OF_LIGHTNING                = 62276,                    // damage reduction aura
+    SPELL_STORMHAMMER                       = 62042,                    // triggers 62470 and 64909 on target
+    SPELL_CHARGE_ORB                        = 62016,                    // target npc 33378;
     SPELL_TOUCH_OF_DOMINION                 = 62507,                    // hard mode timer; triggers 62565 after 2.5 min
+    SPELL_TOUCH_OF_DOMINION_AURA            = 62565,                    // buff received by Thorim on hard mode fail
     SPELL_BERSERK_1                         = 62560,
     SPELL_SUMMON_LIGHTNING_ORB              = 62391,                    // on berserk
     SPELL_LIGHTNING_DESTRUCTION             = 62393,                    // cast by npc 33138 on berserk
 
     // phase 2 spells
-    SPELL_CHAIN_LIGHTNING                   = 62131,
+    SPELL_CHAIN_LIGHTNING                   = 62131,                    // spells need to be confirmed
     SPELL_CHAIN_LIGHTNING_H                 = 64390,
-    SPELL_LIGHTNING_CHARGE                  = 62279,
-    SPELL_LIGHTNING_CHARGE_DUMMY            = 62466,                    // dummy effect hits npc 33378 and triggers spell 64098; cone target effect hits npc 32780
+    SPELL_LIGHTNING_CHARGE                  = 62279,                    // buff gained on each charge
+    SPELL_LIGHTNING_CHARGE_DUMMY            = 62466,                    // damage spell for lightning charge; dummy effect hits npc 33378 and triggers spell 64098; cone target effect hits npc 32780
     SPELL_UNBALANCING_STRIKE                = 62130,
     SPELL_BERSERK_2                         = 62555,
     SPELL_THORIM_CREDIT                     = 64985,                    // kill credit spell; added in spell_template
     SPELL_STORMHAMMER_OUTRO                 = 64767,                    // target npc 33196 and trigger spells 62470, 64909 and 64778 and despawn target in 10 sec
     SPELL_TELEPORT                          = 62940,
 
-    // Lightning related spells
+    // Lightning charge related spells
+    SPELL_LIGHTNING_PILLAR_ORB              = 63238,                    // cast on spell 62016 hit; cast by the lower Orb
+    SPELL_LIGHTNING_ORG_CHARGED             = 62186,                    // cast by npc 33378; makes Thorim to cast 62466;
+    SPELL_LIGHTNING_ORB_TRIGGER             = 62278,                    // spell triggered by 62186; however this won't work because 62186 has a duration of 5s while 62278 is triggered after 8s
+    SPELL_LIGHTNING_PILLAR                  = 62976,                    // cast by npc 33378 (upper Orb) to npc 33378 (lower Orb) at the same time with spell 62186
+
+    // Other lightning related spells
     SPELL_ACTIVATE_LIGHTNING_ORB_PERIODIC   = 62184,                    // cast by npc 32879; starts the whole lightning event
-    SPELL_LIGHTNING_ORG_CHARGED             = 62186,                    // cast by npc 33378; makes Thorim to cast 62466
-    SPELL_LIGHTNING_PILLAR                  = 62976,                    // cast by npc 33378 to npc 33378 (not same guid); triggers 64098 on Thorim
     SPELL_LIGHTNING_FIELD                   = 64972,                    // cast by npc 32892
 
     // Sif spells
-    SPELL_FROST_BOLT                        = 62583,
-    SPELL_FROST_BOLT_H                      = 62601,
+    SPELL_FROSTBOLT                         = 62583,
+    SPELL_FROSTBOLT_H                       = 62601,
     SPELL_FROSTBOLT_VOLLEY                  = 62580,
     SPELL_FROSTBOLT_VOLLEY_H                = 62604,
     SPELL_FROST_NOVA                        = 62597,
     SPELL_FROST_NOVA_H                      = 62605,
-    SPELL_BLIZZARD                          = 62576,
-    SPELL_BLIZZARD_H                        = 62602,
+    SPELL_BLIZZARD                          = 62577,                    // targets npc 32892
+    SPELL_BLIZZARD_H                        = 62603,
+    SPELL_BLINK                             = 62578,
 
     // Colossus spells
     SPELL_SMASH                             = 62339,
+    SPELL_RUNIC_SMASH                       = 62465,                    // cast by npcs 33140 and 33141
     //SPELL_SMASH_RIGHT                     = 62414,
     SPELL_RUNIC_SMASH_L                     = 62058,
     SPELL_RUNIC_SMASH_R                     = 62057,
@@ -166,14 +171,26 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
     uint32 m_uiBerserkTimer;
     uint8 m_uiPhase;
 
-    uint32 m_uiHardModeCheckTimer;
+    uint32 m_uiStormHammerTimer;
+    uint32 m_uiChargeOrbTimer;
+    uint32 m_uiArenaDwarfTimer;
+    uint32 m_uiAttackTimer;
+    uint32 m_uiChainLightningTimer;
+    uint32 m_uiUnbalancingStrikeTimer;
+
+    GuidList m_lUpperOrbsGuids;
 
     void Reset() override
     {
-        m_uiPhase               = PHASE_ARENA;
-        m_uiBerserkTimer        = 5 * MINUTE * IN_MILLISECONDS;
+        m_uiPhase                   = PHASE_ARENA;
+        m_uiBerserkTimer            = 5 * MINUTE * IN_MILLISECONDS;
 
-        m_uiHardModeCheckTimer  = 0;
+        m_uiStormHammerTimer        = 45000;
+        m_uiChargeOrbTimer          = 35000;
+        m_uiArenaDwarfTimer         = 25000;
+        m_uiChainLightningTimer     = urand(10000, 15000);
+        m_uiUnbalancingStrikeTimer  = 20000;
+        m_uiAttackTimer             = 0;
 
         SetCombatMovement(false);
     }
@@ -251,6 +268,8 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         {
             m_pInstance->SetData(TYPE_THORIM, IN_PROGRESS);
             m_pInstance->SetData(TYPE_THORIM_HARD, NOT_STARTED);
+
+            m_pInstance->GetThunderOrbsGuids(m_lUpperOrbsGuids);
         }
 
         StartNextDialogueText(SAY_AGGRO_1);
@@ -268,8 +287,9 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             return;
 
         m_uiPhase = PHASE_SOLO;
-        SetCombatMovement(true);
-        DoStartMovement(m_creature->getVictim());
+        m_uiAttackTimer = 1000;
+        m_uiChargeOrbTimer = 20000;
+        m_uiBerserkTimer = 5 * MINUTE * IN_MILLISECONDS;
         m_creature->RemoveAurasDueToSpell(SPELL_SHEAT_OF_LIGHTNING);
 
         // make Sif attack too if hard mode is active
@@ -278,7 +298,23 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
             {
                 DoScriptText(SAY_SIF_EVENT, pSif);
+                SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pSif);
                 pSif->AI()->AttackStart(m_creature->getVictim());
+            }
+        }
+    }
+
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
+    {
+        // hard mode is failed; despawn Sif
+        if (pSpell->Id == SPELL_TOUCH_OF_DOMINION_AURA && m_pInstance)
+        {
+            m_pInstance->SetData(TYPE_THORIM_HARD, FAIL);
+
+            if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+            {
+                DoScriptText(SAY_SIF_DESPAWN, pSif);
+                pSif->ForcedDespawn(5000);
             }
         }
     }
@@ -305,7 +341,6 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             case SPELL_TOUCH_OF_DOMINION:
                 if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
                     pSif->CastSpell(m_creature, SPELL_TOUCH_OF_DOMINION, false);
-                m_uiHardModeCheckTimer = 150000;
                 break;
             case PHASE_SOLO:
                 m_creature->GetMotionMaster()->MoveJump(afArenaCenterLoc[0], afArenaCenterLoc[1], afArenaCenterLoc[2], 45.55969f, 5.0f, 1);
@@ -320,8 +355,23 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             case SPELL_THORIM_CREDIT:
                 if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
                     m_creature->ForcedDespawn(2000);
+                // despawn Sif if not despawned by accident
+                if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
+                    pSif->ForcedDespawn();
                 break;
         }
+    }
+
+    // function to return a random arena Thunder Orb
+    ObjectGuid SelectRandomOrbGuid()
+    {
+        if (m_lUpperOrbsGuids.empty())
+            return ObjectGuid();
+
+        GuidList::iterator iter = m_lUpperOrbsGuids.begin();
+        advance(iter, urand(0, m_lUpperOrbsGuids.size() - 1));
+
+        return *iter;
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -335,27 +385,6 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         {
             // arena phase abilities
             case PHASE_ARENA:
-
-                if (m_uiHardModeCheckTimer)
-                {
-                    if (m_uiHardModeCheckTimer <= uiDiff)
-                    {
-                        // hard mode is failed; despawn Sif
-                        if (m_pInstance)
-                        {
-                            m_pInstance->SetData(TYPE_THORIM_HARD, FAIL);
-
-                            if (Creature* pSif = m_pInstance->GetSingleCreatureFromStorage(NPC_SIF))
-                            {
-                                DoScriptText(SAY_SIF_DESPAWN, pSif);
-                                pSif->ForcedDespawn(1000);
-                            }
-                        }
-                        m_uiHardModeCheckTimer = 0;
-                    }
-                    else
-                        m_uiHardModeCheckTimer -= uiDiff;
-                }
 
                 if (m_uiBerserkTimer)
                 {
@@ -372,8 +401,25 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
                         m_uiBerserkTimer -= uiDiff;
                 }
 
-                // no break; same combat abilities, but in transition
-            case PHASE_TRANSITION:
+                if (m_uiChargeOrbTimer < uiDiff)
+                {
+                    // this spell has AoE target, but we need to be very specific with the selected targets
+                    if (Creature* pTarget = m_creature->GetMap()->GetCreature(SelectRandomOrbGuid()))
+                    {
+                        if (DoCastSpellIfCan(pTarget, SPELL_CHARGE_ORB) == CAST_OK)
+                            m_uiChargeOrbTimer = 20000;
+                    }
+                }
+                else
+                    m_uiChargeOrbTimer -= uiDiff;
+
+                if (m_uiStormHammerTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_STORMHAMMER) == CAST_OK)
+                        m_uiStormHammerTimer = 15000;
+                }
+                else
+                    m_uiStormHammerTimer -= uiDiff;
 
                 break;
                 // solo phase abilities
@@ -393,7 +439,59 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
                         m_uiBerserkTimer -= uiDiff;
                 }
 
+                if (m_uiAttackTimer)
+                {
+                    if (m_uiAttackTimer <= uiDiff)
+                    {
+                        // Add some small delay to combat movement because Jump triggers before it's actually finished
+                        SetCombatMovement(true);
+                        DoStartMovement(m_creature->getVictim());
+                        m_uiAttackTimer = 0;
+                    }
+                    else
+                        m_uiAttackTimer -= uiDiff;
+                }
+
+                if (m_uiChargeOrbTimer < uiDiff)
+                {
+                    // this spell requires very specific targets
+                    if (Creature* pTarget = m_creature->GetMap()->GetCreature(SelectRandomOrbGuid()))
+                    {
+                        pTarget->CastSpell(pTarget, SPELL_LIGHTNING_ORG_CHARGED, true);
+
+                        // charge the lower orb as well
+                        if (Unit* pOrb = GetClosestCreatureWithEntry(pTarget, NPC_THUNDER_ORB, 25.0f, true, false, true))
+                            pTarget->CastSpell(pOrb, SPELL_LIGHTNING_PILLAR, true);
+
+                        m_uiChargeOrbTimer = 20000;
+                    }
+                }
+                else
+                    m_uiChargeOrbTimer -= uiDiff;
+
+                if (m_uiChainLightningTimer < uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    {
+                        if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H) == CAST_OK)
+                            m_uiChainLightningTimer = urand(10000, 15000);
+                    }
+                }
+                else
+                    m_uiChainLightningTimer -= uiDiff;
+
+                if (m_uiUnbalancingStrikeTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_UNBALANCING_STRIKE) == CAST_OK)
+                        m_uiUnbalancingStrikeTimer = 25000;
+                }
+                else
+                    m_uiUnbalancingStrikeTimer -= uiDiff;
+
                 DoMeleeAttackIfReady();
+                break;
+                // transition phase; nothing here, wait for transition to finish
+            case PHASE_TRANSITION:
                 break;
         }
     }
@@ -404,6 +502,206 @@ CreatureAI* GetAI_boss_thorim(Creature* pCreature)
     return new boss_thorimAI(pCreature);
 }
 
+/*######
+## boss_sif
+######*/
+
+struct MANGOS_DLL_DECL boss_sifAI : public ScriptedAI
+{
+    boss_sifAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+    bool m_bAttackReady;
+
+    uint32 m_uiFrostBoltTimer;
+    uint32 m_uiVolleyTimer;
+    uint32 m_uiFrostNovaTimer;
+    uint32 m_uiBlizzardTimer;
+    uint32 m_uiBlinkTimer;
+
+    GuidList m_lBunniesGuids;
+
+    void Reset() override
+    {
+        m_bAttackReady = false;
+
+        m_uiFrostBoltTimer  = urand(2000, 3000);
+        m_uiVolleyTimer     = urand(7000, 10000);
+        m_uiFrostNovaTimer  = urand(30000, 35000);
+        m_uiBlizzardTimer   = urand(20000, 30000);
+        m_uiBlinkTimer      = urand(20000, 25000);
+
+        SetCombatMovement(false);
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        // custom attack; only in hard mode
+        if (!m_bAttackReady)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void EnterEvadeMode() override
+    {
+        // custom evade; Sif doesn't need to move to home position
+        if (!m_bAttackReady)
+            return;
+
+        m_creature->RemoveAllAurasOnEvade();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        // activate attack on hard mode
+        if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetEntry() == NPC_THORIM)
+        {
+            m_bAttackReady = true;
+
+            if (m_pInstance)
+                m_pInstance->GetThorimBunniesGuids(m_lBunniesGuids);
+        }
+    }
+
+    // function to return a random arena bunny for Blizzard spell
+    ObjectGuid SelectRandomBunnyGuid()
+    {
+        if (m_lBunniesGuids.empty())
+            return ObjectGuid();
+
+        GuidList::iterator iter = m_lBunniesGuids.begin();
+        advance(iter, urand(0, m_lBunniesGuids.size() - 1));
+
+        return *iter;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiFrostBoltTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_FROSTBOLT : SPELL_FROSTBOLT_H) == CAST_OK)
+                    m_uiFrostBoltTimer = urand(2000, 3000);
+            }
+        }
+        else
+            m_uiFrostBoltTimer -= uiDiff;
+
+        if (m_uiVolleyTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FROSTBOLT_VOLLEY : SPELL_FROSTBOLT_VOLLEY_H) == CAST_OK)
+                m_uiVolleyTimer = urand(15000, 18000);
+        }
+        else
+            m_uiVolleyTimer -= uiDiff;
+
+        if (m_uiFrostNovaTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FROST_NOVA : SPELL_FROST_NOVA_H) == CAST_OK)
+                m_uiFrostNovaTimer = urand(20000, 25000);
+        }
+        else
+            m_uiFrostNovaTimer -= uiDiff;
+
+        if (m_uiBlizzardTimer < uiDiff)
+        {
+            // this spell has AoE target, but we need to be very specific with the selected targets
+            if (Unit* pTarget = m_creature->GetMap()->GetUnit(SelectRandomBunnyGuid()))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_BLIZZARD : SPELL_BLIZZARD_H) == CAST_OK)
+                    m_uiBlizzardTimer = 40000;
+            }
+        }
+        else
+            m_uiBlizzardTimer -= uiDiff;
+
+        if (m_uiBlinkTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_BLINK) == CAST_OK)
+                    m_uiBlinkTimer = urand(20000, 25000);
+            }
+        }
+        else
+            m_uiBlinkTimer -= uiDiff;
+    }
+};
+
+CreatureAI* GetAI_boss_sif(Creature* pCreature)
+{
+    return new boss_sifAI(pCreature);
+}
+
+/*######
+## npc_thunder_orb
+######*/
+
+struct MANGOS_DLL_DECL npc_thunder_orbAI : public Scripted_NoMovementAI
+{
+    npc_thunder_orbAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    uint32 m_uiTriggerTimer;
+
+    void Reset() override
+    {
+        m_uiTriggerTimer = 0;
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
+    {
+        // cast visual on the lower Orb
+        if (pSpell->Id == SPELL_CHARGE_ORB)
+        {
+            if (Creature* pOrb = GetClosestCreatureWithEntry(m_creature, NPC_THUNDER_ORB, 25.0f, true, false, true))
+                pOrb->CastSpell(pOrb, SPELL_LIGHTNING_PILLAR_ORB, false);
+        }
+        // SPECIAL NOTE: this aura has a duration lower than the trigger period for the next spell; so we need to force this by timer
+        else if (pSpell->Id == SPELL_LIGHTNING_ORG_CHARGED)
+            m_uiTriggerTimer = 8000;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiTriggerTimer)
+        {
+            if (m_uiTriggerTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_LIGHTNING_ORB_TRIGGER) == CAST_OK)
+                    m_uiTriggerTimer = 0;
+            }
+            else
+                m_uiTriggerTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_thunder_orb(Creature* pCreature)
+{
+    return new npc_thunder_orbAI(pCreature);
+}
+
 void AddSC_boss_thorim()
 {
     Script* pNewScript;
@@ -411,5 +709,15 @@ void AddSC_boss_thorim()
     pNewScript = new Script;
     pNewScript->Name = "boss_thorim";
     pNewScript->GetAI = GetAI_boss_thorim;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sif";
+    pNewScript->GetAI = GetAI_boss_sif;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_thunder_orb";
+    pNewScript->GetAI = GetAI_npc_thunder_orb;
     pNewScript->RegisterSelf();
 }

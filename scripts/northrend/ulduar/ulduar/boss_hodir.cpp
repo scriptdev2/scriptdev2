@@ -50,6 +50,7 @@ enum
     SPELL_ICICLE_SNOWPACK               = 62476,                // cast right before Flash Freeze; triggers the spell which summons npc 33173
     SPELL_ICICLE_SNOWPACK_H             = 62477,
     SPELL_FLASH_FREEZE                  = 61968,                // main spell; sends event 20896
+    SPELL_TELEPORT                      = 62940,                // despawn on event end
 
     // icicle spells
     SPELL_ICICLE                        = 62236,
@@ -113,6 +114,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
     uint32 m_uiFlashFreezeTimer;
     uint32 m_uiFrozenBlowsTimer;
     uint32 m_uiFreezeTimer;
+    uint8 m_uiEpilogueStage;
 
     void Reset() override
     {
@@ -120,6 +122,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         m_uiFlashFreezeTimer = 50000;
         m_uiFrozenBlowsTimer = 70000;
         m_uiFreezeTimer      = urand(25000, 30000);
+        m_uiEpilogueStage    = 0;
     }
 
     void Aggro(Unit* pWho) override
@@ -196,14 +199,25 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         {
             if (m_uiEpilogueTimer <= uiDiff)
             {
-                if (m_pInstance)
-                    m_pInstance->SetData(TYPE_HODIR, DONE);
+                switch (m_uiEpilogueStage)
+                {
+                    case 0:
+                        if (m_pInstance)
+                            m_pInstance->SetData(TYPE_HODIR, DONE);
 
-                DoScriptText(SAY_EPILOGUE, m_creature);
-                m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
-
-                m_creature->ForcedDespawn(10000);
-                m_uiEpilogueTimer = 0;
+                        DoScriptText(SAY_EPILOGUE, m_creature);
+                        m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
+                        m_uiEpilogueTimer = 10000;
+                        break;
+                    case 1:
+                        if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
+                        {
+                            m_creature->ForcedDespawn(2000);
+                            m_uiEpilogueTimer = 0;
+                        }
+                        break;
+                }
+                ++m_uiEpilogueStage;
             }
             else
                 m_uiEpilogueTimer -= uiDiff;

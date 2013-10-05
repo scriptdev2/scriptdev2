@@ -209,6 +209,15 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             else
                 m_leftKoloStalkerGuid = pCreature->GetObjectGuid();
             return;
+        case NPC_THORIM_EVENT_BUNNY:
+            if (pCreature->GetPositionZ() < 420.0f)
+                m_lThorimBunniesGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_THUNDER_ORB:
+            // get only the upper ones; the lower ones are searched dynamically in order to be paired correctly
+            if (pCreature->GetPositionZ() > 430.0f)
+                m_lUpperThunderOrbsGuids.push_back(pCreature->GetObjectGuid());
+            return;
 
         default:
             return;

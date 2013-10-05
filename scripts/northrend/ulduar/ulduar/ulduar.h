@@ -147,6 +147,9 @@ enum
     NPC_CAPTAIN_ALLIANCE        = 32908,
     NPC_SOLDIER_HORDE           = 32883,
     NPC_CAPTAIN_HORDE           = 32907,
+    NPC_THORIM_EVENT_BUNNY      = 32892,
+    NPC_THUNDER_ORB             = 33378,
+    NPC_THORIM_CONTROLLER       = 32879,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
@@ -469,6 +472,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         void GetTrappersGuids(GuidList& lTrappers) { lTrappers = m_lTrappersGuids; }
         void GetHarpoonsGuids(GuidVector& vHarpoons) { vHarpoons = m_vBrokenHarpoonsGuids; }
         void GetToyPileGuids(GuidVector& vToyPiles) { vToyPiles = m_vToyPileGuidVector; }
+        void GetThorimBunniesGuids(GuidList& lBunnies) { lBunnies = m_lThorimBunniesGuids; }
+        void GetThunderOrbsGuids(GuidList& lOrbs) { lOrbs = m_lUpperThunderOrbsGuids; }
 
         void Update(uint32 uiDiff);
 
@@ -504,6 +509,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         GuidList m_lDefendersGuids;
         GuidList m_lHarpoonDummyGuids;
         GuidList m_lRepairedHarpoonsGuids;
+        GuidList m_lThorimBunniesGuids;
+        GuidList m_lUpperThunderOrbsGuids;
         GuidSet m_sColossusGuidSet;
 };
 
