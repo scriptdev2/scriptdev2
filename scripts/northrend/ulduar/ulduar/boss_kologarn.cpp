@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
         DoCastSpellIfCan(m_creature, SPELL_REDUCE_PARRY_CHANCE, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KOLOGARN, DONE);
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KOLOGARN, IN_PROGRESS);

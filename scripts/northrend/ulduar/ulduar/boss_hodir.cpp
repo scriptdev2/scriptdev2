@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         m_uiEpilogueStage    = 0;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
         {

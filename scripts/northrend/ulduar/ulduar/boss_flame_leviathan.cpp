@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         m_uiThorimHammerTimer   = 0;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
         {
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         // check the towers again to make sure that some of them were not destroyed in the meanwhile
         FetchTowers();
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_flame_leviathanAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         if (urand(0, 1))
             DoScriptText(SAY_SLAY, m_creature);

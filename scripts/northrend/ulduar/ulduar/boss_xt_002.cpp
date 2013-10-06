@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_xt_002AI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_XT002, DONE);
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_xt_002AI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
         {
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
         m_uiRobotTimer = 0;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // notify XT that hard mode is enabled
         if (m_pInstance)
