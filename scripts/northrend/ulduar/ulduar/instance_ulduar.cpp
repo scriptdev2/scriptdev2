@@ -163,6 +163,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_RUNE_GIANT:
         case NPC_SIF:
         case NPC_JORMUNGAR_BEHEMOTH:
+        case NPC_THORIM_COMBAT_TRIGGER:
         case NPC_ELDER_BRIGHTLEAF:
         case NPC_ELDER_IRONBRACH:
         case NPC_ELDER_STONEBARK:
@@ -217,6 +218,12 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             // get only the upper ones; the lower ones are searched dynamically in order to be paired correctly
             if (pCreature->GetPositionZ() > 430.0f)
                 m_lUpperThunderOrbsGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_LEFT_HAND_BUNNY:
+            m_lLeftHandBunniesGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_RIGHT_HAND_BUNNY:
+            m_lRightHandBunniesGuids.push_back(pCreature->GetObjectGuid());
             return;
 
         default:
@@ -610,7 +617,10 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_LIGHTNING_FIELD);
             if (uiData == IN_PROGRESS)
+            {
                 DoToggleGameObjectFlags(GO_DOOR_LEVER, GO_FLAG_NO_INTERACT, false);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_LIGHTNING, true);
+            }
             else if (uiData == DONE)
             {
                 if (GetData(TYPE_THORIM_HARD) == DONE)
@@ -634,6 +644,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                     pDoor->ResetDoorOrButton();
                 if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_THORIM_STONE_DOOR))
                     pDoor->ResetDoorOrButton();
+                if (Creature* pColossus = GetSingleCreatureFromStorage(NPC_RUNIC_COLOSSUS))
+                {
+                    if (pColossus->isAlive())
+                        pColossus->AI()->EnterEvadeMode();
+                }
 
                 if (Player* pPlayer = GetPlayerInMap())
                     DoSpawnThorimNpcs(pPlayer);
@@ -1110,6 +1125,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_LOSE_ILLUSION_N:
         case ACHIEV_CRIT_LOSE_ILLUSION_H:
             return GetData(TYPE_THORIM_HARD) == DONE;
+        case ACHIEV_CRIT_LIGHTNING_N:
+        case ACHIEV_CRIT_LIGHTNING_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_LIGHTNING];
 
         default:
             return false;

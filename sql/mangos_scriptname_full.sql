@@ -1306,6 +1306,7 @@ UPDATE creature_template SET ScriptName='npc_icicle_target' WHERE entry=33174;
 UPDATE creature_template SET ScriptName='boss_thorim' WHERE entry=32865;
 UPDATE creature_template SET ScriptName='boss_sif' WHERE entry=33196;
 UPDATE creature_template SET ScriptName='npc_thunder_orb' WHERE entry=33378;
+UPDATE creature_template SET ScriptName='npc_runic_colossus' WHERE entry=32872;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event

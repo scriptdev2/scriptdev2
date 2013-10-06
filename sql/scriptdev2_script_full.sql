@@ -3646,7 +3646,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603244,'%s activates Mimiron\'s Inferno.',0,3,0,0,'leviathan EMOTE_MIMIRON_INFERNO'),
 (-1603245,'%s activates Thorim\'s Hammer.',0,3,0,0,'leviathan EMOTE_THORIM_HAMMER'),
 
-(-1603246,'I know just the place. Will you be all right?',15823,1,0,0,'brann SAY_BRANN_OUTRO');
+(-1603246,'I know just the place. Will you be all right?',15823,1,0,0,'brann SAY_BRANN_OUTRO'),
+
+(-1603247,'%s surrounds itself with a crackling Runic Barrier!',0,3,0,0,'thorim EMOTE_RUNIC_BARRIER');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_thorim
-SD%Complete: 60%
+SD%Complete: 70%
 SDComment: Script is only partially complete.
 SDCategory: Ulduar
 EndScriptData */
@@ -51,6 +51,8 @@ enum
     SAY_SIF_EVENT                           = -1603157,
     SAY_SIF_DESPAWN                         = -1603158,
 
+    EMOTE_RUNIC_BARRIER                     = -1603247,
+
     // phase 1 spells
     SPELL_SHEAT_OF_LIGHTNING                = 62276,                    // damage reduction aura
     SPELL_STORMHAMMER                       = 62042,                    // triggers 62470 and 64909 on target
@@ -64,8 +66,8 @@ enum
     // phase 2 spells
     SPELL_CHAIN_LIGHTNING                   = 62131,                    // spells need to be confirmed
     SPELL_CHAIN_LIGHTNING_H                 = 64390,
-    SPELL_LIGHTNING_CHARGE                  = 62279,                    // buff gained on each charge
-    SPELL_LIGHTNING_CHARGE_DUMMY            = 62466,                    // damage spell for lightning charge; dummy effect hits npc 33378 and triggers spell 64098; cone target effect hits npc 32780
+    // SPELL_LIGHTNING_CHARGE               = 62279,                    // buff gained on each charge
+    SPELL_LIGHTNING_CHARGE_DAMAGE           = 62466,                    // damage spell for lightning charge; dummy effect hits npc 33378 and triggers spell 64098; cone target effect hits npc 32780
     SPELL_UNBALANCING_STRIKE                = 62130,
     SPELL_BERSERK_2                         = 62555,
     SPELL_THORIM_CREDIT                     = 64985,                    // kill credit spell; added in spell_template
@@ -93,12 +95,14 @@ enum
     SPELL_BLIZZARD_H                        = 62603,
     SPELL_BLINK                             = 62578,
 
-    // Colossus spells
-    SPELL_SMASH                             = 62339,
+    // Colossus runic smash spells
+    SPELL_RUNIC_SMASH_L                     = 62058,                    // triggers missing spell 62406
+    SPELL_RUNIC_SMASH_R                     = 62057,                    // triggers missing spell 62403
     SPELL_RUNIC_SMASH                       = 62465,                    // cast by npcs 33140 and 33141
-    //SPELL_SMASH_RIGHT                     = 62414,
-    SPELL_RUNIC_SMASH_L                     = 62058,
-    SPELL_RUNIC_SMASH_R                     = 62057,
+    MAX_RUNIC_SMASH                         = 10,                       // defines the max rows of runic smash
+
+    // Colossus combat spells
+    SPELL_SMASH                             = 62339,                    // maybe use 62414 on heroic?
     SPELL_RUNIC_BARRIER                     = 62338,
     SPELL_CHARGE                            = 62613,
     SPELL_CHARGE_H                          = 62614,
@@ -262,7 +266,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         }
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
         {
@@ -362,6 +366,15 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    {
+        if (pSpellEntry->Id == SPELL_LIGHTNING_CHARGE_DAMAGE && pTarget->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (m_pInstance)
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_LIGHTNING, false);
+        }
+    }
+
     // function to return a random arena Thunder Orb
     ObjectGuid SelectRandomOrbGuid()
     {
@@ -372,6 +385,39 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         advance(iter, urand(0, m_lUpperOrbsGuids.size() - 1));
 
         return *iter;
+    }
+
+    // function to return a random player from the arena
+    Unit* GetRandomArenaPlayer()
+    {
+        if (!m_pInstance)
+            return NULL;
+
+        Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_THORIM_COMBAT_TRIGGER);
+        if (!pTrigger)
+            return NULL;
+
+        std::vector<Unit*> suitableTargets;
+        ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
+
+        for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
+        {
+            if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
+            {
+                if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->IsWithinDistInMap(pTrigger, 50.0f) && pTarget->IsWithinLOSInMap(pTrigger))
+                    suitableTargets.push_back(pTarget);
+            }
+        }
+
+        // if no player in the arena was found trigger berserk automatically
+        if (suitableTargets.empty())
+        {
+            m_uiBerserkTimer = 1000;
+            m_uiStormHammerTimer = 60000;
+            return NULL;
+        }
+        else
+            return suitableTargets[urand(0, suitableTargets.size() - 1)];
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -415,8 +461,11 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 
                 if (m_uiStormHammerTimer < uiDiff)
                 {
-                    if (DoCastSpellIfCan(m_creature, SPELL_STORMHAMMER) == CAST_OK)
-                        m_uiStormHammerTimer = 15000;
+                    if (Unit* pTarget = GetRandomArenaPlayer())
+                    {
+                        if (DoCastSpellIfCan(pTarget, SPELL_STORMHAMMER) == CAST_OK)
+                            m_uiStormHammerTimer = 15000;
+                    }
                 }
                 else
                     m_uiStormHammerTimer -= uiDiff;
@@ -444,6 +493,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
                     if (m_uiAttackTimer <= uiDiff)
                     {
                         // Add some small delay to combat movement because Jump triggers before it's actually finished
+                        DoResetThreat();
                         SetCombatMovement(true);
                         DoStartMovement(m_creature->getVictim());
                         m_uiAttackTimer = 0;
@@ -652,6 +702,182 @@ CreatureAI* GetAI_boss_sif(Creature* pCreature)
 }
 
 /*######
+## npc_runic_colossus
+######*/
+
+struct MANGOS_DLL_DECL npc_runic_colossusAI : public ScriptedAI
+{
+    npc_runic_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+
+    uint32 m_uiChargeTimer;
+    uint32 m_uiBarrierTimer;
+    uint32 m_uiSmashTimer;
+
+    uint32 m_uiRunicSmashTimer;
+    uint32 m_uiSmashUpdateTimer;
+    uint8 m_uiSmashIndex;
+
+    bool m_bSmashStarted;
+    bool m_bSmashActive;
+
+    GuidList m_lCurrentSmashBunnies;
+
+    void Reset() override
+    {
+        m_uiChargeTimer      = 1000;
+        m_uiBarrierTimer     = 15000;
+        m_uiSmashTimer       = 0;
+        m_uiRunicSmashTimer  = 0;
+        m_uiSmashUpdateTimer = 250;
+        m_uiSmashIndex       = 1;
+        m_bSmashStarted      = false;
+        m_bSmashActive       = false;
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        m_creature->InterruptNonMeleeSpells(false);
+        m_uiRunicSmashTimer = 0;
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        if (!m_bSmashStarted && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
+                m_creature->IsWithinDistInMap(pWho, 80.0f) && m_creature->IsWithinLOSInMap(pWho))
+        {
+            m_uiRunicSmashTimer = 1000;
+            m_bSmashStarted = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
+    {
+        // start runic smash event
+        if (pSpell->Id == SPELL_RUNIC_SMASH_L && m_pInstance)
+        {
+            m_lCurrentSmashBunnies.clear();
+            m_pInstance->GetSmashTargetsGuids(m_lCurrentSmashBunnies, true);
+            m_bSmashActive = true;
+        }
+        else if (pSpell->Id == SPELL_RUNIC_SMASH_R && m_pInstance)
+        {
+            m_lCurrentSmashBunnies.clear();
+            m_pInstance->GetSmashTargetsGuids(m_lCurrentSmashBunnies, false);
+            m_bSmashActive = true;
+        }
+    }
+
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
+    {
+        if ((pSpellEntry->Id == SPELL_CHARGE || pSpellEntry->Id == SPELL_CHARGE_H) && pTarget->GetTypeId() == TYPEID_PLAYER)
+            m_uiSmashTimer = 1000;
+    }
+
+    // Wrapper to keep Runic Smash in a distinct function
+    void UpdateRunicSmash(const uint32 uiDiff)
+    {
+        if (!m_bSmashActive)
+            return;
+
+        if (m_uiSmashUpdateTimer < uiDiff)
+        {
+            // check all the targets which are in a certain distance from the colossus
+            for (GuidList::const_iterator itr = m_lCurrentSmashBunnies.begin(); itr != m_lCurrentSmashBunnies.end(); ++itr)
+            {
+                if (Creature* pBunny = m_creature->GetMap()->GetCreature(*itr))
+                {
+                    // use 12 and 16 as multipliers in order to get the perfect combination
+                    if (pBunny->GetPositionY() > m_creature->GetPositionY() + 12 * m_uiSmashIndex &&
+                            pBunny->GetPositionY() < m_creature->GetPositionY() + 16 * m_uiSmashIndex)
+                        pBunny->CastSpell(pBunny, SPELL_RUNIC_SMASH, false);
+                }
+            }
+
+            ++m_uiSmashIndex;
+            if (m_uiSmashIndex == MAX_RUNIC_SMASH + 1)
+            {
+                m_bSmashActive = false;
+                m_uiSmashIndex = 1;
+            }
+
+            m_uiSmashUpdateTimer = 250;
+        }
+        else
+            m_uiSmashUpdateTimer -= uiDiff;
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiRunicSmashTimer)
+        {
+            if (m_uiRunicSmashTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, urand(0, 1) ? SPELL_RUNIC_SMASH_L : SPELL_RUNIC_SMASH_R) == CAST_OK)
+                    m_uiRunicSmashTimer = 7000;
+            }
+            else
+                m_uiRunicSmashTimer -= uiDiff;
+
+            UpdateRunicSmash(uiDiff);
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiChargeTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, m_bIsRegularMode ? SPELL_CHARGE : SPELL_CHARGE_H, SELECT_FLAG_NOT_IN_MELEE_RANGE))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_CHARGE : SPELL_CHARGE_H) == CAST_OK)
+                    m_uiChargeTimer = urand(10000, 15000);
+            }
+        }
+        else
+            m_uiChargeTimer -= uiDiff;
+
+        // smash is cast right after charge
+        if (m_uiSmashTimer)
+        {
+            if (m_uiSmashTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SMASH) == CAST_OK)
+                    m_uiSmashTimer = 0;
+            }
+            else
+                m_uiSmashTimer -= uiDiff;
+        }
+
+        if (m_uiBarrierTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_RUNIC_BARRIER) == CAST_OK)
+            {
+                DoScriptText(EMOTE_RUNIC_BARRIER, m_creature);
+                m_uiBarrierTimer = urand(30000, 35000);
+            }
+        }
+        else
+            m_uiBarrierTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_runic_colossus(Creature* pCreature)
+{
+    return new npc_runic_colossusAI(pCreature);
+}
+
+/*######
 ## npc_thunder_orb
 ######*/
 
@@ -714,6 +940,11 @@ void AddSC_boss_thorim()
     pNewScript = new Script;
     pNewScript->Name = "boss_sif";
     pNewScript->GetAI = GetAI_boss_sif;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_runic_colossus";
+    pNewScript->GetAI = GetAI_npc_runic_colossus;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

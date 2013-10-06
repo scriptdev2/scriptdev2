@@ -150,6 +150,9 @@ enum
     NPC_THORIM_EVENT_BUNNY      = 32892,
     NPC_THUNDER_ORB             = 33378,
     NPC_THORIM_CONTROLLER       = 32879,
+    NPC_THORIM_COMBAT_TRIGGER   = 34055,
+    NPC_RIGHT_HAND_BUNNY        = 33140,
+    NPC_LEFT_HAND_BUNNY         = 33141,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
@@ -173,7 +176,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 16,
+    MAX_SPECIAL_ACHIEV_CRITS    = 17,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -191,6 +194,7 @@ enum
     TYPE_ACHIEV_DISARMED        = 13,
     TYPE_ACHIEV_CHEESE_FREEZE   = 14,
     TYPE_ACHIEV_COOL_FRIENDS    = 15,
+    TYPE_ACHIEV_LIGHTNING       = 16,
 
     // Loot chests
     // Kologarn
@@ -474,6 +478,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         void GetToyPileGuids(GuidVector& vToyPiles) { vToyPiles = m_vToyPileGuidVector; }
         void GetThorimBunniesGuids(GuidList& lBunnies) { lBunnies = m_lThorimBunniesGuids; }
         void GetThunderOrbsGuids(GuidList& lOrbs) { lOrbs = m_lUpperThunderOrbsGuids; }
+        void GetSmashTargetsGuids(GuidList& lTargets, bool bLeft) { lTargets = bLeft ? m_lLeftHandBunniesGuids : m_lRightHandBunniesGuids; }
 
         void Update(uint32 uiDiff);
 
@@ -511,6 +516,8 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         GuidList m_lRepairedHarpoonsGuids;
         GuidList m_lThorimBunniesGuids;
         GuidList m_lUpperThunderOrbsGuids;
+        GuidList m_lLeftHandBunniesGuids;
+        GuidList m_lRightHandBunniesGuids;
         GuidSet m_sColossusGuidSet;
 };
 
