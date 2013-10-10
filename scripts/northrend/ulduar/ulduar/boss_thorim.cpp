@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_thorim
-SD%Complete: 70%
-SDComment: Script is only partially complete.
+SD%Complete: 90%
+SDComment: Platform lightning NYI. Script might need minor improvements.
 SDCategory: Ulduar
 EndScriptData */
 
@@ -107,20 +107,19 @@ enum
     SPELL_CHARGE                            = 62613,
     SPELL_CHARGE_H                          = 62614,
 
+    SPELL_LEAP                              = 61934,                    // used by the arena dwarfes
+
     // event npcs
     NPC_LIGHTNING_ORB                       = 33138,                    // spawned on arena berserk
     NPC_DARK_RUNE_CHAMPION                  = 32876,                    // arena npcs
     NPC_DARK_RUNE_WARBRINGER                = 32877,
     NPC_DARK_RUNE_EVOKER                    = 32878,
     NPC_DARK_RUNE_COMMONER                  = 32904,
-    NPC_DARK_RUNE_ACOLYTE_ARENA             = 32886,
-    NPC_IRON_RING_GUARD                     = 32874,                    // hallway npcs
-    NPC_DARK_RUNE_ACOLYTE_HALLWAY           = 33110,
-    NPC_IRON_HONOR_GUARD_1                  = 33125,                    // stairs npcs
-    NPC_IRON_HONOR_GUARD_2                  = 32875,
-    NPC_DARK_RUNE_ACOLYTE_STAIRS            = 32957,
-    NPC_TRAP_BUNNY_1                        = 33725,                    // thorim traps; have auras 62241 and 63540
-    NPC_TRAP_BUNNY_2                        = 33054,
+    // NPC_IRON_RING_GUARD                  = 32874,                    // hallway npcs
+    // NPC_DARK_RUNE_ACOLYTE_HALLWAY        = 33110,
+    // NPC_IRON_HONOR_GUARD                 = 32875,                    // stairs npcs
+    // NPC_TRAP_BUNNY_1                     = 33725,                    // thorim traps; have auras 62241 and 63540
+    // NPC_TRAP_BUNNY_2                     = 33054,
 
     FACTION_ID_FRIENDLY                     = 35,
     PHASE_ARENA                             = 1,
@@ -174,6 +173,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 
     uint32 m_uiBerserkTimer;
     uint8 m_uiPhase;
+    uint8 m_uiDwarfIndex;
 
     uint32 m_uiStormHammerTimer;
     uint32 m_uiChargeOrbTimer;
@@ -183,6 +183,8 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
     uint32 m_uiUnbalancingStrikeTimer;
 
     GuidList m_lUpperOrbsGuids;
+    GuidList m_lUpperBunniesGuids;
+    GuidList m_lLowerBunniesGuids;
 
     void Reset() override
     {
@@ -191,10 +193,11 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 
         m_uiStormHammerTimer        = 45000;
         m_uiChargeOrbTimer          = 35000;
-        m_uiArenaDwarfTimer         = 25000;
+        m_uiArenaDwarfTimer         = 20000;
         m_uiChainLightningTimer     = urand(10000, 15000);
         m_uiUnbalancingStrikeTimer  = 20000;
         m_uiAttackTimer             = 0;
+        m_uiDwarfIndex              = urand(0, 2);
 
         SetCombatMovement(false);
     }
@@ -274,6 +277,8 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             m_pInstance->SetData(TYPE_THORIM_HARD, NOT_STARTED);
 
             m_pInstance->GetThunderOrbsGuids(m_lUpperOrbsGuids);
+            m_pInstance->GetThorimBunniesGuids(m_lUpperBunniesGuids, true);
+            m_pInstance->GetThorimBunniesGuids(m_lLowerBunniesGuids, false);
         }
 
         StartNextDialogueText(SAY_AGGRO_1);
@@ -325,9 +330,22 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 
     void JustSummoned(Creature* pSummoned) override
     {
-        // the lightning orb should clean out the whole hallway on arena berserk
-        if (pSummoned->GetEntry() == NPC_LIGHTNING_ORB)
-            pSummoned->CastSpell(pSummoned, SPELL_LIGHTNING_DESTRUCTION, true);
+        switch (pSummoned->GetEntry())
+        {
+            // the lightning orb should clean out the whole hallway on arena berserk
+            case NPC_LIGHTNING_ORB:
+                pSummoned->CastSpell(pSummoned, SPELL_LIGHTNING_DESTRUCTION, true);
+                break;
+            case NPC_DARK_RUNE_CHAMPION:
+            case NPC_DARK_RUNE_WARBRINGER:
+            case NPC_DARK_RUNE_EVOKER:
+            case NPC_DARK_RUNE_COMMONER:
+            case NPC_DARK_RUNE_ACOLYTE:
+                if (Creature* pTarget = GetClosestLowerBunny(pSummoned))
+                    pSummoned->CastSpell(pTarget, SPELL_LEAP, true);
+                pSummoned->SetInCombatWithZone();
+                break;
+        }
     }
 
     void JustDidDialogueStep(int32 iEntry) override
@@ -387,6 +405,35 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         return *iter;
     }
 
+    // function to return a random arena upper Bunny
+    Creature* SelectRandomUpperBunny()
+    {
+        if (m_lUpperBunniesGuids.empty())
+            return NULL;
+
+        GuidList::iterator iter = m_lUpperBunniesGuids.begin();
+        advance(iter, urand(0, m_lUpperBunniesGuids.size() - 1));
+
+        return m_creature->GetMap()->GetCreature(*iter);
+    }
+
+    // function to return the closest ground Bunny
+    Creature* GetClosestLowerBunny(Creature* pSource)
+    {
+        if (m_lLowerBunniesGuids.empty())
+            return NULL;
+
+        std::list<Creature*> lBunnies;
+        for (GuidList::const_iterator itr = m_lLowerBunniesGuids.begin(); itr != m_lLowerBunniesGuids.end(); ++itr)
+        {
+            if (Creature* pBunny = m_creature->GetMap()->GetCreature(*itr))
+                lBunnies.push_back(pBunny);
+        }
+
+        lBunnies.sort(ObjectDistanceOrder(pSource));
+        return lBunnies.front();
+    }
+
     // function to return a random player from the arena
     Unit* GetRandomArenaPlayer()
     {
@@ -420,6 +467,50 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
             return suitableTargets[urand(0, suitableTargets.size() - 1)];
     }
 
+    // function to spawn a random pack of dwarfes
+    void DoSpawnArenaDwarf()
+    {
+        switch (m_uiDwarfIndex)
+        {
+            case 0:                     // commoners (always in groups of 6-7)
+            {
+                std::vector<Creature*> vBunnies;
+                for (GuidList::const_iterator itr = m_lUpperBunniesGuids.begin(); itr != m_lUpperBunniesGuids.end(); ++itr)
+                {
+                    if (Creature* pBunny = m_creature->GetMap()->GetCreature(*itr))
+                        vBunnies.push_back(pBunny);
+                }
+                std::random_shuffle(vBunnies.begin(), vBunnies.end());
+
+                uint8 uiMaxCommoners = urand(6, 7);
+                if (uiMaxCommoners > vBunnies.size() - 1)
+                    uiMaxCommoners = vBunnies.size();
+
+                for (uint8 i = 0; i < uiMaxCommoners; ++i)
+                    m_creature->SummonCreature(NPC_DARK_RUNE_COMMONER, vBunnies[i]->GetPositionX(), vBunnies[i]->GetPositionY(), vBunnies[i]->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                break;
+            }
+            case 1:                     // warbringers (along with champions or evokers)
+                if (Creature* pBunny = SelectRandomUpperBunny())
+                    m_creature->SummonCreature(NPC_DARK_RUNE_WARBRINGER, pBunny->GetPositionX(), pBunny->GetPositionY(), pBunny->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                // warbringers can have another buddy summoned at the same time
+                if (roll_chance_i(75))
+                {
+                    if (Creature* pBunny = SelectRandomUpperBunny())
+                        m_creature->SummonCreature(roll_chance_i(70) ? NPC_DARK_RUNE_CHAMPION : NPC_DARK_RUNE_EVOKER, pBunny->GetPositionX(), pBunny->GetPositionY(), pBunny->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                }
+                break;
+            case 2:                     // evokers alone
+                if (Creature* pBunny = SelectRandomUpperBunny())
+                    m_creature->SummonCreature(NPC_DARK_RUNE_EVOKER, pBunny->GetPositionX(), pBunny->GetPositionY(), pBunny->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                break;
+        }
+
+        // get a new index which will be different from the first one
+        uint8 uiNewIndex = (m_uiDwarfIndex + urand(1, 2)) % 3;
+        m_uiDwarfIndex = uiNewIndex;
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
@@ -446,6 +537,14 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
                     else
                         m_uiBerserkTimer -= uiDiff;
                 }
+
+                if (m_uiArenaDwarfTimer < uiDiff)
+                {
+                    DoSpawnArenaDwarf();
+                    m_uiArenaDwarfTimer = 10000;
+                }
+                else
+                    m_uiArenaDwarfTimer -= uiDiff;
 
                 if (m_uiChargeOrbTimer < uiDiff)
                 {
@@ -623,7 +722,7 @@ struct MANGOS_DLL_DECL boss_sifAI : public ScriptedAI
             m_bAttackReady = true;
 
             if (m_pInstance)
-                m_pInstance->GetThorimBunniesGuids(m_lBunniesGuids);
+                m_pInstance->GetThorimBunniesGuids(m_lBunniesGuids, false);
         }
     }
 

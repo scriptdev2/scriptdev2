@@ -143,6 +143,7 @@ enum
     NPC_RUNE_GIANT              = 32873,
     NPC_SIF                     = 33196,
     NPC_JORMUNGAR_BEHEMOTH      = 32882,
+    NPC_DARK_RUNE_ACOLYTE       = 32886,
     NPC_SOLDIER_ALLIANCE        = 32885,
     NPC_CAPTAIN_ALLIANCE        = 32908,
     NPC_SOLDIER_HORDE           = 32883,
@@ -153,6 +154,8 @@ enum
     NPC_THORIM_COMBAT_TRIGGER   = 34055,
     NPC_RIGHT_HAND_BUNNY        = 33140,
     NPC_LEFT_HAND_BUNNY         = 33141,
+    NPC_HONOR_GUARD_STAIRS      = 33125,                    // summoned mobs before the Rune Giant
+    NPC_RUNE_ACOLYTE_STAIRS     = 32957,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
@@ -454,6 +457,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
 
         void OnPlayerEnter(Player* pPlayer) override;
         void OnCreatureCreate(Creature* pCreature) override;
+        void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureDeath(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
@@ -476,7 +480,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         void GetTrappersGuids(GuidList& lTrappers) { lTrappers = m_lTrappersGuids; }
         void GetHarpoonsGuids(GuidVector& vHarpoons) { vHarpoons = m_vBrokenHarpoonsGuids; }
         void GetToyPileGuids(GuidVector& vToyPiles) { vToyPiles = m_vToyPileGuidVector; }
-        void GetThorimBunniesGuids(GuidList& lBunnies) { lBunnies = m_lThorimBunniesGuids; }
+        void GetThorimBunniesGuids(GuidList& lBunnies, bool bUpper) { lBunnies = bUpper ? m_lUpperBunniesGuids : m_lThorimBunniesGuids; }
         void GetThunderOrbsGuids(GuidList& lOrbs) { lOrbs = m_lUpperThunderOrbsGuids; }
         void GetSmashTargetsGuids(GuidList& lTargets, bool bLeft) { lTargets = bLeft ? m_lLeftHandBunniesGuids : m_lRightHandBunniesGuids; }
 
@@ -502,6 +506,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         uint32 m_uiAlgalonTimer;
         uint32 m_uiShatterAchievTimer;
         uint32 m_uiGauntletStatus;
+        uint32 m_uiStairsSpawnTimer;
         uint8 m_uiSlayedArenaMobs;
 
         ObjectGuid m_leftKoloStalkerGuid;
@@ -515,6 +520,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         GuidList m_lHarpoonDummyGuids;
         GuidList m_lRepairedHarpoonsGuids;
         GuidList m_lThorimBunniesGuids;
+        GuidList m_lUpperBunniesGuids;
         GuidList m_lUpperThunderOrbsGuids;
         GuidList m_lLeftHandBunniesGuids;
         GuidList m_lRightHandBunniesGuids;

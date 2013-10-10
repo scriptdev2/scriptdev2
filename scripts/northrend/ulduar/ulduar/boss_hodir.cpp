@@ -102,6 +102,7 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_bEventFinished = false;
         m_uiEpilogueTimer = 0;
+        m_uiEpilogueStage = 0;
         Reset();
     }
 
@@ -122,7 +123,6 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
         m_uiFlashFreezeTimer = 50000;
         m_uiFrozenBlowsTimer = 70000;
         m_uiFreezeTimer      = urand(25000, 30000);
-        m_uiEpilogueStage    = 0;
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -167,6 +167,18 @@ struct MANGOS_DLL_DECL boss_hodirAI : public ScriptedAI
 
             if (!m_bEventFinished)
             {
+                // Inform the faction helpers that the fight is over
+                ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
+                for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
+                {
+                    // only check creatures
+                    if (!(*itr)->getUnitGuid().IsCreature())
+                        continue;
+
+                    if (Creature* pTarget = m_creature->GetMap()->GetCreature((*itr)->getUnitGuid()))
+                        pTarget->AI()->EnterEvadeMode();
+                }
+
                 m_uiEpilogueTimer = 10000;
                 m_creature->setFaction(FACTION_ID_FRIENDLY);
                 m_bEventFinished = true;

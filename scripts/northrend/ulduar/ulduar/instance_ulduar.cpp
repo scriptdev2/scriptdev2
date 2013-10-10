@@ -59,6 +59,7 @@ instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHe
     m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
     m_uiGauntletStatus(0),
+    m_uiStairsSpawnTimer(0),
     m_uiSlayedArenaMobs(0)
 {
     Initialize();
@@ -211,8 +212,11 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
                 m_leftKoloStalkerGuid = pCreature->GetObjectGuid();
             return;
         case NPC_THORIM_EVENT_BUNNY:
+            // sort the event bunnies between the arena and tribune spawns; the platform spawns are ignored for the moment
             if (pCreature->GetPositionZ() < 420.0f)
                 m_lThorimBunniesGuids.push_back(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() > 438.5f)
+                m_lUpperBunniesGuids.push_back(pCreature->GetObjectGuid());
             return;
         case NPC_THUNDER_ORB:
             // get only the upper ones; the lower ones are searched dynamically in order to be paired correctly
@@ -653,6 +657,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 if (Player* pPlayer = GetPlayerInMap())
                     DoSpawnThorimNpcs(pPlayer);
 
+                m_uiStairsSpawnTimer = 0;
                 m_uiSlayedArenaMobs = 0;
             }
             break;
@@ -943,6 +948,16 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
     }
 }
 
+void instance_ulduar::OnCreatureEnterCombat(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_RUNE_GIANT:
+            m_uiStairsSpawnTimer = 0;
+            break;
+    }
+}
+
 void instance_ulduar::OnCreatureDeath(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
@@ -990,16 +1005,18 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
         case NPC_CAPTAIN_ALLIANCE:
         case NPC_SOLDIER_HORDE:
         case NPC_CAPTAIN_HORDE:
+        case NPC_DARK_RUNE_ACOLYTE:
             ++m_uiSlayedArenaMobs;
 
-            // start combat when all 4 faction soldiers and the Jormungar are dead
-            if (m_uiSlayedArenaMobs == 5)
+            // start combat when all 4 faction soldiers, the Acolyte and the Jormungar are dead
+            if (m_uiSlayedArenaMobs == 6)
             {
                 if (Creature* pThorim = GetSingleCreatureFromStorage(NPC_THORIM))
                     pThorim->SetInCombatWithZone();
             }
             break;
         case NPC_RUNIC_COLOSSUS:
+            m_uiStairsSpawnTimer = 30000;
             DoUseDoorOrButton(GO_RUNED_STONE_DOOR);
             break;
         case NPC_RUNE_GIANT:
@@ -1243,6 +1260,25 @@ void instance_ulduar::Update(uint32 uiDiff)
         }
         else
             m_uiAlgalonTimer -= uiDiff;
+    }
+
+    if (m_uiStairsSpawnTimer)
+    {
+        if (m_uiStairsSpawnTimer <= uiDiff)
+        {
+            // Note: this part involves a lot of guesswork
+            // These are the stairs npcs which are summoned before engaging the Rune Giant; both npcs have waypoint movement
+            if (Creature* pGiant = GetSingleCreatureFromStorage(NPC_RUNE_GIANT))
+            {
+                if (urand(0, 1))
+                    pGiant->SummonCreature(NPC_HONOR_GUARD_STAIRS, 2101.2f, -434.135f, 438.331f, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                else
+                    pGiant->SummonCreature(NPC_RUNE_ACOLYTE_STAIRS, 2100.41f, -446.712f, 438.331f, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+            m_uiStairsSpawnTimer = urand(20000, 30000);
+        }
+        else
+            m_uiStairsSpawnTimer -= uiDiff;
     }
 }
 
