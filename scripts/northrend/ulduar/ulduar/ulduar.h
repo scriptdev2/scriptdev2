@@ -8,7 +8,7 @@
 enum
 {
     MAX_ENCOUNTER               = 15,
-    HARD_MODE_ENCOUNTER         = 7,
+    HARD_MODE_ENCOUNTER         = 8,
     KEEPER_ENCOUNTER            = 4,
 
     // Main boss types
@@ -35,6 +35,7 @@ enum
     TYPE_MIMIRON_HARD           = 17,
     TYPE_HODIR_HARD             = 18,
     TYPE_THORIM_HARD            = 19,
+    TYPE_FREYA_HARD             = 20,
     TYPE_VEZAX_HARD             = 21,
     TYPE_YOGGSARON_HARD         = 22,
 

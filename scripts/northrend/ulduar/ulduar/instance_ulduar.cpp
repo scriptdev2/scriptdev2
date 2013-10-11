@@ -729,11 +729,14 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_MIMIRON_HARD:
             m_auiHardBoss[4] = uiData;
             return;
-        case TYPE_VEZAX_HARD:
+        case TYPE_FREYA_HARD:
             m_auiHardBoss[5] = uiData;
             return;
-        case TYPE_YOGGSARON_HARD:
+        case TYPE_VEZAX_HARD:
             m_auiHardBoss[6] = uiData;
+            return;
+        case TYPE_YOGGSARON_HARD:
+            m_auiHardBoss[7] = uiData;
             return;
 
             // Ulduar keepers
@@ -900,10 +903,12 @@ uint32 instance_ulduar::GetData(uint32 uiType) const
             return m_auiHardBoss[3];
         case TYPE_MIMIRON_HARD:
             return m_auiHardBoss[4];
-        case TYPE_VEZAX_HARD:
+        case TYPE_FREYA_HARD:
             return m_auiHardBoss[5];
-        case TYPE_YOGGSARON_HARD:
+        case TYPE_VEZAX_HARD:
             return m_auiHardBoss[6];
+        case TYPE_YOGGSARON_HARD:
+            return m_auiHardBoss[7];
 
             // Ulduar Keepers
         case TYPE_KEEPER_HODIR:
