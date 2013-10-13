@@ -180,7 +180,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 17,
+    MAX_SPECIAL_ACHIEV_CRITS    = 18,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -199,6 +199,7 @@ enum
     TYPE_ACHIEV_CHEESE_FREEZE   = 14,
     TYPE_ACHIEV_COOL_FRIENDS    = 15,
     TYPE_ACHIEV_LIGHTNING       = 16,
+    TYPE_ACHIEV_BACK_NATURE     = 17,
 
     // Loot chests
     // Kologarn
@@ -317,6 +318,7 @@ enum
     // Achievement related
     ACHIEV_START_IGNIS_ID       = 20951,                    // Ignis timed achievs 2930, 2929
     ACHIEV_START_XT002_ID       = 21027,                    // XT-002 timed achievs 2937, 2938
+    ACHIEV_START_FREYA_ID       = 21597,                    // Freya timed achievs 2980, 2981
 
     ACHIEV_CRIT_SARONITE_N      = 10451,                    // General Vezax, achievs 3181, 3188
     ACHIEV_CRIT_SARONITE_H      = 10462,
@@ -380,6 +382,14 @@ enum
     ACHIEV_CRIT_LIGHTNING_H     = 10309,
     ACHIEV_CRIT_LOSE_ILLUSION_N = 10440,                    // Thorim, achievs 3176, 3183
     ACHIEV_CRIT_LOSE_ILLUSION_H = 10457,
+    ACHIEV_CRIT_BACK_NATURE_N   = 10445,                    // Freya, achievs 2982, 2983
+    ACHIEV_CRIT_BACK_NATURE_H   = 10758,
+    ACHIEV_CRIT_KNOCK_1_N       = 10785,                    // Freya, achievs 3177, 3185
+    ACHIEV_CRIT_KNOCK_1_H       = 10793,
+    ACHIEV_CRIT_KNOCK_2_N       = 10786,                    // Freya, achievs 3178, 3186
+    ACHIEV_CRIT_KNOCK_2_H       = 10794,
+    ACHIEV_CRIT_KNOCK_3_N       = 10787,                    // Freya, achievs 3179, 3187
+    ACHIEV_CRIT_KNOCK_3_H       = 10795,
 };
 
 struct UlduarSpawns

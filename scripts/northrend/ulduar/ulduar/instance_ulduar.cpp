@@ -1150,6 +1150,18 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_LIGHTNING_N:
         case ACHIEV_CRIT_LIGHTNING_H:
             return m_abAchievCriteria[TYPE_ACHIEV_LIGHTNING];
+        case ACHIEV_CRIT_BACK_NATURE_N:
+        case ACHIEV_CRIT_BACK_NATURE_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_BACK_NATURE];
+        case ACHIEV_CRIT_KNOCK_1_N:
+        case ACHIEV_CRIT_KNOCK_1_H:
+            return GetData(TYPE_FREYA_HARD) >= 1;
+        case ACHIEV_CRIT_KNOCK_2_N:
+        case ACHIEV_CRIT_KNOCK_2_H:
+            return GetData(TYPE_FREYA_HARD) >= 2;
+        case ACHIEV_CRIT_KNOCK_3_N:
+        case ACHIEV_CRIT_KNOCK_3_H:
+            return GetData(TYPE_FREYA_HARD) == 3;
 
         default:
             return false;
