@@ -665,6 +665,23 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
+                // despawn elders which are still alive on event complete
+                if (Creature* pElder = GetSingleCreatureFromStorage(NPC_ELDER_BRIGHTLEAF))
+                {
+                    if (pElder->isAlive())
+                        pElder->ForcedDespawn();
+                }
+                if (Creature* pElder = GetSingleCreatureFromStorage(NPC_ELDER_IRONBRACH))
+                {
+                    if (pElder->isAlive())
+                        pElder->ForcedDespawn();
+                }
+                if (Creature* pElder = GetSingleCreatureFromStorage(NPC_ELDER_STONEBARK))
+                {
+                    if (pElder->isAlive())
+                        pElder->ForcedDespawn();
+                }
+
                 SpawnFriendlyKeeper(NPC_KEEPER_FREYA);
                 DoOpenMadnessDoorIfCan();
             }

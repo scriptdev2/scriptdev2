@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_freya
-SD%Complete: 40%
+SD%Complete: 60%
 SDComment: Parially complete.
 SDCategory: Ulduar
 EndScriptData */
@@ -37,9 +37,9 @@ enum
     SAY_BERSERK                         = -1603008,
 
     EMOTE_ALLIES_NATURE                 = -1603010,
-    EMOTE_LIFEBINDER                    = -1603011,
-    EMOTE_TREMOR                        = -1603012,
-    EMOTE_IRON_ROOTS                    = -1603013,
+    // EMOTE_LIFEBINDER                 = -1603011,
+    // EMOTE_TREMOR                     = -1603012,
+    // EMOTE_IRON_ROOTS                 = -1603013,
 
     SAY_AGGRO_BRIGHT                    = -1603014,
     SAY_SLAY_1_BRIGHT                   = -1603015,
@@ -91,7 +91,8 @@ enum
     SPELL_SUMMON_CHEST_3_H              = 62958,
 
     // hard mode spells
-    SPELL_DRAINED_OF_POWER              = 62467,                // stun effect for each elder alive
+    SPELL_FULL_HEAL                     = 43978,
+    SPELL_DRAINED_OF_POWER              = 62467,                // stun effect for each elder alive after finish channeling
 
     SPELL_BRIGHTLEAF_ESSENCE_CHANNEL    = 62485,                // brightleaf
     SPELL_BRIGHTLEAF_ESSENCE_CHANNEL_H  = 65587,
@@ -102,8 +103,6 @@ enum
     SPELL_IRONBRANCH_ESSENCE_CHANNEL_H  = 65588,
     SPELL_IRON_ROOTS                    = 62439,
     SPELL_IRON_ROOTS_H                  = 62862,
-    // SPELL_STRENGTHEN_IRON_ROOTS      = 62440,                // purpose unk
-    // SPELL_STRENGTHEN_IRON_ROOTS_H    = 63601,
 
     SPELL_STONEBARK_ESSEMCE_CHANNEL     = 62483,                // stonebark
     SPELL_STONEBARK_ESSEMCE_CHANNEL_H   = 65589,
@@ -115,10 +114,16 @@ enum
     SPELL_HEALTHY_SPORE_VISUAL          = 62538,                // cast by npc 33215
     SPELL_POTENT_PHEROMONES             = 62541,                // cast by npc 33215
 
-    // sun beam spells
-    SPELL_UNSTABLE_SUN_BEAM_VISUAL      = 62216,                // cast by npc 33170
-    SPELL_UNSTABLE_ENERGY               = 62451,                // cast by npc 33170
-    SPELL_UNSTABLE_ENERGY_H             = 62865,
+    // sun beam spells; handled by eventAI
+    // SPELL_UNSTABLE_SUN_BEAM_VISUAL   = 62216,                // cast by npc 33170
+    // SPELL_UNSTABLE_ENERGY            = 62451,                // cast by npc 33170
+    // SPELL_UNSTABLE_ENERGY_H          = 62865,
+
+    // iron roots spells
+    SPELL_STRENGTHEN_IRON_ROOTS         = 62440,                // remove stun and damange aura from summoner
+    SPELL_STRENGTHEN_IRON_ROOTS_H       = 63601,
+    SPELL_IRON_ROOTS_REMOVE             = 62282,                // same as above, but for the Elder version
+    SPELL_IRON_ROOTS_REMOVE_H           = 63598,
 
     // nature bomb spells
     SPELL_NATURE_BOMB_GO                = 64600,                // spawns go 194902
@@ -146,14 +151,15 @@ enum
 
     // other summons
     NPC_NATURE_BOMB                     = 34129,
-    NPC_SUN_BEAM                        = 33170,
+    // NPC_SUN_BEAM                     = 33170,
     NPC_UNSTABLE_SUN_BEAM               = 33050,
+    NPC_IRON_ROOTS                      = 33088,
     NPC_STRENGHENED_IRON_ROOTS          = 33168,
     NPC_EONARS_GIFT                     = 33228,
     NPC_HEALTHY_SPORE                   = 33215,
 
     // other
-    GO_NATURE_BOMB                      = 194902,
+    // GO_NATURE_BOMB                   = 194902,
     MIN_ATTUNED_NATURE_STACKS           = 25,
     MAX_ALLIES_SPELLS                   = 3,
     MAX_ALLIES_WAVES                    = 6,
@@ -196,6 +202,10 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
     uint32 m_uiNatureBombTimer;
     uint32 m_uiLifebindersGiftTimer;
 
+    uint32 m_uiUnstableEnergyTimer;
+    uint32 m_uiIronRootsTimer;
+    uint32 m_uiGroundTremorTimer;
+
     std::vector<uint32> spawnSpellsVector;
 
     void Reset() override
@@ -207,6 +217,10 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
         m_uiNatureBombTimer         = 65000;
         m_uiSunbeamTimer            = 20000;
         m_uiLifebindersGiftTimer    = 25000;
+
+        m_uiUnstableEnergyTimer     = 0;
+        m_uiIronRootsTimer          = 0;
+        m_uiGroundTremorTimer       = 0;
 
         // make the spawn spells random
         std::random_shuffle(spawnSpellsVector.begin(), spawnSpellsVector.end());
@@ -224,7 +238,6 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_ATTUNED_TO_NATURE, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_TOUCH_OF_EONAR : SPELL_TOUCH_OF_EONAR_H, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
 
-        DoScriptText(SAY_AGGRO, m_creature);
         FetchElders();
     }
 
@@ -249,7 +262,26 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
     void JustReachedHome() override
     {
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_FREYA, FAIL);
+
+            // reset elders
+            if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_BRIGHTLEAF))
+            {
+                if (pElder->isAlive())
+                    pElder->AI()->EnterEvadeMode();
+            }
+            if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_IRONBRACH))
+            {
+                if (pElder->isAlive())
+                    pElder->AI()->EnterEvadeMode();
+            }
+            if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_STONEBARK))
+            {
+                if (pElder->isAlive())
+                    pElder->AI()->EnterEvadeMode();
+            }
+        }
     }
 
     void EnterEvadeMode() override
@@ -398,21 +430,44 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
         if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_BRIGHTLEAF))
         {
             if (pElder->isAlive())
+            {
+                pElder->CastSpell(pElder, m_bIsRegularMode ? SPELL_BRIGHTLEAF_ESSENCE_CHANNEL : SPELL_BRIGHTLEAF_ESSENCE_CHANNEL_H, true);
+                pElder->CastSpell(pElder, SPELL_FULL_HEAL, true);
+
+                m_uiUnstableEnergyTimer = 25000;
                 ++uiEldersAlive;
+            }
         }
         if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_IRONBRACH))
         {
             if (pElder->isAlive())
+            {
+                pElder->CastSpell(pElder, m_bIsRegularMode ? SPELL_IRONBRANCH_ESSENCE_CHANNEL : SPELL_IRONBRANCH_ESSENCE_CHANNEL_H, true);
+                pElder->CastSpell(pElder, SPELL_FULL_HEAL, true);
+
+                m_uiIronRootsTimer = 60000;
                 ++uiEldersAlive;
+            }
         }
         if (Creature* pElder = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_STONEBARK))
         {
             if (pElder->isAlive())
+            {
+                pElder->CastSpell(pElder, m_bIsRegularMode ? SPELL_STONEBARK_ESSEMCE_CHANNEL : SPELL_STONEBARK_ESSEMCE_CHANNEL_H, true);
+                pElder->CastSpell(pElder, SPELL_FULL_HEAL, true);
+
+                m_uiGroundTremorTimer = 10000;
                 ++uiEldersAlive;
+            }
         }
 
         // store the info about the elders alive
         m_pInstance->SetData(TYPE_FREYA_HARD, uiEldersAlive);
+
+        if (uiEldersAlive)
+            DoScriptText(SAY_AGGRO_HARD, m_creature);
+        else
+            DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -486,13 +541,46 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
         if (m_uiLifebindersGiftTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_LIFEBINDERS_GIFT_SUMMON) == CAST_OK)
-            {
-                DoScriptText(EMOTE_LIFEBINDER, m_creature);
                 m_uiLifebindersGiftTimer = 40000;
-            }
         }
         else
             m_uiLifebindersGiftTimer -= uiDiff;
+
+        // Brightleaf ability
+        if (m_uiUnstableEnergyTimer)
+        {
+            if (m_uiUnstableEnergyTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_UNSTABLE_SUN_BEAM : SPELL_UNSTABLE_SUN_BEAM_H) == CAST_OK)
+                    m_uiUnstableEnergyTimer = 25000;
+            }
+            else
+                m_uiUnstableEnergyTimer -= uiDiff;
+        }
+
+        // Ironbranch ability
+        if (m_uiIronRootsTimer)
+        {
+            if (m_uiIronRootsTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IRON_ROOTS : SPELL_IRON_ROOTS_H) == CAST_OK)
+                    m_uiIronRootsTimer = 60000;
+            }
+            else
+                m_uiIronRootsTimer -= uiDiff;
+        }
+
+        // Stonebark ability
+        if (m_uiGroundTremorTimer)
+        {
+            if (m_uiGroundTremorTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_GROUND_TREMOR : SPELL_GROUND_TREMOR_H) == CAST_OK)
+                    m_uiGroundTremorTimer = 30000;
+            }
+            else
+                m_uiGroundTremorTimer -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }
@@ -606,6 +694,43 @@ CreatureAI* GetAI_npc_nature_bomb(Creature* pCreature)
     return new npc_nature_bombAI(pCreature);
 }
 
+/*######
+## npc_iron_roots
+######*/
+
+struct MANGOS_DLL_DECL npc_iron_rootsAI : public Scripted_NoMovementAI
+{
+    npc_iron_rootsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    bool m_bIsRegularMode;
+
+    void Reset() override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        if (!m_creature->IsTemporarySummon())
+            return;
+
+        if (m_creature->GetEntry() == NPC_IRON_ROOTS)
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IRON_ROOTS_REMOVE : SPELL_IRON_ROOTS_REMOVE_H, CAST_TRIGGERED);
+        else if (m_creature->GetEntry() == NPC_STRENGHENED_IRON_ROOTS)
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_STRENGTHEN_IRON_ROOTS : SPELL_STRENGTHEN_IRON_ROOTS_H, CAST_TRIGGERED);
+    }
+
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_iron_roots(Creature* pCreature)
+{
+    return new npc_iron_rootsAI(pCreature);
+}
+
 void AddSC_boss_freya()
 {
     Script* pNewScript;
@@ -624,5 +749,10 @@ void AddSC_boss_freya()
     pNewScript = new Script;
     pNewScript->Name = "npc_nature_bomb";
     pNewScript->GetAI = GetAI_npc_nature_bomb;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_iron_roots";
+    pNewScript->GetAI = GetAI_npc_iron_roots;
     pNewScript->RegisterSelf();
 }
