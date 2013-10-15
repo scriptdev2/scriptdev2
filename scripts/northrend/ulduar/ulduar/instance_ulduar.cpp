@@ -160,6 +160,8 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_BRANN_ALGALON:
 
         case NPC_LEVIATHAN_MK:
+        case NPC_LEVIATHAN_MK_TURRET:
+        case NPC_COMPUTER:
         case NPC_RUNIC_COLOSSUS:
         case NPC_RUNE_GIANT:
         case NPC_SIF:

@@ -74,6 +74,7 @@ enum
     SAY_FREYA_HELP                              = -1603009,
     SAY_HODIR_HELP                              = -1603093,
     SAY_THORIM_HELP                             = -1603155,
+    SAY_MIMIRON_HELP                            = -1603195,
 };
 
 void AddSC_boss_yogg_saron()

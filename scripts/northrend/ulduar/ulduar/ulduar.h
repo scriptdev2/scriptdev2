@@ -109,9 +109,6 @@ enum
 
     // The keepers of ulduar
     NPC_MIMIRON                 = 33350,
-    NPC_LEVIATHAN_MK            = 33432,
-    NPC_VX001                   = 33651,
-    NPC_AERIAL_UNIT             = 33670,
     NPC_HODIR                   = 32845,
     NPC_THORIM                  = 32865,
     NPC_FREYA                   = 32906,
@@ -157,6 +154,14 @@ enum
     NPC_LEFT_HAND_BUNNY         = 33141,
     NPC_HONOR_GUARD_STAIRS      = 33125,                    // summoned mobs before the Rune Giant
     NPC_RUNE_ACOLYTE_STAIRS     = 32957,
+
+    // Mimiron event npcs
+    NPC_LEVIATHAN_MK            = 33432,
+    NPC_LEVIATHAN_MK_TURRET     = 34071,
+    NPC_VX001                   = 33651,
+    NPC_AERIAL_UNIT             = 33670,
+    NPC_COMPUTER                = 34143,
+    NPC_BOT_SUMMON_TRIGGER      = 33856,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
