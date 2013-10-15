@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_freya
-SD%Complete: 80%
-SDComment: Parially complete.
+SD%Complete: 95%
+SDComment: Elders and some of the Nature Allies handled in ACID. Script might require some minor improvements.
 SDCategory: Ulduar
 EndScriptData */
 
@@ -138,7 +138,7 @@ enum
     // three allies spells
     SPELL_FEIGN_DEATH                   = 65985,
     SPELL_CLEAR_DEBUFFS                 = 34098,
-    SPELL_TIDAL_WAVE                    = 62652,
+    SPELL_TIDAL_WAVE                    = 62652,                // triggers 62653 or 62935
     SPELL_TIDAL_WAVE_VISUAL             = 62655,
     SPELL_HARDENED_BARK                 = 62664,
     SPELL_HARDENED_BARK_H               = 64191,
@@ -163,12 +163,12 @@ enum
 
     // other summons
     NPC_NATURE_BOMB                     = 34129,
-    // NPC_SUN_BEAM                     = 33170,
-    NPC_UNSTABLE_SUN_BEAM               = 33050,
+    // NPC_SUN_BEAM                     = 33170,                // handled in eventAI
+    // NPC_UNSTABLE_SUN_BEAM            = 33050,                // handled in eventAI
     NPC_IRON_ROOTS                      = 33088,
     NPC_STRENGHENED_IRON_ROOTS          = 33168,
     NPC_EONARS_GIFT                     = 33228,
-    NPC_HEALTHY_SPORE                   = 33215,
+    // NPC_HEALTHY_SPORE                = 33215,
 
     // other
     // GO_NATURE_BOMB                   = 194902,
