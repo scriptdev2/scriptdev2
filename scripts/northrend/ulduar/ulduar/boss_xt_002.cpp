@@ -59,9 +59,9 @@ enum
     SPELL_LIFE_SPARK                    = 64210,
 
     // heart of XT002 spells
-    SPELL_HEART_RIDE_VEHICLE            = 63852,            // ride seat 1 - procs on damage (probably spell 17683)
+    SPELL_HEART_RIDE_VEHICLE            = 63852,            // ride seat 0 - procs on damage (probably spell 17683)
     SPELL_FULL_HEAL                     = 17683,
-    SPELL_RIDE_VEHICLE                  = 63313,            // ride seat 2
+    SPELL_RIDE_VEHICLE                  = 63313,            // ride seat 1
     SPELL_LIGHTNING_TETHER              = 64799,            // dummy
     SPELL_HEART_OVERLOAD                = 62789,            // triggers missing spell 62791
     SPELL_EXPOSED_HEART                 = 63849,            // procs on damage; triggers missing spell 62791
@@ -233,6 +233,8 @@ struct MANGOS_DLL_DECL boss_xt_002AI : public ScriptedAI
                         pHeart->Respawn();
 
                     pHeart->AI()->EnterEvadeMode();
+                    m_creature->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                    pHeart->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pHeart->CastSpell(m_creature, SPELL_HEART_RIDE_VEHICLE, true);
                 }
 
@@ -338,13 +340,15 @@ struct MANGOS_DLL_DECL boss_xt_002AI : public ScriptedAI
                     // mount the heart back inside if not already killed
                     if (m_pInstance && m_pInstance->GetData(TYPE_XT002_HARD) != DONE)
                     {
-                         if (Creature* pHeart = m_pInstance->GetSingleCreatureFromStorage(NPC_HEART_DECONSTRUCTOR))
-                         {
-                             pHeart->CastSpell(m_creature, SPELL_HEART_RIDE_VEHICLE, true);
+                        if (Creature* pHeart = m_pInstance->GetSingleCreatureFromStorage(NPC_HEART_DECONSTRUCTOR))
+                        {
+                            pHeart->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            m_creature->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                            pHeart->CastSpell(m_creature, SPELL_HEART_RIDE_VEHICLE, true);
 
-                             // no spell found for this
-                             pHeart->SetHealth(pHeart->GetMaxHealth());
-                         }
+                            // no spell found for this
+                            pHeart->SetHealth(pHeart->GetMaxHealth());
+                        }
                     }
                 }
                 else
@@ -412,6 +416,10 @@ struct MANGOS_DLL_DECL boss_heart_deconstructorAI : public ScriptedAI
         // start XT phase switch and start recharging robots
         if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetEntry() == NPC_XT002)
         {
+            // remove flags and previous vehicle aura before applying the new one
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            pInvoker->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+
             DoCastSpellIfCan(pInvoker, SPELL_RIDE_VEHICLE, CAST_TRIGGERED);
             DoCastSpellIfCan(pInvoker, SPELL_LIGHTNING_TETHER, CAST_TRIGGERED);
             DoCastSpellIfCan(m_creature, SPELL_HEART_OVERLOAD, CAST_TRIGGERED);
@@ -493,7 +501,7 @@ struct MANGOS_DLL_DECL npc_scrapbotAI : public ScriptedAI
             DoCastSpellIfCan(pWho, SPELL_RIDE_VEHICLE_SCRAPBOT, CAST_TRIGGERED);
             pWho->CastSpell(m_creature, SPELL_SCRAP_REPAIR, true);
             DoScriptText(EMOTE_REPAIR, pWho);
-            m_creature->ForcedDespawn(2000);
+            m_creature->ForcedDespawn(4000);
             m_bIsHealed = true;
         }
     }

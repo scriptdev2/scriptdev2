@@ -389,12 +389,12 @@ enum
     ACHIEV_CRIT_LOSE_ILLUSION_H = 10457,
     ACHIEV_CRIT_BACK_NATURE_N   = 10445,                    // Freya, achievs 2982, 2983
     ACHIEV_CRIT_BACK_NATURE_H   = 10758,
-    ACHIEV_CRIT_KNOCK_1_N       = 10785,                    // Freya, achievs 3177, 3185
-    ACHIEV_CRIT_KNOCK_1_H       = 10793,
-    ACHIEV_CRIT_KNOCK_2_N       = 10786,                    // Freya, achievs 3178, 3186
-    ACHIEV_CRIT_KNOCK_2_H       = 10794,
-    ACHIEV_CRIT_KNOCK_3_N       = 10787,                    // Freya, achievs 3179, 3187
-    ACHIEV_CRIT_KNOCK_3_H       = 10795,
+    ACHIEV_CRIT_KNOCK_1_N       = 10447,                    // Freya, achievs 3177, 3185
+    ACHIEV_CRIT_KNOCK_1_H       = 10459,
+    ACHIEV_CRIT_KNOCK_2_N       = 10448,                    // Freya, achievs 3178, 3186
+    ACHIEV_CRIT_KNOCK_2_H       = 10460,
+    ACHIEV_CRIT_KNOCK_3_N       = 10449,                    // Freya, achievs 3179, 3187
+    ACHIEV_CRIT_KNOCK_3_H       = 10461,
 };
 
 struct UlduarSpawns
