@@ -3368,7 +3368,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603009,'Eonar, your servant calls for your blessing!',15535,1,0,0,'freya SAY_HELP_YOGG'),
 
 (-1603010,'Allies of Nature have appeared!',0,3,0,0,'freya EMOTE_ALLIES_NATURE'),
-(-1603011,'A Lifebinder\'s Gift begins to grow!',0,3,0,0,'freya EMOTE_LIFEBINDER'),
+(-1603011,'The %s withers into the earth and begins to regenerate.',0,2,0,0,'freya EMOTE_REGEN_ALLIES'),
 (-1603012,'Freya begins to cast Ground Tremor!',0,3,0,0,'freya EMOTE_TREMOR'),
 (-1603013,'Freya casts Strenghtened Iron Roots!',0,3,0,0,'freya EMOTE_IRON_ROOTS'),
 

@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_freya
-SD%Complete: 60%
+SD%Complete: 80%
 SDComment: Parially complete.
 SDCategory: Ulduar
 EndScriptData */
@@ -37,7 +37,7 @@ enum
     SAY_BERSERK                         = -1603008,
 
     EMOTE_ALLIES_NATURE                 = -1603010,
-    // EMOTE_LIFEBINDER                 = -1603011,
+    EMOTE_REGEN_ALLIES                  = -1603011,
     // EMOTE_TREMOR                     = -1603012,
     // EMOTE_IRON_ROOTS                 = -1603013,
 
@@ -135,6 +135,18 @@ enum
     SPELL_ATTUNED_2_STACKS              = 62524,                // remove 2 stacks of 62519
     SPELL_ATTUNED_25_STACKS             = 62521,                // remove 25 stacks of 62519
 
+    // three allies spells
+    SPELL_FEIGN_DEATH                   = 65985,
+    SPELL_CLEAR_DEBUFFS                 = 34098,
+    SPELL_TIDAL_WAVE                    = 62652,
+    SPELL_TIDAL_WAVE_VISUAL             = 62655,
+    SPELL_HARDENED_BARK                 = 62664,
+    SPELL_HARDENED_BARK_H               = 64191,
+    SPELL_LIGHTNING_LASH                = 62648,
+    SPELL_LIGHTNING_LASH_H              = 62939,
+    SPELL_STORMBOLT                     = 62649,
+    SPELL_STORMBOLT_H                   = 62938,
+
     // eonar's gift spells
     SPELL_LIFEBINDERS_GIFT              = 62584,
     SPELL_LIFEBINDERS_GIFT_H            = 64185,
@@ -201,10 +213,15 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
     uint32 m_uiSunbeamTimer;
     uint32 m_uiNatureBombTimer;
     uint32 m_uiLifebindersGiftTimer;
+    uint32 m_uiThreeAlliesTimer;
 
     uint32 m_uiUnstableEnergyTimer;
     uint32 m_uiIronRootsTimer;
     uint32 m_uiGroundTremorTimer;
+
+    ObjectGuid m_waterSpiritGuid;
+    ObjectGuid m_stormLasherGuid;
+    ObjectGuid m_snaplasherGuid;
 
     std::vector<uint32> spawnSpellsVector;
 
@@ -217,6 +234,7 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
         m_uiNatureBombTimer         = 65000;
         m_uiSunbeamTimer            = 20000;
         m_uiLifebindersGiftTimer    = 25000;
+        m_uiThreeAlliesTimer        = 0;
 
         m_uiUnstableEnergyTimer     = 0;
         m_uiIronRootsTimer          = 0;
@@ -356,9 +374,18 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
                 break;
             case NPC_DETONATING_LASHER:
             case NPC_ANCIENT_CONSERVATOR:
+                pSummoned->AI()->AttackStart(m_creature->getVictim());
+                break;
             case NPC_WATER_SPIRIT:
+                m_waterSpiritGuid = pSummoned->GetObjectGuid();
+                pSummoned->AI()->AttackStart(m_creature->getVictim());
+                break;
             case NPC_STORM_LASHER:
+                m_stormLasherGuid = pSummoned->GetObjectGuid();
+                pSummoned->AI()->AttackStart(m_creature->getVictim());
+                break;
             case NPC_SNAPLASHER:
+                m_snaplasherGuid = pSummoned->GetObjectGuid();
                 pSummoned->AI()->AttackStart(m_creature->getVictim());
                 break;
             case NPC_NATURE_BOMB:
@@ -416,6 +443,11 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
                 while (spawnSpellsVector[0] == uiLastSpell)
                     std::random_shuffle(spawnSpellsVector.begin(), spawnSpellsVector.end());
             }
+        }
+        else if (eventType == AI_EVENT_CUSTOM_B)
+        {
+            if (!m_uiThreeAlliesTimer)
+                m_uiThreeAlliesTimer = 12000;
         }
     }
 
@@ -501,6 +533,35 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
             }
             else
                 m_uiBerserkTimer -= uiDiff;
+        }
+
+        if (m_uiThreeAlliesTimer)
+        {
+            if (m_uiThreeAlliesTimer <= uiDiff)
+            {
+                Creature* pSpirit = m_creature->GetMap()->GetCreature(m_waterSpiritGuid);
+                Creature* pStormLasher = m_creature->GetMap()->GetCreature(m_stormLasherGuid);
+                Creature* pSnapLasher = m_creature->GetMap()->GetCreature(m_snaplasherGuid);
+                if (!pSpirit || !pStormLasher || !pSnapLasher)
+                    return;
+
+                if (pSpirit->HasAura(SPELL_FEIGN_DEATH) && pStormLasher->HasAura(SPELL_FEIGN_DEATH) && pSnapLasher->HasAura(SPELL_FEIGN_DEATH))
+                {
+                    m_creature->DealDamage(pSpirit, pSpirit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+                    m_creature->DealDamage(pStormLasher, pStormLasher->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+                    m_creature->DealDamage(pSnapLasher, pSnapLasher->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+                }
+                else
+                {
+                    pSpirit->CastSpell(pSpirit, SPELL_FULL_HEAL, true);
+                    pStormLasher->CastSpell(pStormLasher, SPELL_FULL_HEAL, true);
+                    pSnapLasher->CastSpell(pSnapLasher, SPELL_FULL_HEAL, true);
+                }
+
+                m_uiThreeAlliesTimer = 0;
+            }
+            else
+                 m_uiThreeAlliesTimer -= uiDiff;
         }
 
         if (m_uiAlliesWaveCount < MAX_ALLIES_WAVES)
@@ -602,6 +663,197 @@ bool EffectScriptEffectCreature_boss_freya(Unit* pCaster, uint32 uiSpellId, Spel
     }
 
     return false;
+}
+
+/*######
+## three_nature_allies
+######*/
+
+struct MANGOS_DLL_DECL three_nature_alliesAI : public ScriptedAI
+{
+    three_nature_alliesAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+
+    bool m_bIsFakeDeath;
+
+    void Reset() override
+    {
+        m_bIsFakeDeath = false;
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
+    {
+        if (pDoneBy->GetEntry() == NPC_FREYA)
+            return;
+
+        if (uiDamage >= m_creature->GetHealth())
+        {
+            uiDamage = 0;
+
+            if (m_bIsFakeDeath)
+                return;
+
+            if (m_pInstance)
+            {
+                if (Creature* pFreya = m_pInstance->GetSingleCreatureFromStorage(NPC_FREYA))
+                    SendAIEvent(AI_EVENT_CUSTOM_B, m_creature, pFreya);
+            }
+
+            DoCastSpellIfCan(m_creature, SPELL_CLEAR_DEBUFFS, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_FEIGN_DEATH, CAST_TRIGGERED);
+
+            m_creature->SetHealth(1);
+            m_creature->ClearComboPointHolders();
+            m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+            m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->ClearAllReactives();
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MoveIdle();
+            m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+
+            DoScriptText(EMOTE_REGEN_ALLIES, m_creature);
+            m_bIsFakeDeath = true;
+        }
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    {
+        if (pSpell->Id == SPELL_FULL_HEAL)
+        {
+            m_bIsFakeDeath = false;
+            DoResetThreat();
+            m_creature->RemoveAurasDueToSpell(SPELL_FEIGN_DEATH);
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+    }
+};
+
+/*######
+## npc_water_spirit
+######*/
+
+struct MANGOS_DLL_DECL npc_water_spiritAI : public three_nature_alliesAI
+{
+    npc_water_spiritAI(Creature* pCreature) : three_nature_alliesAI(pCreature) { Reset(); }
+
+    uint32 m_uiTidalWaveTimer;
+
+    void Reset() override
+    {
+        m_uiTidalWaveTimer = 10000;
+        three_nature_alliesAI::Reset();
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiTidalWaveTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_TIDAL_WAVE) == CAST_OK)
+            {
+                DoCastSpellIfCan(m_creature, SPELL_TIDAL_WAVE_VISUAL, CAST_TRIGGERED);
+                m_uiTidalWaveTimer = 10000;
+            }
+        }
+        else
+            m_uiTidalWaveTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_water_spirit(Creature* pCreature)
+{
+    return new npc_water_spiritAI(pCreature);
+}
+
+/*######
+## npc_snaplasher
+######*/
+
+struct MANGOS_DLL_DECL npc_snaplasherAI : public three_nature_alliesAI
+{
+    npc_snaplasherAI(Creature* pCreature) : three_nature_alliesAI(pCreature) { Reset(); }
+
+    void Reset() override
+    {
+        three_nature_alliesAI::Reset();
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HARDENED_BARK : SPELL_HARDENED_BARK_H);
+    }
+};
+
+CreatureAI* GetAI_npc_snaplasher(Creature* pCreature)
+{
+    return new npc_snaplasherAI(pCreature);
+}
+
+/*######
+## npc_storm_lasher
+######*/
+
+struct MANGOS_DLL_DECL npc_storm_lasherAI : public three_nature_alliesAI
+{
+    npc_storm_lasherAI(Creature* pCreature) : three_nature_alliesAI(pCreature) { Reset(); }
+
+    uint32 m_uiLightningLashTimer;
+    uint32 m_uiStormBoltTimer;
+
+    void Reset() override
+    {
+        m_uiLightningLashTimer = urand(5000, 10000);
+        m_uiStormBoltTimer = 5000;
+        three_nature_alliesAI::Reset();
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiLightningLashTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_LIGHTNING_LASH : SPELL_LIGHTNING_LASH_H) == CAST_OK)
+                    m_uiLightningLashTimer = urand(5000, 10000);
+            }
+        }
+        else
+            m_uiLightningLashTimer -= uiDiff;
+
+        if (m_uiStormBoltTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_STORMBOLT : SPELL_STORMBOLT_H) == CAST_OK)
+                    m_uiStormBoltTimer = 5000;
+            }
+        }
+        else
+            m_uiStormBoltTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_storm_lasher(Creature* pCreature)
+{
+    return new npc_storm_lasherAI(pCreature);
 }
 
 /*######
@@ -731,6 +983,33 @@ CreatureAI* GetAI_npc_iron_roots(Creature* pCreature)
     return new npc_iron_rootsAI(pCreature);
 }
 
+/*######
+## npc_healthy_spore
+######*/
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_healthy_sporeAI : public Scripted_NoMovementAI
+{
+    npc_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_AUTO_GROW, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+        DoCastSpellIfCan(m_creature, SPELL_POTENT_PHEROMONES, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+        DoCastSpellIfCan(m_creature, SPELL_HEALTHY_SPORE_VISUAL, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+        m_creature->ForcedDespawn(25000);
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_healthy_spore(Creature* pCreature)
+{
+    return new npc_healthy_sporeAI(pCreature);
+}
+
 void AddSC_boss_freya()
 {
     Script* pNewScript;
@@ -739,6 +1018,21 @@ void AddSC_boss_freya()
     pNewScript->Name = "boss_freya";
     pNewScript->GetAI = GetAI_boss_freya;
     pNewScript->pEffectScriptEffectNPC = &EffectScriptEffectCreature_boss_freya;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_water_spirit";
+    pNewScript->GetAI = GetAI_npc_water_spirit;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_snaplasher";
+    pNewScript->GetAI = GetAI_npc_snaplasher;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_storm_lasher";
+    pNewScript->GetAI = GetAI_npc_storm_lasher;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -754,5 +1048,10 @@ void AddSC_boss_freya()
     pNewScript = new Script;
     pNewScript->Name = "npc_iron_roots";
     pNewScript->GetAI = GetAI_npc_iron_roots;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_healthy_spore";
+    pNewScript->GetAI = GetAI_npc_healthy_spore;
     pNewScript->RegisterSelf();
 }
