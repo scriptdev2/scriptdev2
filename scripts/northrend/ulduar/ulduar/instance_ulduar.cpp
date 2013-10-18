@@ -162,6 +162,8 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_LEVIATHAN_MK:
         case NPC_LEVIATHAN_MK_TURRET:
         case NPC_COMPUTER:
+        case NPC_VX001:
+        case NPC_AERIAL_UNIT:
         case NPC_RUNIC_COLOSSUS:
         case NPC_RUNE_GIANT:
         case NPC_SIF:
@@ -318,9 +320,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             break;
             // Mimiron
         case G0_MIMIRON_BUTTON:
-            if (m_auiEncounter[TYPE_MIMIRON] == NOT_STARTED)
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-            break;
         case GO_MIMIRON_DOOR_1:
         case GO_MIMIRON_DOOR_2:
         case GO_MIMIRON_DOOR_3:
@@ -575,17 +574,54 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
             // Keepers of Ulduar
         case TYPE_MIMIRON:
+            // Don't set the same encounter data twice
+            if (uiData == m_auiEncounter[uiType])
+                return;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MIMIRON_DOOR_1);
             DoUseDoorOrButton(GO_MIMIRON_DOOR_2);
             DoUseDoorOrButton(GO_MIMIRON_DOOR_3);
             if (uiData == DONE)
             {
-                if (GetData(TYPE_MIMIRON_HARD) != DONE)
+                if (GetData(TYPE_MIMIRON_HARD) == DONE)
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10_H : GO_CACHE_OF_INOV_25_H, 30 * MINUTE);
+                else
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30 * MINUTE);
 
                 SpawnFriendlyKeeper(NPC_KEEPER_MIMIRON);
                 DoOpenMadnessDoorIfCan();
+            }
+            else if (uiData == IN_PROGRESS)
+                DoToggleGameObjectFlags(G0_MIMIRON_BUTTON, GO_FLAG_NO_INTERACT, true);
+            else if (uiData == FAIL)
+            {
+                // reset objects
+                DoToggleGameObjectFlags(G0_MIMIRON_BUTTON, GO_FLAG_NO_INTERACT, false);
+
+                if (GameObject* pButton = GetSingleGameObjectFromStorage(G0_MIMIRON_BUTTON))
+                    pButton->ResetDoorOrButton();
+                if (GameObject* pElevator = GetSingleGameObjectFromStorage(GO_MIMIRON_ELEVATOR))
+                    pElevator->SetGoState(GO_STATE_ACTIVE);
+
+                // reset vehicles
+                if (Creature* pLeviathan = GetSingleCreatureFromStorage(NPC_LEVIATHAN_MK))
+                    pLeviathan->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                if (Creature* pVx001 = GetSingleCreatureFromStorage(NPC_VX001, true))
+                {
+                    pVx001->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                    pVx001->ForcedDespawn(1000);
+                }
+                if (Creature* pAerial = GetSingleCreatureFromStorage(NPC_AERIAL_UNIT, true))
+                {
+                    pAerial->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                    pAerial->ForcedDespawn(1000);
+                }
+                if (Creature* pMimiron = GetSingleCreatureFromStorage(NPC_MIMIRON))
+                    pMimiron->AI()->EnterEvadeMode();
+                if (Creature* pComputer = GetSingleCreatureFromStorage(NPC_COMPUTER))
+                    pComputer->AI()->EnterEvadeMode();
+
+                SetData(TYPE_MIMIRON_HARD, FAIL);
             }
             break;
         case TYPE_HODIR:
@@ -1181,6 +1217,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_KNOCK_3_N:
         case ACHIEV_CRIT_KNOCK_3_H:
             return GetData(TYPE_FREYA_HARD) == 3;
+        case ACHIEV_CRIT_FIREFIGHTER_N:
+        case ACHIEV_CRIT_FIREFIGHTER_H:
+            return GetData(TYPE_MIMIRON_HARD) == DONE;
 
         default:
             return false;

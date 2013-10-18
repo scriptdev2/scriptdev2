@@ -395,6 +395,8 @@ enum
     ACHIEV_CRIT_KNOCK_2_H       = 10460,
     ACHIEV_CRIT_KNOCK_3_N       = 10449,                    // Freya, achievs 3179, 3187
     ACHIEV_CRIT_KNOCK_3_H       = 10461,
+    ACHIEV_CRIT_FIREFIGHTER_N   = 10450,                    // Mimiron, achievs 3180, 3189
+    ACHIEV_CRIT_FIREFIGHTER_H   = 10463,
 };
 
 struct UlduarSpawns

@@ -724,7 +724,7 @@ struct MANGOS_DLL_DECL three_nature_alliesAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
+    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_FULL_HEAL)
         {

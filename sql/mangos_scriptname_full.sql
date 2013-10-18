@@ -1314,7 +1314,11 @@ UPDATE creature_template SET ScriptName='npc_healthy_spore' WHERE entry=33215;
 UPDATE creature_template SET ScriptName='npc_water_spirit' WHERE entry=33202;
 UPDATE creature_template SET ScriptName='npc_snaplasher' WHERE entry=32916;
 UPDATE creature_template SET ScriptName='npc_storm_lasher' WHERE entry=32919;
+UPDATE creature_template SET ScriptName='boss_mimiron' WHERE entry=33350;
 UPDATE creature_template SET ScriptName='boss_leviathan_mk2' WHERE entry=33432;
+UPDATE creature_template SET ScriptName='boss_vx001' WHERE entry=33651;
+UPDATE creature_template SET ScriptName='boss_aerial_unit' WHERE entry=33670;
+UPDATE gameobject_template SET ScriptName='go_big_red_button' WHERE entry=194739;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
