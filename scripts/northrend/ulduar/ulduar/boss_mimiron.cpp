@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_mimiron
-SD%Complete: 60%
-SDComment: Combat abilities NYI.
+SD%Complete: 80%
+SDComment: Hard mode abilities NYI.
 SDCategory: Ulduar
 EndScriptData */
 
@@ -106,13 +106,15 @@ enum
 
     // VX001 spells
     SPELL_RAPID_BURST_SUMMON                = 64840,
-    SPELL_RAPID_BURST_LEFT                  = 63387,                    // used in the VX phase; each spell has a different robot animation
-    SPELL_RAPID_BURST_RIGHT                 = 64019,
-    SPELL_RAPID_BURST_LEFT_H                = 64531,
-    SPELL_RAPID_BURST_RIGHT_H               = 64532,
-    SPELL_LASER_BARRAGE                     = 63274,
-    SPELL_SPINNING_UP                       = 63414,                    // laser barrage spell for the final phase
-    SPELL_ROCKET_STRIKE                     = 64402,                    // targets npc 34050; triggers 63681 and 63036 from target
+    SPELL_RAPID_BURST_EFFECT                = 64841,
+    SPELL_RAPID_BURST_AURA                  = 63382,                    // triggers alternative the left and right Rapid Burst or Hand Pulse
+    // SPELL_RAPID_BURST_LEFT               = 63387,                    // used in the VX phase; each spell has a different robot animation
+    // SPELL_RAPID_BURST_RIGHT              = 64019,
+    // SPELL_RAPID_BURST_LEFT_H             = 64531,
+    // SPELL_RAPID_BURST_RIGHT_H            = 64532,
+    // SPELL_LASER_BARRAGE                  = 63274,
+    SPELL_SPINNING_UP                       = 63414,                    // triggers 63414 and 66490;
+    SPELL_ROCKET_STRIKE                     = 64402,                    // targets npc 34050; triggers 63681 and 63036 from target; will spawn npc 34047
     SPELL_HEAT_WAVE                         = 63679,
     SPELL_HEAT_WAVE_H                       = 64534,
     SPELL_HAND_PULSE_LEFT                   = 64348,                    // spells used only in the final phase
@@ -128,10 +130,26 @@ enum
     SPELL_PLASMA_BALL_FLY_H                 = 64535,
     SPELL_PLASMA_BALL                       = 65647,                    // used during the final phase
     SPELL_PLASMA_BALL_H                     = 65648,
-    SPELL_SUMMON_ASSAULT_BOT                = 64427,                    // summon npc 34057
-    SPELL_SUMMON_SCRAP_BOT                  = 63819,                    // summon npc 33855
+    SPELL_SUMMON_ASSAULT_BOT_TRIGGER        = 64425,                    // triggers 64427 and 64426; used to summon npc 34057
+    SPELL_SUMMON_ASSAULT_BOT_VISUAL         = 64426,
+    SPELL_SUMMON_ASSAULT_BOT                = 64427,
+    SPELL_SUMMON_SCRAP_BOT_TRIGGER          = 63820,                    // triggers 63819 and 64398; used to summon npc 33855
+    SPELL_SUMMON_SCRAP_BOT_VISUAL           = 64398,
+    SPELL_SUMMON_SCRAP_BOT                  = 63819,
     SPELL_BOMB_BOT_SUMMON                   = 63811,                    // summon npc 33836
-    SPELL_SUMMON_FIRE_BOT                   = 64622,                    // hard mode spell; summon npc 34147
+    SPELL_MAGNETIC_CORE_PULL                = 64436,
+    SPELL_MAGNETIC_CORE_VISUAL              = 64438,
+    SPELL_SUMMON_FIRE_BOT_TRIGGER           = 64620,                    // triggers 64621, 64622; hard mode spell; used to summon npc 34147
+    SPELL_SUMMON_FIRE_BOT_VISUAL            = 64621,
+    SPELL_SUMMON_FIRE_BOT                   = 64622,
+
+    // proximity mine
+    SPELL_PROXIMITY_MINE                    = 65345,
+    SPELL_EXPLOSION                         = 66351,
+    SPELL_EXPLOSION_H                       = 63009,
+
+    // bots spells
+    SPELL_BOMB_BOT                          = 63767,
 
     // hard mode spells
     SPELL_SELF_DESTRUCTION                  = 64613,
@@ -144,7 +162,7 @@ enum
     SPELL_SUMMON_FLAMES_SPREAD              = 64562,                    // cast by npc 34363
 
     // frost bomb spells
-    SPELL_EXPLOSION                         = 64626,
+    SPELL_EXPLOSION_FROST                   = 64626,
     SPELL_FROST_BOMB_VISUAL                 = 64624,
 
     // summoned
@@ -234,7 +252,7 @@ static const float afTankEvadePos[4] = {2792.07f, 2596.32f, 364.3136f, 3.5f};
 static const float afRobotSpawnPos[4] = {2744.431f, 2569.385f, 364.3968f, 3.141f};
 static const float afRocketSpawnPos[4] = {2746.262f, 2567.085f, 369.2921f, 3.14f};
 static const float afAerialSpawnPos[4] = {2744.365f, 2569.303f, 392.2355f, 3.15f};
-static const float afAerialMovePos[3] = {2743.32f, 2569.285f, 380.2812f};
+static const float afAerialMovePos[3] = {2743.32f, 2569.285f, 378.2812f};
 static const float afTankMovePos[3] = {2763.82f, 2568.87f, 364.3136f};
 static const float afCenterMovePos[3] = {2744.61f, 2569.38f, 364.3136f};
 
@@ -694,8 +712,18 @@ struct MANGOS_DLL_DECL boss_leviathan_mk2AI : public ScriptedAI
 
     uint32 m_uiMountTimer;
 
+    uint32 m_uiMinesTimer;
+    uint32 m_uiNapalmTimer;
+    uint32 m_uiPlasmaBlastTimer;
+    uint32 m_uiShockBlastTimer;
+
     void Reset() override
     {
+        m_uiMinesTimer          = 1000;
+        m_uiNapalmTimer         = 20000;
+        m_uiPlasmaBlastTimer    = 10000;
+        m_uiShockBlastTimer     = 30000;
+
         SetCombatMovement(true);
     }
 
@@ -712,7 +740,7 @@ struct MANGOS_DLL_DECL boss_leviathan_mk2AI : public ScriptedAI
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
-        if (pDoneBy->GetEntry() == NPC_MIMIRON)
+        if (pDoneBy->GetEntry() == NPC_MIMIRON && m_uiPhase == PHASE_DAMAGED)
             return;
 
         if (uiDamage >= m_creature->GetHealth())
@@ -837,6 +865,8 @@ struct MANGOS_DLL_DECL boss_leviathan_mk2AI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned) override
     {
+        if (pSummoned->GetEntry() == NPC_PROXIMITY_MINE)
+            pSummoned->CastSpell(pSummoned, SPELL_PROXIMITY_MINE, true);
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -876,6 +906,48 @@ struct MANGOS_DLL_DECL boss_leviathan_mk2AI : public ScriptedAI
         if (m_uiPhase == PHASE_TRANSITION || m_uiPhase == PHASE_DAMAGED)
             return;
 
+        // Leviathan phase spells
+        if (m_uiPhase == PHASE_LEVIATHAN)
+        {
+            if (m_uiPlasmaBlastTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (Creature* pTurret = m_pInstance->GetSingleCreatureFromStorage(NPC_LEVIATHAN_MK_TURRET))
+                        pTurret->CastSpell(pTarget, m_bIsRegularMode ? SPELL_PLASMA_BLAST : SPELL_PLASMA_BLAST_H, false);
+
+                    DoScriptText(EMOTE_PLASMA_BLAST, m_creature);
+                    m_uiPlasmaBlastTimer = 30000;
+                }
+            }
+            else
+                m_uiPlasmaBlastTimer -= uiDiff;
+
+            if (m_uiNapalmTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_NAPALM_SHELL) == CAST_OK)
+                    m_uiNapalmTimer = 7000;
+            }
+            else
+                m_uiNapalmTimer -= uiDiff;
+        }
+
+        if (m_uiMinesTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_PROXIMITY_MINES) == CAST_OK)
+                m_uiMinesTimer = 35000;
+        }
+        else
+            m_uiMinesTimer -= uiDiff;
+
+        if (m_uiShockBlastTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SHOCK_BLAST) == CAST_OK)
+                m_uiShockBlastTimer = 34000;
+        }
+        else
+            m_uiShockBlastTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -910,9 +982,22 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
     uint32 m_uiMountTimer;
     uint8 m_uiRocketCount;
 
+    uint32 m_uiRocketStrikeTimer;
+    uint32 m_uiRapidBurstTimer;
+    uint32 m_uLaserBarrageTimer;
+    uint32 m_uiHandPulseTimer;
+    uint32 m_uiBurstEndTimer;
+    uint32 m_uiLaserEndTimer;
+
     void Reset() override
     {
-        m_uiRocketCount = 0;
+        m_uiRocketCount         = 0;
+        m_uiBurstEndTimer       = 0;
+        m_uiLaserEndTimer       = 0;
+        m_uiRapidBurstTimer     = 1000;
+        m_uiHandPulseTimer      = 1000;
+        m_uiRocketStrikeTimer   = 20000;
+        m_uLaserBarrageTimer    = 60000;
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -924,13 +1009,12 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
         }
 
         // Set levitate for animation purpose
-        // ToDo: find proper hand animation for final phase. This only works for the second phase
         m_creature->SetLevitate(true);
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
-        if (pDoneBy->GetEntry() == NPC_MIMIRON)
+        if (pDoneBy->GetEntry() == NPC_MIMIRON && m_uiPhase == PHASE_DAMAGED)
             return;
 
         if (uiDamage >= m_creature->GetHealth())
@@ -940,7 +1024,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
             if (m_uiPhase == PHASE_VX001)
             {
                 // shut down the VX001
-                if (DoCastSpellIfCan(m_creature, SPELL_TORSO_DISABLED) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, SPELL_TORSO_DISABLED, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                 {
                     // start transition phase
                     if (Creature* pMimiron = m_pInstance->GetSingleCreatureFromStorage(NPC_MIMIRON))
@@ -955,6 +1039,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
                     m_creature->CombatStop();
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
+                    Reset();
                     m_uiPhase = PHASE_TRANSITION;
                 }
             }
@@ -1017,20 +1102,52 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
         {
             // mount rockets at their seats
             case NPC_ROCKET_VISUAL:
+            {
                 int32 iSeat = (int32)m_uiRocketCount + 6;
                 pSummoned->CastCustomSpell(m_creature, SPELL_RIDE_VEHICLE_HARDCODED, &iSeat, NULL, NULL, true);
+                break;
+            }
+            case NPC_BURST_TARGET:
+                pSummoned->CastSpell(m_creature, SPELL_RAPID_BURST_EFFECT, true);
+                m_uiBurstEndTimer = 3000;
+
+                // Remove the target focus but allow the boss to face the burst target
+                m_creature->SetTargetGuid(ObjectGuid());
+                m_creature->SetFacingToObject(pSummoned);
                 break;
         }
     }
 
-    void UpdateAI(const uint32 uiDiff) override
+    // Custom threat management
+    bool SelectCustomHostileTarget()
     {
-        if (!m_pInstance)
+        Unit* pTarget = NULL;
+        Unit* pOldTarget = m_creature->getVictim();
+
+        if (!m_creature->getThreatManager().isThreatListEmpty())
+            pTarget = m_creature->getThreatManager().getHostileTarget();
+
+        if (pTarget)
         {
-            script_error_log("Instance Ulduar: ERROR Failed to load instance data for this instace.");
-            return;
+            if (pOldTarget != pTarget && !m_uiBurstEndTimer && !m_uiLaserEndTimer)
+                AttackStart(pTarget);
+
+            // Set victim to old target (if not while Burst or Laser)
+            if (pOldTarget && pOldTarget->isAlive() && !m_uiBurstEndTimer && !m_uiLaserEndTimer)
+            {
+                m_creature->SetTargetGuid(pOldTarget->GetObjectGuid());
+                m_creature->SetInFront(pOldTarget);
+            }
+
+            return true;
         }
 
+        // Will call EnterEvadeMode if fit
+        return m_creature->SelectHostileTarget() && m_creature->getVictim();
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
         // Mount the Rockets
         if (m_uiMountTimer)
         {
@@ -1048,14 +1165,81 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
                 m_uiMountTimer -= uiDiff;
         }
 
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+        if (!SelectCustomHostileTarget())
             return;
 
         // no combat during transition or when damaged
         if (m_uiPhase == PHASE_TRANSITION || m_uiPhase == PHASE_DAMAGED)
             return;
 
-        DoMeleeAttackIfReady();
+        // count the burst or laser expire timer for target reset
+        if (m_uiBurstEndTimer)
+        {
+            if (m_uiBurstEndTimer <= uiDiff)
+                m_uiBurstEndTimer = 0;
+            else
+                m_uiBurstEndTimer -= uiDiff;
+        }
+
+        if (m_uiLaserEndTimer)
+        {
+            if (m_uiLaserEndTimer <= uiDiff)
+                m_uiLaserEndTimer = 0;
+            else
+                 m_uiLaserEndTimer -= uiDiff;
+
+            // no other abilities during Laser
+            return;
+        }
+
+        if (m_uiPhase == PHASE_VX001)
+        {
+            if (m_uiRapidBurstTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_RAPID_BURST_SUMMON, SELECT_FLAG_PLAYER))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_RAPID_BURST_SUMMON) == CAST_OK)
+                        m_uiRapidBurstTimer = 4000;
+                }
+            }
+            else
+                m_uiRapidBurstTimer -= uiDiff;
+        }
+        else if (m_uiPhase == PHASE_FULL_ROBOT)
+        {
+            if (m_uiHandPulseTimer < uiDiff)
+            {
+                CanCastResult uiResult;
+                if (urand(0, 1))
+                    uiResult = DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HAND_PULSE_LEFT : SPELL_HAND_PULSE_LEFT_H);
+                else
+                    uiResult = DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HAND_PULSE_RIGHT : SPELL_HAND_PULSE_RIGHT_H);
+
+                if (uiResult == CAST_OK)
+                    m_uiHandPulseTimer = urand(1000, 2000);
+            }
+            else
+                 m_uiHandPulseTimer -= uiDiff;
+        }
+
+        if (m_uiRocketStrikeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_ROCKET_STRIKE) == CAST_OK)
+                m_uiRocketStrikeTimer = 20000;
+        }
+        else
+             m_uiRocketStrikeTimer -= uiDiff;
+
+        if (m_uLaserBarrageTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SPINNING_UP) == CAST_OK)
+            {
+                m_uiLaserEndTimer = 14000;
+                m_uLaserBarrageTimer = 40000;
+            }
+        }
+        else
+             m_uLaserBarrageTimer -= uiDiff;
     }
 };
 
@@ -1084,20 +1268,34 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
     bool m_bIsRegularMode;
     uint8 m_uiPhase;
 
+    uint32 m_uiCombatMoveTimer;
+    uint32 m_uiPlasmaBallTimer;
+    uint32 m_uiBombBotTimer;
+    uint32 m_uiAssaultBotTimer;
+    uint32 m_uiScrapBotTimer;
+    uint32 m_uiMagneticTimer;
+
     void Reset() override
     {
+        m_uiCombatMoveTimer = 2000;
+        m_uiPlasmaBallTimer = 2000;
+        m_uiAssaultBotTimer = 5000;
+        m_uiBombBotTimer    = 15000;
+        m_uiScrapBotTimer   = 10000;
+        m_uiMagneticTimer   = 0;
+
         SetCombatMovement(false);
     }
 
     void Aggro(Unit* /*pWho*/) override
     {
         m_uiPhase = PHASE_AERIAL_UNIT;
-        // ToDo: handle air combat movement
+        m_creature->SetWalk(false);
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
-        if (pDoneBy->GetEntry() == NPC_MIMIRON)
+        if (pDoneBy->GetEntry() == NPC_MIMIRON && m_uiPhase == PHASE_DAMAGED)
             return;
 
         if (uiDamage >= m_creature->GetHealth())
@@ -1135,13 +1333,21 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell) override
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // self repair succesfull; resume fight
         if (pSpell->Id == SPELL_SELF_REPAIR)
         {
             m_uiPhase = PHASE_FULL_ROBOT;
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+        }
+        else if (pSpell->Id == SPELL_MAGNETIC_CORE_PULL && pCaster->GetEntry() == NPC_MAGNETIC_CORE)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_MAGNETIC_CORE_VISUAL, CAST_INTERRUPT_PREVIOUS);
+            m_uiMagneticTimer = 20000;
+
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MovePoint(0, pCaster->GetPositionX(), pCaster->GetPositionY(), pCaster->GetPositionZ());
         }
     }
 
@@ -1174,6 +1380,13 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned) override
     {
+        if (pSummoned->GetEntry() == NPC_BOMB_BOT)
+            pSummoned->CastSpell(pSummoned, SPELL_BOMB_BOT, true);
+
+        if (m_pInstance && m_pInstance->GetData(TYPE_MIMIRON_HARD) == DONE)
+            pSummoned->CastSpell(pSummoned, SPELL_EMERGENCY_MODE, true);
+
+        pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -1181,15 +1394,253 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiMagneticTimer)
+        {
+            if (m_uiMagneticTimer <= uiDiff)
+            {
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), afAerialMovePos[2]);
+
+                m_creature->RemoveAurasDueToSpell(SPELL_MAGNETIC_CORE_VISUAL);
+                m_uiMagneticTimer = 0;
+            }
+            else
+                 m_uiMagneticTimer -= uiDiff;
+
+            // no other abilities during the magnetic pull
+            return;
+        }
+
         // no combat during transition or when damaged
         if (m_uiPhase == PHASE_TRANSITION || m_uiPhase == PHASE_DAMAGED)
             return;
+
+        // aerial phase spells
+        if (m_uiPhase == PHASE_AERIAL_UNIT)
+        {
+            // move to a closer point to target
+            if (m_uiCombatMoveTimer < uiDiff)
+            {
+                if (m_creature->GetDistance(m_creature->getVictim()) > 30.0f)
+                {
+                    float fX, fY, fZ;
+                    m_creature->getVictim()->GetContactPoint(m_creature, fX, fY, fZ, 3 * ATTACK_DISTANCE);
+
+                    m_creature->GetMotionMaster()->Clear();
+                    m_creature->GetMotionMaster()->MovePoint(0, fX, fY, m_creature->GetPositionZ());
+                }
+                m_uiCombatMoveTimer = 2000;
+            }
+            else
+                m_uiCombatMoveTimer -= uiDiff;
+
+            if (m_uiPlasmaBallTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_PLASMA_BALL_FLY : SPELL_PLASMA_BALL_FLY_H) == CAST_OK)
+                    m_uiPlasmaBallTimer = urand(2000, 3000);
+            }
+            else
+                m_uiPlasmaBallTimer -= uiDiff;
+
+            if (m_uiAssaultBotTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_ASSAULT_BOT_TRIGGER) == CAST_OK)
+                    m_uiAssaultBotTimer = 30000;
+            }
+            else
+                m_uiAssaultBotTimer -= uiDiff;
+
+            if (m_uiBombBotTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_BOMB_BOT_SUMMON) == CAST_OK)
+                    m_uiBombBotTimer = 15000;
+            }
+            else
+                m_uiBombBotTimer -= uiDiff;
+
+            if (m_uiScrapBotTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_SCRAP_BOT_TRIGGER) == CAST_OK)
+                    m_uiScrapBotTimer = 10000;
+            }
+            else
+                 m_uiScrapBotTimer -= uiDiff;
+        }
+        // full robot abilities
+        else if (m_uiPhase == PHASE_FULL_ROBOT)
+        {
+            if (m_uiPlasmaBallTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_PLASMA_BALL : SPELL_PLASMA_BALL_H) == CAST_OK)
+                    m_uiPlasmaBallTimer = 2000;
+            }
+            else
+                m_uiPlasmaBallTimer -= uiDiff;
+        }
     }
 };
 
 CreatureAI* GetAI_boss_aerial_unit(Creature* pCreature)
 {
     return new boss_aerial_unitAI(pCreature);
+}
+
+/*######
+## npc_proximity_mine
+######*/
+
+struct MANGOS_DLL_DECL npc_proximity_mineAI : public Scripted_NoMovementAI
+{
+    npc_proximity_mineAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    uint32 m_uiExplodeTimer;
+
+    void Reset() override
+    {
+        m_uiExplodeTimer = 35000;
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiExplodeTimer)
+        {
+            if (m_uiExplodeTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_EXPLOSION_H) == CAST_OK)
+                {
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->RemoveAurasDueToSpell(SPELL_PROXIMITY_MINE);
+                    m_creature->ForcedDespawn(2000);
+                    m_uiExplodeTimer = 0;
+                }
+            }
+            else
+                 m_uiExplodeTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_proximity_mine(Creature* pCreature)
+{
+    return new npc_proximity_mineAI(pCreature);
+}
+
+/*######
+## npc_bot_trigger
+######*/
+
+struct MANGOS_DLL_DECL npc_bot_triggerAI : public Scripted_NoMovementAI
+{
+    npc_bot_triggerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+
+    uint32 m_uiSummonTimer;
+    uint32 m_uiSummonSpell;
+
+    void Reset() override
+    {
+        m_uiSummonTimer = 0;
+        m_uiSummonSpell = 0;
+    }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* /*pInvoker*/, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A)
+        {
+            m_uiSummonTimer = 6000;
+            m_uiSummonSpell = uiMiscValue;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiSummonTimer)
+        {
+            if (m_uiSummonTimer <= uiDiff)
+            {
+                if (m_pInstance)
+                {
+                    if (Creature* pAerial = m_pInstance->GetSingleCreatureFromStorage(NPC_AERIAL_UNIT))
+                    {
+                        if (DoCastSpellIfCan(m_creature, m_uiSummonSpell, CAST_TRIGGERED, pAerial->GetObjectGuid()) == CAST_OK)
+                            m_uiSummonTimer = 0;
+                    }
+                }
+            }
+            else
+                m_uiSummonTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_bot_trigger(Creature* pCreature)
+{
+    return new npc_bot_triggerAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_bot_trigger(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    // always check spellid and effectindex
+    if ((uiSpellId == SPELL_SUMMON_ASSAULT_BOT_TRIGGER || uiSpellId == SPELL_SUMMON_SCRAP_BOT_TRIGGER || uiSpellId == SPELL_SUMMON_FIRE_BOT_TRIGGER) && uiEffIndex == EFFECT_INDEX_0)
+    {
+        uint32 uiVisualSpell = 0;
+        uint32 uiSummonSpell = 0;
+
+        switch (uiSpellId)
+        {
+            case SPELL_SUMMON_SCRAP_BOT_TRIGGER:
+                uiVisualSpell = SPELL_SUMMON_ASSAULT_BOT_VISUAL;
+                uiSummonSpell = SPELL_SUMMON_ASSAULT_BOT;
+                break;
+            case SPELL_SUMMON_ASSAULT_BOT_TRIGGER:
+                uiVisualSpell = SPELL_SUMMON_SCRAP_BOT_VISUAL;
+                uiSummonSpell = SPELL_SUMMON_SCRAP_BOT;
+                break;
+            case SPELL_SUMMON_FIRE_BOT_TRIGGER:
+                uiVisualSpell = SPELL_SUMMON_FIRE_BOT_VISUAL;
+                uiSummonSpell = SPELL_SUMMON_FIRE_BOT;
+                break;
+        }
+
+        pCreatureTarget->CastSpell(pCreatureTarget, uiVisualSpell, true);
+        pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pCaster, pCreatureTarget, uiSummonSpell);
+
+        // always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## boss_leviathan_mk2_turret
+######*/
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL boss_leviathan_mk2_turretAI : public Scripted_NoMovementAI
+{
+    boss_leviathan_mk2_turretAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset() override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_boss_leviathan_mk2_turret(Creature* pCreature)
+{
+    return new boss_leviathan_mk2_turretAI(pCreature);
 }
 
 /*######
@@ -1236,6 +1687,22 @@ void AddSC_boss_mimiron()
     pNewScript = new Script;
     pNewScript->Name = "boss_aerial_unit";
     pNewScript->GetAI = GetAI_boss_aerial_unit;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_proximity_mine";
+    pNewScript->GetAI = GetAI_npc_proximity_mine;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_bot_trigger";
+    pNewScript->GetAI = GetAI_npc_bot_trigger;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_bot_trigger;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_leviathan_mk2_turret";
+    pNewScript->GetAI = GetAI_boss_leviathan_mk2_turret;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

@@ -3585,7 +3585,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603194,'It would appear that I\'ve made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear.',15627,1,0,1,'mimiron SAY_ROBOT_DEATH'),
 
 (-1603195,'Combat matrix enhanced. Behold wonderous rapidity!',15630,1,0,0,'mimiron SAY_HELP_YOGG'),
-(-1603196,'Leviathan Mk II begins to cast Plasma Blast!',0,3,0,0,'mimiron EMOTE_PLASMA_BLAST'),
+(-1603196,'%s begins to cast Plasma Blast!',0,3,0,0,'mimiron EMOTE_PLASMA_BLAST'),
 
 (-1603197,'Aaaaaaaaaaaaaaaaa... Help me!!! Please got to help me!',15771,1,0,0,'yogg SAY_SARA_INTRO_1'),
 (-1603198,'What do you want from me? Leave me alone!',15772,1,0,0,'yogg SAY_SARA_INTRO_2'),
