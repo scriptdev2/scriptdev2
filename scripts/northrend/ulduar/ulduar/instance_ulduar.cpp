@@ -164,6 +164,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_COMPUTER:
         case NPC_VX001:
         case NPC_AERIAL_UNIT:
+        case NPC_WORLD_TRIGGER_FLAMES:
         case NPC_RUNIC_COLOSSUS:
         case NPC_RUNE_GIANT:
         case NPC_SIF:
@@ -324,15 +325,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_MIMIRON_DOOR_2:
         case GO_MIMIRON_DOOR_3:
         case GO_MIMIRON_ELEVATOR:
-        case GO_MIMIRON_TEL1:
-        case GO_MIMIRON_TEL2:
-        case GO_MIMIRON_TEL3:
-        case GO_MIMIRON_TEL4:
-        case GO_MIMIRON_TEL5:
-        case GO_MIMIRON_TEL6:
-        case GO_MIMIRON_TEL7:
-        case GO_MIMIRON_TEL8:
-        case GO_MIMIRON_TEL9:
             // Thorim
         case GO_DARK_IRON_PORTCULIS:
         case GO_RUNED_STONE_DOOR:
@@ -605,7 +597,10 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
                 // reset vehicles
                 if (Creature* pLeviathan = GetSingleCreatureFromStorage(NPC_LEVIATHAN_MK))
+                {
                     pLeviathan->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                    pLeviathan->AI()->EnterEvadeMode();
+                }
                 if (Creature* pVx001 = GetSingleCreatureFromStorage(NPC_VX001, true))
                 {
                     pVx001->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);

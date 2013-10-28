@@ -1320,7 +1320,11 @@ UPDATE creature_template SET ScriptName='boss_vx001' WHERE entry=33651;
 UPDATE creature_template SET ScriptName='boss_aerial_unit' WHERE entry=33670;
 UPDATE creature_template SET ScriptName='npc_proximity_mine' WHERE entry=34362;
 UPDATE creature_template SET ScriptName='npc_bot_trigger' WHERE entry=33856;
+UPDATE creature_template SET ScriptName='npc_rocket_strike' WHERE entry=34047;
+UPDATE creature_template SET ScriptName='npc_frost_bomb' WHERE entry=34149;
+UPDATE creature_template SET ScriptName='npc_mimiron_flames' WHERE entry IN (34363,34121);
 UPDATE creature_template SET ScriptName='boss_leviathan_mk2_turret' WHERE entry=34071;
+UPDATE creature_template SET ScriptName='npc_computer' WHERE entry=34143;
 UPDATE gameobject_template SET ScriptName='go_big_red_button' WHERE entry=194739;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES

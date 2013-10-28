@@ -162,6 +162,7 @@ enum
     NPC_AERIAL_UNIT             = 33670,
     NPC_COMPUTER                = 34143,
     NPC_BOT_SUMMON_TRIGGER      = 33856,
+    NPC_WORLD_TRIGGER_FLAMES    = 21252,
 
     // The descent into madness
     NPC_VEZAX                   = 33271,
