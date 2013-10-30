@@ -490,6 +490,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
         bool CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const override;
 
+        void DoSpawnThorimNpcs(Player* pSummoner);
         void DoProcessShatteredEvent();
 
         ObjectGuid GetKoloRubbleStalker(bool bRightSide) { return bRightSide ? m_rightKoloStalkerGuid : m_leftKoloStalkerGuid; }
@@ -509,7 +510,6 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         void JustDidDialogueStep(int32 iEntry) override;
         void SpawnFriendlyKeeper(uint32 uiWho);
         void DoSpawnHodirNpcs(Player* pSummoner);
-        void DoSpawnThorimNpcs(Player* pSummoner);
         void DoOpenMadnessDoorIfCan();
         void DoCallLeviathanHelp();
 

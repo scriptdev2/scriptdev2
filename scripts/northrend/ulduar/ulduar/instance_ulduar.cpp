@@ -120,7 +120,6 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
         }
 
         DoSpawnHodirNpcs(pPlayer);
-        DoSpawnThorimNpcs(pPlayer);
         m_bHelpersLoaded = true;
     }
 }
@@ -686,9 +685,6 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                     if (pColossus->isAlive())
                         pColossus->AI()->EnterEvadeMode();
                 }
-
-                if (Player* pPlayer = GetPlayerInMap())
-                    DoSpawnThorimNpcs(pPlayer);
 
                 m_uiStairsSpawnTimer = 0;
                 m_uiSlayedArenaMobs = 0;

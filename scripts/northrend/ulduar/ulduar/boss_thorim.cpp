@@ -170,6 +170,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
     instance_ulduar* m_pInstance;
     bool m_bIsRegularMode;
     bool m_bEventFinished;
+    bool m_bArenaSpawned;
 
     uint32 m_uiBerserkTimer;
     uint8 m_uiPhase;
@@ -198,6 +199,8 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         m_uiUnbalancingStrikeTimer  = 20000;
         m_uiAttackTimer             = 0;
         m_uiDwarfIndex              = urand(0, 2);
+
+        m_bArenaSpawned             = false;
 
         SetCombatMovement(false);
     }
@@ -282,6 +285,20 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         }
 
         StartNextDialogueText(SAY_AGGRO_1);
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        // spawn the arena npcs only when players are close to Thorim in order to avoid the possible bugs
+        if (!m_bArenaSpawned && pWho->GetTypeId() == TYPEID_PLAYER && pWho->isAlive() && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, DEFAULT_VISIBILITY_INSTANCE))
+        {
+            if (m_pInstance)
+                m_pInstance->DoSpawnThorimNpcs((Player*)pWho);
+
+            m_bArenaSpawned = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void JustReachedHome() override
