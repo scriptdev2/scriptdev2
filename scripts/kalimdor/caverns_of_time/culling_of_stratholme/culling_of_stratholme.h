@@ -47,7 +47,8 @@ enum
     NPC_JENA_ANDERSON               = 27885,
     NPC_MALCOM_MOORE                = 27891,                // Not (yet?) spawned
     NPC_BARTLEBY_BATTSON            = 27907,
-    NPC_CRATES_BUNNY                = 30996,
+    NPC_GRAIN_CRATE_HELPER          = 27827,
+    // NPC_CRATES_BUNNY             = 30996,
 
     // Intro Event NPCs
     NPC_LORDAERON_FOOTMAN           = 27745,
@@ -75,7 +76,11 @@ enum
     // Gameobjects
     GO_DOOR_BOOKCASE                = 188686,
     GO_DARK_RUNED_CHEST             = 190663,
-    GO_DARK_RUNED_CHEST_H          = 193597,
+    GO_DARK_RUNED_CHEST_H           = 193597,
+
+    GO_SUSPICIOUS_GRAIN_CRATE       = 190094,
+    GO_CRATE_HIGHLIGHT              = 190117,
+    GO_PLAGUE_GRAIN_CRATE           = 190095,
 
     // World States
     WORLD_STATE_CRATES              = 3479,
@@ -117,6 +122,7 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         void Initialize() override;
 
+        void OnPlayerEnter(Player* pPlayer) override;
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
@@ -134,17 +140,22 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         void GetCratesBunnyOrderedList(std::list<Creature*>& lList);
         Creature* GetStratIntroFootman();
         void GetResidentOrderedList(std::list<Creature*>& lList);
-        void DoSpawnArthasIfNeeded();
-        void DoSpawnChromieIfNeeded();
+
+        void DoSpawnArthasIfNeeded(Unit* pSummoner);
+        bool CanGrainEventProgress(Creature* pCrate);
+
+        void DoEventAtTriggerIfCan(uint32 uiTriggerId);
+
+    protected:
+        void DoChromieWhisper(int32 iEntry);
+        void DoSpawnChromieIfNeeded(Unit* pSummoner);
         uint8 GetInstancePosition();
         void ArthasJustDied();
 
-    protected:
-        void OnPlayerEnter(Player* pPlayer) override;
-        void DoChromieHurrySpeech();
-
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        bool m_bStartedInnEvent;
 
         uint8 m_uiGrainCrateCount;
         uint32 m_uiRemoveCrateStateTimer;
@@ -156,6 +167,8 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         GuidList m_lAgiatedCitizenGUIDList;
         GuidList m_lAgiatedResidentGUIDList;
+
+        GuidSet m_sGrainCratesGuidSet;
 };
 
 #endif

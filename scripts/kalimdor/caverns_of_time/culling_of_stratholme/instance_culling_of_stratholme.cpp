@@ -26,8 +26,11 @@ EndScriptData */
 
 enum
 {
-    MAX_ARTHAS_SPAWN_POS = 5,
-    SAY_CHROMIE_HURRY    = -1000000                         // TODO
+    MAX_ARTHAS_SPAWN_POS        = 5,
+    MAX_GRAIN_CRATES            = 5,
+    SAY_CHROMIE_HURRY           = -1000000,                         // TODO
+
+    WHISPER_CHROMIE_CRATES      = -1595001,
 };
 
 struct sSpawnLocation
@@ -47,12 +50,13 @@ static sSpawnLocation m_aArthasSpawnLocs[] =                // need tuning
 static sSpawnLocation m_aChromieSpawnLocs[] =               // need tuning, escpecially EndPositions!
 {
     {1814.46f, 1283.97f, 142.30f, 4.32f},                   // near bridge
-    {2311.0f, 1502.4f, 127.9f, 0.0f},                       // End
+    {2319.562f, 1506.409f, 152.0499f, 3.78f},               // End
     {1811.52f, 1285.92f, 142.37f, 4.47f},                   // Hourglass, near bridge
     {2186.42f, 1323.77f, 129.91f, 0.0f},                    // Hourglass, End
 };
 
 instance_culling_of_stratholme::instance_culling_of_stratholme(Map* pMap) : ScriptedInstance(pMap),
+    m_bStartedInnEvent(false),
     m_uiGrainCrateCount(0),
     m_uiRemoveCrateStateTimer(0),
     m_uiArthasRespawnTimer(0)
@@ -89,7 +93,7 @@ void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
-        case NPC_CRATES_BUNNY:                  m_luiCratesBunnyGUIDs.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_GRAIN_CRATE_HELPER:            m_luiCratesBunnyGUIDs.push_back(pCreature->GetObjectGuid()); break;
         case NPC_LORDAERON_FOOTMAN:             m_luiFootmanGUIDs.push_back(pCreature->GetObjectGuid());     break;
 
         case NPC_STRATHOLME_CITIZEN:
@@ -122,7 +126,7 @@ void instance_culling_of_stratholme::OnObjectCreate(GameObject* pGo)
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
-void instance_culling_of_stratholme::DoChromieHurrySpeech()
+void instance_culling_of_stratholme::DoChromieWhisper(int32 iEntry)
 {
     if (Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_ENTRANCE))
     {
@@ -132,7 +136,7 @@ void instance_culling_of_stratholme::DoChromieHurrySpeech()
             for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
                 if (Player* pPlayer = itr->getSource())
-                    DoScriptText(SAY_CHROMIE_HURRY, pChromie, pPlayer);
+                    DoScriptText(iEntry, pChromie, pPlayer);
             }
         }
     }
@@ -148,13 +152,14 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_CRATES, 1);
             else if (uiData == IN_PROGRESS)
             {
-                if (m_uiGrainCrateCount >= 5)
+                // safety check
+                if (m_uiGrainCrateCount >= MAX_GRAIN_CRATES)
                     return;
 
                 ++m_uiGrainCrateCount;
                 DoUpdateWorldState(WORLD_STATE_CRATES_COUNT, m_uiGrainCrateCount);
 
-                if (m_uiGrainCrateCount == 5)
+                if (m_uiGrainCrateCount == MAX_GRAIN_CRATES)
                 {
                     m_uiRemoveCrateStateTimer = 20000;
                     SetData(TYPE_GRAIN_EVENT, DONE);
@@ -184,8 +189,11 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
+                DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_DARK_RUNED_CHEST : GO_DARK_RUNED_CHEST_H, GO_FLAG_NO_INTERACT, false);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_DARK_RUNED_CHEST : GO_DARK_RUNED_CHEST_H, 30 * MINUTE);
-                DoSpawnChromieIfNeeded();
+
+                if (Player* pPlayer = GetPlayerInMap())
+                    DoSpawnChromieIfNeeded(pPlayer);
             }
             break;
         case TYPE_INFINITE_CORRUPTER_TIME:
@@ -211,7 +219,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                     SetData(TYPE_INFINITE_CORRUPTER_TIME, 0);
                     break;
                 case SPECIAL:
-                    DoChromieHurrySpeech();
+                    DoChromieWhisper(SAY_CHROMIE_HURRY);
                     break;
                 case FAIL:
                     SetData(TYPE_INFINITE_CORRUPTER_TIME, 0);
@@ -269,31 +277,29 @@ void instance_culling_of_stratholme::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
-void instance_culling_of_stratholme::OnPlayerEnter(Player* /*pPlayer*/)
+void instance_culling_of_stratholme::OnPlayerEnter(Player* pPlayer)
 {
-    if (instance->GetPlayersCountExceptGMs() == 0)
-    {
-        DoSpawnArthasIfNeeded();
-        DoSpawnChromieIfNeeded();
+    // spawn Chromie and Arthas
+    DoSpawnArthasIfNeeded(pPlayer);
+    DoSpawnChromieIfNeeded(pPlayer);
 
-        // Show World States if needed, TODO verify if needed and if this is the right way
-        if (m_auiEncounter[TYPE_GRAIN_EVENT] == IN_PROGRESS || m_auiEncounter[TYPE_GRAIN_EVENT] == SPECIAL)
-            DoUpdateWorldState(WORLD_STATE_CRATES, 1);      // Show Crates Counter
-        else
-            DoUpdateWorldState(WORLD_STATE_CRATES, 0);      // Remove Crates Counter
+    // Show World States if needed
+    if (m_auiEncounter[TYPE_GRAIN_EVENT] == IN_PROGRESS || m_auiEncounter[TYPE_GRAIN_EVENT] == SPECIAL)
+        pPlayer->SendUpdateWorldState(WORLD_STATE_CRATES, 1);      // Show Crates Counter
+    else
+        pPlayer->SendUpdateWorldState(WORLD_STATE_CRATES, 0);      // Remove Crates Counter
 
-        if (m_auiEncounter[TYPE_MEATHOOK_EVENT] == IN_PROGRESS)
-            DoUpdateWorldState(WORLD_STATE_WAVE, 1);        // Add WaveCounter
-        else if (m_auiEncounter[TYPE_SALRAMM_EVENT] == IN_PROGRESS)
-            DoUpdateWorldState(WORLD_STATE_WAVE, 6);        // Add WaveCounter
-        else
-            DoUpdateWorldState(WORLD_STATE_WAVE, 0);        // Remove WaveCounter
+    if (m_auiEncounter[TYPE_MEATHOOK_EVENT] == IN_PROGRESS)
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WAVE, 1);        // Add WaveCounter
+    else if (m_auiEncounter[TYPE_SALRAMM_EVENT] == IN_PROGRESS)
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WAVE, 6);        // Add WaveCounter
+    else
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WAVE, 0);        // Remove WaveCounter
 
-        if (m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME])
-            DoUpdateWorldState(WORLD_STATE_TIME, 1);        // Show Timer
-        else
-            DoUpdateWorldState(WORLD_STATE_TIME, 0);        // Remove Timer
-    }
+    if (m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME])
+        pPlayer->SendUpdateWorldState(WORLD_STATE_TIME, 1);        // Show Timer
+    else
+        pPlayer->SendUpdateWorldState(WORLD_STATE_TIME, 0);        // Remove Timer
 }
 
 uint32 instance_culling_of_stratholme::GetData(uint32 uiType) const
@@ -334,6 +340,7 @@ static bool sortFromSouthToNorth(Creature* pFirst, Creature* pSecond)
     return pFirst && pSecond && pFirst->GetPositionX() < pSecond->GetPositionX();
 }
 
+// return the ordered list of Grain Crate Helpers
 void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creature*>& lList)
 {
     std::list<Creature*> lCratesBunnyList;
@@ -387,39 +394,73 @@ void instance_culling_of_stratholme::ArthasJustDied()
     m_uiArthasRespawnTimer = 10000;                         // TODO, could be instant
 }
 
-void instance_culling_of_stratholme::DoSpawnArthasIfNeeded()
+void instance_culling_of_stratholme::DoSpawnArthasIfNeeded(Unit* pSummoner)
 {
+    if (!pSummoner)
+        return;
+
     Creature* pArthas = GetSingleCreatureFromStorage(NPC_ARTHAS, true);
     if (pArthas && pArthas->isAlive())
         return;
 
     uint8 uiPosition = GetInstancePosition();
     if (uiPosition && uiPosition <= MAX_ARTHAS_SPAWN_POS)
-    {
-        if (Player* pPlayer = GetPlayerInMap())
-            pPlayer->SummonCreature(NPC_ARTHAS, m_aArthasSpawnLocs[uiPosition - 1].m_fX, m_aArthasSpawnLocs[uiPosition - 1].m_fY, m_aArthasSpawnLocs[uiPosition - 1].m_fZ, m_aArthasSpawnLocs[uiPosition - 1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-    }
+        pSummoner->SummonCreature(NPC_ARTHAS, m_aArthasSpawnLocs[uiPosition - 1].m_fX, m_aArthasSpawnLocs[uiPosition - 1].m_fY, m_aArthasSpawnLocs[uiPosition - 1].m_fZ, m_aArthasSpawnLocs[uiPosition - 1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 }
 
 // Atm here only new Chromies are spawned - despawning depends on Mangos featuring such a thing
 // The hourglass also is not yet spawned/ relocated.
-void instance_culling_of_stratholme::DoSpawnChromieIfNeeded()
+void instance_culling_of_stratholme::DoSpawnChromieIfNeeded(Unit* pSummoner)
 {
-    Player* pPlayer = GetPlayerInMap();
-    if (!pPlayer)
+    if (!pSummoner)
         return;
 
     if (GetInstancePosition() == POS_INSTANCE_FINISHED)
     {
         Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_END, true);
         if (!pChromie)
-            pPlayer->SummonCreature(NPC_CHROMIE_END, m_aChromieSpawnLocs[1].m_fX, m_aChromieSpawnLocs[1].m_fY, m_aChromieSpawnLocs[1].m_fZ, m_aChromieSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+            pSummoner->SummonCreature(NPC_CHROMIE_END, m_aChromieSpawnLocs[1].m_fX, m_aChromieSpawnLocs[1].m_fY, m_aChromieSpawnLocs[1].m_fZ, m_aChromieSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
     }
     else if (GetInstancePosition() >= POS_ARTHAS_INTRO)
     {
         Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_ENTRANCE, true);
         if (!pChromie)
-            pPlayer->SummonCreature(NPC_CHROMIE_ENTRANCE, m_aChromieSpawnLocs[0].m_fX, m_aChromieSpawnLocs[0].m_fY, m_aChromieSpawnLocs[0].m_fZ, m_aChromieSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+            pSummoner->SummonCreature(NPC_CHROMIE_ENTRANCE, m_aChromieSpawnLocs[0].m_fX, m_aChromieSpawnLocs[0].m_fY, m_aChromieSpawnLocs[0].m_fZ, m_aChromieSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+    }
+}
+
+// Function to check if the grain event can progress
+bool instance_culling_of_stratholme::CanGrainEventProgress(Creature* pCrate)
+{
+    if (!pCrate)
+        return false;
+
+    if (m_sGrainCratesGuidSet.find(pCrate->GetObjectGuid()) != m_sGrainCratesGuidSet.end())
+        return false;
+
+    if (GetData(TYPE_GRAIN_EVENT) != DONE)
+        SetData(TYPE_GRAIN_EVENT, IN_PROGRESS);
+
+    m_sGrainCratesGuidSet.insert(pCrate->GetObjectGuid());
+    return true;
+}
+
+void instance_culling_of_stratholme::DoEventAtTriggerIfCan(uint32 uiTriggerId)
+{
+    switch (uiTriggerId)
+    {
+        case AREATRIGGER_INN:
+            if (m_bStartedInnEvent)
+                return;
+
+            // start dialogue
+            if (Creature* pMichael = GetSingleCreatureFromStorage(NPC_MICHAEL_BELFAST))
+            {
+                pMichael->SetStandState(UNIT_STAND_STATE_STAND);
+                pMichael->GetMotionMaster()->MoveWaypoint();
+            }
+            m_bStartedInnEvent = true;
+            break;
     }
 }
 
@@ -448,8 +489,11 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
     {
         if (m_uiRemoveCrateStateTimer <= uiDiff)
         {
+            if (Player* pPlayer = GetPlayerInMap())
+                DoSpawnChromieIfNeeded(pPlayer);
+
             DoUpdateWorldState(WORLD_STATE_CRATES, 0);
-            DoSpawnChromieIfNeeded();
+            DoChromieWhisper(WHISPER_CHROMIE_CRATES);
             m_uiRemoveCrateStateTimer = 0;
         }
         else
@@ -461,7 +505,9 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
     {
         if (m_uiArthasRespawnTimer <= uiDiff)
         {
-            DoSpawnArthasIfNeeded();
+            if (Player* pPlayer = GetPlayerInMap())
+                DoSpawnArthasIfNeeded(pPlayer);
+
             m_uiArthasRespawnTimer = 0;
         }
         else
@@ -474,6 +520,20 @@ InstanceData* GetInstanceData_instance_culling_of_stratholme(Map* pMap)
     return new instance_culling_of_stratholme(pMap);
 }
 
+bool AreaTrigger_at_culling_of_stratholme(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_INN)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pPlayer->GetInstanceData())
+            pInstance->DoEventAtTriggerIfCan(pAt->id);
+    }
+
+    return false;
+}
+
 void AddSC_instance_culling_of_stratholme()
 {
     Script* pNewScript;
@@ -481,5 +541,10 @@ void AddSC_instance_culling_of_stratholme()
     pNewScript = new Script;
     pNewScript->Name = "instance_culling_of_stratholme";
     pNewScript->GetInstanceData = &GetInstanceData_instance_culling_of_stratholme;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_culling_of_stratholme";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_culling_of_stratholme;
     pNewScript->RegisterSelf();
 }

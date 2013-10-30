@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: culling_of_stratholme
-SD%Complete: 5%
-SDComment: Placeholder
+SD%Complete: 20%
+SDComment: Only intro events are supported.
 SDCategory: Culling of Stratholme
 EndScriptData */
 
@@ -47,11 +47,14 @@ enum
     GOSSIP_ITEM_INN_1           = -3595003,
     GOSSIP_ITEM_INN_2           = -3595004,
     GOSSIP_ITEM_INN_3           = -3595005,
+    GOSSIP_ITEM_INN_SKIP        = -3595006,                 // used to skip the intro; requires research
+    GOSSIP_ITEM_INN_TELEPORT    = -3595007,                 // teleport to stratholme - used after the main event has started
 
     TEXT_ID_INN_1               = 12939,
     TEXT_ID_INN_2               = 12949,
     TEXT_ID_INN_3               = 12950,
     TEXT_ID_INN_4               = 12952,
+    TEXT_ID_INN_TELEPORT        = 13470,
 };
 
 bool GossipHello_npc_chromie(Player* pPlayer, Creature* pCreature)
@@ -129,7 +132,7 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 /*sen
                     if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
                     {
                         if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
-                            pInstance->DoSpawnArthasIfNeeded();
+                            pInstance->DoSpawnArthasIfNeeded(pPlayer);
                     }
                     break;
             }
@@ -138,7 +141,7 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 /*sen
     return true;
 }
 
-bool QuestAccept_npc_chromie(Player* /*pPlayer*/, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     switch (pQuest->GetQuestId())
     {
@@ -153,7 +156,7 @@ bool QuestAccept_npc_chromie(Player* /*pPlayer*/, Creature* pCreature, const Que
             if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
             {
                 if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
-                    pInstance->DoSpawnArthasIfNeeded();
+                    pInstance->DoSpawnArthasIfNeeded(pPlayer);
             }
             break;
     }
@@ -166,6 +169,8 @@ bool QuestAccept_npc_chromie(Player* /*pPlayer*/, Creature* pCreature, const Que
 
 enum
 {
+    SAY_SOLDIERS_REPORT         = -1595000,
+
     SPELL_ARCANE_DISRUPTION     = 49590,
     SPELL_CRATES_KILL_CREDIT    = 58109,
 };
@@ -176,6 +181,9 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
     {
         if (Creature* pTarget = (Creature*)pAura->GetTarget())
         {
+            if (pTarget->GetEntry() != NPC_GRAIN_CRATE_HELPER)
+                return true;
+
             std::list<Creature*> lCrateBunnyList;
             if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pTarget->GetInstanceData())
             {
@@ -185,40 +193,63 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
                 {
                     ++i;
                     if (*itr == pTarget)
+                    {
+                        // check if the event can proceed
+                        if (!pInstance->CanGrainEventProgress(pTarget))
+                            return true;
+
                         break;
+                    }
                 }
 
                 switch (i)
                 {
                     case 1:
                         // Start NPC_ROGER_OWENS Event
+                        if (Creature* pRoger = pInstance->GetSingleCreatureFromStorage(NPC_ROGER_OWENS))
+                        {
+                            pRoger->SetStandState(UNIT_STAND_STATE_STAND);
+                            pRoger->GetMotionMaster()->MoveWaypoint();
+                        }
                         break;
                     case 2:
                         // Start NPC_SERGEANT_MORIGAN  Event
+                        if (Creature* pMorigan = pInstance->GetSingleCreatureFromStorage(NPC_SERGEANT_MORIGAN))
+                            pMorigan->GetMotionMaster()->MoveWaypoint();
                         break;
                     case 3:
                         // Start NPC_JENA_ANDERSON Event
+                        if (Creature* pJena = pInstance->GetSingleCreatureFromStorage(NPC_JENA_ANDERSON))
+                            pJena->GetMotionMaster()->MoveWaypoint();
                         break;
                     case 4:
                         // Start NPC_MALCOM_MOORE Event
+                        pTarget->SummonCreature(NPC_MALCOM_MOORE, 1605.452f, 804.9279f, 122.961f, 5.19f, TEMPSUMMON_DEAD_DESPAWN, 0);
                         break;
                     case 5:
                         // Start NPC_BARTLEBY_BATTSON Event
+                        if (Creature* pBartleby = pInstance->GetSingleCreatureFromStorage(NPC_BARTLEBY_BATTSON))
+                            pBartleby->GetMotionMaster()->MoveWaypoint();
                         break;
                 }
 
-                if (pInstance->GetData(TYPE_GRAIN_EVENT) != DONE)
+                // Finished event, give killcredit
+                if (pInstance->GetData(TYPE_GRAIN_EVENT) == DONE)
                 {
-                    pInstance->SetData(TYPE_GRAIN_EVENT, IN_PROGRESS);
-
-                    // Finished event, give killcredit
-                    if (pInstance->GetData(TYPE_GRAIN_EVENT) == DONE)
-                        pTarget->CastSpell(pTarget, SPELL_CRATES_KILL_CREDIT, true);
+                    pTarget->CastSpell(pTarget, SPELL_CRATES_KILL_CREDIT, true);
+                    pInstance->DoOrSimulateScriptTextForThisInstance(SAY_SOLDIERS_REPORT, NPC_LORDAERON_CRIER);
                 }
 
-                // pTarget->ForcedDespawn();    // direct despawn has influence on visual effects,
-                // but despawning makes it impossible to multi-use the spell at the same place
-                // perhaps some add. GO-Visual
+                // despawn the GO visuals and spanw the plague crate
+                if (GameObject* pCrate = GetClosestGameObjectWithEntry(pTarget, GO_SUSPICIOUS_GRAIN_CRATE, 5.0f))
+                    pCrate->SetLootState(GO_JUST_DEACTIVATED);
+                if (GameObject* pHighlight = GetClosestGameObjectWithEntry(pTarget, GO_CRATE_HIGHLIGHT, 5.0f))
+                    pHighlight->SetLootState(GO_JUST_DEACTIVATED);
+                if (GameObject* pCrate = GetClosestGameObjectWithEntry(pTarget, GO_PLAGUE_GRAIN_CRATE, 5.0f))
+                {
+                    pCrate->SetRespawnTime(6 * HOUR * IN_MILLISECONDS);
+                    pCrate->Refresh();
+                }
             }
         }
     }
