@@ -177,6 +177,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_YOGGSARON:
         case NPC_SARA:
         case NPC_YOGG_BRAIN:
+        case NPC_VOICE_OF_YOGG:
         case NPC_ALGALON:
 
         case NPC_MIMIRON:
@@ -232,6 +233,9 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             return;
         case NPC_RIGHT_HAND_BUNNY:
             m_lRightHandBunniesGuids.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_OMINOUS_CLOUD:
+            m_lOminousCloudsGuids.push_back(pCreature->GetObjectGuid());
             return;
 
         default:
@@ -723,8 +727,27 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_VEZAX_GATE);
             break;
         case TYPE_YOGGSARON:
+            // Don't set the same encounter data twice
+            if (uiData == m_auiEncounter[uiType])
+                return;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_YOGG_GATE);
+            if (uiData == FAIL)
+            {
+                // reset Ominous clouds
+                for (GuidList::const_iterator itr = m_lOminousCloudsGuids.begin(); itr != m_lOminousCloudsGuids.end(); ++itr)
+                {
+                    if (Creature* pCloud = instance->GetCreature(*itr))
+                        pCloud->AI()->EnterEvadeMode();
+                }
+
+                // clear insane and despawn the voice
+                if (Creature* pVoice = GetSingleCreatureFromStorage(NPC_VOICE_OF_YOGG))
+                    pVoice->ForcedDespawn();
+
+                if (Creature* pSara = GetSingleCreatureFromStorage(NPC_SARA))
+                    pSara->AI()->EnterEvadeMode();
+            }
             break;
 
             // Celestial Planetarium
@@ -1073,6 +1096,15 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
         case NPC_RUNE_GIANT:
             DoUseDoorOrButton(GO_THORIM_STONE_DOOR);
             break;
+    }
+}
+
+void instance_ulduar::OnCreatureEvade(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_GUARDIAN_OF_YOGG)
+    {
+        SetData(TYPE_YOGGSARON, FAIL);
+        pCreature->ForcedDespawn();
     }
 }
 

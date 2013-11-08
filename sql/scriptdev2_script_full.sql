@@ -3665,7 +3665,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603257,'This area will self-destruct in two minutes.',15423,1,0,0,'mimiron SAY_DESTRUCT_2_MIN'),
 (-1603258,'This area will self-destruct in one minute.',15424,1,0,0,'mimiron SAY_DESTRUCT_1_MIN'),
 (-1603259,'Self-destruct sequence finalized. Have a nice day.',15425,1,0,0,'mimiron SAY_DESTRUCT_0_MIN'),
-(-1603260,'Self-destruct sequence terminated. Overide code A905.',15414,1,0,0,'mimiron SAY_SELF_DESTRUCT_END');
+(-1603260,'Self-destruct sequence terminated. Overide code A905.',15414,1,0,0,'mimiron SAY_SELF_DESTRUCT_END'),
+
+(-1603261,'%s begins to boil upon touching $n!',0,2,0,0,'ominous cloud EMOTE_CLOUD_BOIL');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

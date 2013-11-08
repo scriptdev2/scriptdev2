@@ -170,6 +170,9 @@ enum
     NPC_YOGGSARON               = 33288,
     NPC_SARA                    = 33134,
     NPC_YOGG_BRAIN              = 33890,
+    NPC_VOICE_OF_YOGG           = 33280,
+    NPC_OMINOUS_CLOUD           = 33292,
+    NPC_GUARDIAN_OF_YOGG        = 33136,
 
     // Celestial planetarium
     NPC_ALGALON                 = 32871,
@@ -478,6 +481,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         void OnCreatureCreate(Creature* pCreature) override;
         void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureDeath(Creature* pCreature) override;
+        void OnCreatureEvade(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
@@ -543,6 +547,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
         GuidList m_lUpperThunderOrbsGuids;
         GuidList m_lLeftHandBunniesGuids;
         GuidList m_lRightHandBunniesGuids;
+        GuidList m_lOminousCloudsGuids;
         GuidSet m_sColossusGuidSet;
 };
 
