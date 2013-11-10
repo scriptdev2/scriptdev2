@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
         // spawn the arena npcs only when players are close to Thorim in order to avoid the possible bugs
         if (!m_bArenaSpawned && pWho->GetTypeId() == TYPEID_PLAYER && pWho->isAlive() && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, DEFAULT_VISIBILITY_INSTANCE))
         {
-            if (m_pInstance)
+            if (m_pInstance && m_pInstance->GetData(TYPE_THORIM) != DONE)
                 m_pInstance->DoSpawnThorimNpcs((Player*)pWho);
 
             m_bArenaSpawned = true;

@@ -3372,8 +3372,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1603010,'Allies of Nature have appeared!',0,3,0,0,'freya EMOTE_ALLIES_NATURE'),
 (-1603011,'The %s withers into the earth and begins to regenerate.',0,2,0,0,'freya EMOTE_REGEN_ALLIES'),
-(-1603012,'Freya begins to cast Ground Tremor!',0,3,0,0,'freya EMOTE_TREMOR'),
-(-1603013,'Freya casts Strenghtened Iron Roots!',0,3,0,0,'freya EMOTE_IRON_ROOTS'),
+
+(-1603012,'As you wish, $N.',0,0,0,0,'keeper SAY_KEEPER_ACTIVE'),
+(-1603013,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1603014,'Matron, the Conservatory has been breached!',15483,1,0,0,'brightleaf SAY_AGGRO_BRIGHT'),
 (-1603015,'Fertilizer.',15485,1,0,0,'brightleaf SAY_SLAY_1_BRIGHT'),
@@ -4734,7 +4735,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3603009,'We are ready to help!','Expedition Commander GOSSIP_ITEM_START_RAZORSCALE'),
 (-3603010,'Activate secondary defensive systems.','Lore Keeper of Norgannon GOSSIP_ITEM_ACTIVATE_SYSTEMS'),
 (-3603011,'Confirmed.','Lore Keeper of Norgannon GOSSIP_ITEM_CONFIRMED'),
-(-3603012,'We\'re ready. Begin the assault!','Brann Bronzebeard GOSSIP_ITEM_BEGIN_ASSAULT');
+(-3603012,'We\'re ready. Begin the assault!','Brann Bronzebeard GOSSIP_ITEM_BEGIN_ASSAULT'),
+
+(-3603013,'Lend us your aid, keeper. Together we will defeat Yogg-Saron.','Ulduar Keeper GOSSIP_ITEM_LEND_AID'),
+(-3603014,'Yes.','Ulduar Keeper GOSSIP_ITEM_KEEPER_CONFIRM');
 
 -- -3 608 000 VIOLET HOLD
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

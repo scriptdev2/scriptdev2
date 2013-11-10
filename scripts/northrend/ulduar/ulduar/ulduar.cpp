@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: ulduar
-SD%Complete: 10%
+SD%Complete: 70%
 SDComment: Teleporters are hacked until solved in core
 SDCategory: Ulduar
 EndScriptData */
@@ -28,6 +28,7 @@ npc_keeper_norgannon
 event_go_ulduar_tower
 npc_storm_tempered_keeper
 npc_charged_sphere
+npc_ulduar_keeper
 EndContentData */
 
 #include "precompiled.h"
@@ -503,6 +504,93 @@ CreatureAI* GetAI_npc_charged_sphere(Creature* pCreature)
     return new npc_charged_sphereAI(pCreature);
 }
 
+/*######
+## npc_ulduar_keeper
+######*/
+
+enum
+{
+    SAY_KEEPER_ACTIVE                           = -1603012,
+
+    GOSSIP_ITEM_LEND_AID                        = -3603013,
+    GOSSIP_ITEM_KEEPER_CONFIRM                  = -3603014,
+
+    GOSSIP_TEXT_ID_HODIR                        = 14326,
+    GOSSIP_TEXT_ID_FREYA                        = 14332,
+    GOSSIP_TEXT_ID_THORIM                       = 14333,
+    GOSSIP_TEXT_ID_MIMIRON                      = 14334,
+    GOSSIP_TEXT_ID_KEEPER_CONFIRM               = 14325,
+    GOSSIP_TEXT_ID_YOGG_DEFEATED                = 384,                      // ToDo: add the right text id here!
+};
+
+bool GossipHello_npc_ulduar_keeper(Player* pPlayer, Creature* pCreature)
+{
+    if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_YOGGSARON) == DONE)
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_YOGG_DEFEATED, pCreature->GetObjectGuid());
+        else
+        {
+            switch (pCreature->GetEntry())
+            {
+                case NPC_KEEPER_HODIR:
+                    if (pInstance->GetData(TYPE_KEEPER_HODIR) != DONE)
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_LEND_AID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_HODIR, pCreature->GetObjectGuid());
+                    break;
+                case NPC_KEEPER_FREYA:
+                    if (pInstance->GetData(TYPE_KEEPER_FREYA) != DONE)
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_LEND_AID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_FREYA, pCreature->GetObjectGuid());
+                    break;
+                case NPC_KEEPER_THORIM:
+                    if (pInstance->GetData(TYPE_KEEPER_THORIM) != DONE)
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_LEND_AID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_THORIM, pCreature->GetObjectGuid());
+                    break;
+                case NPC_KEEPER_MIMIRON:
+                    if (pInstance->GetData(TYPE_KEEPER_MIMIRON) != DONE)
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_LEND_AID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_MIMIRON, pCreature->GetObjectGuid());
+                    break;
+            }
+        }
+    }
+    return true;
+}
+
+bool GossipSelect_npc_ulduar_keeper(Player* pPlayer, Creature* pCreature, uint32 /*sender*/, uint32 uiAction)
+{
+    switch (uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KEEPER_CONFIRM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_KEEPER_CONFIRM, pCreature->GetObjectGuid());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            DoScriptText(SAY_KEEPER_ACTIVE, pCreature, pPlayer);
+            pPlayer->CLOSE_GOSSIP_MENU();
+
+            if (instance_ulduar* pInstance = (instance_ulduar*)pCreature->GetInstanceData())
+            {
+                switch (pCreature->GetEntry())
+                {
+                    case NPC_KEEPER_HODIR:   pInstance->SetData(TYPE_KEEPER_HODIR,   DONE); break;
+                    case NPC_KEEPER_FREYA:   pInstance->SetData(TYPE_KEEPER_FREYA,   DONE); break;
+                    case NPC_KEEPER_THORIM:  pInstance->SetData(TYPE_KEEPER_THORIM,  DONE); break;
+                    case NPC_KEEPER_MIMIRON: pInstance->SetData(TYPE_KEEPER_MIMIRON, DONE); break;
+                }
+            }
+            break;
+    }
+
+    return true;
+}
+
 void AddSC_ulduar()
 {
     Script* pNewScript;
@@ -538,5 +626,11 @@ void AddSC_ulduar()
     pNewScript = new Script;
     pNewScript->Name = "npc_charged_sphere";
     pNewScript->GetAI = &GetAI_npc_charged_sphere;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ulduar_keeper";
+    pNewScript->pGossipHello = &GossipHello_npc_ulduar_keeper;
+    pNewScript->pGossipSelect = &GossipSelect_npc_ulduar_keeper;
     pNewScript->RegisterSelf();
 }

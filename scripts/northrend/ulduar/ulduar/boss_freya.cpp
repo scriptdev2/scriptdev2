@@ -38,8 +38,6 @@ enum
 
     EMOTE_ALLIES_NATURE                 = -1603010,
     EMOTE_REGEN_ALLIES                  = -1603011,
-    // EMOTE_TREMOR                     = -1603012,
-    // EMOTE_IRON_ROOTS                 = -1603013,
 
     SAY_AGGRO_BRIGHT                    = -1603014,
     SAY_SLAY_1_BRIGHT                   = -1603015,

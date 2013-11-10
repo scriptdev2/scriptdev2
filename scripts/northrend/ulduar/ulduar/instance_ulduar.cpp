@@ -29,6 +29,11 @@ enum
     SAY_PRE_LEVIATHAN_1                     = -1603239,
     SAY_PRE_LEVIATHAN_2                     = -1603240,
     SAY_PRE_LEVIATHAN_3                     = -1603241,
+
+    SAY_FREYA_HELP                          = -1603009,
+    SAY_HODIR_HELP                          = -1603093,
+    SAY_THORIM_HELP                         = -1603155,
+    SAY_MIMIRON_HELP                        = -1603195,
 };
 
 static const DialogueEntry aUlduarDialogue[] =
@@ -44,6 +49,7 @@ struct UlduarKeeperSpawns
 {
     float fX, fY, fZ, fO;
     uint32 uiEntry, uiType;
+    int32 iText;
 };
 
 static UlduarKeeperSpawns m_aKeepersSpawnLocs[] =
@@ -52,6 +58,14 @@ static UlduarKeeperSpawns m_aKeepersSpawnLocs[] =
     {2028.766f, 17.42014f,  411.4446f, 3.857f, NPC_KEEPER_MIMIRON, TYPE_MIMIRON},
     {1945.761f, -81.52171f, 411.4407f, 1.029f, NPC_KEEPER_HODIR,   TYPE_HODIR},
     {2028.822f, -65.73573f, 411.4426f, 2.460f, NPC_KEEPER_THORIM,  TYPE_THORIM},
+};
+
+static UlduarKeeperSpawns m_aKeeperHelperLocs[] =
+{
+    {2036.873f,  25.42513f, 338.4984f, 3.909f, NPC_FREYA_HELPER,   TYPE_KEEPER_FREYA,   SAY_FREYA_HELP},
+    {2036.658f, -73.58822f, 338.4985f, 2.460f, NPC_MIMIRON_HELPER, TYPE_KEEPER_MIMIRON, SAY_MIMIRON_HELP},
+    {1939.045f, -90.87457f, 338.5426f, 0.994f, NPC_HODIR_HELPER,   TYPE_KEEPER_HODIR,   SAY_HODIR_HELP},
+    {1939.148f,  42.49035f, 338.5427f, 5.235f, NPC_THORIM_HELPER,  TYPE_KEEPER_THORIM,  SAY_THORIM_HELP},
 };
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
@@ -110,13 +124,19 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
         pPlayer->SendUpdateWorldState(WORLD_STATE_TIMER_COUNT, GetData(TYPE_ALGALON_TIMER));
     }
 
-    // spawn frienly keepers in the central hall and all the other faction npcs
+    // spawn frienly keepers in the central hall, keeper helpers for Yogg-Saron and all the other faction npcs
     if (!m_bHelpersLoaded)
     {
         for (uint8 i = 0; i < countof(m_aKeepersSpawnLocs); ++i)
         {
             if (GetData(m_aKeepersSpawnLocs[i].uiType) == DONE)
                 pPlayer->SummonCreature(m_aKeepersSpawnLocs[i].uiEntry, m_aKeepersSpawnLocs[i].fX, m_aKeepersSpawnLocs[i].fY, m_aKeepersSpawnLocs[i].fZ, m_aKeepersSpawnLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
+        }
+
+        for (uint8 i = 0; i < countof(m_aKeeperHelperLocs); ++i)
+        {
+            if (GetData(m_aKeeperHelperLocs[i].uiType) == DONE)
+                pPlayer->SummonCreature(m_aKeeperHelperLocs[i].uiEntry, m_aKeeperHelperLocs[i].fX, m_aKeeperHelperLocs[i].fY, m_aKeeperHelperLocs[i].fZ, m_aKeeperHelperLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
         }
 
         DoSpawnHodirNpcs(pPlayer);
@@ -810,15 +830,27 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
 
             // Ulduar keepers
         case TYPE_KEEPER_HODIR:
+            if (uiData == m_auiUlduarKeepers[0] || uiData != DONE)
+                return;
+            SpawnKeeperHelper(NPC_HODIR_HELPER);
             m_auiUlduarKeepers[0] = uiData;
             break;
         case TYPE_KEEPER_THORIM:
+            if (uiData == m_auiUlduarKeepers[1] || uiData != DONE)
+                return;
+            SpawnKeeperHelper(NPC_THORIM_HELPER);
             m_auiUlduarKeepers[1] = uiData;
             break;
         case TYPE_KEEPER_FREYA:
+            if (uiData == m_auiUlduarKeepers[2] || uiData != DONE)
+                return;
+            SpawnKeeperHelper(NPC_FREYA_HELPER);
             m_auiUlduarKeepers[2] = uiData;
             break;
         case TYPE_KEEPER_MIMIRON:
+            if (uiData == m_auiUlduarKeepers[3] || uiData != DONE)
+                return;
+            SpawnKeeperHelper(NPC_MIMIRON_HELPER);
             m_auiUlduarKeepers[3] = uiData;
             break;
 
@@ -1019,6 +1051,34 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
         case NPC_KEEPER_HODIR:   pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[2].fX, m_aKeepersSpawnLocs[2].fY, m_aKeepersSpawnLocs[2].fZ, m_aKeepersSpawnLocs[2].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
         case NPC_KEEPER_THORIM:  pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[3].fX, m_aKeepersSpawnLocs[3].fY, m_aKeepersSpawnLocs[3].fZ, m_aKeepersSpawnLocs[3].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
         case NPC_KEEPER_FREYA:   pPlayer->SummonCreature(uiWho, m_aKeepersSpawnLocs[0].fX, m_aKeepersSpawnLocs[0].fY, m_aKeepersSpawnLocs[0].fZ, m_aKeepersSpawnLocs[0].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true); break;
+    }
+}
+
+// Spawn the keeper helpers for Yogg-Saron
+void instance_ulduar::SpawnKeeperHelper(uint32 uiWho)
+{
+    Player* pPlayer = GetPlayerInMap();
+    if (!pPlayer)
+        return;
+
+    switch (uiWho)
+    {
+        case NPC_MIMIRON_HELPER:
+            if (Creature* pKeeper = pPlayer->SummonCreature(uiWho, m_aKeeperHelperLocs[1].fX, m_aKeeperHelperLocs[1].fY, m_aKeeperHelperLocs[1].fZ, m_aKeeperHelperLocs[1].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true))
+                DoScriptText(m_aKeeperHelperLocs[1].iText, pKeeper);
+            break;
+        case NPC_HODIR_HELPER:
+            if (Creature* pKeeper = pPlayer->SummonCreature(uiWho, m_aKeeperHelperLocs[2].fX, m_aKeeperHelperLocs[2].fY, m_aKeeperHelperLocs[2].fZ, m_aKeeperHelperLocs[2].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true))
+                DoScriptText(m_aKeeperHelperLocs[2].iText, pKeeper);
+            break;
+        case NPC_THORIM_HELPER:
+            if (Creature* pKeeper = pPlayer->SummonCreature(uiWho, m_aKeeperHelperLocs[3].fX, m_aKeeperHelperLocs[3].fY, m_aKeeperHelperLocs[3].fZ, m_aKeeperHelperLocs[3].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true))
+                DoScriptText(m_aKeeperHelperLocs[3].iText, pKeeper);
+            break;
+        case NPC_FREYA_HELPER:
+            if (Creature* pKeeper = pPlayer->SummonCreature(uiWho, m_aKeeperHelperLocs[0].fX, m_aKeeperHelperLocs[0].fY, m_aKeeperHelperLocs[0].fZ, m_aKeeperHelperLocs[0].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true))
+                DoScriptText(m_aKeeperHelperLocs[0].iText, pKeeper);
+            break;
     }
 }
 

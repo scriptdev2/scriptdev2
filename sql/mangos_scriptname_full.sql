@@ -1329,6 +1329,7 @@ UPDATE creature_template SET ScriptName='npc_mimiron_flames' WHERE entry IN (343
 UPDATE creature_template SET ScriptName='boss_leviathan_mk2_turret' WHERE entry=34071;
 UPDATE creature_template SET ScriptName='npc_computer' WHERE entry=34143;
 UPDATE gameobject_template SET ScriptName='go_big_red_button' WHERE entry=194739;
+UPDATE creature_template SET ScriptName='npc_ulduar_keeper' WHERE entry IN (33241,33242,33244,33213);
 UPDATE creature_template SET ScriptName='boss_sara' WHERE entry=33134;
 UPDATE creature_template SET ScriptName='npc_ominous_cloud' WHERE entry=33292;
 UPDATE creature_template SET ScriptName='npc_voice_yogg_saron' WHERE entry=33280;

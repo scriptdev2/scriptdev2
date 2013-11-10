@@ -72,11 +72,6 @@ enum
     EMOTE_SHATTER_BLAST                         = -1603235,
     EMOTE_CLOUD_BOIL                            = -1603261,
 
-    SAY_FREYA_HELP                              = -1603009,
-    SAY_HODIR_HELP                              = -1603093,
-    SAY_THORIM_HELP                             = -1603155,
-    SAY_MIMIRON_HELP                            = -1603195,
-
     // generic spells
     SPELL_EXTINGUISH_LIFE                       = 64166,                    // berserk spell
 

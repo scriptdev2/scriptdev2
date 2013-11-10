@@ -420,6 +420,7 @@ static const UlduarSpawns afReinforcementsNormal[] =
     {122.479f, 25.093f, 410.60f, 3.10f, NPC_SALVAGED_DEMOLISHER},
     {123.022f, 39.671f, 409.80f, 3.10f, NPC_SALVAGED_DEMOLISHER},
 };
+
 static const UlduarSpawns afReinforcementsHeroic[] =
 {
     {106.359f, -35.269f, 409.80f, 3.12f, NPC_SALVAGED_SIEGE_ENGINE},
@@ -513,6 +514,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private Dialogu
     protected:
         void JustDidDialogueStep(int32 iEntry) override;
         void SpawnFriendlyKeeper(uint32 uiWho);
+        void SpawnKeeperHelper(uint32 uiWho);
         void DoSpawnHodirNpcs(Player* pSummoner);
         void DoOpenMadnessDoorIfCan();
         void DoCallLeviathanHelp();
