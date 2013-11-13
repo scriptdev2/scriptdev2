@@ -22,6 +22,7 @@ SDCategory: Un'Goro Crater
 EndScriptData */
 
 /* ContentData
+npc_ame01
 npc_ringo
 EndContentData */
 
@@ -81,9 +82,9 @@ struct MANGOS_DLL_DECL npc_ame01AI : public npc_escortAI
 
             switch (urand(0, 2))
             {
-                case 0: DoScriptText(SAY_AME_AGGRO1, m_creature); break;
-                case 1: DoScriptText(SAY_AME_AGGRO2, m_creature); break;
-                case 2: DoScriptText(SAY_AME_AGGRO3, m_creature); break;
+                case 0: DoScriptText(SAY_AME_AGGRO1, m_creature, pWho); break;
+                case 1: DoScriptText(SAY_AME_AGGRO2, m_creature, pWho); break;
+                case 2: DoScriptText(SAY_AME_AGGRO3, m_creature, pWho); break;
             }
         }
     }
