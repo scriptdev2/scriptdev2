@@ -43,6 +43,7 @@ spell 51331
 spell 51332
 spell 51366
 spell 52090
+spell 56099
 EndContentData */
 
 #include "precompiled.h"
@@ -342,6 +343,12 @@ enum
     SPELL_MELODIOUS_RAPTURE_VISUAL      = 21051,
     NPC_DEEPRUN_RAT                     = 13016,
     NPC_ENTHRALLED_DEEPRUN_RAT          = 13017,
+
+    // quest 12981
+    SPELL_THROW_ICE                     = 56099,
+    SPELL_FROZEN_IRON_SCRAP             = 56101,
+    NPC_SMOLDERING_SCRAP_BUNNY          = 30169,
+    GO_SMOLDERING_SCRAP                 = 192124,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -1020,6 +1027,25 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                 pCreatureTarget->GetMotionMaster()->MoveFollow(pCaster, frand(0.5f, 3.0f), frand(M_PI_F * 0.8f, M_PI_F * 1.2f));
 
                 ((Player*)pCaster)->KilledMonsterCredit(NPC_ENTHRALLED_DEEPRUN_RAT);
+            }
+            return true;
+        }
+        case SPELL_THROW_ICE:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCreatureTarget->GetEntry() != NPC_SMOLDERING_SCRAP_BUNNY)
+                    return true;
+
+                if (GameObject* pScrap = GetClosestGameObjectWithEntry(pCreatureTarget, GO_SMOLDERING_SCRAP, 5.0f))
+                {
+                    if (pScrap->GetRespawnTime() != 0)
+                        return true;
+
+                    pCreatureTarget->CastSpell(pCreatureTarget, SPELL_FROZEN_IRON_SCRAP, true);
+                    pScrap->SetLootState(GO_JUST_DEACTIVATED);
+                    pCreatureTarget->ForcedDespawn(1000);
+                }
             }
             return true;
         }
