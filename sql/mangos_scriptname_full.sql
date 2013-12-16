@@ -371,6 +371,8 @@ UPDATE creature_template SET ScriptName='npc_nesingwary_trapper' WHERE entry=258
 UPDATE creature_template SET ScriptName='npc_oil_stained_wolf' WHERE entry=25791;
 UPDATE creature_template SET ScriptName='npc_sinkhole_kill_credit' WHERE entry IN (26248,26249);
 UPDATE creature_template SET ScriptName='npc_lurgglbr' WHERE entry=25208;
+UPDATE creature_template SET ScriptName='npc_beryl_sorcerer' WHERE entry=25316;
+UPDATE creature_template SET ScriptName='npc_captured_beryl_sorcerer' WHERE entry=25474;
 
 /* BURNING STEPPES */
 UPDATE creature_template SET ScriptName='npc_ragged_john' WHERE entry=9563;

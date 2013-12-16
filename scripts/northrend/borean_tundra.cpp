@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11865, 11728, 11897, 11570
+SDComment: Quest support: 11570, 11590, 11728, 11865, 11897.
 SDCategory: Borean Tundra
 EndScriptData */
 
@@ -25,6 +25,7 @@ EndScriptData */
 npc_nesingwary_trapper
 npc_sinkhole_kill_credit
 npc_lurgglbr
+npc_beryl_sorcerer
 EndContentData */
 
 #include "precompiled.h"
@@ -518,6 +519,68 @@ CreatureAI* GetAI_npc_lurgglbr(Creature* pCreature)
     return new npc_lurgglbrAI(pCreature);
 }
 
+/*#####
+# npc_beryl_sorcerer
+#####*/
+
+enum
+{
+    SPELL_ARCANE_CHAINS                 = 45611,
+    SPELL_ARCANE_CHAINS_CHANNEL         = 45630,
+    SPELL_SUMMON_CHAINS_CHARACTER       = 45625,                // triggers 45626
+    // SPELL_ENSLAVED_ARCANE_CHAINS     = 45632,                // chain visual - purpose unk, probably used on quest end
+
+    NPC_BERYL_SORCERER                  = 25316,
+    NPC_CAPTURED_BERYL_SORCERER         = 25474,
+};
+
+bool EffectAuraDummy_npc_beryl_sorcerer(const Aura* pAura, bool bApply)
+{
+    if (pAura->GetId() == SPELL_ARCANE_CHAINS)
+    {
+        if (pAura->GetEffIndex() != EFFECT_INDEX_0 || !bApply)
+            return false;
+
+        Creature* pCreature = (Creature*)pAura->GetTarget();
+        Unit* pCaster = pAura->GetCaster();
+        if (!pCreature || !pCaster || pCaster->GetTypeId() != TYPEID_PLAYER || pCreature->GetEntry() != NPC_BERYL_SORCERER)
+            return false;
+
+        // only for wounded creatures
+        if (pCreature->GetHealthPercent() > 30.0f)
+            return false;
+
+        // spawn the captured sorcerer, apply dummy aura on the summoned and despawn
+        pCaster->CastSpell(pCreature, SPELL_SUMMON_CHAINS_CHARACTER, true);
+        pCaster->CastSpell(pCaster, SPELL_ARCANE_CHAINS_CHANNEL, true);
+        pCreature->ForcedDespawn();
+        return true;
+    }
+
+    return false;
+}
+
+bool EffectAuraDummy_npc_captured_beryl_sorcerer(const Aura* pAura, bool bApply)
+{
+    if (pAura->GetId() == SPELL_ARCANE_CHAINS_CHANNEL)
+    {
+        if (pAura->GetEffIndex() != EFFECT_INDEX_0 || !bApply)
+            return false;
+
+        Creature* pCreature = (Creature*)pAura->GetTarget();
+        Unit* pCaster = pAura->GetCaster();
+        if (!pCreature || !pCaster || pCaster->GetTypeId() != TYPEID_PLAYER || pCreature->GetEntry() != NPC_CAPTURED_BERYL_SORCERER)
+            return false;
+
+        // follow the caster
+        ((Player*)pCaster)->KilledMonsterCredit(NPC_CAPTURED_BERYL_SORCERER);
+        pCreature->GetMotionMaster()->MoveFollow(pCaster, pCreature->GetDistance(pCaster), M_PI_F - pCreature->GetAngle(pCaster));
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_borean_tundra()
 {
     Script* pNewScript;
@@ -543,5 +606,15 @@ void AddSC_borean_tundra()
     pNewScript->Name = "npc_lurgglbr";
     pNewScript->GetAI = &GetAI_npc_lurgglbr;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_lurgglbr;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_beryl_sorcerer";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_beryl_sorcerer;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_captured_beryl_sorcerer";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_captured_beryl_sorcerer;
     pNewScript->RegisterSelf();
 }
