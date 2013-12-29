@@ -202,7 +202,7 @@ void DoOrSimulateScriptTextForMap(int32 iTextEntry, uint32 uiCreatureEntry, Map*
     }
 
     debug_log("SD2: DoOrSimulateScriptTextForMap: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",
-              iTextEntry, pData->SoundId, pData->Type, pData->Language, pData->Emote);
+              iTextEntry, pData->SoundId, pData->Type, pData->LanguageId, pData->Emote);
 
     if (pData->Type != CHAT_TYPE_ZONE_YELL)
     {
@@ -214,9 +214,9 @@ void DoOrSimulateScriptTextForMap(int32 iTextEntry, uint32 uiCreatureEntry, Map*
         pMap->PlayDirectSoundToMap(pData->SoundId);
 
     if (pCreatureSource)                                // If provided pointer for sayer, use direct version
-        pMap->MonsterYellToMap(pCreatureSource->GetObjectGuid(), iTextEntry, pData->Language, pTarget);
+        pMap->MonsterYellToMap(pCreatureSource->GetObjectGuid(), iTextEntry, pData->LanguageId, pTarget);
     else                                                // Simulate yell
-        pMap->MonsterYellToMap(pInfo, iTextEntry, pData->Language, pTarget);
+        pMap->MonsterYellToMap(pInfo, iTextEntry, pData->LanguageId, pTarget);
 }
 
 //*********************************
