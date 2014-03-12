@@ -1041,7 +1041,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1000963,'%s looks at you for a moment, then motions for you to follow.',0,2,0,0,'cenarion sparrowhawk EMOTE_FOLLOW'),
 (-1000964,'%s surveys the ground for the buried raven stones.',0,2,0,0,'cenarion sparrowhawk EMOTE_SURVEY'),
-(-1000965,'%s locates a buried raven stone.',0,2,0,0,'cenarion sparrowhawk EMOTE_LOCATE');
+(-1000965,'%s locates a buried raven stone.',0,2,0,0,'cenarion sparrowhawk EMOTE_LOCATE'),
+
+(-1000966,'I WILL CRUSH YOU LIKE A GNAT!',0,1,0,0,'reth\'hedron SAY_LOW_HP'),
+(-1000967,'You will regret this, mortal! Reth\'hedron will return... I will have my vengeance!',0,1,0,53,'reth\'hedron SAY_EVENT_END');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
