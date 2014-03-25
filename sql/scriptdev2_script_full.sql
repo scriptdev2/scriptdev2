@@ -1052,14 +1052,27 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000971,'Keep them off me!',0,0,0,0,'drijya SAY_DRIJYA_3'),
 (-1000972,'I\'m done with this pylon. On to the next.',0,0,0,1,'drijya SAY_DRIJYA_4'),
 (-1000973,'Alright, pylon two down. Now for the heat mainfold.',0,0,0,1,'drijya SAY_DRIJYA_5'),
-(-1000974,'That should do it. The teleporter should blow any second now !',0,0,0,5,'drijya SAY_DRIJYA_6'),
+(-1000974,'That should do it. The teleporter should blow any second now!',0,0,0,5,'drijya SAY_DRIJYA_6'),
 (-1000975,'Ok, let\'s get out of here!',0,0,0,1,'drijya SAY_DRIJYA_7'),
 (-1000976,'Thank you, $n! I couldn\'t have done it without you. You\'ll let Gahruj know?',0,0,0,1,'drijya SAY_DRIJYA_COMPLETE'),
 
 (-1000977,'Oh, it\'s on now! But you thought I\'d be alone too, huh?!',0,0,0,0,'tapoke slim jahn SAY_AGGRO'),
 (-1000978,'Okay, okay! No need to get all violent. I\'ll talk. I\'ll talk!',0,0,0,20,'tapoke slim jahn SAY_DEFEAT'),
 (-1000979,'Whoa! This is way more than what I bargained for, you\'re on your own, Slim!',0,0,0,0,'slim\'s friend SAY_FRIEND_DEFEAT'),
-(-1000980,'I have a few notes from the job back at my place. I\'ll get them and then meet you back in the inn.',0,0,0,1,'tapoke slim jahn SAY_NOTES');
+(-1000980,'I have a few notes from the job back at my place. I\'ll get them and then meet you back in the inn.',0,0,0,1,'tapoke slim jahn SAY_NOTES'),
+
+(-1000981,'It is time. The rite of exorcism will now commence...',0,0,0,0,'anchorite barada SAY_EXORCISM_1'),
+(-1000982,'Prepare yourself. Do not allow the ritual to be interrupted or we may lose our patient...',0,0,0,1,'anchorite barada SAY_EXORCISM_2'),
+(-1000983,'Keep away. The fool is mine.',0,0,0,0,'colonel jules SAY_EXORCISM_3'),
+(-1000984,'Back, foul beings of darkness! You have no power here!',0,0,0,0,'anchorite barada SAY_EXORCISM_4'),
+(-1000985,'No! Not yet! This soul is ours!',0,0,0,0,'colonel jules SAY_EXORCISM_5'),
+(-1000986,'Back! I cast you back... corrupter of faith! Author of pain! Do not return, or suffer the same fate as you did here today!',0,0,0,2,'anchorite barada SAY_EXORCISM_6'),
+(-1000987,'I... must not...falter!',0,0,0,0,'anchorite barada SAY_EXORCISM_RANDOM_1'),
+(-1000988,'Be cleansed with Light, human! Let not the demonic corruption overwhelm you.',0,0,0,0,'anchorite barada SAY_EXORCISM_RANDOM_2'),
+(-1000989,'Back, foul beings of darkness! You have no power here!',0,0,0,0,'anchorite barada SAY_EXORCISM_RANDOM_3'),
+(-1000990,'This is fruitless, draenei! You and your little helper cannot wrest control of this pathetic human. He is mine!',0,0,0,0,'colonel jules SAY_EXORCISM_RANDOM_4'),
+(-1000991,'I see your ancestors, Anchorite! They writhe and scream in the darkness... they are with us!',0,0,0,0,'colonel jules SAY_EXORCISM_RANDOM_5'),
+(-1000992,'I will tear your soul into morsels and slow roast them over demon fire!',0,0,0,0,'colonel jules SAY_EXORCISM_RANDOM_6');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4628,7 +4641,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000107,'I am ready, as are my forces. Let us end this masquerade!','reginald windsor GOSSIP_ITEM_START'),
 (-3000108,'I need a moment of your time, sir.','prospector anvilward GOSSIP_ITEM_MOMENT'),
 (-3000109,'I am ready, Oronok. Let us destroy Cyrukh and free the elements!','oronok torn-heart GOSSIP_ITEM_FIGHT'),
-(-3000110,'Why... yes, of course. I\'ve something to show you right inside this building, Mr. Anvilward.','prospector anvilward GOSSIP_ITEM_SHOW');
+(-3000110,'Why... yes, of course. I\'ve something to show you right inside this building, Mr. Anvilward.','prospector anvilward GOSSIP_ITEM_SHOW'),
+(-3000111,'I am ready, Anchorite. Let us begin the exorcism.','anchorite barada GOSSIP_ITEM_EXORCISM');
 
 -- -3 033 000 SHADOWFANG KEEP
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
