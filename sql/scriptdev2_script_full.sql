@@ -1082,7 +1082,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000997,'We go!',0,0,0,0,'fhwoor SAY_CAMP_ENTER'),
 (-1000998,'Uh oh...',0,0,0,0,'fhwoor SAY_AMBUSH'),
 (-1000999,'Ha ha, squishy naga!',0,0,0,0,'fhwoor SAY_AMBUSH_CLEARED'),
-(-1001000,'Fhwoor do good!',0,0,0,0,'fhwoor SAY_ESCORT_COMPLETE');
+(-1001000,'Fhwoor do good!',0,0,0,0,'fhwoor SAY_ESCORT_COMPLETE'),
+
+(-1001001,'We must leave before more are alerted.',0,0,0,0,'kurenai captive SAY_KUR_START'),
+(-1001002,'It\'s an ambush! Defend yourself!',0,0,0,0,'kurenai captive SAY_KUR_AMBUSH_1'),
+(-1001003,'We are surrounded!',0,0,0,0,'kurenai captive SAY_KUR_AMBUSH_2'),
+(-1001004,'Up ahead is the road to Telaar. We will split up when we reach the fork as they will surely send more Murkblood after us. Hopefully one of us makes it back to Telaar alive.',0,0,0,1,'kurenai captive SAY_KUR_COMPLETE_1'),
+(-1001005,'Farewell, stranger. Your heroics will be remembered by my people. Now, hurry to Telaar!',0,0,0,1,'kurenai captive SAY_KUR_COMPLETE_2');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -6005,6 +6011,29 @@ INSERT INTO script_waypoint VALUES
 (17969, 24, -472.463959, 5449.546875, 22.561453, 0, ''),
 (17969, 25, -454.533264, 5461.302246, 22.602837, 30000, 'quest complete');
 
+DELETE FROM script_waypoint WHERE entry=18209;
+INSERT INTO script_waypoint VALUES
+(18209, 0, -1518.092407, 8465.188477, -4.102, 0, ''),
+(18209, 1, -1516.741699, 8472.000977, -4.101, 0, ''),
+(18209, 2, -1516.330444, 8473.119141, -4.102, 0, ''),
+(18209, 3, -1514.117310, 8476.740234, -4.100, 0, ''),
+(18209, 4, -1512.199951, 8481.147461, -4.015, 0, ''),
+(18209, 5, -1514.709839, 8488.281250, -3.544, 0, ''),
+(18209, 6, -1516.556274, 8495.236328, -2.463, 0, ''),
+(18209, 7, -1515.730957, 8506.528320, -0.609, 7000, 'SAY_KUR_AMBUSH'),
+(18209, 8, -1505.038940, 8513.247070, 0.672, 0, ''),
+(18209, 9, -1476.161133, 8496.066406, 2.157, 0, ''),
+(18209, 10, -1464.450684, 8492.601563, 3.529, 0, ''),
+(18209, 11, -1457.568359, 8492.183594, 4.449, 0, ''),
+(18209, 12, -1444.100342, 8499.031250, 6.177, 0, ''),
+(18209, 13, -1426.472168, 8510.116211, 7.686, 0, ''),
+(18209, 14, -1403.685303, 8524.146484, 9.680, 0, ''),
+(18209, 15, -1384.890503, 8542.014648, 11.180, 0, ''),
+(18209, 16, -1385.107422, 8547.194336, 11.297, 5000, 'SAY_KUR_COMPLETE'),
+(18209, 17, -1387.814453, 8556.652344, 11.735, 0, ''),
+(18209, 18, -1397.817749, 8574.999023, 13.204, 0, ''),
+(18209, 19, -1411.961304, 8598.225586, 14.990, 0, '');
+
 DELETE FROM script_waypoint WHERE entry=18210;
 INSERT INTO script_waypoint VALUES
 (18210, 0, -1581.410034, 8557.933594, 2.726, 0, ''),
@@ -7617,7 +7646,7 @@ INSERT INTO script_waypoint VALUES
 
 DELETE FROM script_waypoint WHERE entry=17877;
 INSERT INTO script_waypoint VALUES
-(17877, 0, 231.403, 8479.940, 17.928, 3000, 'stand up'),
+(17877, 0, 231.403, 8479.940, 17.928, 3000, ''),
 (17877, 1, 214.645, 8469.645, 23.121, 0, ''),
 (17877, 2, 208.538, 8463.481, 24.738, 0, ''),
 (17877, 3, 196.524, 8446.077, 24.814, 0, ''),

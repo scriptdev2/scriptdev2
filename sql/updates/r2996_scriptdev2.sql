@@ -9,7 +9,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 DELETE FROM script_waypoint WHERE entry=17877;
 INSERT INTO script_waypoint VALUES
-(17877, 0, 231.403, 8479.940, 17.928, 3000, 'stand up'),
+(17877, 0, 231.403, 8479.940, 17.928, 3000, ''),
 (17877, 1, 214.645, 8469.645, 23.121, 0, ''),
 (17877, 2, 208.538, 8463.481, 24.738, 0, ''),
 (17877, 3, 196.524, 8446.077, 24.814, 0, ''),
