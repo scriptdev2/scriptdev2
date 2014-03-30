@@ -237,10 +237,10 @@ struct MANGOS_DLL_DECL npc_echo_of_medivhAI : public ScriptedAI
         if (m_uiCheatTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, urand(0, 1) ? (m_pInstance->GetPlayerTeam() == ALLIANCE ? SPELL_HAND_OF_MEDIVH_HORDE : SPELL_HAND_OF_MEDIVH_ALLIANCE) :
-                (m_pInstance->GetPlayerTeam() == ALLIANCE ? SPELL_FURY_OF_MEDIVH_ALLIANCE : SPELL_FURY_OF_MEDIVH_HORDE));
+                                 (m_pInstance->GetPlayerTeam() == ALLIANCE ? SPELL_FURY_OF_MEDIVH_ALLIANCE : SPELL_FURY_OF_MEDIVH_HORDE));
 
             switch (urand(0, 2))
-            {
+        {
                 case 0: DoPlaySoundToSet(m_creature, SOUND_ID_CHEAT_1); break;
                 case 1: DoPlaySoundToSet(m_creature, SOUND_ID_CHEAT_2); break;
                 case 2: DoPlaySoundToSet(m_creature, SOUND_ID_CHEAT_3); break;
@@ -327,8 +327,8 @@ struct MANGOS_DLL_DECL npc_chess_piece_genericAI : public ScriptedAI
         if (m_pInstance)
         {
             if ((m_pInstance->GetPlayerTeam() == ALLIANCE && m_creature->getFaction() == FACTION_ID_CHESS_ALLIANCE) ||
-                (m_pInstance->GetPlayerTeam() == HORDE && m_creature->getFaction() == FACTION_ID_CHESS_HORDE) ||
-                m_pInstance->GetData(TYPE_CHESS) == DONE)
+                    (m_pInstance->GetPlayerTeam() == HORDE && m_creature->getFaction() == FACTION_ID_CHESS_HORDE) ||
+                    m_pInstance->GetData(TYPE_CHESS) == DONE)
                 m_uiMoveCommandTimer = 0;
         }
     }

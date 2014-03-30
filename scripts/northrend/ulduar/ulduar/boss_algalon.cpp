@@ -309,7 +309,7 @@ struct MANGOS_DLL_DECL boss_algalonAI : public ScriptedAI, private DialogueHelpe
     {
         switch (pSummoned->GetEntry())
         {
-            // move Brann to the center of the platform (and override pathfinding because of missing GO support)
+                // move Brann to the center of the platform (and override pathfinding because of missing GO support)
             case NPC_BRANN_ALGALON:
                 pSummoned->SetWalk(false);
                 pSummoned->GetMotionMaster()->MovePoint(0, 1631.986f, -297.7831f, 417.321f, false);

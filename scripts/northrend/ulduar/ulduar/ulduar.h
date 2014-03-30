@@ -413,7 +413,7 @@ struct UlduarSpawns
 // ToDo: spawn additional Engineers, Demolitionists, Mages and Liquid Pyrite near the columns
 static const UlduarSpawns afReinforcementsNormal[] =
 {
-    {118.797f, -26.9963f,409.80f, 3.14f, NPC_SALVAGED_SIEGE_ENGINE},
+    {118.797f, -26.9963f, 409.80f, 3.14f, NPC_SALVAGED_SIEGE_ENGINE},
     {118.847f, -43.758f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
     {116.602f, 8.464f, 409.80f, 3.10f, NPC_SALVAGED_CHOPPER},
     {116.859f, -4.199f, 409.80f, 3.12f, NPC_SALVAGED_CHOPPER},

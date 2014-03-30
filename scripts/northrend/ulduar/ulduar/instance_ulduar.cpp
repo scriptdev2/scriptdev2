@@ -70,7 +70,7 @@ static UlduarKeeperSpawns m_aKeeperHelperLocs[] =
 
 instance_ulduar::instance_ulduar(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aUlduarDialogue),
     m_bHelpersLoaded(false),
-    m_uiAlgalonTimer(MINUTE * IN_MILLISECONDS),
+    m_uiAlgalonTimer(MINUTE* IN_MILLISECONDS),
     m_uiShatterAchievTimer(0),
     m_uiGauntletStatus(0),
     m_uiStairsSpawnTimer(0),
@@ -1101,20 +1101,20 @@ void instance_ulduar::OnCreatureDeath(Creature* pCreature)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_CAT_LADY, false);
             break;
         case NPC_ULDUAR_COLOSSUS:
-            {
-                if (m_sColossusGuidSet.find(pCreature->GetObjectGuid()) != m_sColossusGuidSet.end())
-                    m_sColossusGuidSet.erase(pCreature->GetObjectGuid());
+        {
+            if (m_sColossusGuidSet.find(pCreature->GetObjectGuid()) != m_sColossusGuidSet.end())
+                m_sColossusGuidSet.erase(pCreature->GetObjectGuid());
 
-                // start pre Leviathan event
-                if (m_sColossusGuidSet.empty())
-                {
-                    StartNextDialogueText(SAY_PRE_LEVIATHAN_1);
-                    SetData(TYPE_LEVIATHAN, SPECIAL);
-                    SetData(TYPE_LEVIATHAN_GAUNTLET, DONE);
-                    pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
-                }
+            // start pre Leviathan event
+            if (m_sColossusGuidSet.empty())
+            {
+                StartNextDialogueText(SAY_PRE_LEVIATHAN_1);
+                SetData(TYPE_LEVIATHAN, SPECIAL);
+                SetData(TYPE_LEVIATHAN_GAUNTLET, DONE);
+                pCreature->SummonCreature(NPC_LEVIATHAN, afLeviathanSpawnPos[0], afLeviathanSpawnPos[1], afLeviathanSpawnPos[2], afLeviathanSpawnPos[3], TEMPSUMMON_DEAD_DESPAWN, 0, true);
             }
-            break;
+        }
+        break;
         case NPC_DRUID_HORDE_N:
         case NPC_DRUID_HORDE_H:
         case NPC_SHAMAN_HORDE_N:

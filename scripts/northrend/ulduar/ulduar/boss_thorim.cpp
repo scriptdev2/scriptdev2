@@ -349,7 +349,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
     {
         switch (pSummoned->GetEntry())
         {
-            // the lightning orb should clean out the whole hallway on arena berserk
+                // the lightning orb should clean out the whole hallway on arena berserk
             case NPC_LIGHTNING_ORB:
                 pSummoned->CastSpell(pSummoned, SPELL_LIGHTNING_DESTRUCTION, true);
                 break;
@@ -537,7 +537,7 @@ struct MANGOS_DLL_DECL boss_thorimAI : public ScriptedAI, private DialogueHelper
 
         switch (m_uiPhase)
         {
-            // arena phase abilities
+                // arena phase abilities
             case PHASE_ARENA:
 
                 if (m_uiBerserkTimer)

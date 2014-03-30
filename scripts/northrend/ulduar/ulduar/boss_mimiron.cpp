@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
 
         switch (iEntry)
         {
-            // Encounter intro (normal and hard mode)
+                // Encounter intro (normal and hard mode)
             case NPC_MIMIRON:
             case NPC_LEVIATHAN_MK_TURRET:
                 // jump on the top of the robot for intro / phase end text
@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
                 break;
 
-            // Start phase 2 transition
+                // Start phase 2 transition
             case GO_MIMIRON_ELEVATOR:
                 m_pInstance->DoUseDoorOrButton(GO_MIMIRON_ELEVATOR);
                 break;
@@ -424,7 +424,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 }
                 break;
 
-            // Start phase 3 transition
+                // Start phase 3 transition
             case NPC_ROCKET_STRIKE:
                 // mount on the top of the robot for phase end text
                 if (Creature* pVx001 = m_pInstance->GetSingleCreatureFromStorage(NPC_VX001))
@@ -463,7 +463,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 }
                 break;
 
-            // Start phase 4 transition
+                // Start phase 4 transition
             case NPC_COMPUTER:
                 // get the tank into combat position
                 if (Creature* pLeviathan = m_pInstance->GetSingleCreatureFromStorage(NPC_LEVIATHAN_MK))
@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 }
                 break;
 
-            // Start encounter epilogue
+                // Start encounter epilogue
             case SPELL_SLEEP_VISUAL:
                 DoCastSpellIfCan(m_creature, SPELL_SLEEP_VISUAL);
                 if (m_pInstance->GetData(TYPE_MIMIRON_HARD) == DONE)
@@ -560,7 +560,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
     {
         switch (eventType)
         {
-            // Red button pressed
+                // Red button pressed
             case AI_EVENT_CUSTOM_A:
                 StartNextDialogueText(SAY_SELF_DESTRUCT);
                 m_uiPhase = PHASE_LEVIATHAN;
@@ -570,19 +570,19 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 m_uiDestructTimer = MINUTE * IN_MILLISECONDS;
                 m_uiFlamesTimer = 7000;
                 break;
-            // Leviathan phase finished
+                // Leviathan phase finished
             case AI_EVENT_CUSTOM_B:
                 StartNextDialogueText(NPC_LEVIATHAN_MK_TURRET);
                 break;
-            // VX001 phase finished
+                // VX001 phase finished
             case AI_EVENT_CUSTOM_C:
                 StartNextDialogueText(SPELL_TORSO_DISABLED);
                 break;
-            // Aerial unit phase finished
+                // Aerial unit phase finished
             case AI_EVENT_CUSTOM_D:
                 StartNextDialogueText(NPC_COMPUTER);
                 break;
-            // Robot piece destroyed
+                // Robot piece destroyed
             case AI_EVENT_CUSTOM_E:
                 if (!m_uiWakeUpTimer)
                     m_uiWakeUpTimer = 10000;
@@ -729,7 +729,7 @@ struct MANGOS_DLL_DECL boss_mimironAI : public ScriptedAI, private DialogueHelpe
                 m_uiFlamesTimer = urand(25000, 30000);
             }
             else
-                 m_uiFlamesTimer -= uiDiff;
+                m_uiFlamesTimer -= uiDiff;
         }
 
         if (m_uiDestructTimer)
@@ -1029,7 +1029,7 @@ struct MANGOS_DLL_DECL boss_leviathan_mk2AI : public ScriptedAI
                         m_uiFlameSuppressTimer = 60000;
                 }
                 else
-                     m_uiFlameSuppressTimer -= uiDiff;
+                    m_uiFlameSuppressTimer -= uiDiff;
             }
         }
 
@@ -1274,7 +1274,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
             if (m_uiLaserEndTimer <= uiDiff)
                 m_uiLaserEndTimer = 0;
             else
-                 m_uiLaserEndTimer -= uiDiff;
+                m_uiLaserEndTimer -= uiDiff;
 
             // no other abilities during Laser
             return;
@@ -1301,7 +1301,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
                         m_uiFlameSuppressTimer = 10000;
                 }
                 else
-                     m_uiFlameSuppressTimer -= uiDiff;
+                    m_uiFlameSuppressTimer -= uiDiff;
             }
         }
         else if (m_uiPhase == PHASE_FULL_ROBOT)
@@ -1318,7 +1318,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
                     m_uiHandPulseTimer = urand(1000, 2000);
             }
             else
-                 m_uiHandPulseTimer -= uiDiff;
+                m_uiHandPulseTimer -= uiDiff;
         }
 
         if (m_uiRocketStrikeTimer < uiDiff)
@@ -1327,7 +1327,7 @@ struct MANGOS_DLL_DECL boss_vx001AI : public ScriptedAI
                 m_uiRocketStrikeTimer = 20000;
         }
         else
-             m_uiRocketStrikeTimer -= uiDiff;
+            m_uiRocketStrikeTimer -= uiDiff;
 
         if (m_uLaserBarrageTimer < uiDiff)
         {
@@ -1521,7 +1521,7 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
                 m_uiMagneticTimer = 0;
             }
             else
-                 m_uiMagneticTimer -= uiDiff;
+                m_uiMagneticTimer -= uiDiff;
 
             // no other abilities during the magnetic pull
             return;
@@ -1580,7 +1580,7 @@ struct MANGOS_DLL_DECL boss_aerial_unitAI : public ScriptedAI
                     m_uiScrapBotTimer = 10000;
             }
             else
-                 m_uiScrapBotTimer -= uiDiff;
+                m_uiScrapBotTimer -= uiDiff;
 
             if (m_uiFireBotTimer)
             {
@@ -1651,7 +1651,7 @@ struct MANGOS_DLL_DECL npc_proximity_mineAI : public Scripted_NoMovementAI
                 }
             }
             else
-                 m_uiExplodeTimer -= uiDiff;
+                m_uiExplodeTimer -= uiDiff;
         }
     }
 };
@@ -1843,7 +1843,7 @@ struct MANGOS_DLL_DECL npc_mimiron_flamesAI : public Scripted_NoMovementAI
             }
         }
         else
-             m_uiSpreadTimer -= uiDiff;
+            m_uiSpreadTimer -= uiDiff;
     }
 };
 

@@ -407,8 +407,8 @@ enum
 
 static const float afRethhedronPos[2][3] =
 {
-    {-1502.39f, 9772.33f, 200.421f},
-    {-1557.93f, 9834.34f, 200.949f}
+    { -1502.39f, 9772.33f, 200.421f},
+    { -1557.93f, 9834.34f, 200.949f}
 };
 
 struct MANGOS_DLL_DECL npc_rethhedronAI : public ScriptedAI

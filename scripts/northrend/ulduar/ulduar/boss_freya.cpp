@@ -559,7 +559,7 @@ struct MANGOS_DLL_DECL boss_freyaAI : public ScriptedAI
                 m_uiThreeAlliesTimer = 0;
             }
             else
-                 m_uiThreeAlliesTimer -= uiDiff;
+                m_uiThreeAlliesTimer -= uiDiff;
         }
 
         if (m_uiAlliesWaveCount < MAX_ALLIES_WAVES)

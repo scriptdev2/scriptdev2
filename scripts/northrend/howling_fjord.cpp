@@ -637,14 +637,14 @@ struct MANGOS_DLL_DECL npc_king_ymironAI : public ScriptedAI, private DialogueHe
         {
             // Get all the citizen around the king for future use
             if (pWho->isAlive() && m_creature->IsWithinDistInMap(pWho, 60.0) && ((Player*)pWho)->GetQuestStatus(QUEST_ID_ANGUISH_OF_NIFFLEVAR) == QUEST_STATUS_INCOMPLETE
-                && pWho->HasAura(SPELL_ECHO_OF_YMIRON_NIFFLEVAR))
+                    && pWho->HasAura(SPELL_ECHO_OF_YMIRON_NIFFLEVAR))
             {
                 std::list<Creature*> lCrowdList;
                 GetCreatureListWithEntryInGrid(lCrowdList, m_creature, NPC_CITIZEN_OF_NIFFLEVAR_MALE, 60.0f);
                 GetCreatureListWithEntryInGrid(lCrowdList, m_creature, NPC_CITIZEN_OF_NIFFLEVAR_FEMALE, 60.0f);
 
                 for (std::list<Creature*>::const_iterator itr = lCrowdList.begin(); itr != lCrowdList.end(); ++itr)
-                    m_lCrowdGuidList.push_back( (*itr)->GetObjectGuid() );
+                    m_lCrowdGuidList.push_back((*itr)->GetObjectGuid());
 
                 m_uiCrowdSpeechTimer = 1000;
                 m_bEventInit = true;

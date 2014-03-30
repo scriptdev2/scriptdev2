@@ -640,8 +640,8 @@ enum
 
 static const float aKernobeePositions[2][3] =
 {
-    {-330.92f, -3.03f, -152.85f},                           // End position
-    {-297.32f, -7.32f, -152.85f}                            // Walk out of the door
+    { -330.92f, -3.03f, -152.85f},                          // End position
+    { -297.32f, -7.32f, -152.85f}                           // Walk out of the door
 };
 
 struct MANGOS_DLL_DECL npc_kernobeeAI : public FollowerAI

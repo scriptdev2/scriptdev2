@@ -1221,7 +1221,7 @@ struct MANGOS_DLL_DECL npc_drijyaAI : public npc_escortAI
                 pSummoned->AI()->AttackStart(m_creature);
                 break;
         }
-     }
+    }
 
     void WaypointReached(uint32 uiPointId) override
     {

@@ -409,7 +409,7 @@ struct MANGOS_DLL_DECL boss_kologarnAI : public Scripted_NoMovementAI
                 {
                     DoScriptText(SAY_GRAB, m_creature);
                     DoScriptText(EMOTE_STONE_GRIP, m_creature);
-                    m_uiStoneGripTimer = urand (20000, 30000);
+                    m_uiStoneGripTimer = urand(20000, 30000);
                 }
             }
             else

@@ -645,7 +645,7 @@ struct MANGOS_DLL_DECL npc_rabid_bearAI : public ScriptedAI
     void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_uiCheckTimer && pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_THARNARIUN_TREETENDER &&
-              pWho->IsWithinDist(m_creature, 2 * INTERACTION_DISTANCE, false))
+                pWho->IsWithinDist(m_creature, 2 * INTERACTION_DISTANCE, false))
         {
             // Possible related spell: 9455 9372
             m_creature->ForcedDespawn(1000);
