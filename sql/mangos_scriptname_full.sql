@@ -1076,6 +1076,7 @@ UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 /* STORM PEAKS */
 UPDATE creature_template SET ScriptName='npc_floating_spirit' WHERE entry IN (30141,30143,30145);
 UPDATE creature_template SET ScriptName='npc_restless_frostborn' WHERE entry IN (29974,30135,30144);
+UPDATE creature_template SET ScriptName='npc_injured_miner' WHERE entry=29434;
 
 /* STORMWIND CITY */
 UPDATE creature_template SET ScriptName='npc_bartleby' WHERE entry=6090;
