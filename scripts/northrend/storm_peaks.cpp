@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Storm_Peaks
 SD%Complete: 100
-SDComment: Quest support: 12831, 12977.
+SDComment: Quest support: 12832, 12977.
 SDCategory: Storm Peaks
 EndScriptData */
 
