@@ -741,6 +741,7 @@ INSERT INTO scripted_areatrigger VALUES
 /* ICECROWN */
 UPDATE creature_template SET ScriptName='npc_squad_leader' WHERE entry IN (31737,31833);
 UPDATE creature_template SET ScriptName='npc_infantry' WHERE entry IN (31701,31832);
+UPDATE creature_template SET ScriptName='npc_father_kamaros' WHERE entry IN (31279,32800);
 
 /* IRONFORGE */
 
