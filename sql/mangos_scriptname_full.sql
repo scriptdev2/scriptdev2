@@ -681,6 +681,7 @@ UPDATE creature_template SET ScriptName='npc_silvermoon_harry' WHERE entry=24539
 UPDATE creature_template SET ScriptName='npc_lich_king_village' WHERE entry=24248;
 UPDATE creature_template SET ScriptName='npc_king_ymiron' WHERE entry=24321;
 UPDATE creature_template SET ScriptName='npc_firecrackers_bunny' WHERE entry=24230;
+UPDATE creature_template SET ScriptName='npc_apothecary_hanes' WHERE entry=23784;
 
 /*  */
 /* ICECROWN CITADEL */
