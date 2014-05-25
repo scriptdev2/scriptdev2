@@ -1425,6 +1425,9 @@ UPDATE creature_template SET ScriptName='npc_disciple_of_naralex' WHERE entry=36
 /* WESTERN PLAGUELANDS */
 UPDATE creature_template SET ScriptName='npc_the_scourge_cauldron' WHERE entry=11152;
 UPDATE creature_template SET ScriptName='npc_anchorite_truuen' WHERE entry=17238;
+UPDATE creature_template SET ScriptName='npc_taelan_fordring' WHERE entry=1842;
+UPDATE creature_template SET ScriptName='npc_isillien' WHERE entry=1840;
+UPDATE creature_template SET ScriptName='npc_tirion_fordring' WHERE entry=12126;
 
 /* WESTFALL */
 UPDATE creature_template SET ScriptName='npc_daphne_stilwell' WHERE entry=6182;
