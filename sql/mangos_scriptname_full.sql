@@ -80,8 +80,10 @@ INSERT INTO scripted_areatrigger VALUES
 (4485,'at_dark_portal');
 DELETE FROM scripted_areatrigger WHERE entry=1966;
 INSERT INTO scripted_areatrigger VALUES (1966,'at_murkdeep');
-DELETE FROM scripted_areatrigger WHERE entry=4047;
-INSERT INTO scripted_areatrigger VALUES (4047,'at_temple_ahnqiraj');
+DELETE FROM scripted_areatrigger WHERE entry IN (4047,4052);
+INSERT INTO scripted_areatrigger VALUES
+(4047,'at_temple_ahnqiraj'),
+(4052,'at_temple_ahnqiraj');
 
 
 /* BATTLEGROUNDS */
