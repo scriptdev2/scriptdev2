@@ -539,6 +539,7 @@ UPDATE creature_template SET ScriptName='npc_morokk' WHERE entry=4500;
 UPDATE creature_template SET ScriptName='npc_restless_apparition' WHERE entry=23861;
 UPDATE creature_template SET ScriptName='npc_private_hendel' WHERE entry=4966;
 UPDATE creature_template SET ScriptName='npc_stinky_ignatz' WHERE entry=4880;
+UPDATE creature_template SET ScriptName='boss_tethyr' WHERE entry=23899;
 DELETE FROM scripted_areatrigger WHERE entry=4752;
 INSERT INTO scripted_areatrigger VALUES
 (4752,'at_nats_landing');
