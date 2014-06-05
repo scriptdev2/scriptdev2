@@ -581,6 +581,7 @@ UPDATE creature_template SET ScriptName='npc_kroshius' WHERE entry=14467;
 
 /* FERALAS */
 UPDATE creature_template SET ScriptName='npc_oox22fe' WHERE entry=7807;
+UPDATE creature_template SET ScriptName='npc_shay_leafrunner' WHERE entry=7774;
 
 /* GHOSTLANDS */
 UPDATE creature_template SET ScriptName='npc_ranger_lilatha' WHERE entry=16295;
