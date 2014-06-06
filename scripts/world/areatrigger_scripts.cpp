@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Areatrigger_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4291, 6681, 11686, 10589/10604, 12741, 12548, 13315/13351, 12575
+SDComment: Quest support: 4291, 6681, 10589/10604, 11686, 12548, 12575, 12741, 13315/13351, 24849/24851.
 SDCategory: Areatrigger
 EndScriptData */
 
@@ -32,6 +32,7 @@ at_stormwright_shelf            5108
 at_childrens_week_spot          3546,3547,3548,3552,3549,3550
 at_scent_larkorwi               1726,1727,1728,1729,1730,1731,1732,1733,1734,1735,1736,1737,1738,1739,1740
 at_murkdeep                     1966
+at_hot_on_the_trail             5710, 5711, 5712, 5714, 5715, 5716
 EndContentData */
 
 #include "precompiled.h"
@@ -323,6 +324,46 @@ bool AreaTrigger_at_murkdeep(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
     return false;
 }
 
+/*######
+## at_hot_on_the_trail
+######*/
+
+struct HotOnTrailData
+{
+    uint32 uiAtEntry, uiQuestEntry, uiCreditEntry, uiSpellEntry;
+};
+
+static const HotOnTrailData aHotOnTrailValues[6] =
+{
+    {5710, 24849, 38340, 71713},                    // Stormwind Bank
+    {5711, 24849, 38341, 71745},                    // Stormwind Auction House
+    {5712, 24849, 38342, 71752},                    // Stormwind Barber Shop
+    {5714, 24851, 38341, 71760},                    // Orgrimmar Auction House
+    {5715, 24851, 38340, 71759},                    // Orgrimmar Bank
+    {5716, 24851, 38342, 71758},                    // Orgrimmar Barber Shop
+};
+
+bool AreaTrigger_at_hot_on_the_trail(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pPlayer->isGameMaster() || !pPlayer->isAlive())
+        return false;
+
+    for (uint8 i = 0; i < 6; ++i)
+    {
+        if (pAt->id == aHotOnTrailValues[i].uiAtEntry)
+        {
+            if (pPlayer->GetQuestStatus(aHotOnTrailValues[i].uiQuestEntry) == QUEST_STATUS_INCOMPLETE &&
+                    pPlayer->GetReqKillOrCastCurrentCount(aHotOnTrailValues[i].uiQuestEntry, aHotOnTrailValues[i].uiCreditEntry) == 0)
+            {
+                pPlayer->CastSpell(pPlayer, aHotOnTrailValues[i].uiSpellEntry, true);
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void AddSC_areatrigger_scripts()
 {
     Script* pNewScript;
@@ -380,5 +421,10 @@ void AddSC_areatrigger_scripts()
     pNewScript = new Script;
     pNewScript->Name = "at_murkdeep";
     pNewScript->pAreaTrigger = &AreaTrigger_at_murkdeep;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_hot_on_the_trail";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_hot_on_the_trail;
     pNewScript->RegisterSelf();
 }
