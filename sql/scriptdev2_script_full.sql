@@ -1208,7 +1208,16 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1001113,'The bell again, such a sweet sound.',0,0,0,0,'shay leafrunner SAY_WANDER_DONE_3'),
 (-1001114,'%s begins to wander off.',0,2,0,0,'shay leafrunner EMOTE_WANDER'),
 (-1001115,'Oh, here you are, Rockbiter! I\'m sorry, I know I\'m not supposed to wander off.',0,0,0,1,'shay leafrunner SAY_EVENT_COMPLETE_1'),
-(-1001116,'I\'m so glad yer back Shay. Please, don\'t ever run off like that again! What would I tell yer parents if I lost ya?',0,0,0,1,'rockbiter SAY_EVENT_COMPLETE_2');
+(-1001116,'I\'m so glad yer back Shay. Please, don\'t ever run off like that again! What would I tell yer parents if I lost ya?',0,0,0,1,'rockbiter SAY_EVENT_COMPLETE_2'),
+
+(-1001117,'AHAHAHAHA... you\'ll join us soon enough!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_1'),
+(-1001118,'I don\'t want to leave! I want to stay here!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_2'),
+(-1001119,'I must get further underground to where he is. I must jump!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_3'),
+(-1001120,'I won\'t leave!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_4'),
+(-1001121,'I\'ll never return. The whole reason for my existence awaits below!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_5'),
+(-1001122,'I\'m coming, master!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_6'),
+(-1001123,'My life for you!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_7'),
+(-1001124,'NO! You\'re wrong! The voices in my head are beautiful!',0,1,0,0,'saronite mine slave SAY_MINER_SUICIDE_8');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4779,7 +4788,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000109,'I am ready, Oronok. Let us destroy Cyrukh and free the elements!','oronok torn-heart GOSSIP_ITEM_FIGHT'),
 (-3000110,'Why... yes, of course. I\'ve something to show you right inside this building, Mr. Anvilward.','prospector anvilward GOSSIP_ITEM_SHOW'),
 (-3000111,'I am ready, Anchorite. Let us begin the exorcism.','anchorite barada GOSSIP_ITEM_EXORCISM'),
-(-3000112,'I\'m ready - let\'s get out of here.','injured goblin miner GOSSIP_ITEM_ESCORT_READY');
+(-3000112,'I\'m ready - let\'s get out of here.','injured goblin miner GOSSIP_ITEM_ESCORT_READY'),
+(-3000113,'Go on, you\'re free. Get out of here!','saronite mine slave GOSSIP_ITEM_SLAVE_FREE');
 
 -- -3 033 000 SHADOWFANG KEEP
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
