@@ -1230,7 +1230,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1001133,'Well done! Be ready for anything!',0,0,0,4,'tipsy mcmanus SAY_ACTION_COMPLETE_3'),
 (-1001134,'That\'ll do. Never know what it\'ll need next...',0,0,0,4,'tipsy mcmanus SAY_ACTION_COMPLETE_4'),
 (-1001135,'It\'s no good! I\'m shutting it down...',0,0,0,0,'tipsy mcmanus SAY_DISTILLATION_FAIL'),
-(-1001136,'We\'ve done it! Come get the cask.',0,0,0,0,'tipsy mcmanus SAY_DISTILLATION_COMPLETE');
+(-1001136,'We\'ve done it! Come get the cask.',0,0,0,0,'tipsy mcmanus SAY_DISTILLATION_COMPLETE'),
+
+(-1001137,'The duel will begin in...',0,5,0,0,'death knight initiate EMOTE_DUEL_BEGIN'),
+(-1001138,'3...',0,5,0,0,'death knight initiate EMOTE_DUEL_BEGIN_3'),
+(-1001139,'2...',0,5,0,0,'death knight initiate EMOTE_DUEL_BEGIN_2'),
+(-1001140,'1...',0,5,0,0,'death knight initiate EMOTE_DUEL_BEGIN_1');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
