@@ -1015,6 +1015,7 @@ UPDATE creature_template SET ScriptName='boss_high_inquisitor_whitemane' WHERE e
 UPDATE creature_template SET ScriptName='boss_scarlet_commander_mograine' WHERE entry=3976;
 UPDATE creature_template SET ScriptName='mob_scarlet_trainee' WHERE entry=6575;
 UPDATE creature_template SET ScriptName='boss_headless_horseman' WHERE entry=23682;
+UPDATE creature_template SET ScriptName='boss_head_of_horseman' WHERE entry=23775;
 
 /* SCHOLOMANCE */
 UPDATE instance_template SET ScriptName='instance_scholomance' WHERE map=289;
