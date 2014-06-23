@@ -525,6 +525,7 @@ UPDATE instance_template SET ScriptName='instance_dire_maul' WHERE map=429;
 
 /* DRAGONBLIGHT */
 UPDATE creature_template SET ScriptName='npc_destructive_ward' WHERE entry=27430;
+UPDATE creature_template SET ScriptName='npc_crystalline_ice_giant' WHERE entry=26809;
 
 /* DRAK'THARON KEEP */
 UPDATE creature_template SET ScriptName='boss_novos' WHERE entry=26631;
@@ -694,6 +695,7 @@ UPDATE creature_template SET ScriptName='npc_lich_king_village' WHERE entry=2424
 UPDATE creature_template SET ScriptName='npc_king_ymiron' WHERE entry=24321;
 UPDATE creature_template SET ScriptName='npc_firecrackers_bunny' WHERE entry=24230;
 UPDATE creature_template SET ScriptName='npc_apothecary_hanes' WHERE entry=23784;
+UPDATE creature_template SET ScriptName='npc_scalawag_frog' WHERE entry=26503;
 
 /*  */
 /* ICECROWN CITADEL */

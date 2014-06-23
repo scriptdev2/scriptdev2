@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Howling_Fjord
 SD%Complete: ?
-SDComment: Quest support: 11154, 11241, 11300, 11343, 11344, 11464.
+SDComment: Quest support: 11154, 11241, 11300, 11343, 11344, 11464, 11476.
 SDCategory: Howling Fjord
 EndScriptData */
 
@@ -30,6 +30,7 @@ npc_lich_king_village
 npc_king_ymiron
 npc_firecrackers_bunny
 npc_apothecary_hanes
+npc_scalawag_frog
 EndContentData */
 
 #include "precompiled.h"
@@ -975,6 +976,34 @@ bool QuestAccept_npc_apothecary_hanes(Player* pPlayer, Creature* pCreature, cons
     return false;
 }
 
+/*######
+## npc_scalawag_frog
+######*/
+
+enum
+{
+    ITEM_ID_SCALAWAG_FROG           = 35803,
+    ITEM_ID_SHINY_KNIFE             = 35813,
+    NPC_SCALAWAG_FROG               = 26503,
+};
+
+bool NpcSpellClick_npc_scalawag_frog(Player* pPlayer, Creature* pClickedCreature, uint32 /*uiSpellId*/)
+{
+    if (pClickedCreature->GetEntry() == NPC_SCALAWAG_FROG && pPlayer->HasItemCount(ITEM_ID_SHINY_KNIFE, 1))
+    {
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_ID_SCALAWAG_FROG, 1))
+        {
+            pPlayer->SendNewItem(pItem, 1, true, false);
+            pClickedCreature->ForcedDespawn();
+
+            // always return true when handled special npc spell click
+            return true;
+        }
+    }
+
+    return true;
+}
+
 void AddSC_howling_fjord()
 {
     Script* pNewScript;
@@ -1026,5 +1055,10 @@ void AddSC_howling_fjord()
     pNewScript->Name = "npc_apothecary_hanes";
     pNewScript->GetAI = &GetAI_npc_apothecary_hanes;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_apothecary_hanes;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_scalawag_frog";
+    pNewScript->pNpcSpellClick = &NpcSpellClick_npc_scalawag_frog;
     pNewScript->RegisterSelf();
 }
