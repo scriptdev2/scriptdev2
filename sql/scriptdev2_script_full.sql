@@ -3803,7 +3803,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1603205,'Weak-minded fools!',15780,4,0,0,'yogg SAY_WIPE_PHASE_1'),
 
-(-1603206,'I am the lucid dream. The monster in your nightmares. The fiend of a thousand faces. Cower before my true form. BOW DOWN BEFORE THE GOD OF DEATH!',15754,1,0,0,'yogg SAY_PHASE_2_INTRO'),
+(-1603206,'I am the lucid dream.',15754,1,0,457,'yogg SAY_PHASE_2_INTRO_1'),
 (-1603207,'Tremble, mortals, before the coming of the end!',15777,1,0,0,'yogg SAY_SARA_PHASE_2_INTRO_A'),
 (-1603208,'Suffocate upon your own hate!',15776,1,0,0,'yogg SAY_SARA_PHASE_2_INTRO_B'),
 
@@ -3870,7 +3870,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603259,'Self-destruct sequence finalized. Have a nice day.',15425,1,0,0,'mimiron SAY_DESTRUCT_0_MIN'),
 (-1603260,'Self-destruct sequence terminated. Overide code A905.',15414,1,0,0,'mimiron SAY_SELF_DESTRUCT_END'),
 
-(-1603261,'%s begins to boil upon touching $n!',0,2,0,0,'ominous cloud EMOTE_CLOUD_BOIL');
+(-1603261,'%s begins to boil upon touching $n!',0,2,0,0,'ominous cloud EMOTE_CLOUD_BOIL'),
+(-1603262,'The monster in your nightmares.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_2'),
+(-1603263,'The fiend of a thousand faces.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_3'),
+(-1603264,'Cower before my true form.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_4'),
+(-1603265,'BOW DOWN BEFORE THE GOD OF DEATH!',0,1,0,0,'yogg SAY_PHASE_2_INTRO_5');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
