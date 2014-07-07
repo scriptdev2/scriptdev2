@@ -588,6 +588,7 @@ UPDATE creature_template SET ScriptName='npc_corrupt_saber' WHERE entry=10042;
 UPDATE creature_template SET ScriptName='npc_niby_the_almighty' WHERE entry=14469;
 UPDATE creature_template SET ScriptName='npc_kroshius' WHERE entry=14467;
 UPDATE creature_template SET ScriptName='npc_captured_arkonarin' WHERE entry=11016;
+UPDATE creature_template SET ScriptName='npc_arei' WHERE entry=9598;
 
 /* FERALAS */
 UPDATE creature_template SET ScriptName='npc_oox22fe' WHERE entry=7807;
