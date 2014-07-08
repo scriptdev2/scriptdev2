@@ -77,6 +77,9 @@ void ScriptedAI::MoveInLineOfSight(Unit* pWho)
  */
 void ScriptedAI::AttackStart(Unit* pWho)
 {
+    if (!pWho || !m_creature->CanAttackByItself())
+        return;
+
     if (pWho && m_creature->Attack(pWho, true))             // The Attack function also uses basic checks if pWho can be attacked
     {
         m_creature->AddThreat(pWho);
