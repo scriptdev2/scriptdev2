@@ -3896,7 +3896,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603262,'The monster in your nightmares.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_2'),
 (-1603263,'The fiend of a thousand faces.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_3'),
 (-1603264,'Cower before my true form.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_4'),
-(-1603265,'BOW DOWN BEFORE THE GOD OF DEATH!',0,1,0,0,'yogg SAY_PHASE_2_INTRO_5');
+(-1603265,'BOW DOWN BEFORE THE GOD OF DEATH!',0,1,0,0,'yogg SAY_PHASE_2_INTRO_5'),
+(-1603266,'%s opens his mouth wide!',0,3,0,0,'yogg EMOTE_DEAFENING_ROAR');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

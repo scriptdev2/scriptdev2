@@ -1374,8 +1374,11 @@ UPDATE creature_template SET ScriptName='npc_ulduar_keeper' WHERE entry IN (3324
 UPDATE creature_template SET ScriptName='boss_sara' WHERE entry=33134;
 UPDATE creature_template SET ScriptName='boss_yogg_saron' WHERE entry=33288;
 UPDATE creature_template SET ScriptName='npc_ominous_cloud' WHERE entry=33292;
+UPDATE creature_template SET ScriptName='npc_death_ray' WHERE entry=33881;
 UPDATE creature_template SET ScriptName='npc_voice_yogg_saron' WHERE entry=33280;
 UPDATE creature_template SET ScriptName='npc_guardian_of_yogg' WHERE entry=33136;
+UPDATE creature_template SET ScriptName='npc_immortal_guardian' WHERE entry=33988;
+UPDATE creature_template SET ScriptName='npc_constrictor_tentacle' WHERE entry=33983;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
