@@ -3831,7 +3831,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1603209,'MADNESS WILL CONSUME YOU!',15756,1,0,0,'yogg SAY_MADNESS'),
 (-1603210,'Look upon the true face of death and know that your end comes soon!',15755,1,0,0,'yogg SAY_PHASE_3'),
-(-1603211,'Hoohehehahahaha... AHAHAHAHAHAHA!',15757,1,0,0,'yogg SAY_SLAY_1'),
+(-1603211,'%s prepares to unleash Empowering Shadows!',0,3,0,0,'yogg EMOTE_EMPOWERING_SHADOWS'),
 (-1603212,'Eternal suffering awaits!',15758,1,0,0,'yogg SAY_SLAY_2'),
 (-1603213,'Your fate is sealed. The end of days is finally upon you and ALL who inhabit this miserable little seedling. Uulwi ifis halahs gag erh\'ongg w\'ssh.',15761,1,0,0,'yogg SAY_DEATH'),
 (-1603214,'Your will is no longer you own...',15759,4,0,0,'yogg SAY_TO_INSANE_1'),

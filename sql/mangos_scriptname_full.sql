@@ -1382,6 +1382,8 @@ UPDATE creature_template SET ScriptName='npc_immortal_guardian' WHERE entry=3398
 UPDATE creature_template SET ScriptName='npc_constrictor_tentacle' WHERE entry=33983;
 UPDATE creature_template SET ScriptName='npc_descent_madness' WHERE entry=34072;
 UPDATE creature_template SET ScriptName='npc_laughing_skull' WHERE entry=33990;
+UPDATE creature_template SET ScriptName='npc_keeper_mimiron' WHERE entry=33412;
+UPDATE creature_template SET ScriptName='npc_keeper_thorim' WHERE entry=33413;
 DELETE FROM scripted_event_id WHERE id IN (9735,20907,20964,21030,21031,21032,21033,21045,21605,21606,21620);
 INSERT INTO scripted_event_id VALUES
 (9735, 'event_spell_saronite_barrier'), -- Vezax saronite barrier event
