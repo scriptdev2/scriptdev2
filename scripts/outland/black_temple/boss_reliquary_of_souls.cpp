@@ -105,7 +105,7 @@ enum
 ## boss_reliquary_of_souls
 ######*/
 
-struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
+struct boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
 {
     boss_reliquary_of_soulsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -321,7 +321,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
 ## essence_base_AI
 ######*/
 
-struct MANGOS_DLL_DECL essence_base_AI : public ScriptedAI
+struct essence_base_AI : public ScriptedAI
 {
     essence_base_AI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -389,7 +389,7 @@ struct MANGOS_DLL_DECL essence_base_AI : public ScriptedAI
 ## boss_essence_of_suffering
 ######*/
 
-struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
+struct boss_essence_of_sufferingAI : public essence_base_AI
 {
     boss_essence_of_sufferingAI(Creature* pCreature) : essence_base_AI(pCreature) { Reset(); }
 
@@ -448,7 +448,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
 ## boss_essence_of_desire
 ######*/
 
-struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
+struct boss_essence_of_desireAI : public essence_base_AI
 {
     boss_essence_of_desireAI(Creature* pCreature) : essence_base_AI(pCreature) { Reset(); }
 
@@ -520,7 +520,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
 ## boss_essence_of_anger
 ######*/
 
-struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
+struct boss_essence_of_angerAI : public ScriptedAI
 {
     boss_essence_of_angerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -605,7 +605,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 ## npc_enslaved_soul
 ######*/
 
-struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
+struct npc_enslaved_soulAI : public ScriptedAI
 {
     npc_enslaved_soulAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

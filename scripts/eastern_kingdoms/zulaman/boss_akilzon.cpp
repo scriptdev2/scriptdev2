@@ -51,7 +51,7 @@ enum
     MAX_EAGLE_COUNT         = 6,
 };
 
-struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
+struct boss_akilzonAI : public ScriptedAI
 {
     boss_akilzonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -207,7 +207,7 @@ CreatureAI* GetAI_boss_akilzon(Creature* pCreature)
     return new boss_akilzonAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_soaring_eagleAI : public ScriptedAI
+struct mob_soaring_eagleAI : public ScriptedAI
 {
     mob_soaring_eagleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

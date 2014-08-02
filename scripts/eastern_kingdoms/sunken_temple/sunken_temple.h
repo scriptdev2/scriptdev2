@@ -102,7 +102,7 @@ static const SummonLocations aHakkariDoorLocations[2] =
     { -512.015f, 276.134f, -90.827f}
 };
 
-class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
+class instance_sunken_temple : public ScriptedInstance
 {
     public:
         instance_sunken_temple(Map* pMap);

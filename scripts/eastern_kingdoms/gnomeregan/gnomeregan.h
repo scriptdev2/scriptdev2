@@ -51,7 +51,7 @@ struct sBombFace
     uint32 m_uiBombTimer;
 };
 
-class MANGOS_DLL_DECL instance_gnomeregan : public ScriptedInstance
+class instance_gnomeregan : public ScriptedInstance
 {
     public:
         instance_gnomeregan(Map* pMap);

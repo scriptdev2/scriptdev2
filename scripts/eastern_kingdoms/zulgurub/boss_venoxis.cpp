@@ -47,7 +47,7 @@ enum
     SPELL_TRASH             = 3391
 };
 
-struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
+struct boss_venoxisAI : public ScriptedAI
 {
     boss_venoxisAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

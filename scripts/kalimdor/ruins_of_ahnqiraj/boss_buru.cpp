@@ -50,7 +50,7 @@ enum
     PHASE_TRANSFORM         = 2,
 };
 
-struct MANGOS_DLL_DECL boss_buruAI : public ScriptedAI
+struct boss_buruAI : public ScriptedAI
 {
     boss_buruAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -173,7 +173,7 @@ CreatureAI* GetAI_boss_buru(Creature* pCreature)
     return new boss_buruAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL npc_buru_eggAI : public Scripted_NoMovementAI
+struct npc_buru_eggAI : public Scripted_NoMovementAI
 {
     npc_buru_eggAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {

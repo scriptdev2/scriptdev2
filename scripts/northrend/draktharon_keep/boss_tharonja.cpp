@@ -73,7 +73,7 @@ enum Phases
 ## boss_tharonja
 ######*/
 
-struct MANGOS_DLL_DECL boss_tharonjaAI : public ScriptedAI
+struct boss_tharonjaAI : public ScriptedAI
 {
     boss_tharonjaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

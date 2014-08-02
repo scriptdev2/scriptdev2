@@ -194,7 +194,7 @@ Waypoint m_aTsunamiLoc[] =
 ## Boss Sartharion
 ######*/
 
-struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
+struct boss_sartharionAI : public ScriptedAI
 {
     boss_sartharionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -563,7 +563,7 @@ enum VespText
 };
 
 // to control each dragons common abilities
-struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
+struct dummy_dragonAI : public ScriptedAI
 {
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -799,7 +799,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 ## Mob Tenebron
 ######*/
 
-struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
+struct mob_tenebronAI : public dummy_dragonAI
 {
     mob_tenebronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
     {
@@ -912,7 +912,7 @@ CreatureAI* GetAI_mob_tenebron(Creature* pCreature)
 ## Mob Shadron
 ######*/
 
-struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
+struct mob_shadronAI : public dummy_dragonAI
 {
     mob_shadronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
     {
@@ -1030,7 +1030,7 @@ CreatureAI* GetAI_mob_shadron(Creature* pCreature)
 ## Mob Vesperon
 ######*/
 
-struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
+struct mob_vesperonAI : public dummy_dragonAI
 {
     mob_vesperonAI(Creature* pCreature) : dummy_dragonAI(pCreature)
     {
@@ -1140,7 +1140,7 @@ CreatureAI* GetAI_mob_vesperon(Creature* pCreature)
 ## Mob Twilight Eggs
 ######*/
 
-struct MANGOS_DLL_DECL mob_twilight_eggsAI : public Scripted_NoMovementAI
+struct mob_twilight_eggsAI : public Scripted_NoMovementAI
 {
     mob_twilight_eggsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
@@ -1191,7 +1191,7 @@ CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)
 ## npc_tenebron_egg_controller
 ######*/
 
-struct MANGOS_DLL_DECL npc_tenebron_egg_controllerAI : public Scripted_NoMovementAI
+struct npc_tenebron_egg_controllerAI : public Scripted_NoMovementAI
 {
     npc_tenebron_egg_controllerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -1241,7 +1241,7 @@ CreatureAI* GetAI_npc_tenebron_egg_controller(Creature* pCreature)
 ## npc_flame_tsunami
 ######*/
 
-struct MANGOS_DLL_DECL npc_flame_tsunamiAI : public ScriptedAI
+struct npc_flame_tsunamiAI : public ScriptedAI
 {
     npc_flame_tsunamiAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -1294,7 +1294,7 @@ CreatureAI* GetAI_npc_flame_tsunami(Creature* pCreature)
 ## npc_fire_cyclone
 ######*/
 
-struct MANGOS_DLL_DECL npc_fire_cycloneAI : public ScriptedAI
+struct npc_fire_cycloneAI : public ScriptedAI
 {
     npc_fire_cycloneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

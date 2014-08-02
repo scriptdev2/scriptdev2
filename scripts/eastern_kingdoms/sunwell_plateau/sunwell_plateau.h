@@ -100,7 +100,7 @@ static const EventLocations aKalecLoc[] =
     {1648.255f, 519.377f, 165.848f},                // fly away
 };
 
-class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance, private DialogueHelper
+class instance_sunwell_plateau : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_sunwell_plateau(Map* pMap);
