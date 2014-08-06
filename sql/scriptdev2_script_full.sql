@@ -3844,17 +3844,17 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603220,'Yrr n\'lyeth... shuul anagg!',15766,0,0,0,'yogg SAY_YOGG_V3_1'),
 (-1603221,'He will learn... no king rules forever; only death is eternal!',15767,0,0,0,'yogg SAY_YOGG_V3_2'),
 
-(-1603222,'It is done... All have been given that which must be given. I now seal the Dragon Soul forever...',15631,0,0,0,'yogg SAY_NELTHARION_1'),
-(-1603223,'That terrible glow... should that be?',15784,0,0,0,'yogg SAY_YSERA'),
-(-1603224,'For it to be as it must, yes.',15632,0,0,0,'yogg SAY_NELTHARION_2'),
-(-1603225,'It is a weapon like no other. It must be like no other.',15610,0,0,0,'yogg SAY_MALYGOS'),
+(-1603222,'It is done... All have been given that which must be given. I now seal the Dragon Soul forever...',15631,0,0,1,'yogg SAY_NELTHARION_1'),
+(-1603223,'That terrible glow... should that be?',15784,0,0,1,'yogg SAY_YSERA'),
+(-1603224,'For it to be as it must, yes.',15632,0,0,1,'yogg SAY_NELTHARION_2'),
+(-1603225,'It is a weapon like no other. It must be like no other.',15610,0,0,1,'yogg SAY_MALYGOS'),
 (-1603226,'His brood learned their lesson before too long, you shall soon learn yours!',15765,0,0,0,'yogg SAY_YOGG_V2'),
 
-(-1603227,'Bad news sire. The clans are united under Blackhand in this assault. They will stand together until Stormwind has fallen.',15538,0,0,0,'yogg SAY_GARONA_1'),
-(-1603228,'Gul\'dan is bringing up his warlocks by nightfall. Until then, the Blackrock clan will be trying to take the Eastern Wall.',15539,0,0,0,'yogg SAY_GARONA_2'),
+(-1603227,'Bad news sire.',15538,0,0,1,'yogg SAY_GARONA_1'),
+(-1603228,'Gul\'dan is bringing up his warlocks by nightfall. Until then, the Blackrock clan will be trying to take the Eastern Wall.',15540,0,0,1,'yogg SAY_GARONA_3'),
 (-1603229,'A thousand deaths... ',15762,0,0,0,'yogg SAY_YOGG_V1_1'),
 (-1603230,'or one murder.',15763,0,0,0,'yogg SAY_YOGG_V1_2'),
-(-1603231,'We will hold until the reinforcements come. As long as men with stout hearts are manning the walls and throne Stormwind will hold.',15540,0,0,0,'yogg SAY_GARONA_3'),
+(-1603231,'We will hold until the reinforcements come. As long as men with stout hearts are manning the walls and throne Stormwind will hold.',15585,0,0,1,'yogg SAY_KING_LLANE'),
 (-1603232,'The orc leaders agree with your assessment.',15541,0,0,0,'yogg SAY_GARONA_4'),
 (-1603233,'Your petty quarrels only make me stronger!',15764,0,0,0,'yogg SAY_YOGG_V1_3'),
 
@@ -3897,7 +3897,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603263,'The fiend of a thousand faces.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_3'),
 (-1603264,'Cower before my true form.',0,1,0,457,'yogg SAY_PHASE_2_INTRO_4'),
 (-1603265,'BOW DOWN BEFORE THE GOD OF DEATH!',0,1,0,0,'yogg SAY_PHASE_2_INTRO_5'),
-(-1603266,'%s opens his mouth wide!',0,3,0,0,'yogg EMOTE_DEAFENING_ROAR');
+(-1603266,'%s opens his mouth wide!',0,3,0,0,'yogg EMOTE_DEAFENING_ROAR'),
+(-1603267,'The clans are united under Blackhand in this assault. They will stand together until Stormwind has fallen.',15539,0,0,1,'yogg SAY_GARONA_2');
 
 -- -1 604 000 GUNDRAK
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
