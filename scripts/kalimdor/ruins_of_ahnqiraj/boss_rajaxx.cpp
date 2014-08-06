@@ -72,7 +72,7 @@ static const DialogueEntry aIntroDialogue[] =
     {0, 0, 0},
 };
 
-struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private DialogueHelper
+struct npc_general_andorovAI : public ScriptedAI, private DialogueHelper
 {
     npc_general_andorovAI(Creature* pCreature) : ScriptedAI(pCreature),
         DialogueHelper(aIntroDialogue)
@@ -296,7 +296,7 @@ bool GossipSelect_npc_general_andorov(Player* pPlayer, Creature* pCreature, uint
     return true;
 }
 
-struct MANGOS_DLL_DECL npc_kaldorei_eliteAI : public ScriptedAI
+struct npc_kaldorei_eliteAI : public ScriptedAI
 {
     npc_kaldorei_eliteAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

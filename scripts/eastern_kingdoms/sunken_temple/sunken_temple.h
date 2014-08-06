@@ -98,11 +98,11 @@ static const SummonLocations aSunkenTempleLocation[] =
 // Summon location for the suppressors
 static const SummonLocations aHakkariDoorLocations[2] =
 {
-    { -420.629f, 276.682f, -90.827f},
-    { -512.015f, 276.134f, -90.827f}
+    { -420.629f, 276.682f, -90.827f, 0.0f},
+    { -512.015f, 276.134f, -90.827f, 0.0f}
 };
 
-class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
+class instance_sunken_temple : public ScriptedInstance
 {
     public:
         instance_sunken_temple(Map* pMap);

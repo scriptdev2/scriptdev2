@@ -56,7 +56,7 @@ static float fAddPosition[4] = {163.5727f, 252.1900f, 42.8684f, 5.57052f};
 ## mob_vrykul_skeleton
 ######*/
 
-struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
+struct mob_vrykul_skeletonAI : public ScriptedAI
 {
     mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -176,7 +176,7 @@ CreatureAI* GetAI_mob_vrykul_skeleton(Creature* pCreature)
 ## boss_keleseth
 ######*/
 
-struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
+struct boss_kelesethAI : public ScriptedAI
 {
     boss_kelesethAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

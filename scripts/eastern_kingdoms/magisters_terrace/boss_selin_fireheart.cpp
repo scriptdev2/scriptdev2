@@ -51,7 +51,7 @@ enum
     NPC_BRUISER                     = 24689,
 };
 
-struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
+struct boss_selin_fireheartAI : public ScriptedAI
 {
     boss_selin_fireheartAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -251,7 +251,7 @@ CreatureAI* GetAI_boss_selin_fireheart(Creature* pCreature)
     return new boss_selin_fireheartAI(pCreature);
 };
 
-struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
+struct mob_fel_crystalAI : public ScriptedAI
 {
     mob_fel_crystalAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

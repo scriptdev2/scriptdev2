@@ -67,7 +67,7 @@ static const SummonLocation aSteamriggerSpawnLocs[] =
     { -331.161f, -112.212f, -7.66f},
 };
 
-struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
+struct boss_mekgineer_steamriggerAI : public ScriptedAI
 {
     boss_mekgineer_steamriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -212,7 +212,7 @@ CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* pCreature)
     return new boss_mekgineer_steamriggerAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
+struct mob_steamrigger_mechanicAI : public ScriptedAI
 {
     mob_steamrigger_mechanicAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

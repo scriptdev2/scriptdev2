@@ -274,7 +274,7 @@ static const uint32 aMadnessChamberDoors[MAX_ILLUSIONS] = { GO_BRAIN_DOOR_STORMW
 ## boss_sara
 ######*/
 
-struct MANGOS_DLL_DECL boss_saraAI : public Scripted_NoMovementAI, private DialogueHelper
+struct boss_saraAI : public Scripted_NoMovementAI, private DialogueHelper
 {
     boss_saraAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature),
         DialogueHelper(aYoggSaronDialog)
@@ -580,7 +580,7 @@ CreatureAI* GetAI_boss_sara(Creature* pCreature)
 ## boss_yogg_saron
 ######*/
 
-struct MANGOS_DLL_DECL boss_yogg_saronAI : public Scripted_NoMovementAI
+struct boss_yogg_saronAI : public Scripted_NoMovementAI
 {
     boss_yogg_saronAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -718,7 +718,7 @@ CreatureAI* GetAI_boss_yogg_saron(Creature* pCreature)
 ## npc_voice_yogg_saron
 ######*/
 
-struct MANGOS_DLL_DECL npc_voice_yogg_saronAI : public Scripted_NoMovementAI
+struct npc_voice_yogg_saronAI : public Scripted_NoMovementAI
 {
     npc_voice_yogg_saronAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -955,7 +955,7 @@ CreatureAI* GetAI_npc_voice_yogg_saron(Creature* pCreature)
 ## npc_brain_yogg_saron
 ######*/
 
-struct MANGOS_DLL_DECL npc_brain_yogg_saronAI : public Scripted_NoMovementAI
+struct npc_brain_yogg_saronAI : public Scripted_NoMovementAI
 {
     npc_brain_yogg_saronAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -1157,7 +1157,7 @@ CreatureAI* GetAI_npc_brain_yogg_saron(Creature* pCreature)
 ## npc_guardian_of_yogg
 ######*/
 
-struct MANGOS_DLL_DECL npc_guardian_of_yoggAI : public ScriptedAI
+struct npc_guardian_of_yoggAI : public ScriptedAI
 {
     npc_guardian_of_yoggAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -1253,7 +1253,7 @@ CreatureAI* GetAI_npc_guardian_of_yogg(Creature* pCreature)
 ## npc_immortal_guardian
 ######*/
 
-struct MANGOS_DLL_DECL npc_immortal_guardianAI : public ScriptedAI
+struct npc_immortal_guardianAI : public ScriptedAI
 {
     npc_immortal_guardianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -1351,7 +1351,7 @@ bool EffectDummyCreature_npc_immortal_guardian(Unit* /*pCaster*/, uint32 uiSpell
 ## npc_constrictor_tentacle
 ######*/
 
-struct MANGOS_DLL_DECL npc_constrictor_tentacleAI : public Scripted_NoMovementAI
+struct npc_constrictor_tentacleAI : public Scripted_NoMovementAI
 {
     npc_constrictor_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -1379,7 +1379,7 @@ CreatureAI* GetAI_npc_constrictor_tentacle(Creature* pCreature)
 ## npc_ominous_cloud
 ######*/
 
-struct MANGOS_DLL_DECL npc_ominous_cloudAI : public Scripted_NoMovementAI
+struct npc_ominous_cloudAI : public Scripted_NoMovementAI
 {
     npc_ominous_cloudAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
@@ -1437,7 +1437,7 @@ CreatureAI* GetAI_npc_ominous_cloud(Creature* pCreature)
 ## npc_death_ray
 ######*/
 
-struct MANGOS_DLL_DECL npc_death_rayAI : public ScriptedAI
+struct npc_death_rayAI : public ScriptedAI
 {
     npc_death_rayAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -1479,7 +1479,7 @@ CreatureAI* GetAI_npc_death_ray(Creature* pCreature)
 ## npc_descent_madness
 ######*/
 
-struct MANGOS_DLL_DECL npc_descent_madnessAI : public Scripted_NoMovementAI
+struct npc_descent_madnessAI : public Scripted_NoMovementAI
 {
     npc_descent_madnessAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -1529,7 +1529,7 @@ bool NpcSpellClick_npc_descent_madness(Player* pPlayer, Creature* pClickedCreatu
 ######*/
 
 // TODO Remove this 'script' when combat can be proper prevented from core-side
-struct MANGOS_DLL_DECL npc_laughing_skullAI : public Scripted_NoMovementAI
+struct npc_laughing_skullAI : public Scripted_NoMovementAI
 {
     npc_laughing_skullAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
@@ -1548,7 +1548,7 @@ CreatureAI* GetAI_npc_laughing_skull(Creature* pCreature)
 ## npc_keeper_mimiron
 ######*/
 
-struct MANGOS_DLL_DECL npc_keeper_mimironAI : public Scripted_NoMovementAI
+struct npc_keeper_mimironAI : public Scripted_NoMovementAI
 {
     npc_keeper_mimironAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
@@ -1593,7 +1593,7 @@ CreatureAI* GetAI_npc_keeper_mimiron(Creature* pCreature)
 ######*/
 
 // TODO Remove this 'script' when combat can be proper prevented from core-side
-struct MANGOS_DLL_DECL npc_keeper_thorimAI : public Scripted_NoMovementAI
+struct npc_keeper_thorimAI : public Scripted_NoMovementAI
 {
     npc_keeper_thorimAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 

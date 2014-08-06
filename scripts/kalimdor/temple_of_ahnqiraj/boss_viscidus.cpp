@@ -53,7 +53,7 @@ enum
     NPC_GLOB_OF_VISCIDUS        = 15667
 };
 
-struct MANGOS_DLL_DECL boss_viscidusAI : public ScriptedAI
+struct boss_viscidusAI : public ScriptedAI
 {
     boss_viscidusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

@@ -89,7 +89,7 @@ enum SuperSpells
     SUPER_ARCANE_EXPL   = 2,
 };
 
-struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
+struct boss_aranAI : public ScriptedAI
 {
     boss_aranAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -399,7 +399,7 @@ CreatureAI* GetAI_boss_aran(Creature* pCreature)
 }
 
 // TODO Remove this 'script' when combat can be proper prevented from core-side
-struct MANGOS_DLL_DECL npc_shade_of_aran_blizzardAI : public ScriptedAI
+struct npc_shade_of_aran_blizzardAI : public ScriptedAI
 {
     npc_shade_of_aran_blizzardAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

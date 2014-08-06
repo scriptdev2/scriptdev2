@@ -23,7 +23,7 @@ enum EncounterState
 #define OUT_LOAD_INST_DATA_COMPLETE    debug_log("SD2: Instance Data Load for Instance %s (Map %d, Instance Id: %d) is complete.", instance->GetMapName(), instance->GetId(), instance->GetInstanceId())
 #define OUT_LOAD_INST_DATA_FAIL        script_error_log("Unable to load Instance Data for Instance %s (Map %d, Instance Id: %d).", instance->GetMapName(), instance->GetId(), instance->GetInstanceId())
 
-class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
+class ScriptedInstance : public InstanceData
 {
     public:
         ScriptedInstance(Map* pMap) : InstanceData(pMap) {}
@@ -69,7 +69,7 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 };
 
 // Class for world maps (May need additional zone-wide functions later on)
-class MANGOS_DLL_DECL ScriptedMap : public ScriptedInstance
+class ScriptedMap : public ScriptedInstance
 {
     public:
         ScriptedMap(Map* pMap) : ScriptedInstance(pMap) {}

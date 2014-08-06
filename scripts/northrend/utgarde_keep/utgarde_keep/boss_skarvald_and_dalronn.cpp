@@ -74,7 +74,7 @@ Yell m_aYell[] =
     {SAY_DAL_DEATH, SAY_SKA_DAL_DIES_REPLY}
 };
 
-struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
+struct boss_s_and_d_dummyAI : public ScriptedAI
 {
     boss_s_and_d_dummyAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
 ## boss_skarvald
 ######*/
 
-struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
+struct boss_skarvaldAI : public boss_s_and_d_dummyAI
 {
     boss_skarvaldAI(Creature* pCreature) : boss_s_and_d_dummyAI(pCreature) { Reset(); }
 
@@ -251,7 +251,7 @@ CreatureAI* GetAI_boss_skarvald(Creature* pCreature)
 ## boss_dalronn
 ######*/
 
-struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
+struct boss_dalronnAI : public boss_s_and_d_dummyAI
 {
     boss_dalronnAI(Creature* pCreature) : boss_s_and_d_dummyAI(pCreature) { Reset(); }
 

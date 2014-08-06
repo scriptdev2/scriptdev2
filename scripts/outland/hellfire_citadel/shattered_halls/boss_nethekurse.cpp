@@ -79,7 +79,7 @@ enum
     NPC_FEL_ORC_CONVERT    = 17083,
 };
 
-struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
+struct boss_grand_warlock_nethekurseAI : public ScriptedAI
 {
     boss_grand_warlock_nethekurseAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
+struct mob_fel_orc_convertAI : public ScriptedAI
 {
     mob_fel_orc_convertAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -410,7 +410,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 };
 
 // NOTE: this creature are also summoned by other spells, for different creatures
-struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public Scripted_NoMovementAI
+struct mob_lesser_shadow_fissureAI : public Scripted_NoMovementAI
 {
     mob_lesser_shadow_fissureAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 

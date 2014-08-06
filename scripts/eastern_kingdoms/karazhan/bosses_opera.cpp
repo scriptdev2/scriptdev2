@@ -85,7 +85,7 @@ enum
     NPC_CYCLONE                 = 18412,
 };
 
-struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
+struct boss_dorotheeAI : public ScriptedAI
 {
     boss_dorotheeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
+struct boss_strawmanAI : public ScriptedAI
 {
     boss_strawmanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -319,7 +319,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
+struct boss_tinheadAI : public ScriptedAI
 {
     boss_tinheadAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -419,7 +419,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
+struct boss_roarAI : public ScriptedAI
 {
     boss_roarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -528,7 +528,7 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
 
 static const float afCycloneSpawnLoc[4] = { -10907.68f, -1778.651f, 90.56018f, 0.61f};
 
-struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
+struct boss_croneAI : public ScriptedAI
 {
     boss_croneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -666,7 +666,7 @@ bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 /
     return true;
 }
 
-struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
+struct boss_bigbadwolfAI : public ScriptedAI
 {
     boss_bigbadwolfAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -796,7 +796,7 @@ enum OperaPhase
 
 static const float afRomuloSpawnLoc[4] = { -10893.62f, -1760.78f, 90.55f, 4.76f};
 
-struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
+struct boss_julianneAI : public ScriptedAI
 {
     boss_julianneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -1048,7 +1048,7 @@ bool EffectDummyCreature_spell_drink_poison(Unit* /*pCaster*/, uint32 uiSpellId,
     return false;
 }
 
-struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
+struct boss_romuloAI : public ScriptedAI
 {
     boss_romuloAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

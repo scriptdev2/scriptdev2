@@ -51,7 +51,7 @@ enum
     SPELL_STRIKE                = 14516
 };
 
-struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
+struct boss_erekemAI : public ScriptedAI
 {
     boss_erekemAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -173,7 +173,7 @@ CreatureAI* GetAI_boss_erekem(Creature* pCreature)
     return new boss_erekemAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
+struct npc_erekem_guardAI : public ScriptedAI
 {
     npc_erekem_guardAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

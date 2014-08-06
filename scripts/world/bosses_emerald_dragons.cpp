@@ -50,7 +50,7 @@ enum
     NPC_DREAM_FOG                   = 15224,
 };
 
-struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
+struct boss_emerald_dragonAI : public ScriptedAI
 {
     boss_emerald_dragonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -155,7 +155,7 @@ enum
     SPELL_PUTRID_MUSHROOM       = 24904,                    // Summons a mushroom on killing a player
 };
 
-struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
+struct boss_emerissAI : public boss_emerald_dragonAI
 {
     boss_emerissAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
@@ -236,7 +236,7 @@ enum
     SPELL_SPIRIT_SHAPE_VISUAL   = 24809,
 };
 
-struct MANGOS_DLL_DECL boss_lethonAI : public boss_emerald_dragonAI
+struct boss_lethonAI : public boss_emerald_dragonAI
 {
     boss_lethonAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) {}
 
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL boss_lethonAI : public boss_emerald_dragonAI
     }
 };
 
-struct MANGOS_DLL_DECL npc_spirit_shadeAI : public ScriptedAI
+struct npc_spirit_shadeAI : public ScriptedAI
 {
     npc_spirit_shadeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -343,7 +343,7 @@ enum
     SPELL_POSIONBREATH      = 20667
 };
 
-struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
+struct boss_taerarAI : public boss_emerald_dragonAI
 {
     boss_taerarAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
@@ -473,7 +473,7 @@ enum
 };
 
 // Ysondre script
-struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
+struct boss_ysondreAI : public boss_emerald_dragonAI
 {
     boss_ysondreAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 

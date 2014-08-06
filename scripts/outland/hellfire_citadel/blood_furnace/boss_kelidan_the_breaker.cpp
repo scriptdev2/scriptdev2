@@ -68,7 +68,7 @@ struct SortByAngle
     WorldObject const* m_pRef;
 };
 
-struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
+struct boss_kelidan_the_breakerAI : public ScriptedAI
 {
     boss_kelidan_the_breakerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -298,7 +298,7 @@ enum
     SPELL_MARK_OF_SHADOW    = 30937,
 };
 
-struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
+struct mob_shadowmoon_channelerAI : public ScriptedAI
 {
     mob_shadowmoon_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

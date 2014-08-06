@@ -84,7 +84,7 @@ static SpawnLocations aSpirits[] =
     { -12266.1f, -1940.72f, 132.606f, 0.70910f}
 };
 
-struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
+struct boss_mandokirAI : public ScriptedAI
 {
     boss_mandokirAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 };
 
 // Ohgan
-struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
+struct mob_ohganAI : public ScriptedAI
 {
     mob_ohganAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

@@ -62,7 +62,7 @@ enum
     NPC_SHADOW_LEO          = 21875
 };
 
-struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
+struct boss_leotheras_the_blindAI : public ScriptedAI
 {
     boss_leotheras_the_blindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

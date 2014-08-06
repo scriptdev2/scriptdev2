@@ -31,7 +31,7 @@ enum
     SPELL_ICE_TOMB      = 16869
 };
 
-struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
+struct boss_maleki_the_pallidAI : public ScriptedAI
 {
     boss_maleki_the_pallidAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

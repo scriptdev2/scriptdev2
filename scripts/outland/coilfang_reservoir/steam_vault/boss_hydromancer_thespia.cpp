@@ -46,7 +46,7 @@ enum
     SPELL_SUMMON_ELEMENTALS     = 31476,            // not sure where to use this
 };
 
-struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
+struct boss_thespiaAI : public ScriptedAI
 {
     boss_thespiaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

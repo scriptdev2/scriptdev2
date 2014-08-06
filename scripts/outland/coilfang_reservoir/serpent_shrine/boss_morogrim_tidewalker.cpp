@@ -70,7 +70,7 @@ enum
 
 static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850, 38023, 38024, 38025 };
 
-struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
+struct boss_morogrim_tidewalkerAI : public ScriptedAI
 {
     boss_morogrim_tidewalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
+struct mob_water_globuleAI : public ScriptedAI
 {
     mob_water_globuleAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

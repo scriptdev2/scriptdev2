@@ -422,6 +422,12 @@ enum
     ACHIEV_CRIT_DRIVE_CRAZY_H   = 10296,
 };
 
+struct UlduarSpawn
+{
+    float fX, fY, fZ, fO;
+    uint32 uiEntry;
+};
+
 struct UlduarSpawns
 {
     float fX, fY, fZ, fO;
@@ -430,7 +436,7 @@ struct UlduarSpawns
 
 // Note: coordinates are guessed, but pretty close to what they should be
 // ToDo: spawn additional Engineers, Demolitionists, Mages and Liquid Pyrite near the columns
-static const UlduarSpawns afReinforcementsNormal[] =
+static const UlduarSpawn afReinforcementsNormal[] =
 {
     {118.797f, -26.9963f, 409.80f, 3.14f, NPC_SALVAGED_SIEGE_ENGINE},
     {118.847f, -43.758f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
@@ -440,7 +446,7 @@ static const UlduarSpawns afReinforcementsNormal[] =
     {123.022f, 39.671f, 409.80f, 3.10f, NPC_SALVAGED_DEMOLISHER},
 };
 
-static const UlduarSpawns afReinforcementsHeroic[] =
+static const UlduarSpawn afReinforcementsHeroic[] =
 {
     {106.359f, -35.269f, 409.80f, 3.12f, NPC_SALVAGED_SIEGE_ENGINE},
     {135.351f, -20.767f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
@@ -488,7 +494,7 @@ static const float afProspectorSpawnPos[4] = { 1556.469f, 143.5023f, 427.2918f, 
 // spawn location for Algalon in reload case
 static const float afAlgalonMovePos[4] = {1632.668f, -302.7656f, 417.3211f, 1.53f};
 
-class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance, private DialogueHelper
+class instance_ulduar : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_ulduar(Map* pMap);

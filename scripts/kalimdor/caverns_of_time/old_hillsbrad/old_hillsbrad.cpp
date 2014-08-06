@@ -231,7 +231,7 @@ static const DialogueEntry aThrallDialogue[] =
     {0, 0, 0},
 };
 
-struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
+struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
 {
     npc_thrall_old_hillsbradAI(Creature* pCreature) : npc_escortAI(pCreature),
         DialogueHelper(aThrallDialogue)
@@ -1156,7 +1156,7 @@ static const DialogueEntry aTarethaDialogue[] =
     {0, 0, 0},
 };
 
-struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI, private DialogueHelper
+struct npc_tarethaAI : public npc_escortAI, private DialogueHelper
 {
     npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature),
         DialogueHelper(aTarethaDialogue)

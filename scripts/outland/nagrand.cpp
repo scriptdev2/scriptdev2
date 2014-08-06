@@ -47,7 +47,7 @@ enum
     FACTION_FRIENDLY            = 35
 };
 
-struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
+struct mob_lumpAI : public ScriptedAI
 {
     mob_lumpAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -183,7 +183,7 @@ enum
 static float m_afAmbushA[] = { -1568.805786f, 8533.873047f, 1.958f};
 static float m_afAmbushB[] = { -1491.554321f, 8506.483398f, 1.248f};
 
-struct MANGOS_DLL_DECL npc_nagrand_captiveAI : public npc_escortAI
+struct npc_nagrand_captiveAI : public npc_escortAI
 {
     npc_nagrand_captiveAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
@@ -349,7 +349,7 @@ enum
     QUEST_VISIT_WITH_ANCESTORS  = 10085
 };
 
-struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
+struct npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
 {
     npc_creditmarker_visit_with_ancestorsAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -411,7 +411,7 @@ static const float afRethhedronPos[2][3] =
     { -1557.93f, 9834.34f, 200.949f}
 };
 
-struct MANGOS_DLL_DECL npc_rethhedronAI : public ScriptedAI
+struct npc_rethhedronAI : public ScriptedAI
 {
     npc_rethhedronAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

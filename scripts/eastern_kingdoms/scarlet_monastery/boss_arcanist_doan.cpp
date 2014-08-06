@@ -35,7 +35,7 @@ enum
     SPELL_ARCANE_BUBBLE         = 9438,
 };
 
-struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
+struct boss_arcanist_doanAI : public ScriptedAI
 {
     boss_arcanist_doanAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
