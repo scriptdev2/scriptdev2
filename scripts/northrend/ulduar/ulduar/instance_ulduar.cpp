@@ -57,10 +57,10 @@ struct UlduarKeeperSpawns
 
 static UlduarKeeperSpawns m_aKeepersSpawnLocs[] =
 {
-    {1945.682f, 33.34201f,  411.4408f, 5.270f, NPC_KEEPER_FREYA,   TYPE_FREYA},
-    {2028.766f, 17.42014f,  411.4446f, 3.857f, NPC_KEEPER_MIMIRON, TYPE_MIMIRON},
-    {1945.761f, -81.52171f, 411.4407f, 1.029f, NPC_KEEPER_HODIR,   TYPE_HODIR},
-    {2028.822f, -65.73573f, 411.4426f, 2.460f, NPC_KEEPER_THORIM,  TYPE_THORIM},
+    {1945.682f, 33.34201f,  411.4408f, 5.270f, NPC_KEEPER_FREYA,   TYPE_FREYA,   0},
+    {2028.766f, 17.42014f,  411.4446f, 3.857f, NPC_KEEPER_MIMIRON, TYPE_MIMIRON, 0},
+    {1945.761f, -81.52171f, 411.4407f, 1.029f, NPC_KEEPER_HODIR,   TYPE_HODIR,   0},
+    {2028.822f, -65.73573f, 411.4426f, 2.460f, NPC_KEEPER_THORIM,  TYPE_THORIM,  0},
 };
 
 static UlduarKeeperSpawns m_aKeeperHelperLocs[] =
@@ -1436,12 +1436,12 @@ void instance_ulduar::DoCallLeviathanHelp()
         return;
 
     for (uint8 i = 0; i < countof(afReinforcementsNormal); ++i)
-        pLeviathan->SummonCreature(afReinforcementsNormal[i].uiAllyEntry, afReinforcementsNormal[i].fX, afReinforcementsNormal[i].fY, afReinforcementsNormal[i].fZ, afReinforcementsNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+        pLeviathan->SummonCreature(afReinforcementsNormal[i].uiEntry, afReinforcementsNormal[i].fX, afReinforcementsNormal[i].fY, afReinforcementsNormal[i].fZ, afReinforcementsNormal[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
 
     if (!instance->IsRegularDifficulty())
     {
         for (uint8 i = 0; i < countof(afReinforcementsHeroic); ++i)
-            pLeviathan->SummonCreature(afReinforcementsHeroic[i].uiAllyEntry, afReinforcementsHeroic[i].fX, afReinforcementsHeroic[i].fY, afReinforcementsHeroic[i].fZ, afReinforcementsHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
+            pLeviathan->SummonCreature(afReinforcementsHeroic[i].uiEntry, afReinforcementsHeroic[i].fX, afReinforcementsHeroic[i].fY, afReinforcementsHeroic[i].fZ, afReinforcementsHeroic[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0, true);
     }
 }
 

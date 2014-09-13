@@ -463,7 +463,13 @@ enum
     ACHIEV_CRIT_CONQ_HODIR      = 10719,
 };
 
-struct UlduarSpawns
+struct UlduarSpawn
+{
+    float fX, fY, fZ, fO;
+    uint32 uiEntry;
+};
+
+struct UlduarSpawnTwoSide
 {
     float fX, fY, fZ, fO;
     uint32 uiAllyEntry, uiHordeEntry;
@@ -471,7 +477,7 @@ struct UlduarSpawns
 
 // Note: coordinates are guessed, but pretty close to what they should be
 // ToDo: spawn additional Engineers, Demolitionists, Mages and Liquid Pyrite near the columns
-static const UlduarSpawns afReinforcementsNormal[] =
+static const UlduarSpawn afReinforcementsNormal[] =
 {
     {118.797f, -26.9963f, 409.80f, 3.14f, NPC_SALVAGED_SIEGE_ENGINE},
     {118.847f, -43.758f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
@@ -481,7 +487,7 @@ static const UlduarSpawns afReinforcementsNormal[] =
     {123.022f, 39.671f, 409.80f, 3.10f, NPC_SALVAGED_DEMOLISHER},
 };
 
-static const UlduarSpawns afReinforcementsHeroic[] =
+static const UlduarSpawn afReinforcementsHeroic[] =
 {
     {106.359f, -35.269f, 409.80f, 3.12f, NPC_SALVAGED_SIEGE_ENGINE},
     {135.351f, -20.767f, 409.80f, 3.15f, NPC_SALVAGED_SIEGE_ENGINE},
@@ -494,7 +500,7 @@ static const UlduarSpawns afReinforcementsHeroic[] =
     {112.700f, 47.884f, 409.79f, 3.10f, NPC_SALVAGED_DEMOLISHER},
 };
 
-static const UlduarSpawns afHodirHelpersNormal[] =
+static const UlduarSpawnTwoSide afHodirHelpersNormal[] =
 {
     {1999.903f, -230.4966f, 432.7581f, 1.53589f,  NPC_DRUID_ALLIANCE_N,  NPC_DRUID_HORDE_N},
     {2010.058f, -243.4553f, 432.7672f, 1.361357f, NPC_SHAMAN_ALLIANCE_N, NPC_SHAMAN_HORDE_N},
@@ -502,7 +508,7 @@ static const UlduarSpawns afHodirHelpersNormal[] =
     {1983.751f, -243.3579f, 432.7672f, 1.570796f, NPC_PRIEST_ALLIANCE_N, NPC_PRIEST_HORDE_N},
 };
 
-static const UlduarSpawns afHodirHelpersHeroic[] =
+static const UlduarSpawnTwoSide afHodirHelpersHeroic[] =
 {
     {2013.37f, -240.331f, 432.687f, 1.80463f, NPC_DRUID_ALLIANCE_H,  NPC_DRUID_HORDE_H},
     {1983.89f, -240.369f, 432.687f, 1.37658f, NPC_SHAMAN_ALLIANCE_H, NPC_SHAMAN_HORDE_H},
@@ -510,7 +516,7 @@ static const UlduarSpawns afHodirHelpersHeroic[] =
     {1997.88f, -239.394f, 432.687f, 1.4237f,  NPC_PRIEST_ALLIANCE_H, NPC_PRIEST_HORDE_H},
 };
 
-static const UlduarSpawns afThorimSpawns[] =
+static const UlduarSpawnTwoSide afThorimSpawns[] =
 {
     {2127.24f, -251.309f, 419.7935f, 5.899213f,   NPC_SOLDIER_HORDE, NPC_SOLDIER_ALLIANCE},
     {2123.316f, -254.7708f, 419.7886f, 6.178465f, NPC_SOLDIER_HORDE, NPC_SOLDIER_ALLIANCE},
