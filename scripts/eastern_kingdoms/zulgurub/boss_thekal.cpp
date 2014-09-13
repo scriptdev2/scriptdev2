@@ -59,7 +59,7 @@ enum
 };
 
 // abstract base class for faking death
-struct MANGOS_DLL_DECL boss_thekalBaseAI : public ScriptedAI
+struct boss_thekalBaseAI : public ScriptedAI
 {
     boss_thekalBaseAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_thekalBaseAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL boss_thekalAI : public boss_thekalBaseAI
+struct boss_thekalAI : public boss_thekalBaseAI
 {
     boss_thekalAI(Creature* pCreature) : boss_thekalBaseAI(pCreature)
     {
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public boss_thekalBaseAI
 ## mob_zealot_lorkhan
 ######*/
 
-struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public boss_thekalBaseAI
+struct mob_zealot_lorkhanAI : public boss_thekalBaseAI
 {
     mob_zealot_lorkhanAI(Creature* pCreature) : boss_thekalBaseAI(pCreature)
     {
@@ -496,7 +496,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public boss_thekalBaseAI
 ## npc_zealot_zath
 ######*/
 
-struct MANGOS_DLL_DECL mob_zealot_zathAI : public boss_thekalBaseAI
+struct mob_zealot_zathAI : public boss_thekalBaseAI
 {
     mob_zealot_zathAI(Creature* pCreature) : boss_thekalBaseAI(pCreature)
     {

@@ -66,7 +66,7 @@ enum
     MAX_BLOODBOILS              = 5,
 };
 
-struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
+struct boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

@@ -81,7 +81,7 @@ static const uint32 uiMutatedInfections[MAX_MUTATE_INFACTION_STEPS] =
     SPELL_MUTATED_INFECTION_5
 };
 
-struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
+struct boss_rotfaceAI : public ScriptedAI
 {
     boss_rotfaceAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -192,7 +192,7 @@ CreatureAI* GetAI_boss_rotface(Creature* pCreature)
     return new boss_rotfaceAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
+struct mob_little_oozeAI : public ScriptedAI
 {
     mob_little_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -242,7 +242,7 @@ CreatureAI* GetAI_mob_little_ooze(Creature* pCreature)
     return new mob_little_oozeAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
+struct mob_big_oozeAI : public ScriptedAI
 {
     mob_big_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

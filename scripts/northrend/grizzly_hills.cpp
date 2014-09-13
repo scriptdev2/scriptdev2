@@ -45,7 +45,7 @@ enum
     SPELL_GOLEM_CHARGE_CREDIT   = 47797,
 };
 
-struct MANGOS_DLL_DECL npc_depleted_war_golemAI : public ScriptedPetAI
+struct npc_depleted_war_golemAI : public ScriptedPetAI
 {
     npc_depleted_war_golemAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
 
@@ -137,7 +137,7 @@ enum
     GO_FIRE_DOOR                        = 188480,
 };
 
-struct MANGOS_DLL_DECL npc_harrison_jonesAI : public npc_escortAI
+struct npc_harrison_jonesAI : public npc_escortAI
 {
     npc_harrison_jonesAI(Creature* pCreature) : npc_escortAI(pCreature)
     {

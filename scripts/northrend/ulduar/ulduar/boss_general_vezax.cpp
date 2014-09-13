@@ -61,7 +61,7 @@ enum
 ## boss_general_vezax
 ######*/
 
-struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
+struct boss_general_vezaxAI : public ScriptedAI
 {
     boss_general_vezaxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

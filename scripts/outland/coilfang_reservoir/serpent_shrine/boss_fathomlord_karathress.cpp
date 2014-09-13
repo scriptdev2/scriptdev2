@@ -83,7 +83,7 @@ static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_SHARKKIS, NPC_TIDALVESS, NPC_
 ## boss_fathomlord_karathress
 ######*/
 
-struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
+struct boss_fathomlord_karathressAI : public ScriptedAI
 {
     boss_fathomlord_karathressAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 ## boss_fathomguard_sharkkis
 ######*/
 
-struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
+struct boss_fathomguard_sharkkisAI : public ScriptedAI
 {
     boss_fathomguard_sharkkisAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -330,7 +330,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 ## boss_fathomguard_tidalvess
 ######*/
 
-struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
+struct boss_fathomguard_tidalvessAI : public ScriptedAI
 {
     boss_fathomguard_tidalvessAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 ## boss_fathomguard_caribdis
 ######*/
 
-struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
+struct boss_fathomguard_caribdisAI : public ScriptedAI
 {
     boss_fathomguard_caribdisAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 

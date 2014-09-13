@@ -47,7 +47,7 @@ enum
 static float m_afSpawnLocation[] = {5768.71f, -2969.29f, 273.816f};
 static uint32 m_auiBosses[] = {NPC_AZBARIN, NPC_DUKE_SINGEN, NPC_ERATHIUS, NPC_GARGORAL};
 
-struct MANGOS_DLL_DECL npc_gurgthockAI : public ScriptedAI
+struct npc_gurgthockAI : public ScriptedAI
 {
     npc_gurgthockAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -110,7 +110,7 @@ enum
     NPC_DECAYING_GHOUL                      = 28565,
 };
 
-struct MANGOS_DLL_DECL npc_ghoul_feeding_bunnyAI : public ScriptedAI
+struct npc_ghoul_feeding_bunnyAI : public ScriptedAI
 {
     npc_ghoul_feeding_bunnyAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -171,7 +171,7 @@ enum
     NPC_GHOUL_FEEDING_BUNNY                 = 28591,
 };
 
-struct MANGOS_DLL_DECL npc_decaying_ghoulAI : public ScriptedAI
+struct npc_decaying_ghoulAI : public ScriptedAI
 {
     npc_decaying_ghoulAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

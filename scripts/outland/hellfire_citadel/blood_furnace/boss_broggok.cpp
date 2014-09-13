@@ -39,7 +39,7 @@ enum
     POINT_EVENT_COMBAT      = 1,
 };
 
-struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
+struct boss_broggokAI : public ScriptedAI
 {
     boss_broggokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
+struct mob_broggok_poisoncloudAI : public ScriptedAI
 {
     mob_broggok_poisoncloudAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 

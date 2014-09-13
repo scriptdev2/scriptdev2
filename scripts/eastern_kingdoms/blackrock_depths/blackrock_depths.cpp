@@ -158,7 +158,7 @@ bool AreaTrigger_at_ring_of_law(Player* pPlayer, AreaTriggerEntry const* pAt)
 ## npc_grimstone
 ######*/
 
-struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
+struct npc_grimstoneAI : public npc_escortAI
 {
     npc_grimstoneAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
@@ -550,7 +550,7 @@ enum
     QUEST_ALE          = 4295
 };
 
-struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
+struct npc_rocknotAI : public npc_escortAI
 {
     npc_rocknotAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
@@ -724,7 +724,7 @@ enum
     QUEST_JAIL_BREAK            = 4322
 };
 
-struct MANGOS_DLL_DECL npc_marshal_windsorAI : public npc_escortAI
+struct npc_marshal_windsorAI : public npc_escortAI
 {
     npc_marshal_windsorAI(Creature* m_creature) : npc_escortAI(m_creature)
     {

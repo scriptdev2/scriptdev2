@@ -75,7 +75,7 @@ enum HalazziPhase
     PHASE_FINAL         = 2
 };
 
-struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
+struct boss_halazziAI : public ScriptedAI
 {
     boss_halazziAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -302,7 +302,7 @@ enum
     SPELL_SHRED_ARMOR       = 43243
 };
 
-struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
+struct boss_spirit_lynxAI : public ScriptedAI
 {
     boss_spirit_lynxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

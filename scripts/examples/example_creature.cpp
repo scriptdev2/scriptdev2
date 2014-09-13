@@ -69,7 +69,7 @@ enum
 // If (and only if) a gossip must be handled within SD2, then it should be moved to SD2-database!
 #define GOSSIP_ITEM     "I'm looking for a fight"
 
-struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
+struct example_creatureAI : public ScriptedAI
 {
     // *** HANDLED FUNCTION ***
     // This is the constructor, called only once when the creature is first created

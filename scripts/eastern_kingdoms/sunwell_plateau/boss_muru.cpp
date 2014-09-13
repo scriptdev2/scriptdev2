@@ -72,7 +72,7 @@ enum
 ## boss_muru
 ######*/
 
-struct MANGOS_DLL_DECL boss_muruAI : public Scripted_NoMovementAI
+struct boss_muruAI : public Scripted_NoMovementAI
 {
     boss_muruAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_muruAI : public Scripted_NoMovementAI
 ## boss_entropius
 ######*/
 
-struct MANGOS_DLL_DECL boss_entropiusAI : public ScriptedAI
+struct boss_entropiusAI : public ScriptedAI
 {
     boss_entropiusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -319,7 +319,7 @@ struct MANGOS_DLL_DECL boss_entropiusAI : public ScriptedAI
 ## npc_portal_target
 ######*/
 
-struct MANGOS_DLL_DECL npc_portal_targetAI : public Scripted_NoMovementAI
+struct npc_portal_targetAI : public Scripted_NoMovementAI
 {
     npc_portal_targetAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
@@ -411,7 +411,7 @@ struct MANGOS_DLL_DECL npc_portal_targetAI : public Scripted_NoMovementAI
 ## npc_void_sentinel_summoner
 ######*/
 
-struct MANGOS_DLL_DECL npc_void_sentinel_summonerAI : public Scripted_NoMovementAI
+struct npc_void_sentinel_summonerAI : public Scripted_NoMovementAI
 {
     npc_void_sentinel_summonerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {

@@ -60,7 +60,7 @@ enum
     NPC_KILREK                  = 17229
 };
 
-struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
+struct boss_terestianAI : public ScriptedAI
 {
     boss_terestianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI
+struct npc_fiendish_portalAI : public ScriptedAI
 {
     npc_fiendish_portalAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI
 };
 
 // TODO Remove this 'script' when combat can be proper prevented from core-side
-struct MANGOS_DLL_DECL mob_demon_chainAI : public Scripted_NoMovementAI
+struct mob_demon_chainAI : public Scripted_NoMovementAI
 {
     mob_demon_chainAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 

@@ -84,7 +84,7 @@ enum
     SPELL_TELEPORT_INSIDE       = 62138,            // script effect - should trigger 62139
 };
 
-struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
+struct npc_sinclariAI : public npc_escortAI
 {
     npc_sinclariAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
@@ -220,7 +220,7 @@ bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 /*ui
 ## npc_prison_event_controller
 ######*/
 
-struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
+struct npc_prison_event_controllerAI : public ScriptedAI
 {
     npc_prison_event_controllerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -411,7 +411,7 @@ CreatureAI* GetAI_npc_prison_event_controller(Creature* pCreature)
 
 static const uint32 aTrashPortalNpcs[4] = {NPC_AZURE_CAPTAIN, NPC_AZURE_RAIDER, NPC_AZURE_SORCEROR, NPC_AZURE_STALKER};
 
-struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
+struct npc_teleportation_portalAI : public ScriptedAI
 {
     npc_teleportation_portalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

@@ -46,7 +46,7 @@ enum
 ## boss_gortok
 ######*/
 
-struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
+struct boss_gortokAI : public ScriptedAI
 {
     boss_gortokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

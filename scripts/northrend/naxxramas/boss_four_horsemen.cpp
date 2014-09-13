@@ -104,7 +104,7 @@ static const float aHorseMenMoveCoords[4][3] =
     {2517.8f, -2896.6f,  241.28f},         // sir zeliek
 };
 
-struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
+struct boss_lady_blaumeuxAI : public ScriptedAI
 {
     boss_lady_blaumeuxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -226,7 +226,7 @@ CreatureAI* GetAI_boss_lady_blaumeux(Creature* pCreature)
     return new boss_lady_blaumeuxAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
+struct boss_rivendare_naxxAI : public ScriptedAI
 {
     boss_rivendare_naxxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -338,7 +338,7 @@ CreatureAI* GetAI_boss_rivendare_naxx(Creature* pCreature)
     return new boss_rivendare_naxxAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
+struct boss_thane_korthazzAI : public ScriptedAI
 {
     boss_thane_korthazzAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -445,7 +445,7 @@ CreatureAI* GetAI_boss_thane_korthazz(Creature* pCreature)
     return new boss_thane_korthazzAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
+struct boss_sir_zeliekAI : public ScriptedAI
 {
     boss_sir_zeliekAI(Creature* pCreature) : ScriptedAI(pCreature)
     {

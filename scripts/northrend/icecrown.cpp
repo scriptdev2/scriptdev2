@@ -82,7 +82,7 @@ enum
     QUEST_ID_ASSAULT_BY_GROUND_H        = 13301,
 };
 
-struct MANGOS_DLL_DECL npc_squad_leaderAI : public npc_escortAI
+struct npc_squad_leaderAI : public npc_escortAI
 {
     npc_squad_leaderAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
@@ -312,7 +312,7 @@ enum
     SPELL_HEROIC_STRIKE                 = 29426,
 };
 
-struct MANGOS_DLL_DECL npc_infantryAI : public ScriptedAI
+struct npc_infantryAI : public ScriptedAI
 {
     npc_infantryAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -437,7 +437,7 @@ enum
     QUEST_ID_GET_OUT_OF_HERE_H          = 13481,
 };
 
-struct MANGOS_DLL_DECL npc_father_kamarosAI : public npc_escortAI
+struct npc_father_kamarosAI : public npc_escortAI
 {
     npc_father_kamarosAI(Creature* pCreature) : npc_escortAI(pCreature)
     {

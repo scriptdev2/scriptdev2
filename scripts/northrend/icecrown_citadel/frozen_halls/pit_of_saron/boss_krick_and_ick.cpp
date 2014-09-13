@@ -70,7 +70,7 @@ static const float afTyrannusTeleLoc[4] = {841.01f, 196.245f, 573.964f, 4.46f};
 ## boss_ick
 ######*/
 
-struct MANGOS_DLL_DECL boss_ickAI : public ScriptedAI
+struct boss_ickAI : public ScriptedAI
 {
     boss_ickAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -289,7 +289,7 @@ CreatureAI* GetAI_boss_ick(Creature* pCreature)
 ## boss_krick
 ######*/
 
-struct MANGOS_DLL_DECL boss_krickAI : public ScriptedAI
+struct boss_krickAI : public ScriptedAI
 {
     boss_krickAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -360,7 +360,7 @@ CreatureAI* GetAI_boss_krick(Creature* pCreature)
 ## npc_exploding_orb
 ######*/
 
-struct MANGOS_DLL_DECL npc_exploding_orbAI : public Scripted_NoMovementAI
+struct npc_exploding_orbAI : public Scripted_NoMovementAI
 {
     npc_exploding_orbAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 

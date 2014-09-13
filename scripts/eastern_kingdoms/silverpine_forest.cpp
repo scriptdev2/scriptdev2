@@ -54,7 +54,7 @@ enum
     NPC_QUINN           = 1951
 };
 
-struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
+struct npc_deathstalker_erlandAI : public npc_escortAI
 {
     npc_deathstalker_erlandAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
@@ -173,7 +173,7 @@ SpawnPoint SpawnPoints[] =
 
 static float m_afMoveCoords[] = { -410.69f, 1498.04f, 19.77f};
 
-struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
+struct npc_deathstalker_faerleiaAI : public ScriptedAI
 {
     npc_deathstalker_faerleiaAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
