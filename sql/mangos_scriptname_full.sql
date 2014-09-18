@@ -1157,7 +1157,6 @@ UPDATE creature_template SET ScriptName='npc_shadow_image' WHERE entry=25214;
 UPDATE creature_template SET ScriptName='boss_muru' WHERE entry=25741;
 UPDATE creature_template SET ScriptName='boss_entropius' WHERE entry=25840;
 UPDATE creature_template SET ScriptName='npc_portal_target' WHERE entry=25770;
-UPDATE creature_template SET ScriptName='npc_void_sentinel_summoner' WHERE entry=25782;
 UPDATE creature_template SET ScriptName='boss_kiljaeden' WHERE entry=25315;
 UPDATE creature_template SET ScriptName='npc_kiljaeden_controller' WHERE entry=25608;
 UPDATE creature_template SET ScriptName='spell_dummy_npc_brutallus_cloud' WHERE entry=25703;
@@ -1165,6 +1164,8 @@ UPDATE creature_template SET ScriptName='boss_felmyst' WHERE entry=25038;
 UPDATE creature_template SET ScriptName='npc_shield_orb' WHERE entry=25502;
 UPDATE creature_template SET ScriptName='npc_power_blue_flight' WHERE entry=25653;
 UPDATE creature_template SET ScriptName='npc_demonic_vapor' WHERE entry=25265;
+UPDATE creature_template SET ScriptName='npc_darkness' WHERE entry=25879;
+UPDATE creature_template SET ScriptName='npc_singularity' WHERE entry=25855;
 
 /* SWAMP OF SORROWS */
 UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;
