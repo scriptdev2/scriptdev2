@@ -1268,7 +1268,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1001167,'Thank you, $N. Now my spirit will finally be at peace.',0,0,0,0,'arei SAY_ESCORT_COMPLETE'),
 
 (-1001168,'The naga torture the spirits of water. They invoke chaos and destruction!',0,0,0,0,'wilda SAY_WIL_PROGRESS_4'),
-(-1001169,'The naga do not respect nature. They twist and corrupt it to meet their needs. They live to agitate the spirits.',0,0,0,0,'wilda SAY_WIL_PROGRESS_5');
+(-1001169,'The naga do not respect nature. They twist and corrupt it to meet their needs. They live to agitate the spirits.',0,0,0,0,'wilda SAY_WIL_PROGRESS_5'),
+
+(-1001170,'Time only has meaning to mortals, insect. Dimensius is infinite!',0,1,0,0,'dimensius SAY_AGGRO'),
+(-1001171,'I hunger! Feed me the power of this forge, my children!',0,1,0,0,'dimensius SAY_SUMMON');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
