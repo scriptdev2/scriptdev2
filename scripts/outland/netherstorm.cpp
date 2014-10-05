@@ -1561,7 +1561,7 @@ void AddSC_netherstorm()
 
     pNewScript = new Script;
     pNewScript->Name = "npc_commander_dawnforge";
-    pNewScript->GetAI = GetAI_npc_commander_dawnforge;
+    pNewScript->GetAI = &GetAI_npc_commander_dawnforge;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
