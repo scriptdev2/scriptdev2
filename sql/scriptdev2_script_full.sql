@@ -1271,7 +1271,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1001169,'The naga do not respect nature. They twist and corrupt it to meet their needs. They live to agitate the spirits.',0,0,0,0,'wilda SAY_WIL_PROGRESS_5'),
 
 (-1001170,'Time only has meaning to mortals, insect. Dimensius is infinite!',0,1,0,0,'dimensius SAY_AGGRO'),
-(-1001171,'I hunger! Feed me the power of this forge, my children!',0,1,0,0,'dimensius SAY_SUMMON');
+(-1001171,'I hunger! Feed me the power of this forge, my children!',0,1,0,0,'dimensius SAY_SUMMON'),
+
+(-1001172,'Spare my life! I will tell you about Arelion\'s secret.',0,0,0,0,'magister_aledis SAY_ALEDIS_DEFEAT');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
