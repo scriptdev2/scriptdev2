@@ -607,6 +607,7 @@ UPDATE instance_template SET ScriptName='instance_gnomeregan' WHERE map=90;
 /* GRIZZLY HILLS */
 UPDATE creature_template SET ScriptName='npc_depleted_war_golem' WHERE entry=27017;
 UPDATE creature_template SET ScriptName='npc_harrison_jones' WHERE entry=26814;
+UPDATE creature_template SET ScriptName='npc_emily' WHERE entry=26588;
 
 /* GRUUL'S LAIR */
 UPDATE instance_template SET ScriptName='instance_gruuls_lair' WHERE map =565;
