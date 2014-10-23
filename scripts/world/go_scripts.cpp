@@ -31,6 +31,7 @@ go_tele_to_violet_stand
 go_andorhal_tower
 go_scourge_enclosure
 go_lab_work_reagents
+go_cat_figurine
 EndContentData */
 
 #include "precompiled.h"
@@ -315,6 +316,27 @@ bool GOUse_go_lab_work_reagents(Player* pPlayer, GameObject* pGo)
     return false;
 }
 
+/*######
+## go_cat_figurine
+######*/
+
+enum
+{
+    SPELL_SUMMON_GHOST_SABER                = 5968,
+};
+
+bool GOUse_go_cat_figurine(Player* pPlayer, GameObject* pGo)
+{
+    if (roll_chance_i(5))
+    {
+        pPlayer->CastSpell(pPlayer, SPELL_SUMMON_GHOST_SABER, true, NULL, NULL, pGo->GetObjectGuid());
+        pGo->SetLootState(GO_JUST_DEACTIVATED);
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_go_scripts()
 {
     Script* pNewScript;
@@ -367,5 +389,10 @@ void AddSC_go_scripts()
     pNewScript = new Script;
     pNewScript->Name = "go_lab_work_reagents";
     pNewScript->pGOUse =          &GOUse_go_lab_work_reagents;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_cat_figurine";
+    pNewScript->pGOUse =          &GOUse_go_cat_figurine;
     pNewScript->RegisterSelf();
 }
