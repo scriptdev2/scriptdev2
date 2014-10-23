@@ -139,6 +139,15 @@ struct boss_hodirAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_SHATTER_CHEST, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
     }
 
+    void AttackStart(Unit* pWho) override
+    {
+        // don't attack again after being defeated
+        if (m_bEventFinished)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
     void JustReachedHome() override
     {
         if (m_pInstance)

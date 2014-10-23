@@ -287,6 +287,15 @@ struct boss_thorimAI : public ScriptedAI, private DialogueHelper
         StartNextDialogueText(SAY_AGGRO_1);
     }
 
+    void AttackStart(Unit* pWho) override
+    {
+        // don't attack again after being defeated
+        if (m_bEventFinished)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
     void MoveInLineOfSight(Unit* pWho) override
     {
         // spawn the arena npcs only when players are close to Thorim in order to avoid the possible bugs

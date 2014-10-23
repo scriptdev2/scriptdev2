@@ -259,6 +259,15 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
         StartNextDialogueText(SAY_AGGRO);
     }
 
+    void AttackStart(Unit* pWho) override
+    {
+        // don't attack again after being defeated
+        if (m_bEventFinished)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
     void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
     {
         if (uiDamage >= m_creature->GetHealth())
@@ -455,7 +464,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
         if (Creature* pConstellation = m_creature->GetMap()->GetCreature(*iter))
         {
             // follow second top aggro player
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, uint32(0), SELECT_FLAG_PLAYER))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER))
             {
                 pConstellation->GetMotionMaster()->MoveFollow(pTarget, CONTACT_DISTANCE, 0);
                 SendAIEvent(AI_EVENT_CUSTOM_A, m_creature, pConstellation);
@@ -507,7 +516,10 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
         if (m_uiBigBangTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_BIG_BANG : SPELL_BIG_BANG_H) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_BIG_BANG_1 : SAY_BIG_BANG_2, m_creature);
                 m_uiBigBangTimer = 90000;
+            }
         }
         else
             m_uiBigBangTimer -= uiDiff;
