@@ -169,6 +169,7 @@ enum
     // The descent into madness
     NPC_VEZAX                   = 33271,
     NPC_SARONITE_ANIMUS         = 33524,
+    NPC_VEZAX_BUNNY             = 33500,
     NPC_YOGGSARON               = 33288,
     NPC_SARA                    = 33134,
     NPC_YOGG_BRAIN              = 33890,
@@ -569,6 +570,7 @@ class instance_ulduar : public ScriptedInstance, private DialogueHelper
         void DoProcessShatteredEvent();
 
         ObjectGuid GetKoloRubbleStalker(bool bRightSide) { return bRightSide ? m_rightKoloStalkerGuid : m_leftKoloStalkerGuid; }
+        ObjectGuid GetVezaxBunnyGuid(bool bAnimus) { return bAnimus ? m_animusVezaxBunnyGuid : m_vaporVezaxBunnyGuid; }
 
         void GetDefenderGuids(GuidList& lDefenders) { lDefenders = m_lDefendersGuids; }
         void GetEngineersGuids(GuidList& lEngineers) { lEngineers = m_lEngineersGuids; }
@@ -608,6 +610,8 @@ class instance_ulduar : public ScriptedInstance, private DialogueHelper
 
         ObjectGuid m_leftKoloStalkerGuid;
         ObjectGuid m_rightKoloStalkerGuid;
+        ObjectGuid m_animusVezaxBunnyGuid;
+        ObjectGuid m_vaporVezaxBunnyGuid;
 
         GuidVector m_vToyPileGuidVector;
         GuidVector m_vBrokenHarpoonsGuids;
