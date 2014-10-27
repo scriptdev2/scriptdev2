@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "culling_of_stratholme.h"
+#include "escort_ai.h"
 
 /* *************
 ** npc_chromie (gossip, quest-accept)
@@ -55,6 +56,8 @@ enum
     TEXT_ID_INN_3               = 12950,
     TEXT_ID_INN_4               = 12952,
     TEXT_ID_INN_TELEPORT        = 13470,
+
+    SPELL_TELEPORT_COT_P4       = 53435,                    // triggers 53436
 };
 
 bool GossipHello_npc_chromie(Player* pPlayer, Creature* pCreature)
@@ -72,6 +75,8 @@ bool GossipHello_npc_chromie(Player* pPlayer, Creature* pCreature)
                     if (pPlayer->GetQuestRewardStatus(QUEST_DISPELLING_ILLUSIONS) && !pPlayer->HasItemCount(ITEM_ARCANE_DISRUPTOR, 1))
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                 }
+                // intro skip option is available since 3.3.x
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_SKIP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
                 pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_1, pCreature->GetObjectGuid());
                 break;
             case NPC_CHROMIE_ENTRANCE:
@@ -114,6 +119,20 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 /*sen
                         }
                     }
                     break;
+                case GOSSIP_ACTION_INFO_DEF+4:
+                    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_TELEPORT, pCreature->GetObjectGuid());
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+5:
+                    pCreature->CastSpell(pPlayer, SPELL_TELEPORT_COT_P4, true);
+                    if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+                    {
+                        // only skip intro if not already started;
+                        if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED && pInstance->GetData(TYPE_GRAIN_EVENT) == NOT_STARTED)
+                            pInstance->SetData(TYPE_ARTHAS_INTRO_EVENT, DONE);
+                    }
+                    pPlayer->CLOSE_GOSSIP_MENU();
+                    break;
             }
             break;
         case NPC_CHROMIE_ENTRANCE:
@@ -132,7 +151,10 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 /*sen
                     if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
                     {
                         if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
+                        {
+                            pInstance->SetData(TYPE_ARTHAS_INTRO_EVENT, IN_PROGRESS);
                             pInstance->DoSpawnArthasIfNeeded(pPlayer);
+                        }
                     }
                     break;
             }
@@ -156,7 +178,10 @@ bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* 
             if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
             {
                 if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
+                {
+                    pInstance->SetData(TYPE_ARTHAS_INTRO_EVENT, IN_PROGRESS);
                     pInstance->DoSpawnArthasIfNeeded(pPlayer);
+                }
             }
             break;
     }
@@ -256,6 +281,93 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
     return true;
 }
 
+/* *************
+** npc_arthas
+************* */
+
+enum
+{
+    GOSSIP_ITEM_CITY_GATES      = -3595008,
+
+    TEXT_ID_CITY_GATES          = 13076,
+
+    SPELL_HOLY_LIGHT            = 52444,
+    SPELL_EXORCISM              = 52445,
+    SPELL_DEVOTION_AURA         = 52442,
+};
+
+struct npc_arthasAI : public npc_escortAI
+{
+    npc_arthasAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_culling_of_stratholme* m_pInstance;
+
+    void Reset() override { }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType == WAYPOINT_MOTION_TYPE)
+        {
+            // set the intro event as done and start the undead waves
+            if (uiPointId == 31 && m_pInstance)
+                m_pInstance->SetData(TYPE_ARTHAS_INTRO_EVENT, DONE);
+        }
+        else
+            npc_escortAI::MovementInform(uiType, uiPointId);
+    }
+
+    void WaypointReached(uint32 uiPointId) override
+    {
+        // ToDo:
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        // ToDo: add spells
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_arthas(Creature* pCreature)
+{
+    return new npc_arthasAI(pCreature);
+}
+
+bool GossipHello_npc_arthas(Player* pPlayer, Creature* pCreature)
+{
+    if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == IN_PROGRESS)
+        {
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CITY_GATES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_CITY_GATES, pCreature->GetObjectGuid());
+        }
+    }
+    return true;
+}
+
+bool GossipSelect_npc_arthas(Player* pPlayer, Creature* pCreature, uint32 /*sender*/, uint32 uiAction)
+{
+    switch (uiAction)
+    {
+    case GOSSIP_ACTION_INFO_DEF+1:
+        // resume WP movement - rest is handled by DB
+        pCreature->clearUnitState(UNIT_STAT_WAYPOINT_PAUSED);
+        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        break;
+    }
+    return true;
+}
+
 void AddSC_culling_of_stratholme()
 {
     Script* pNewScript;
@@ -270,5 +382,12 @@ void AddSC_culling_of_stratholme()
     pNewScript = new Script;
     pNewScript->Name = "spell_dummy_npc_crates_bunny";
     pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc_crates_dummy;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_arthas";
+    pNewScript->GetAI = &GetAI_npc_arthas;
+    pNewScript->pGossipHello = &GossipHello_npc_arthas;
+    pNewScript->pGossipSelect = &GossipSelect_npc_arthas;
     pNewScript->RegisterSelf();
 }

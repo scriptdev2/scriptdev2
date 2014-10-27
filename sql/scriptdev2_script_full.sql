@@ -4973,8 +4973,9 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595003,'Why have I been sent back to this particular place and time?','chromie GOSSIP_ITEM_INN_1'),
 (-3595004,'What was this decision?','chromie GOSSIP_ITEM_INN_2'),
 (-3595005,'So how does the Infinite Dragonflight plan to interfere?','chromie GOSSIP_ITEM_INN_3'),
-(-3595006,'Chromie, you and I both know what''s going to happen in this time stream. We''ve seen this all before.$B$BCan you just skip us ahead to all the real action?','chromie GOSSIP_ITEM_INN_SKIP'),
-(-3595007,'Yes, please!','chromie GOSSIP_ITEM_INN_TELEPORT');
+(-3595006,'Chromie, you and I both know what\'s going to happen in this time stream. We\'ve seen this all before. Can you just skip us ahead to all the real action?','chromie GOSSIP_ITEM_INN_SKIP'),
+(-3595007,'Yes, please!','chromie GOSSIP_ITEM_INN_TELEPORT'),
+(-3595008,'Yes, my Prince. We are ready.','arthas GOSSIP_ITEM_CITY_GATES');
 
 -- -3 599 000 HALLS OF STONE
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
