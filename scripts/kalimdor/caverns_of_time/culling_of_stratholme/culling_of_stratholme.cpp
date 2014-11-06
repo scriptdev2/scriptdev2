@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: culling_of_stratholme
-SD%Complete: 70%
-SDComment: Burning city undead and zombies NYI
+SD%Complete: 80%
+SDComment: Zombies spawns partially implemented
 SDCategory: Culling of Stratholme
 EndScriptData */
 
@@ -498,7 +498,8 @@ struct npc_arthasAI : public npc_escortAI, private DialogueHelper
             DoScriptText(SAY_ARTHAS_MOVE_QUICKLY, m_creature);
             m_creature->SetFactionTemporary(FACTION_ARTHAS_2, TEMPFACTION_RESTORE_REACH_HOME);
 
-            // ToDo: spawn scourge mobs in the burning stratholme
+            if (m_pInstance)
+                m_pInstance->DoSpawnBurningCityUndead(m_creature);
         }
         else if (eventType == AI_EVENT_CUSTOM_B)
         {
