@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER                   = 9,
+    MAX_ENCOUNTER                   = 10,
     MAX_SCOURGE_WAVES               = 10,
     MAX_SCOURGE_TYPE_PER_WAVE       = 4,
 
@@ -15,11 +15,12 @@ enum
     TYPE_ARTHAS_INTRO_EVENT         = 1,                    // Arhas Speech and Walk to Gates and short intro with MalGanis
     TYPE_MEATHOOK_EVENT             = 2,                    // Waves 1-5
     TYPE_SALRAMM_EVENT              = 3,                    // Waves 6-10
-    TYPE_EPOCH_EVENT                = 4,                    // Townhall Event, Boss Killed
-    TYPE_ARTHAS_ESCORT_EVENT        = 5,                    // Townhall to Malganis
-    TYPE_MALGANIS_EVENT             = 6,                    // Malganis
-    TYPE_INFINITE_CORRUPTER_TIME    = 7,                    // Time for 25min Timer
-    TYPE_INFINITE_CORRUPTER         = 8,
+    TYPE_ARTHAS_TOWNHALL_EVENT      = 4,                    // Townhall escort event
+    TYPE_EPOCH_EVENT                = 5,                    // Townhall Event, Boss Killed
+    TYPE_ARTHAS_ESCORT_EVENT        = 6,                    // Burning city escort event
+    TYPE_MALGANIS_EVENT             = 7,                    // Malganis
+    TYPE_INFINITE_CORRUPTER_TIME    = 8,                    // Time for 25min Timer
+    TYPE_INFINITE_CORRUPTER         = 9,                    // Infinite corruptor event
 
     // Main Encounter NPCs
     NPC_CHROMIE_INN                 = 26527,
@@ -32,8 +33,8 @@ enum
     // Dungeon bosses
     NPC_MEATHOOK                    = 26529,
     NPC_SALRAMM_THE_FLESHCRAFTER    = 26530,
-    // NPC_CHRONO_LORD_EPOCH        = 26532,
-    // NPC_MALGANIS                 = 26533,
+    NPC_LORD_EPOCH                  = 26532,
+    NPC_MALGANIS                    = 26533,
 
     // Inn Event related NPC
     NPC_MICHAEL_BELFAST             = 30571,
@@ -98,14 +99,16 @@ enum
     NPC_INFINITE_ADVERSARY          = 27742,
     NPC_INFINITE_AGENT              = 27744,
     NPC_INFINITE_HUNTER             = 27743,
+    NPC_TIME_RIFT                   = 28409,
+    NPC_TIME_RIFT_BIG               = 28439,
 
     // Heroic event npcs
     NPC_INFINITE_CORRUPTER          = 32273,
-    NPC_TIME_RIFT                   = 28409,
     NPC_GUARDIAN_OF_TIME            = 32281,
 
     // Gameobjects
     GO_DOOR_BOOKCASE                = 188686,
+    GO_CITY_ENTRANCE_GATE           = 191788,
     GO_DARK_RUNED_CHEST             = 190663,
     GO_DARK_RUNED_CHEST_H           = 193597,
 
@@ -133,6 +136,9 @@ enum
     5253 Angelicas boutique
     5256 townhall
     5291 Inn */
+
+    // Achievements
+    ACHIEV_CRIT_ZOMBIEFEST          = 7180,                 // achiev 1872
 };
 
 enum eInstancePosition
