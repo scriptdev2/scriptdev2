@@ -200,6 +200,9 @@ void instance_blackfathom_deeps::OnCreatureDeath(Creature* pCreature)
         case NPC_MURKSHALLOW_SOFTSHELL:
             m_lWaveMobsGuids[3].remove(pCreature->GetGUIDLow());
             break;
+        case NPC_BARON_AQUANIS:
+            SetData(TYPE_AQUANIS, DONE);
+            break;
     }
 
     if (IsWaveEventFinished())
@@ -275,12 +278,12 @@ bool GOUse_go_fathom_stone(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return true;
         
-    if (pInstance->GetData(TYPE_AQUANIS) == DONE)
+    if (pInstance->GetData(TYPE_AQUANIS) == DONE || pInstance->GetData(TYPE_AQUANIS) == IN_PROGRESS)
         return true;
     else
     {
-        pPlayer->SummonCreature(NPC_BARON_AQUANIS, aSpawnLocations[6].m_fX, aSpawnLocations[6].m_fY, aSpawnLocations[6].m_fZ, aSpawnLocations[6].m_fO, TEMPSUMMON_TIMED_DESPAWN, 3 * HOUR * IN_MILLISECONDS);
-        pInstance->SetData(TYPE_AQUANIS, DONE);
+        pPlayer->SummonCreature(NPC_BARON_AQUANIS, aSpawnLocations[6].m_fX, aSpawnLocations[6].m_fY, aSpawnLocations[6].m_fZ, aSpawnLocations[6].m_fO, TEMPSUMMON_DEAD_DESPAWN, 3 * HOUR * IN_MILLISECONDS);
+        pInstance->SetData(TYPE_AQUANIS, IN_PROGRESS);
     }
     
     return false;
