@@ -4,16 +4,14 @@
 * Start implementing 4.x scripts for dungeons and quests
 
 == WotLK content ==
-* Finish script for Ulduar, Trial of the Crusader, Icecrown Citadel, Eye of Eternity and Ruby Sanctum
-* Implement dungeon scripts for Halls of Reflection, Trial of the Champion and Culling of Stratholme (requires core proper waipoint movement support)
-* Implement Year event boss - Headless Horseman
+* Finish script for Trial of the Crusader, Icecrown Citadel, Eye of Eternity and Ruby Sanctum
+* Implement dungeon scripts for Halls of Reflection and Trial of the Champion
 * Implement various missing quest scripts
 
 == TBC content ==
-* Various quests which still require script (examples: 5821, 5943, 9729, 9879, 10310, 11085, 10985)
+* Various quests which still require script (examples: 5821, 5943, 10985)
 * Hyjal Summit - Optimize game event.
 * Black Temple - Teron Gorefiend script improvement (requires core proper mind control support)
 
 == Classic content ==
-* Various quests which still require script (examples: 667, 3367, 5721)
-* Temple of AQ - Add missing script part for Viscidus
+* Various quests which still require script (examples: 5721)

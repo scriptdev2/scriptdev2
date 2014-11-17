@@ -1,6 +1,6 @@
 = ScriptDev2 Milestones =
 
-*Current Version: <<currentMS, ScriptDev2 - 0.7  (11 September 2013)>>*
+*Current Version: <<currentMS, ScriptDev2 - 0.8  (17 November 2014)>>*
 
 *Supports:*
 
@@ -10,6 +10,29 @@
 * Cata (4.3.4), see  https://github.com/scriptdev2/scriptdev2-cata
 
 [[currentMS]]
+== Milestone ScriptDev2 - 0.8 ==
+
+=== General ===
+* Implemented various missing quest scripts and similar events
+* Implemented many missing escort quests
+
+=== WotLK content ===
+* Implemented full script for Ulduar
+* Implemented full script for Culling of Stratholme
+
+=== TBC content ===
+* Implemented script for event boss Headless Horseman
+* Various improvements and bug fixes
+
+=== Classic content ===
+* Implemented script for boss Viscidus in AQ40
+* Various improvements and bug fixes
+
+==== Statistics ====
+* Total number of changes: over 144 revisions
+* Fixed many bugs from forum and issues from github
+
+
 == Milestone ScriptDev2 - 0.7 ==
 
 === General ===
