@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Blackfathom_Deeps
 SD%Complete: 50
-SDComment:
+SDComment: Quest support: 6921
 SDCategory: Blackfathom Deeps
 EndScriptData */
 
@@ -27,6 +27,7 @@ EndScriptData */
 /* Encounter 0 = Twilight Lord Kelris
    Encounter 1 = Shrine event
    Must kill twilight lord for shrine event to be possible
+   Encounter 2 = Baron Aquanis (spawned by GO use but should only spawn once per instance)
  */
 
 instance_blackfathom_deeps::instance_blackfathom_deeps(Map* pMap) : ScriptedInstance(pMap),
@@ -125,6 +126,9 @@ void instance_blackfathom_deeps::SetData(uint32 uiType, uint32 uiData)
             else if (uiData == DONE)
                 DoUseDoorOrButton(GO_PORTAL_DOOR);
             break;
+        case TYPE_AQUANIS:
+            m_auiEncounter[2] = uiData;
+            break;
     }
 
     if (uiData == DONE)
@@ -133,7 +137,7 @@ void instance_blackfathom_deeps::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
 
-        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
         m_strInstData = saveStream.str();
         SaveToDB();
@@ -147,6 +151,7 @@ uint32 instance_blackfathom_deeps::GetData(uint32 uiType) const
     {
         case TYPE_KELRIS: return m_auiEncounter[0];
         case TYPE_SHRINE: return m_auiEncounter[1];
+        case TYPE_AQUANIS: return m_auiEncounter[2];
         default:
             return 0;
     }
@@ -163,7 +168,7 @@ void instance_blackfathom_deeps::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -176,6 +181,9 @@ void instance_blackfathom_deeps::Load(const char* chrIn)
 
 void instance_blackfathom_deeps::OnCreatureDeath(Creature* pCreature)
 {
+    if (pCreature->GetEntry() == NPC_BARON_AQUANIS)
+        SetData(TYPE_AQUANIS, DONE);
+
     // Only use this function if shrine event is in progress
     if (m_auiEncounter[1] != IN_PROGRESS)
         return;
@@ -262,6 +270,21 @@ bool GOUse_go_fire_of_akumai(Player* /*pPlayer*/, GameObject* pGo)
     return true;
 }
 
+bool GOUse_go_fathom_stone(Player* pPlayer, GameObject* pGo)
+{
+    instance_blackfathom_deeps* pInstance = (instance_blackfathom_deeps*)pGo->GetInstanceData();
+    if (!pInstance)
+        return true;
+
+    if (pInstance->GetData(TYPE_AQUANIS) == NOT_STARTED)
+    {
+        pPlayer->SummonCreature(NPC_BARON_AQUANIS, afAquanisPos[0], afAquanisPos[1], afAquanisPos[2], afAquanisPos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+        pInstance->SetData(TYPE_AQUANIS, IN_PROGRESS);
+    }
+
+    return false;
+}
+
 void AddSC_instance_blackfathom_deeps()
 {
     Script* pNewScript;
@@ -274,5 +297,10 @@ void AddSC_instance_blackfathom_deeps()
     pNewScript = new Script;
     pNewScript->Name = "go_fire_of_akumai";
     pNewScript->pGOUse = &GOUse_go_fire_of_akumai;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_fathom_stone";
+    pNewScript->pGOUse = &GOUse_go_fathom_stone;
     pNewScript->RegisterSelf();
 }
