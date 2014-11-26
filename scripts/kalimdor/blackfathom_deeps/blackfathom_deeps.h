@@ -7,14 +7,16 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 2,
+    MAX_ENCOUNTER               = 3,
     MAX_FIRES                   = 4,
     MAX_COUNT_POS               = 3,
 
     TYPE_KELRIS                 = 1,
     TYPE_SHRINE                 = 2,
+    TYPE_AQUANIS                = 3,
 
     NPC_KELRIS                  = 4832,
+    NPC_BARON_AQUANIS           = 12876,
 
     // Shrine event
     NPC_AKUMAI_SERVANT          = 4978,
@@ -27,6 +29,7 @@ enum
     GO_SHRINE_2                 = 21119,
     GO_SHRINE_3                 = 21120,
     GO_SHRINE_4                 = 21121,
+    GO_FATHOM_STONE             = 177964,
 };
 
 /* This is the spawn pattern for the event mobs
@@ -52,14 +55,15 @@ struct Locations
     float m_fX, m_fY, m_fZ, m_fO;
 };
 
-static const Locations aSpawnLocations[6] =                 // Should be near the correct positions
+static const Locations aSpawnLocations[7] =                 // Should be near the correct positions
 {
     { -768.949f, -174.413f, -25.87f, 3.09f},                // Left side
     { -768.888f, -164.238f, -25.87f, 3.09f},
     { -768.951f, -153.911f, -25.88f, 3.09f},
     { -867.782f, -174.352f, -25.87f, 6.27f},                // Right side
     { -867.875f, -164.089f, -25.87f, 6.27f},
-    { -867.859f, -153.927f, -25.88f, 6.27f}
+    { -867.859f, -153.927f, -25.88f, 6.27f},
+    {  -782.21f,   -63.26f, -42.43f, 2.36f}                 // Baron Aquanis
 };
 
 struct PosCount
