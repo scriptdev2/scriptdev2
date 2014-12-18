@@ -172,6 +172,18 @@ void instance_ruby_sanctum::SetData(uint32 uiType, uint32 uiData)
                 return;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_FLAME_RING);
+
+            // encounter unit frame
+            if (uiData == DONE || uiData == FAIL)
+            {
+                // remove encounter frames
+                if (Creature* pDragon = GetSingleCreatureFromStorage(NPC_HALION_REAL))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pDragon->GetObjectGuid());
+                if (Creature* pDragon = GetSingleCreatureFromStorage(NPC_HALION_TWILIGHT))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pDragon->GetObjectGuid());
+            }
+
+            // cleanup
             switch (uiData)
             {
                 case FAIL:

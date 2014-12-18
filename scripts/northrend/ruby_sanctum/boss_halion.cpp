@@ -174,7 +174,10 @@ struct boss_halion_realAI : public ScriptedAI
     void Aggro(Unit* /*pWho*/) override
     {
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_HALION, IN_PROGRESS);
+            m_pInstance->SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, m_creature->GetObjectGuid(), 1);
+        }
 
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_PRECISION, CAST_TRIGGERED);
@@ -388,6 +391,9 @@ struct boss_halion_twilightAI : public ScriptedAI
 
     void Aggro(Unit* /*pWho*/) override
     {
+        if (m_pInstance)
+            m_pInstance->SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, m_creature->GetObjectGuid(), 2);
+
         DoCastSpellIfCan(m_creature, SPELL_DUSK_SHROUD, CAST_TRIGGERED);
         DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_PRECISION, CAST_TRIGGERED);
     }

@@ -356,6 +356,26 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_COUNCIL_DOOR_1);
                 DoUseDoorOrButton(GO_COUNCIL_DOOR_2);
             }
+            if (uiData == DONE || uiData == FAIL)
+            {
+                // remove encounter frames
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_VALANAR))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pPrince->GetObjectGuid());
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_KELESETH))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pPrince->GetObjectGuid());
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_TALDARAM))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pPrince->GetObjectGuid());
+            }
+            else if (uiData == IN_PROGRESS)
+            {
+                // add encounter frames
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_VALANAR))
+                    SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, pPrince->GetObjectGuid());
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_KELESETH))
+                    SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, pPrince->GetObjectGuid());
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_TALDARAM))
+                    SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, pPrince->GetObjectGuid());
+            }
             break;
         case TYPE_QUEEN_LANATHEL:
             m_auiEncounter[uiType] = uiData;
@@ -380,6 +400,18 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_GREEN_DRAGON_EXIT);
                 DoUseDoorOrButton(GO_SINDRAGOSA_ENTRANCE);
                 DoRespawnGameObject(GO_DREAMWALKER_CACHE, 60 * MINUTE);
+            }
+            if (uiData == DONE || uiData == FAIL)
+            {
+                // remove encounter frames
+                if (Creature* pDragon = GetSingleCreatureFromStorage(NPC_VALITHRIA))
+                    SendEncounterFrame(ENCOUNTER_FRAME_DISENGAGE, pDragon->GetObjectGuid());
+            }
+            else if (uiData == IN_PROGRESS)
+            {
+                // add encounter frames
+                if (Creature* pDragon = GetSingleCreatureFromStorage(NPC_VALITHRIA))
+                    SendEncounterFrame(ENCOUNTER_FRAME_ENGAGE, pDragon->GetObjectGuid());
             }
             break;
         case TYPE_SINDRAGOSA:
