@@ -856,7 +856,7 @@ struct boss_tethyrAI : public Scripted_NoMovementAI
             pPlayer->SendUpdateWorldState(WORLD_STATE_TETHYR_COUNT, MAX_MARKSMEN);
         }
 
-        m_creature->SetLevitate(true);
+        m_creature->SetSwim(true);
         Reset();
     }
 

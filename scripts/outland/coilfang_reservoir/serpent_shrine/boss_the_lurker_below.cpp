@@ -76,6 +76,7 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
     boss_the_lurker_belowAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_creature->SetSwim(true);
         Reset();
     }
 
