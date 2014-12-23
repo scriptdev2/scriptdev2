@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER                       = 3,
+    MAX_ENCOUNTER                       = 4,
     MAX_CHAMPIONS_AVAILABLE             = 5,
     MAX_CHAMPIONS_ARENA                 = 3,
     MAX_CHAMPIONS_MOUNTS                = 24,
@@ -15,6 +15,7 @@ enum
     TYPE_GRAND_CHAMPIONS                = 0,
     TYPE_ARGENT_CHAMPION                = 1,
     TYPE_BLACK_KNIGHT                   = 2,
+    TYPE_ARENA_CHALLENGE                = 3,                            // used to handle first challenge data; not saved
 
     // event handler
     NPC_ARELAS_BRIGHTSTAR               = 35005,                        // alliance
@@ -59,10 +60,12 @@ enum
     NPC_HORDE_ROGUE_CHAMPION            = 35327,                        // Undercity Champion
 
     // spectators triggers
-    NPC_WORLD_TRIGGER                   = 22515,
-    NPC_SPECTATOR_GENERIC               = 35016,
-    NPC_SPECTATOR_HORDE                 = 34883,
+    NPC_WORLD_TRIGGER                   = 22515,                        // arena center trigger
+    NPC_SPECTATOR_GENERIC               = 35016,                        // generic trigger that marks the home location for champions
+
+    NPC_SPECTATOR_HORDE                 = 34883,                        // creatures that handle emote and crowd
     NPC_SPECTATOR_ALLIANCE              = 34887,
+
     NPC_SPECTATOR_HUMAN                 = 34900,
     NPC_SPECTATOR_ORC                   = 34901,
     NPC_SPECTATOR_TROLL                 = 34902,
@@ -76,8 +79,8 @@ enum
 
     // mounts
     NPC_WARHORSE_ALLIANCE               = 36557,                        // alliance mount vehicle
-    NPC_WARHORSE_HORDE                  = 35644,                        // dummy - part of the decorations
-    NPC_BATTLEWORG_ALLIANCE             = 36559,                        // dummy - part of the decorations
+    NPC_WARHORSE_HORDE                  = 35644,                        // hostile - used by the champions
+    NPC_BATTLEWORG_ALLIANCE             = 36559,                        // hostile - used by the champions
     NPC_BATTLEWORG_HORDE                = 36558,                        // horde mount vehicle
 
     // argent challegers
@@ -133,6 +136,24 @@ enum
     EMOTE_NIGHT_ELVES                   = -1650025,
     EMOTE_HUMANS                        = -1650026,
     EMOTE_DRAENEI                       = -1650027,
+
+    // yells
+    SAY_HERALD_HORDE_WARRIOR            = -1650001,
+    SAY_HERALD_HORDE_MAGE               = -1650002,
+    SAY_HERALD_HORDE_SHAMAN             = -1650003,
+    SAY_HERALD_HORDE_HUNTER             = -1650004,
+    SAY_HERALD_HORDE_ROGUE              = -1650005,
+
+    SAY_HERALD_ALLIANCE_WARRIOR         = -1650007,
+    SAY_HERALD_ALLIANCE_MAGE            = -1650008,
+    SAY_HERALD_ALLIANCE_SHAMAN          = -1650009,
+    SAY_HERALD_ALLIANCE_HUNTER          = -1650010,
+    SAY_HERALD_ALLIANCE_ROGUE           = -1650011,
+
+    // other
+    POINT_ID_CENTER                     = 1,
+    POINT_ID_HOME                       = 2,
+    POINT_ID_COMBAT                     = 3,
 };
 
 static const float aHeraldPositions[3][4] =
@@ -142,32 +163,37 @@ static const float aHeraldPositions[3][4] =
     {743.377f, 630.240f, 411.073f, 0.0f},                               // Near center position
 };
 
+static const float aIntroPositions[4][4] =
+{
+    {746.683f, 685.050f, 412.384f, 4.744f},                             // Champion gate spawn loc
+    {746.425f, 688.927f, 412.365f, 4.744f},                             // Helpers gate spawn locs
+    {750.531f, 688.431f, 412.369f, 4.744f},
+    {742.245f, 688.254f, 412.370f, 4.744f},
+};
+
 // data that provides grand champion entry, vehicle mount, trash champions with the spawn locations as well as crowd stalker and emote entry
 struct ChampionsData
 {
     uint32 uiEntry, uiMount, uiChampion, uiCrowdStalker;
-    int32 iEmoteEntry;
-    float fX, fY, fZ, fO;
+    int32 iEmoteEntry, iYellEntry;
 };
 
-// ToDo: add coords
 static const ChampionsData aAllianceChampions[MAX_CHAMPIONS_AVAILABLE] =
 {
-    { NPC_ALLIANCE_WARRIOR, NPC_ALLIANCE_WARRIOR_MOUNT, NPC_ALLIANCE_WARRIOR_CHAMPION, NPC_SPECTATOR_HUMAN,     EMOTE_HUMANS },
-    { NPC_ALLIANCE_MAGE,    NPC_ALLIANCE_MAGE_MOUNT,    NPC_ALLIANCE_MAGE_CHAMPION,    NPC_SPECTATOR_GNOME,     EMOTE_GNOMES },
-    { NPC_ALLIANCE_SHAMAN,  NPC_ALLIANCE_SHAMAN_MOUNT,  NPC_ALLIANCE_SHAMAN_CHAMPION,  NPC_SPECTATOR_DRAENEI,   EMOTE_DRAENEI },
-    { NPC_ALLIANCE_HUNTER,  NPC_ALLIANCE_HUNTER_MOUNT,  NPC_ALLIANCE_HUNTER_CHAMPION,  NPC_SPECTATOR_NIGHT_ELF, EMOTE_NIGHT_ELVES },
-    { NPC_ALLIANCE_ROGUE,   NPC_ALLIANCE_ROGUE_MOUNT,   NPC_ALLIANCE_ROGUE_CHAMPION,   NPC_SPECTATOR_DWARF,     EMOTE_DWARVES }
+    { NPC_ALLIANCE_WARRIOR, NPC_ALLIANCE_WARRIOR_MOUNT, NPC_ALLIANCE_WARRIOR_CHAMPION, NPC_SPECTATOR_HUMAN,     EMOTE_HUMANS,       SAY_HERALD_ALLIANCE_WARRIOR },
+    { NPC_ALLIANCE_MAGE,    NPC_ALLIANCE_MAGE_MOUNT,    NPC_ALLIANCE_MAGE_CHAMPION,    NPC_SPECTATOR_GNOME,     EMOTE_GNOMES,       SAY_HERALD_ALLIANCE_MAGE },
+    { NPC_ALLIANCE_SHAMAN,  NPC_ALLIANCE_SHAMAN_MOUNT,  NPC_ALLIANCE_SHAMAN_CHAMPION,  NPC_SPECTATOR_DRAENEI,   EMOTE_DRAENEI,      SAY_HERALD_ALLIANCE_SHAMAN },
+    { NPC_ALLIANCE_HUNTER,  NPC_ALLIANCE_HUNTER_MOUNT,  NPC_ALLIANCE_HUNTER_CHAMPION,  NPC_SPECTATOR_NIGHT_ELF, EMOTE_NIGHT_ELVES,  SAY_HERALD_ALLIANCE_HUNTER },
+    { NPC_ALLIANCE_ROGUE,   NPC_ALLIANCE_ROGUE_MOUNT,   NPC_ALLIANCE_ROGUE_CHAMPION,   NPC_SPECTATOR_DWARF,     EMOTE_DWARVES,      SAY_HERALD_ALLIANCE_ROGUE }
 };
 
-// ToDo: add coords
 static const ChampionsData aHordeChampions[MAX_CHAMPIONS_AVAILABLE] =
 {
-    { NPC_HORDE_WARRIOR, NPC_HORDE_WARRIOR_MOUNT, NPC_HORDE_WARRIOR_CHAMPION, NPC_SPECTATOR_ORC,       EMOTE_ORCS },
-    { NPC_HORDE_MAGE,    NPC_HORDE_MAGE_MOUNT,    NPC_HORDE_MAGE_CHAMPION,    NPC_SPECTATOR_BLOOD_ELF, EMOTE_BLOOD_ELVES },
-    { NPC_HORDE_SHAMAN,  NPC_HORDE_SHAMAN_MOUNT,  NPC_HORDE_SHAMAN_CHAMPION,  NPC_SPECTATOR_TAUREN,    EMOTE_TAUREN },
-    { NPC_HORDE_HUNTER,  NPC_HORDE_HUNTER_MOUNT,  NPC_HORDE_HUNTER_CHAMPION,  NPC_SPECTATOR_TROLL,     EMOTE_TROLLS },
-    { NPC_HORDE_ROGUE,   NPC_HORDE_ROGUE_MOUNT,   NPC_HORDE_ROGUE_CHAMPION,   NPC_SPECTATOR_UNDEAD,    EMOTE_UNDEAD }
+    { NPC_HORDE_WARRIOR, NPC_HORDE_WARRIOR_MOUNT, NPC_HORDE_WARRIOR_CHAMPION, NPC_SPECTATOR_ORC,       EMOTE_ORCS,          SAY_HERALD_HORDE_WARRIOR },
+    { NPC_HORDE_MAGE,    NPC_HORDE_MAGE_MOUNT,    NPC_HORDE_MAGE_CHAMPION,    NPC_SPECTATOR_BLOOD_ELF, EMOTE_BLOOD_ELVES,   SAY_HERALD_HORDE_MAGE },
+    { NPC_HORDE_SHAMAN,  NPC_HORDE_SHAMAN_MOUNT,  NPC_HORDE_SHAMAN_CHAMPION,  NPC_SPECTATOR_TAUREN,    EMOTE_TAUREN,        SAY_HERALD_HORDE_SHAMAN },
+    { NPC_HORDE_HUNTER,  NPC_HORDE_HUNTER_MOUNT,  NPC_HORDE_HUNTER_CHAMPION,  NPC_SPECTATOR_TROLL,     EMOTE_TROLLS,        SAY_HERALD_HORDE_HUNTER },
+    { NPC_HORDE_ROGUE,   NPC_HORDE_ROGUE_MOUNT,   NPC_HORDE_ROGUE_CHAMPION,   NPC_SPECTATOR_UNDEAD,    EMOTE_UNDEAD,        SAY_HERALD_HORDE_ROGUE }
 };
 
 // data that provides spawn coordinates and entry for the player mounts
@@ -217,6 +243,9 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
+        void OnCreatureDeath(Creature* pCreature) override;
+        void OnCreatureEvade(Creature* pCreature) override;
+
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
 
@@ -224,13 +253,17 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void Load(const char* chrIn) override;
 
         void DoPrepareChampions(bool bSkipIntro);
+        void MoveChampionToHome(Creature* pChampion);
+        void InformChampionReachHome();
 
-        void Update(uint32 uiDiff) override { DialogueUpdate(uiDiff); }
+        void Update(uint32 uiDiff) override;
 
     private:
         void JustDidDialogueStep(int32 iEntry) override;
 
         void DoSummonHeraldIfNeeded(Unit* pSummoner);
+        void DoSendNextArenaWave();
+        void DoCleanupArenaOnWipe();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
@@ -240,7 +273,23 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         uint32 m_uiHeraldEntry;
         uint32 m_uiGrandChampionEntry;
 
+        uint32 m_uiIntroTimer;
+        uint32 m_uiIntroStage;
+        uint32 m_uiArenaStage;
+        uint32 m_uiGateResetTimer;
+
+        bool m_bSkipIntro;
+
+        ObjectGuid m_ArenaChampionsGuids[MAX_CHAMPIONS_ARENA];
+        ObjectGuid m_ArenaMountsGuids[MAX_CHAMPIONS_ARENA];
+
         std::vector<uint8> m_vChampionsIndex;
+
+        GuidVector m_vAllianceTriggersGuids;
+        GuidVector m_vHordeTriggersGuids;
+
+        GuidList m_lArenaMountsGuids;
+        GuidSet m_sArenaHelpersGuids[MAX_CHAMPIONS_ARENA];
 };
 
 #endif

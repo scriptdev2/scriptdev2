@@ -34,18 +34,7 @@ enum
 {
     // grand champions
     SAY_HERALD_HORDE_CHALLENGE              = -1650000,
-    SAY_HERALD_HORDE_WARRIOR                = -1650001,
-    SAY_HERALD_HORDE_MAGE                   = -1650002,
-    SAY_HERALD_HORDE_SHAMAN                 = -1650003,
-    SAY_HERALD_HORDE_HUNTER                 = -1650004,
-    SAY_HERALD_HORDE_ROGUE                  = -1650005,
-
     SAY_HERALD_ALLIANCE_CHALLENGE           = -1650006,
-    SAY_HERALD_ALLIANCE_WARRIOR             = -1650007,
-    SAY_HERALD_ALLIANCE_MAGE                = -1650008,
-    SAY_HERALD_ALLIANCE_SHAMAN              = -1650009,
-    SAY_HERALD_ALLIANCE_HUNTER              = -1650010,
-    SAY_HERALD_ALLIANCE_ROGUE               = -1650011,
 
     SAY_TIRION_CHALLENGE_WELCOME            = -1650012,
     SAY_TIRION_FIRST_CHALLENGE              = -1650013,
@@ -94,18 +83,31 @@ enum
     SPELL_ARGENT_SUMMON_CHAMPION_WAVE       = 67295,
     SPELL_ARGENT_SUMMON_BOSS_4              = 67396,
     SPELL_ARGENT_HERALD_FEIGN_DEATH         = 66804,
+
+    // Arena event spells - not used for the moment
+    // SPELL_SPECTATOR_FORCE_CHANT          = 66354,
+    // SPELL_SPECTATOR_FX_CHANT             = 66677,
 };
 
 static const DialogueEntryTwoSide aTocDialogues[] =
 {
-    // ToDo:
-    {0, 0, 0, 0 , 0}
+    {TYPE_ARENA_CHALLENGE,          0,                   0, 0, 1000},
+    {SAY_HERALD_HORDE_CHALLENGE,    NPC_ARELAS_BRIGHTSTAR,  SAY_HERALD_ALLIANCE_CHALLENGE, NPC_JAEREN_SUNSWORN,    5000},
+    {SAY_TIRION_CHALLENGE_WELCOME,  NPC_TIRION_FORDRING, 0, 0, 6000},
+    {SAY_TIRION_FIRST_CHALLENGE,    NPC_TIRION_FORDRING, 0, 0, 3000},
+    {NPC_TIRION_FORDRING,           0,                   0, 0, 0},
+    {0, 0, 0, 0, 0}
 };
 
 instance_trial_of_the_champion::instance_trial_of_the_champion(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aTocDialogues),
     m_uiTeam(TEAM_NONE),
     m_uiHeraldEntry(0),
-    m_uiGrandChampionEntry(0)
+    m_uiGrandChampionEntry(0),
+    m_uiIntroTimer(0),
+    m_uiIntroStage(0),
+    m_uiArenaStage(0),
+    m_uiGateResetTimer(0),
+    m_bSkipIntro(false)
 {
     Initialize();
 }
@@ -114,6 +116,9 @@ void instance_trial_of_the_champion::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     InitializeDialogueHelper(this);
+
+    m_vAllianceTriggersGuids.resize(MAX_CHAMPIONS_AVAILABLE);
+    m_vHordeTriggersGuids.resize(MAX_CHAMPIONS_AVAILABLE);
 }
 
 void instance_trial_of_the_champion::OnPlayerEnter(Player* pPlayer)
@@ -166,7 +171,64 @@ void instance_trial_of_the_champion::OnCreatureCreate(Creature* pCreature)
         case NPC_HORDE_ROGUE:
         case NPC_EADRIC:
         case NPC_PALETRESS:
+        case NPC_WORLD_TRIGGER:
+        case NPC_SPECTATOR_HUMAN:
+        case NPC_SPECTATOR_ORC:
+        case NPC_SPECTATOR_TROLL:
+        case NPC_SPECTATOR_TAUREN:
+        case NPC_SPECTATOR_BLOOD_ELF:
+        case NPC_SPECTATOR_UNDEAD:
+        case NPC_SPECTATOR_DWARF:
+        case NPC_SPECTATOR_DRAENEI:
+        case NPC_SPECTATOR_NIGHT_ELF:
+        case NPC_SPECTATOR_GNOME:
             break;
+        case NPC_SPECTATOR_GENERIC:
+            // alliance side
+            if (pCreature->GetPositionX() > 775.0f)
+            {
+                // night elf
+                if (pCreature->GetPositionY() > 650.0f)
+                    m_vAllianceTriggersGuids[3] = pCreature->GetObjectGuid();
+                // gnome
+                else if (pCreature->GetPositionY() > 630.0f)
+                    m_vAllianceTriggersGuids[1] = pCreature->GetObjectGuid();
+                // human
+                else if (pCreature->GetPositionY() > 615.0f)
+                    m_vAllianceTriggersGuids[0] = pCreature->GetObjectGuid();
+                // dwarf
+                else if (pCreature->GetPositionY() > 595.0f)
+                    m_vAllianceTriggersGuids[4] = pCreature->GetObjectGuid();
+                // draenei
+                else if (pCreature->GetPositionY() > 580.0f)
+                    m_vAllianceTriggersGuids[2] = pCreature->GetObjectGuid();
+            }
+            // horde side
+            else if (pCreature->GetPositionX() < 715.0f)
+            {
+                // undead
+                if (pCreature->GetPositionY() > 650.0f)
+                    m_vHordeTriggersGuids[4] = pCreature->GetObjectGuid();
+                // blood elf
+                else if (pCreature->GetPositionY() > 630.0f)
+                    m_vHordeTriggersGuids[1] = pCreature->GetObjectGuid();
+                // orc
+                else if (pCreature->GetPositionY() > 615.0f)
+                    m_vHordeTriggersGuids[0] = pCreature->GetObjectGuid();
+                // troll
+                else if (pCreature->GetPositionY() > 595.0f)
+                    m_vHordeTriggersGuids[3] = pCreature->GetObjectGuid();
+                // tauren
+                else if (pCreature->GetPositionY() > 580.0f)
+                    m_vHordeTriggersGuids[2] = pCreature->GetObjectGuid();
+            }
+            return;
+        case NPC_WARHORSE_ALLIANCE:
+        case NPC_WARHORSE_HORDE:
+        case NPC_BATTLEWORG_ALLIANCE:
+        case NPC_BATTLEWORG_HORDE:
+            m_lArenaMountsGuids.push_back(pCreature->GetObjectGuid());
+            return;
         default:
             return;
     }
@@ -200,6 +262,7 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_GRAND_CHAMPIONS:
             m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_NORTH_GATE);
             if (uiData == DONE)
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CHAMPIONS_LOOT : GO_CHAMPIONS_LOOT_H, 30 * MINUTE);
             break;
@@ -216,6 +279,33 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
         case TYPE_BLACK_KNIGHT:
             m_auiEncounter[uiType] = uiData;
             break;
+        case TYPE_ARENA_CHALLENGE:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+            {
+                // start arena challenge
+                m_uiArenaStage = 0;
+                DoSendNextArenaWave();
+            }
+            else if (uiData == DONE)
+            {
+                // start grand champions challenge (without mount)
+                // ToDo!
+
+                // despawn vehicle mounts
+                for (GuidList::const_iterator itr = m_lArenaMountsGuids.begin(); itr != m_lArenaMountsGuids.end(); ++itr)
+                {
+                    if (Creature* pMount = instance->GetCreature(*itr))
+                        pMount->ForcedDespawn();
+                }
+                m_lArenaMountsGuids.clear();
+            }
+            else if (uiData == FAIL)
+            {
+                DoCleanupArenaOnWipe();
+                SetData(TYPE_ARENA_CHALLENGE, NOT_STARTED);
+            }
+            return;
         default:
             script_error_log("Instance Trial of The Champion: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
@@ -265,6 +355,67 @@ void instance_trial_of_the_champion::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+void instance_trial_of_the_champion::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_ALLIANCE_WARRIOR_CHAMPION:
+        case NPC_ALLIANCE_MAGE_CHAMPION:
+        case NPC_ALLIANCE_SHAMAN_CHAMPION:
+        case NPC_ALLIANCE_HUNTER_CHAMPION:
+        case NPC_ALLIANCE_ROGUE_CHAMPION:
+        case NPC_HORDE_WARRIOR_CHAMPION:
+        case NPC_HORDE_MAGE_CHAMPION:
+        case NPC_HORDE_SHAMAN_CHAMPION:
+        case NPC_HORDE_HUNTER_CHAMPION:
+        case NPC_HORDE_ROGUE_CHAMPION:
+            // handle champion trash mob kill
+            if (m_sArenaHelpersGuids[m_uiArenaStage].find(pCreature->GetObjectGuid()) != m_sArenaHelpersGuids[m_uiArenaStage].end())
+            {
+                m_sArenaHelpersGuids[m_uiArenaStage].erase(pCreature->GetObjectGuid());
+
+                // send next arena wave if cleared
+                if (m_sArenaHelpersGuids[m_uiArenaStage].empty())
+                {
+                    ++m_uiArenaStage;
+                    DoSendNextArenaWave();
+                }
+            }
+            break;
+    }
+}
+
+void instance_trial_of_the_champion::OnCreatureEvade(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_ALLIANCE_WARRIOR_CHAMPION:
+        case NPC_ALLIANCE_MAGE_CHAMPION:
+        case NPC_ALLIANCE_SHAMAN_CHAMPION:
+        case NPC_ALLIANCE_HUNTER_CHAMPION:
+        case NPC_ALLIANCE_ROGUE_CHAMPION:
+        case NPC_HORDE_WARRIOR_CHAMPION:
+        case NPC_HORDE_MAGE_CHAMPION:
+        case NPC_HORDE_SHAMAN_CHAMPION:
+        case NPC_HORDE_HUNTER_CHAMPION:
+        case NPC_HORDE_ROGUE_CHAMPION:
+        case NPC_ALLIANCE_WARRIOR:
+        case NPC_ALLIANCE_MAGE:
+        case NPC_ALLIANCE_SHAMAN:
+        case NPC_ALLIANCE_HUNTER:
+        case NPC_ALLIANCE_ROGUE:
+        case NPC_HORDE_WARRIOR:
+        case NPC_HORDE_MAGE:
+        case NPC_HORDE_SHAMAN:
+        case NPC_HORDE_HUNTER:
+        case NPC_HORDE_ROGUE:
+            if (GetData(TYPE_ARENA_CHALLENGE) == IN_PROGRESS)
+                SetData(TYPE_ARENA_CHALLENGE, FAIL);
+            break;
+    }
+}
+
+// Function that summons herald and vehicle mounts if required
 void instance_trial_of_the_champion::DoSummonHeraldIfNeeded(Unit* pSummoner)
 {
     if (!pSummoner)
@@ -283,14 +434,342 @@ void instance_trial_of_the_champion::DoSummonHeraldIfNeeded(Unit* pSummoner)
     }
 }
 
-void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
+// Function that sends the champions and trash mobs into to fight in the arena
+void instance_trial_of_the_champion::DoSendNextArenaWave()
 {
-    // ToDo:
+    // center trigger for reference
+    Creature* pCenterTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER);
+    if (!pCenterTrigger)
+        return;
+
+    float fX, fY, fZ;
+
+    // trash waves cleaned - send the summoned champions to the center
+    if (m_uiArenaStage == MAX_CHAMPIONS_ARENA)
+    {
+        for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+        {
+            // move mounts to center
+            if (Creature* pMount = instance->GetCreature(m_ArenaMountsGuids[i]))
+            {
+                pMount->SetWalk(false);
+                pCenterTrigger->GetContactPoint(pMount, fX, fY, fZ, 2 * INTERACTION_DISTANCE);
+                pMount->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ);
+            }
+
+            // set champions to attack
+            if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
+                pChampion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        }
+    }
+    // send trash waves of champions in the arena
+    else
+    {
+        for (GuidSet::const_iterator itr = m_sArenaHelpersGuids[m_uiArenaStage].begin(); itr != m_sArenaHelpersGuids[m_uiArenaStage].end(); ++itr)
+        {
+            if (Creature* pHelper = instance->GetCreature(*itr))
+            {
+                pHelper->SetWalk(false);
+                pCenterTrigger->GetContactPoint(pHelper, fX, fY, fZ, 2 * INTERACTION_DISTANCE);
+                pHelper->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, fX, fY, fZ);
+                pHelper->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
+            }
+        }
+    }
 }
 
+// Function that cleans the arena on wipe
+void instance_trial_of_the_champion::DoCleanupArenaOnWipe()
+{
+    // cleanup arena encounter
+    for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+    {
+        if (Creature* pMount = instance->GetCreature(m_ArenaMountsGuids[i]))
+            pMount->ForcedDespawn();
+
+        if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
+            pChampion->ForcedDespawn();
+
+        for (GuidSet::const_iterator itr = m_sArenaHelpersGuids[i].begin(); itr != m_sArenaHelpersGuids[i].end(); ++itr)
+        {
+            if (Creature* pHelper = instance->GetCreature(*itr))
+                pHelper->ForcedDespawn();
+        }
+
+        m_sArenaHelpersGuids[i].clear();
+    }
+
+    // reset herald
+    if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+    {
+        pHerald->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        pHerald->GetMotionMaster()->MoveTargetedHome();
+    }
+}
+
+// Function that prepares the Grand Champions encounter (long and short intro)
 void instance_trial_of_the_champion::DoPrepareChampions(bool bSkipIntro)
 {
-    // ToDo:
+    m_bSkipIntro = bSkipIntro;
+
+    // long intro
+    if (!bSkipIntro)
+        StartNextDialogueText(TYPE_ARENA_CHALLENGE);
+    // short intro
+    else
+    {
+        StartNextDialogueText(SAY_TIRION_CHALLENGE_WELCOME);
+
+        // move the herald to the gate
+        if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[1][0], aHeraldPositions[1][1], aHeraldPositions[1][2]);
+    }
+}
+
+// Function that sends the champion to intro home location
+void instance_trial_of_the_champion::MoveChampionToHome(Creature* pChampion)
+{
+    uint8 uiIndex = m_vChampionsIndex[m_uiIntroStage - 1];
+
+    // get the corresponding trigger
+    Creature* pTrigger = instance->GetCreature(m_uiTeam == ALLIANCE ? m_vHordeTriggersGuids[uiIndex] : m_vAllianceTriggersGuids[uiIndex]);
+    if (!pTrigger)
+        return;
+
+    // move to the right position
+    pChampion->SetWalk(true);
+    pChampion->GetMotionMaster()->MovePoint(POINT_ID_HOME, pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ());
+
+    if (m_uiIntroStage == MAX_CHAMPIONS_ARENA)
+    {
+        // move the herald to the gate
+        if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[1][0], aHeraldPositions[1][1], aHeraldPositions[1][2]);
+    }
+}
+
+// Function that handles instance behavior when champion reaches intro home position
+// This sets the trash mobs to the right points and sends the next champion for intro
+void instance_trial_of_the_champion::InformChampionReachHome()
+{
+    uint8 uiIndex = m_vChampionsIndex[m_uiIntroStage - 1];
+
+    // get the corresponding trigger
+    Creature* pTrigger = instance->GetCreature(m_uiTeam == ALLIANCE ? m_vHordeTriggersGuids[uiIndex] : m_vAllianceTriggersGuids[uiIndex]);
+    if (!pTrigger)
+        return;
+
+    // center trigger for reference
+    Creature* pCenterTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER);
+    if (!pCenterTrigger)
+        return;
+
+    float fX, fY, fZ;
+    uint8 j = 0;
+
+    // move helpers to the right point
+    for (GuidSet::const_iterator itr = m_sArenaHelpersGuids[m_uiIntroStage - 1].begin(); itr != m_sArenaHelpersGuids[m_uiIntroStage - 1].end(); ++itr)
+    {
+        if (Creature* pHelper = instance->GetCreature(*itr))
+        {
+            pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 5.0f, pTrigger->GetAngle(pCenterTrigger) - (M_PI_F * 0.25f) + j * (M_PI_F * 0.25f));
+            pHelper->GetMotionMaster()->Clear();
+            pHelper->GetMotionMaster()->MovePoint(POINT_ID_HOME, fX, fY, fZ);
+            ++j;
+        }
+    }
+
+    // set timer
+    if (m_uiIntroStage == MAX_CHAMPIONS_ARENA)
+        m_uiIntroTimer = 5000;
+    else
+        m_uiIntroTimer = 2000;
+}
+
+void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
+{
+    switch (iEntry)
+    {
+        // start arena long intro
+        case TYPE_ARENA_CHALLENGE:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            {
+                if (Creature* pTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER))
+                    pHerald->GetMotionMaster()->MovePoint(0, pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ());
+            }
+            break;
+        case SAY_HERALD_ALLIANCE_CHALLENGE:
+        case SAY_HERALD_HORDE_CHALLENGE:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            {
+                if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                    pHerald->SetFacingToObject(pTirion);
+
+                // ToDo: play intro music
+            }
+            break;
+        // complete intro - start arena event
+        case NPC_TIRION_FORDRING:
+            m_uiIntroStage = 0;
+            m_uiIntroTimer = 1000;
+            break;
+    }
+}
+
+void instance_trial_of_the_champion::Update(uint32 uiDiff)
+{
+    DialogueUpdate(uiDiff);
+
+    if (m_uiIntroTimer)
+    {
+        if (m_uiIntroTimer <= uiDiff)
+        {
+            switch (m_uiIntroStage)
+            {
+                // spawn champions
+                case 0:
+                case 1:
+                case 2:
+                {
+                    uint8 uiIndex = m_vChampionsIndex[m_uiIntroStage];
+
+                    // summoner (herald)
+                    Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry);
+                    if (!pHerald)
+                        return;
+
+                    // center trigger for reference
+                    Creature* pCenterTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER);
+                    if (!pCenterTrigger)
+                        return;
+
+                    // short intro
+                    if (m_bSkipIntro)
+                    {
+                        // get the summoning trigger
+                        Creature* pTrigger = instance->GetCreature(m_uiTeam == ALLIANCE ? m_vHordeTriggersGuids[uiIndex] : m_vAllianceTriggersGuids[uiIndex]);
+                        if (!pTrigger)
+                            return;
+
+                        // summon grand champion, mount and emote
+                        if (Creature* pChampion = pHerald->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiEntry : aAllianceChampions[uiIndex].uiEntry,
+                            pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), pTrigger->GetAngle(pCenterTrigger), TEMPSUMMON_DEAD_DESPAWN, 0))
+                        {
+                            // handle emote
+                            if (Creature* pStalker = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiCrowdStalker : aAllianceChampions[uiIndex].uiCrowdStalker))
+                                DoScriptText(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].iEmoteEntry : aAllianceChampions[uiIndex].iEmoteEntry, pStalker, pChampion);
+
+                            // summon champion mount
+                            if (Creature* pMount = pChampion->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiMount : aAllianceChampions[uiIndex].uiMount,
+                                pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), pTrigger->GetAngle(pCenterTrigger), TEMPSUMMON_DEAD_DESPAWN, 0))
+                            {
+                                pChampion->CastSpell(pMount, SPELL_RIDE_VEHICLE_HARDCODED, true);
+
+                                // set guid
+                                m_ArenaChampionsGuids[m_uiIntroStage] = pChampion->GetObjectGuid();
+                                m_ArenaMountsGuids[m_uiIntroStage] = pMount->GetObjectGuid();
+                            }
+                        }
+
+                        // summon helper champions
+                        float fX, fY, fZ;
+                        for (uint8 j = 0; j < 3; ++j)
+                        {
+                            pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 5.0f, pTrigger->GetAngle(pCenterTrigger) - (M_PI_F * 0.25f) + j * (M_PI_F * 0.25f));
+                            if (Creature* pHelper = pHerald->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiChampion : aAllianceChampions[uiIndex].uiChampion,
+                                fX, fY, fZ, pTrigger->GetAngle(pCenterTrigger), TEMPSUMMON_DEAD_DESPAWN, 0))
+                                m_sArenaHelpersGuids[m_uiIntroStage].insert(pHelper->GetObjectGuid());
+                        }
+
+                        if (m_uiIntroStage == MAX_CHAMPIONS_ARENA - 1)
+                            m_uiIntroTimer = 5000;
+                        else
+                            m_uiIntroTimer = 2000;
+                    }
+                    // long intro
+                    else
+                    {
+                        float fX, fY, fZ;
+                        DoUseDoorOrButton(GO_MAIN_GATE);
+                        m_uiGateResetTimer = 10000;             // ToDo: set this as door reset timer when fixed in core
+
+                        // summon grand champion, mount and emote
+                        if (Creature* pChampion = pHerald->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiEntry : aAllianceChampions[uiIndex].uiEntry,
+                            aIntroPositions[0][0], aIntroPositions[0][1], aIntroPositions[0][2], aIntroPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                        {
+                            // text
+                            DoScriptText(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].iYellEntry : aAllianceChampions[uiIndex].iYellEntry, pHerald);
+                            pHerald->SetFacingToObject(pChampion);
+
+                            // handle emote
+                            if (Creature* pStalker = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiCrowdStalker : aAllianceChampions[uiIndex].uiCrowdStalker))
+                                DoScriptText(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].iEmoteEntry : aAllianceChampions[uiIndex].iEmoteEntry, pStalker, pChampion);
+
+                            // summon champion mount
+                            if (Creature* pMount = pChampion->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiMount : aAllianceChampions[uiIndex].uiMount,
+                                aIntroPositions[0][0], aIntroPositions[0][1], aIntroPositions[0][2], aIntroPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                            {
+                                pChampion->CastSpell(pMount, SPELL_RIDE_VEHICLE_HARDCODED, true);
+
+                                pMount->SetWalk(false);
+                                pCenterTrigger->GetContactPoint(pChampion, fX, fY, fZ, 2 * INTERACTION_DISTANCE);
+                                pMount->GetMotionMaster()->MovePoint(POINT_ID_CENTER, fX, fY, fZ);
+
+                                // set guid
+                                m_ArenaChampionsGuids[m_uiIntroStage] = pChampion->GetObjectGuid();
+                                m_ArenaMountsGuids[m_uiIntroStage] = pMount->GetObjectGuid();
+
+                                // summon helper champions
+                                for (uint8 j = 0; j < 3; ++j)
+                                {
+                                    if (Creature* pHelper = pChampion->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiChampion : aAllianceChampions[uiIndex].uiChampion,
+                                        aIntroPositions[j + 1][0], aIntroPositions[j + 1][1], aIntroPositions[j + 1][2], aIntroPositions[j + 1][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                                    {
+                                        pHelper->GetMotionMaster()->MoveFollow(pMount, pHelper->GetDistance(pMount), M_PI_F/2 + pHelper->GetAngle(pMount));
+                                        m_sArenaHelpersGuids[m_uiIntroStage].insert(pHelper->GetObjectGuid());
+                                    }
+                                }
+                            }
+                        }
+
+                        // stop event; timer in InformChampionReachHome()
+                        m_uiIntroTimer = 0;
+                    }
+                    break;
+                }
+                // complete intro - start arena challenge
+                case 3:
+                    if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                        DoScriptText(SAY_TIRION_CHALLENGE_BEGIN, pTirion);
+
+                    if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                    {
+                        if (Creature* pCenterTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER))
+                            pHerald->SetFacingToObject(pCenterTrigger);
+                    }
+
+                    // start first half of the encounter
+                    SetData(TYPE_ARENA_CHALLENGE, IN_PROGRESS);
+                    m_uiIntroTimer = 0;
+                    break;
+            }
+            ++m_uiIntroStage;
+        }
+        else
+            m_uiIntroTimer -= uiDiff;
+    }
+
+    // ToDo: set this as door reset timer when fixed in core
+    if (m_uiGateResetTimer)
+    {
+        if (m_uiGateResetTimer <= uiDiff)
+        {
+            DoUseDoorOrButton(GO_MAIN_GATE);
+            m_uiGateResetTimer = 0;
+        }
+        else
+            m_uiGateResetTimer -= uiDiff;
+    }
 }
 
 InstanceData* GetInstanceData_instance_trial_of_the_champion(Map* pMap)
