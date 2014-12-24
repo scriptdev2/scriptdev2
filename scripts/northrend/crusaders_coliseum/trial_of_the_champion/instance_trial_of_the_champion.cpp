@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: instance_trial_of_the_champion
-SD%Complete: 20
-SDComment: Basic support
+SD%Complete: 30
+SDComment: First encounter only
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -91,11 +91,15 @@ enum
 
 static const DialogueEntryTwoSide aTocDialogues[] =
 {
+    // Grand Champions intro
     {TYPE_ARENA_CHALLENGE,          0,                   0, 0, 1000},
     {SAY_HERALD_HORDE_CHALLENGE,    NPC_ARELAS_BRIGHTSTAR,  SAY_HERALD_ALLIANCE_CHALLENGE, NPC_JAEREN_SUNSWORN,    5000},
     {SAY_TIRION_CHALLENGE_WELCOME,  NPC_TIRION_FORDRING, 0, 0, 6000},
     {SAY_TIRION_FIRST_CHALLENGE,    NPC_TIRION_FORDRING, 0, 0, 3000},
     {NPC_TIRION_FORDRING,           0,                   0, 0, 0},
+    // Grand Champions complete
+    {NPC_ARELAS_BRIGHTSTAR,         0,                   0, 0, 7000},
+    {SAY_TIRION_ARGENT_CHAMPION,    NPC_TIRION_FORDRING, 0, 0, 0},
     {0, 0, 0, 0, 0}
 };
 
@@ -107,6 +111,8 @@ instance_trial_of_the_champion::instance_trial_of_the_champion(Map* pMap) : Scri
     m_uiIntroStage(0),
     m_uiArenaStage(0),
     m_uiGateResetTimer(0),
+    m_uiChampionsCount(0),
+    m_uiChampionsTimer(0),
     m_bSkipIntro(false)
 {
     Initialize();
@@ -261,10 +267,29 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_GRAND_CHAMPIONS:
+            // no double count
+            if (m_auiEncounter[uiType] == uiData)
+                return;
+
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_NORTH_GATE);
             if (uiData == DONE)
+            {
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CHAMPIONS_LOOT : GO_CHAMPIONS_LOOT_H, 30 * MINUTE);
+
+                // start delayed dialogue
+                StartNextDialogueText(NPC_ARELAS_BRIGHTSTAR);
+
+                // move the herald back to center
+                if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                {
+                    pHerald->GetMotionMaster()->Clear();
+                    pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[2][0], aHeraldPositions[2][1], aHeraldPositions[2][2]);
+                    pHerald->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                }
+
+                DoSendChampionsToExit();
+            }
             break;
         case TYPE_ARGENT_CHAMPION:
             m_auiEncounter[uiType] = uiData;
@@ -289,22 +314,31 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == DONE)
             {
-                // start grand champions challenge (without mount)
-                // ToDo!
+                // count the champions that reach the exit
+                ++m_uiChampionsCount;
 
-                // despawn vehicle mounts
-                for (GuidList::const_iterator itr = m_lArenaMountsGuids.begin(); itr != m_lArenaMountsGuids.end(); ++itr)
+                if (m_uiChampionsCount == MAX_CHAMPIONS_ARENA)
                 {
-                    if (Creature* pMount = instance->GetCreature(*itr))
-                        pMount->ForcedDespawn();
+                    // start grand champions challenge (without mount)
+                    m_uiChampionsCount = 0;
+                    m_uiChampionsTimer = 5000;
+
+                    // despawn vehicle mounts
+                    for (GuidList::const_iterator itr = m_lArenaMountsGuids.begin(); itr != m_lArenaMountsGuids.end(); ++itr)
+                    {
+                        if (Creature* pMount = instance->GetCreature(*itr))
+                            pMount->ForcedDespawn();
+                    }
+                    m_lArenaMountsGuids.clear();
                 }
-                m_lArenaMountsGuids.clear();
             }
             else if (uiData == FAIL)
             {
                 DoCleanupArenaOnWipe();
                 SetData(TYPE_ARENA_CHALLENGE, NOT_STARTED);
             }
+            else if (uiData == SPECIAL)
+                DoSendChampionsToExit();
             return;
         default:
             script_error_log("Instance Trial of The Champion: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
@@ -413,6 +447,36 @@ void instance_trial_of_the_champion::OnCreatureEvade(Creature* pCreature)
                 SetData(TYPE_ARENA_CHALLENGE, FAIL);
             break;
     }
+}
+
+// Function that returns the arena challenge status
+bool instance_trial_of_the_champion::IsArenaChallengeComplete(uint32 uiType)
+{
+    // check stand state of each champion based on the type of the encounter
+    uint8 uiStandState = 0;
+
+    if (uiType == TYPE_ARENA_CHALLENGE)
+    {
+        // if this was already marked as complete return true
+        if (GetData(TYPE_ARENA_CHALLENGE) == SPECIAL || GetData(TYPE_ARENA_CHALLENGE) == DONE)
+            return true;
+
+        uiStandState = UNIT_STAND_STATE_DEAD;
+    }
+    else if (uiType == TYPE_GRAND_CHAMPIONS)
+        uiStandState = UNIT_STAND_STATE_KNEEL;
+
+    // check if all champions are defeated
+    for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+    {
+        if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
+        {
+            if (pChampion->getStandState() != uiStandState)
+                return false;
+        }
+    }
+
+    return true;
 }
 
 // Function that summons herald and vehicle mounts if required
@@ -584,6 +648,21 @@ void instance_trial_of_the_champion::InformChampionReachHome()
         m_uiIntroTimer = 5000;
     else
         m_uiIntroTimer = 2000;
+}
+
+// Function that will send all the champions to the get for exit
+void instance_trial_of_the_champion::DoSendChampionsToExit()
+{
+    // move the champions to the gate
+    for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+    {
+        if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
+        {
+            pChampion->SetWalk(true);
+            pChampion->SetStandState(UNIT_STAND_STATE_STAND);
+            pChampion->GetMotionMaster()->MovePoint(POINT_ID_EXIT, aChampsPositions[0][0], aChampsPositions[0][1], aChampsPositions[0][2]);
+        }
+    }
 }
 
 void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
@@ -769,6 +848,31 @@ void instance_trial_of_the_champion::Update(uint32 uiDiff)
         }
         else
             m_uiGateResetTimer -= uiDiff;
+    }
+
+    // summon champions for the second part of the encounter
+    if (m_uiChampionsTimer)
+    {
+        if (m_uiChampionsTimer <= uiDiff)
+        {
+            Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry);
+            if (!pHerald)
+                return;
+
+            uint8 uiIndex = 0;
+
+            for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+            {
+                uiIndex = m_vChampionsIndex[i];
+
+                if (Creature* pChampion = pHerald->SummonCreature(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiEntry : aAllianceChampions[uiIndex].uiEntry,
+                    aChampsPositions[i][0], aChampsPositions[i][1], aChampsPositions[i][2], aChampsPositions[i][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                    m_ArenaChampionsGuids[i] = pChampion->GetObjectGuid();
+            }
+            m_uiChampionsTimer = 0;
+        }
+        else
+            m_uiChampionsTimer -= uiDiff;
     }
 }
 

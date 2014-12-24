@@ -154,6 +154,8 @@ enum
     POINT_ID_CENTER                     = 1,
     POINT_ID_HOME                       = 2,
     POINT_ID_COMBAT                     = 3,
+    POINT_ID_MOUNT                      = 4,
+    POINT_ID_EXIT                       = 5,
 };
 
 static const float aHeraldPositions[3][4] =
@@ -169,6 +171,13 @@ static const float aIntroPositions[4][4] =
     {746.425f, 688.927f, 412.365f, 4.744f},                             // Helpers gate spawn locs
     {750.531f, 688.431f, 412.369f, 4.744f},
     {742.245f, 688.254f, 412.370f, 4.744f},
+};
+
+static const float aChampsPositions[3][4] =                             // Champions spawn positions inside the arena
+{
+    {746.600f, 660.116f, 411.772f, 4.729f},
+    {737.701f, 660.689f, 412.477f, 4.729f},
+    {755.232f, 660.352f, 412.477f, 4.729f},
 };
 
 // data that provides grand champion entry, vehicle mount, trash champions with the spawn locations as well as crowd stalker and emote entry
@@ -255,6 +264,10 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void DoPrepareChampions(bool bSkipIntro);
         void MoveChampionToHome(Creature* pChampion);
         void InformChampionReachHome();
+        void DoSendChampionsToExit();
+
+        uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
+        bool IsArenaChallengeComplete(uint32 uiType);
 
         void Update(uint32 uiDiff) override;
 
@@ -277,6 +290,8 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         uint32 m_uiIntroStage;
         uint32 m_uiArenaStage;
         uint32 m_uiGateResetTimer;
+        uint32 m_uiChampionsCount;
+        uint32 m_uiChampionsTimer;
 
         bool m_bSkipIntro;
 
