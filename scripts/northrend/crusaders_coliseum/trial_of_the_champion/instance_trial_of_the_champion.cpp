@@ -449,6 +449,28 @@ void instance_trial_of_the_champion::OnCreatureEvade(Creature* pCreature)
     }
 }
 
+void instance_trial_of_the_champion::OnCreatureDespawn(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_WARHORSE_ALLIANCE:
+        case NPC_WARHORSE_HORDE:
+        case NPC_BATTLEWORG_ALLIANCE:
+        case NPC_BATTLEWORG_HORDE:
+        {
+            if (GetData(TYPE_ARENA_CHALLENGE) == DONE)
+                return;
+
+            // respawn the vehicle mount
+            float fX, fY, fZ, fO;
+            pCreature->GetRespawnCoord(fX, fY, fZ, &fO);
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->SummonCreature(pCreature->GetEntry(), fX, fY, fZ, fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        }
+    }
+}
+
 // Function that returns the arena challenge status
 bool instance_trial_of_the_champion::IsArenaChallengeComplete(uint32 uiType)
 {
