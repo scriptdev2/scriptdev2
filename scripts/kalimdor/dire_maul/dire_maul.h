@@ -79,10 +79,13 @@ enum
     SAY_FREE_IMMOLTHAR          = -1429000,
     SAY_KILL_IMMOLTHAR          = -1429001,
     SAY_IRONBARK_REDEEM         = -1429002,
+    SAY_CHORUSH_KING_DEAD       = -1429003,
 
     FACTION_HOSTILE             = 14,
-    SPELL_KING_OF_GORDOK        = 22799,
+    FACTION_FRIENDLY            = 35,
 };
+
+static const float afMizzleSpawnLoc[4] = {683.296f, 484.384f, 29.544f, 0.0174f};
 
 class instance_dire_maul : public ScriptedInstance
 {

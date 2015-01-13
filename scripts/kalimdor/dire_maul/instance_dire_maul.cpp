@@ -75,7 +75,7 @@ void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
             // North
         case NPC_CHORUSH:
         case NPC_KING_GORDOK:
-        case NPC_MIZZLE_THE_CRAFTY:
+        case NPC_CAPTAIN_KROMCRUSH:
             break;
 
         default:
@@ -243,12 +243,26 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
-                // Apply Aura to players in the map
-                Map::PlayerList const& players = instance->GetPlayers();
-                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                // change faction to certian ogres
+                if (Creature* pOgre = GetSingleCreatureFromStorage(NPC_CAPTAIN_KROMCRUSH))
+                    pOgre->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+
+                if (Creature* pOgre = GetSingleCreatureFromStorage(NPC_CHORUSH))
                 {
-                    if (Player* pPlayer = itr->getSource())
-                        pPlayer->CastSpell(pPlayer, SPELL_KING_OF_GORDOK, true);
+                    // Chorush evades and yells on king death (if alive)
+                    if (pOgre->isAlive())
+                    {
+                        DoScriptText(SAY_CHORUSH_KING_DEAD, pOgre);
+                        pOgre->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+                        pOgre->AI()->EnterEvadeMode();
+                    }
+
+                    // start WP movement for Mizzle; event handled by movement and gossip dbscripts
+                    if (Creature* pMizzle = pOgre->SummonCreature(NPC_MIZZLE_THE_CRAFTY, afMizzleSpawnLoc[0], afMizzleSpawnLoc[1], afMizzleSpawnLoc[2], afMizzleSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0, true))
+                    {
+                        pMizzle->SetWalk(false);
+                        pMizzle->GetMotionMaster()->MoveWaypoint();
+                    }
                 }
             }
             break;
