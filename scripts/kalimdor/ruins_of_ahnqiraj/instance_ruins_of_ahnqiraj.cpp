@@ -308,8 +308,14 @@ void instance_ruins_of_ahnqiraj::DoSendNextArmyWave()
     else
     {
         // Increase the wave id if some are already dead
-        while (m_sArmyWavesGuids[m_uiCurrentArmyWave].empty())
+        while (m_sArmyWavesGuids[m_uiCurrentArmyWave].empty() && m_uiCurrentArmyWave < MAX_ARMY_WAVES)
             ++m_uiCurrentArmyWave;
+
+        if (m_uiCurrentArmyWave == MAX_ARMY_WAVES)
+        {
+            script_error_log("Instance Ruins of Ahn'Qiraj: ERROR Something unexpected happened. Please report to SD2 team.");
+            return;
+        }
 
         float fX, fY, fZ;
         for (GuidSet::const_iterator itr = m_sArmyWavesGuids[m_uiCurrentArmyWave].begin(); itr != m_sArmyWavesGuids[m_uiCurrentArmyWave].end(); ++itr)
