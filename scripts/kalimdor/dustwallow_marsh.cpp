@@ -70,7 +70,7 @@ struct mobs_risen_husk_spiritAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned) override
     {
         if (m_pCreditPlayer)
-            m_pCreditPlayer->KilledMonsterCredit(pSummoned->GetEntry(), pSummoned->GetObjectGuid());
+            m_pCreditPlayer->RewardPlayerAndGroupAtEvent(pSummoned->GetEntry(), pSummoned);
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
