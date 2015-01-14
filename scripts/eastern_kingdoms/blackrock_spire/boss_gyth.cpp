@@ -51,6 +51,7 @@ struct boss_gythAI : public ScriptedAI
     uint32 uiCorrosiveAcidTimer;
     uint32 uiFreezeTimer;
     uint32 uiFlamebreathTimer;
+    uint32 uiKnockAwayTimer;
 
     bool m_bSummonedRend;
     bool m_bHasChromaticChaos;
@@ -60,6 +61,7 @@ struct boss_gythAI : public ScriptedAI
         uiCorrosiveAcidTimer = 8000;
         uiFreezeTimer        = 11000;
         uiFlamebreathTimer   = 4000;
+        uiKnockAwayTimer     = 23000;
         m_bSummonedRend      = false;
         m_bHasChromaticChaos = false;
 
@@ -117,6 +119,14 @@ struct boss_gythAI : public ScriptedAI
         }
         else
             uiFlamebreathTimer -= uiDiff;
+
+        if (uiKnockAwayTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_KNOCK_AWAY) == CAST_OK)
+                uiKnockAwayTimer = 23000;
+        }
+        else
+            uiKnockAwayTimer -= uiDiff;
 
         // Summon Rend
         if (!m_bSummonedRend && m_creature->GetHealthPercent() < 11.0f)
