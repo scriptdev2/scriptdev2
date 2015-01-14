@@ -7,9 +7,10 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 7,
+    MAX_ENCOUNTER           = 8,
     MAX_RELIC_DOORS         = 12,
     MAX_DWARFS              = 7,
+    MAX_DWARF_RUNES         = 7,
 
     TYPE_RING_OF_LAW        = 1,
     TYPE_VAULT              = 2,
@@ -18,6 +19,7 @@ enum
     TYPE_LYCEUM             = 5,
     TYPE_IRON_HALL          = 6,
     TYPE_QUEST_JAIL_BREAK   = 7,
+    TYPE_FLAMELASH          = 8,
 
     NPC_EMPEROR             = 9019,
     NPC_PRINCESS            = 8929,
@@ -68,6 +70,14 @@ enum
     // Jail break event related
     GO_JAIL_DOOR_SUPPLY     = 170561,
     GO_JAIL_SUPPLY_CRATE    = 166872,
+
+    GO_DWARFRUNE_A01        = 170578,
+    GO_DWARFRUNE_B01        = 170579,
+    GO_DWARFRUNE_C01        = 170580,
+    GO_DWARFRUNE_D01        = 170581,
+    GO_DWARFRUNE_E01        = 170582,
+    GO_DWARFRUNE_F01        = 170583,
+    GO_DWARFRUNE_G01        = 170584,
 
     SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
 

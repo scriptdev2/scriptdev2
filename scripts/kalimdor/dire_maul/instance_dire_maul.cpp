@@ -245,7 +245,16 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             {
                 // change faction to certian ogres
                 if (Creature* pOgre = GetSingleCreatureFromStorage(NPC_CAPTAIN_KROMCRUSH))
-                    pOgre->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+                {
+                    if (pOgre->isAlive())
+                    {
+                        pOgre->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+
+                        // only evade if required
+                        if (pOgre->getVictim())
+                            pOgre->AI()->EnterEvadeMode();
+                    }
+                }
 
                 if (Creature* pOgre = GetSingleCreatureFromStorage(NPC_CHORUSH))
                 {

@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Ambassador_Flamelash
-SD%Complete: 80
-SDComment: Texts missing, Add handling rather guesswork, Add spell Burning Spirit likely won't work
+SD%Complete: 90
+SDComment: Texts probably missing; Spirits handling could be improved.
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackrock_depths.h"
 
 enum
 {
@@ -34,41 +35,74 @@ enum
 
 struct boss_ambassador_flamelashAI : public ScriptedAI
 {
-    boss_ambassador_flamelashAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_ambassador_flamelashAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiSpiritTimer;
-    int Rand;
-    int RandX;
-    int RandY;
+
+    GuidSet m_sSpiritsGuidsSet;
 
     void Reset() override
     {
-        m_uiSpiritTimer = 12000;
+        m_uiSpiritTimer = urand(0, 1000);
+
+        m_sSpiritsGuidsSet.clear();
     }
 
-    void SummonSpirits()
+    // function that will summon spirits periodically
+    void DoSummonSpirits()
     {
-        float fX, fY, fZ;
-        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 30.0f, fX, fY, fZ);
-        m_creature->SummonCreature(NPC_BURNING_SPIRIT, fX, fY, fZ, m_creature->GetAngle(fX, fY) + M_PI_F, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
+        if (!m_pInstance)
+            return;
+
+        for (int i = 0; i < MAX_DWARF_RUNES; ++i)
+        {
+            if (GameObject* pRune = m_pInstance->GetSingleGameObjectFromStorage(GO_DWARFRUNE_A01 + i))
+                m_creature->SummonCreature(NPC_BURNING_SPIRIT, pRune->GetPositionX(), pRune->GetPositionY(), pRune->GetPositionZ(), m_creature->GetAngle(m_creature), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
+        }
+    }
+
+    void MoveInLineOfSight(Unit* pWho) override
+    {
+        ScriptedAI::MoveInLineOfSight(pWho);
+
+        if (pWho->GetEntry() == NPC_BURNING_SPIRIT && pWho->isAlive() && m_sSpiritsGuidsSet.find(pWho->GetObjectGuid()) != m_sSpiritsGuidsSet.end() &&
+            pWho->IsWithinDistInMap(m_creature, 2 * CONTACT_DISTANCE))
+        {
+            pWho->CastSpell(m_creature, SPELL_BURNING_SPIRIT, true);
+            m_sSpiritsGuidsSet.erase(pWho->GetObjectGuid());
+        }
     }
 
     void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_FIREBLAST);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMELASH, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMELASH, DONE);
+    }
+
+    void JustReachedHome() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMELASH, FAIL);
     }
 
     void JustSummoned(Creature* pSummoned) override
     {
-        pSummoned->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
-    }
-
-    void SummonedMovementInform(Creature* pSummoned, uint32 /*uiMotionType*/, uint32 uiPointId) override
-    {
-        if (uiPointId != 1)
-            return;
-
-        pSummoned->CastSpell(m_creature, SPELL_BURNING_SPIRIT, true);
+        pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+        m_sSpiritsGuidsSet.insert(pSummoned->GetObjectGuid());
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -80,11 +114,7 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
         // m_uiSpiritTimer
         if (m_uiSpiritTimer < uiDiff)
         {
-            SummonSpirits();
-            SummonSpirits();
-            SummonSpirits();
-            SummonSpirits();
-
+            DoSummonSpirits();
             m_uiSpiritTimer = 20000;
         }
         else

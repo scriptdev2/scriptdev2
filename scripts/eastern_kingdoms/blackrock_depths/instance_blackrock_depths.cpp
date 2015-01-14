@@ -104,6 +104,13 @@ void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
         case GO_SECRET_DOOR:
         case GO_JAIL_DOOR_SUPPLY:
         case GO_JAIL_SUPPLY_CRATE:
+        case GO_DWARFRUNE_A01:
+        case GO_DWARFRUNE_B01:
+        case GO_DWARFRUNE_C01:
+        case GO_DWARFRUNE_D01:
+        case GO_DWARFRUNE_E01:
+        case GO_DWARFRUNE_F01:
+        case GO_DWARFRUNE_G01:
             break;
 
         default:
@@ -221,6 +228,10 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
         case TYPE_QUEST_JAIL_BREAK:
             m_auiEncounter[6] = uiData;
             return;
+        case TYPE_FLAMELASH:
+            for (int i = 0; i < MAX_DWARF_RUNES; ++i)
+                DoUseDoorOrButton(GO_DWARFRUNE_A01 + i);
+            return;
     }
 
     if (uiData == DONE)
@@ -229,7 +240,8 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7];
 
         m_strInstData = saveStream.str();
 
@@ -259,6 +271,8 @@ uint32 instance_blackrock_depths::GetData(uint32 uiType) const
             return m_auiEncounter[5];
         case TYPE_QUEST_JAIL_BREAK:
             return m_auiEncounter[6];
+        case TYPE_FLAMELASH:
+            return m_auiEncounter[7];
         default:
             return 0;
     }
@@ -276,7 +290,7 @@ void instance_blackrock_depths::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
