@@ -66,6 +66,7 @@ enum
     GO_CHEST_SEVEN          = 169243,
     GO_ARENA_SPOILS         = 181074,
     GO_SECRET_DOOR          = 174553,
+    GO_SECRET_SAFE          = 161495,
 
     // Jail break event related
     GO_JAIL_DOOR_SUPPLY     = 170561,
