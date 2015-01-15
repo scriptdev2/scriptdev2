@@ -102,6 +102,7 @@ void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
         case GO_CHEST_SEVEN:
         case GO_ARENA_SPOILS:
         case GO_SECRET_DOOR:
+        case GO_SECRET_SAFE:
         case GO_JAIL_DOOR_SUPPLY:
         case GO_JAIL_SUPPLY_CRATE:
         case GO_DWARFRUNE_A01:
@@ -158,7 +159,10 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
                 return;
             }
             if (uiData == DONE)
+            {
                 DoUseDoorOrButton(GO_SECRET_DOOR);
+                DoToggleGameObjectFlags(GO_SECRET_SAFE, GO_FLAG_NO_INTERACT, false);
+            }
             m_auiEncounter[1] = uiData;
             break;
         case TYPE_BAR:
