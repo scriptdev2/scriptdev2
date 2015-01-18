@@ -134,6 +134,7 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
             m_creature->ClearAllReactives();
 
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
             m_bHasDied = true;
@@ -265,6 +266,7 @@ struct boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
             // prevent killing blow before rezzing commander
             m_creature->SetHealth(uiDamage + 1);
+            uiDamage = 0;
         }
     }
 
