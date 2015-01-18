@@ -166,6 +166,7 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
         {
             // On ressurection, stop fake death and heal whitemane and resume fight
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
             // spell has script target on Whitemane
             DoCastSpellIfCan(m_creature, SPELL_LAYONHANDS);
