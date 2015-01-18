@@ -43,28 +43,26 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiSpiritTimer;
+    uint32 m_uiSpiritTimer[MAX_DWARF_RUNES];
 
     GuidSet m_sSpiritsGuidsSet;
 
     void Reset() override
     {
-        m_uiSpiritTimer = urand(0, 1000);
+        for (uint8 i = 0; i < MAX_DWARF_RUNES; ++i)
+            m_uiSpiritTimer[i] = urand(0, 1000);
 
         m_sSpiritsGuidsSet.clear();
     }
 
     // function that will summon spirits periodically
-    void DoSummonSpirits()
+    void DoSummonSpirit(uint8 uiIndex)
     {
         if (!m_pInstance)
             return;
 
-        for (int i = 0; i < MAX_DWARF_RUNES; ++i)
-        {
-            if (GameObject* pRune = m_pInstance->GetSingleGameObjectFromStorage(GO_DWARFRUNE_A01 + i))
-                m_creature->SummonCreature(NPC_BURNING_SPIRIT, pRune->GetPositionX(), pRune->GetPositionY(), pRune->GetPositionZ(), m_creature->GetAngle(m_creature), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
-        }
+        if (GameObject* pRune = m_pInstance->GetSingleGameObjectFromStorage(GO_DWARFRUNE_A01 + uiIndex))
+            m_creature->SummonCreature(NPC_BURNING_SPIRIT, pRune->GetPositionX(), pRune->GetPositionY(), pRune->GetPositionZ(), m_creature->GetAngle(m_creature), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
     }
 
     void MoveInLineOfSight(Unit* pWho) override
@@ -112,13 +110,16 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
             return;
 
         // m_uiSpiritTimer
-        if (m_uiSpiritTimer < uiDiff)
+        for (uint8 i = 0; i < MAX_DWARF_RUNES; ++i)
         {
-            DoSummonSpirits();
-            m_uiSpiritTimer = 20000;
+            if (m_uiSpiritTimer[i] < uiDiff)
+            {
+                DoSummonSpirit(i);
+                m_uiSpiritTimer[i] = urand(15000, 30000);
+            }
+            else
+                m_uiSpiritTimer[i] -= uiDiff;
         }
-        else
-            m_uiSpiritTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
