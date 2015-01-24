@@ -50,7 +50,6 @@ enum
     SPELL_ICICLE_SNOWPACK               = 62476,                // cast right before Flash Freeze; triggers the spell which summons npc 33173
     SPELL_ICICLE_SNOWPACK_H             = 62477,
     SPELL_FLASH_FREEZE                  = 61968,                // main spell; sends event 20896
-    SPELL_TELEPORT                      = 62940,                // despawn on event end
 
     // icicle spells
     SPELL_ICICLE                        = 62236,

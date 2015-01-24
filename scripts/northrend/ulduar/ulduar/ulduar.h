@@ -327,6 +327,9 @@ enum
     WORLD_STATE_TIMER           = 4132,
     WORLD_STATE_TIMER_COUNT     = 4131,
 
+    // common spells
+    SPELL_TELEPORT              = 62940,
+
     // events
     EVENT_ID_SHUTDOWN           = 21605,
     EVENT_ID_SCRAP_REPAIR       = 21606,

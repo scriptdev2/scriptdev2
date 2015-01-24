@@ -72,7 +72,6 @@ enum
     SPELL_BERSERK_2                         = 62555,
     SPELL_THORIM_CREDIT                     = 64985,                    // kill credit spell; added in spell_template
     SPELL_STORMHAMMER_OUTRO                 = 64767,                    // target npc 33196 and trigger spells 62470, 64909 and 64778 and despawn target in 10 sec
-    SPELL_TELEPORT                          = 62940,
 
     // Lightning charge related spells
     SPELL_LIGHTNING_PILLAR_ORB              = 63238,                    // cast on spell 62016 hit; cast by the lower Orb

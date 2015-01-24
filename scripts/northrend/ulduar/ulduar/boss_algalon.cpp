@@ -64,7 +64,6 @@ enum
     SPELL_SUPERMASSIVE_FAIL             = 65311,                // related to the Supermassive achievements
     SPELL_BERSERK                       = 47008,
     SPELL_ASCEND_HEAVENS                = 64487,                // cast when time's up
-    SPELL_TELEPORT                      = 62940,
 
     // combat spells
     SPELL_QUANTUM_STRIKE                = 64395,

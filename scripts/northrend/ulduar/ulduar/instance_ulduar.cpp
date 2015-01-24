@@ -137,10 +137,13 @@ void instance_ulduar::OnPlayerEnter(Player* pPlayer)
                 pPlayer->SummonCreature(m_aKeepersSpawnLocs[i].uiEntry, m_aKeepersSpawnLocs[i].fX, m_aKeepersSpawnLocs[i].fY, m_aKeepersSpawnLocs[i].fZ, m_aKeepersSpawnLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
         }
 
-        for (uint8 i = 0; i < countof(m_aKeeperHelperLocs); ++i)
+        if (GetData(TYPE_YOGGSARON) != DONE)
         {
-            if (GetData(m_aKeeperHelperLocs[i].uiType) == DONE)
-                pPlayer->SummonCreature(m_aKeeperHelperLocs[i].uiEntry, m_aKeeperHelperLocs[i].fX, m_aKeeperHelperLocs[i].fY, m_aKeeperHelperLocs[i].fZ, m_aKeeperHelperLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
+            for (uint8 i = 0; i < countof(m_aKeeperHelperLocs); ++i)
+            {
+                if (GetData(m_aKeeperHelperLocs[i].uiType) == DONE)
+                    pPlayer->SummonCreature(m_aKeeperHelperLocs[i].uiEntry, m_aKeeperHelperLocs[i].fX, m_aKeeperHelperLocs[i].fY, m_aKeeperHelperLocs[i].fZ, m_aKeeperHelperLocs[i].fO, TEMPSUMMON_CORPSE_DESPAWN, 0, true);
+            }
         }
 
         DoSpawnHodirNpcs(pPlayer);
@@ -813,12 +816,20 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 // reset all helpers
                 for (uint8 i = 0; i < countof(m_aKeeperHelperLocs); ++i)
                 {
-                    if (GetData(m_aKeeperHelperLocs[i].uiType == DONE))
+                    if (GetData(m_aKeeperHelperLocs[i].uiType) == DONE)
                     {
                         if (Creature* pHelper = GetSingleCreatureFromStorage(m_aKeeperHelperLocs[i].uiEntry))
                         {
-                            pHelper->AI()->EnterEvadeMode();
-                            pHelper->CastSpell(pHelper, SPELL_KEEPER_ACTIVE, true);
+                            if (uiData == FAIL)
+                            {
+                                pHelper->AI()->EnterEvadeMode();
+                                pHelper->CastSpell(pHelper, SPELL_KEEPER_ACTIVE, true);
+                            }
+                            else if (uiData == DONE)
+                            {
+                                pHelper->CastSpell(pHelper, SPELL_TELEPORT, true);
+                                pHelper->ForcedDespawn(1000);
+                            }
                         }
                     }
                 }
