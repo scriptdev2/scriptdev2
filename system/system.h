@@ -19,17 +19,12 @@ extern std::string  strSD2Version;                          // version info: dat
 #define TEXT_SOURCE_GOSSIP_START    TEXT_SOURCE_RANGE*3
 #define TEXT_SOURCE_GOSSIP_END      TEXT_SOURCE_RANGE*4 + 1
 
-struct ScriptPointMove
-{
-    uint32 uiCreatureEntry;
-    uint32 uiPointId;
-    float  fX;
-    float  fY;
-    float  fZ;
-    uint32 uiWaitTime;
-};
-
 #define pSystemMgr SystemMgr::Instance()
+
+struct PathInformation
+{
+    uint32 lastWaypoint;
+};
 
 class SystemMgr
 {
@@ -39,7 +34,7 @@ class SystemMgr
 
         static SystemMgr& Instance();
 
-        typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
+        typedef std::map<uint32 /*entry*/, std::map<int32 /*pathId*/, PathInformation> > EntryPathInfo;
 
         // Database
         void LoadVersion();
@@ -48,20 +43,20 @@ class SystemMgr
         void LoadScriptGossipTexts();
         void LoadScriptWaypoints();
 
-        std::vector<ScriptPointMove> const& GetPointMoveList(uint32 uiCreatureEntry) const
+        PathInformation const* GetPathInfo(uint32 entry, int32 pathId) const
         {
-            static std::vector<ScriptPointMove> vEmpty;
+            EntryPathInfo::const_iterator findEntry = m_pathInfo.find(entry);
+            if (findEntry == m_pathInfo.end())
+                return NULL;
+            std::map<int32, PathInformation>::const_iterator findPath = findEntry->second.find(pathId);
+            if (findPath == findEntry->second.end())
+                return NULL;
 
-            PointMoveMap::const_iterator itr = m_mPointMoveMap.find(uiCreatureEntry);
-
-            if (itr == m_mPointMoveMap.end())
-                return vEmpty;
-
-            return itr->second;
+            return &(findPath->second);
         }
 
-    protected:
-        PointMoveMap    m_mPointMoveMap;                    // coordinates for waypoints
+    private:
+        EntryPathInfo m_pathInfo;
 };
 
 #endif

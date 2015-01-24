@@ -68,9 +68,6 @@ void SystemMgr::LoadScriptGossipTexts()
 
 void SystemMgr::LoadScriptWaypoints()
 {
-    // Drop Existing Waypoint list
-    m_mPointMoveMap.clear();
-
     uint64 uiCreatureCount = 0;
 
     // Load Waypoints
@@ -83,7 +80,7 @@ void SystemMgr::LoadScriptWaypoints()
 
     outstring_log("SD2: Loading Script Waypoints for " UI64FMTD " creature(s)...", uiCreatureCount);
 
-    pResult = SD2Database.PQuery("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY pointid");
+    pResult = SD2Database.PQuery("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY entry, pointid");
 
     if (pResult)
     {
@@ -94,28 +91,23 @@ void SystemMgr::LoadScriptWaypoints()
         {
             bar.step();
             Field* pFields = pResult->Fetch();
-            ScriptPointMove pTemp;
 
-            pTemp.uiCreatureEntry   = pFields[0].GetUInt32();
-            uint32 uiEntry          = pTemp.uiCreatureEntry;
-            pTemp.uiPointId         = pFields[1].GetUInt32();
-            pTemp.fX                = pFields[2].GetFloat();
-            pTemp.fY                = pFields[3].GetFloat();
-            pTemp.fZ                = pFields[4].GetFloat();
-            pTemp.uiWaitTime        = pFields[5].GetUInt32();
+            uint32 uiEntry  = pFields[0].GetUInt32();
+            int32 pathId    = 1; // pFields[X].GetInt32();
+            uint32 pointId  = pFields[1].GetUInt32();
+            uint32 delay    = pFields[5].GetUInt32();
 
-            CreatureInfo const* pCInfo = GetCreatureTemplateStore(pTemp.uiCreatureEntry);
-
+            CreatureInfo const* pCInfo = GetCreatureTemplateStore(uiEntry);
             if (!pCInfo)
             {
-                error_db_log("SD2: DB table script_waypoint has waypoint for nonexistent creature entry %u", pTemp.uiCreatureEntry);
+                error_db_log("SD2: DB table script_waypoint has waypoint for nonexistent creature entry %u", uiEntry);
                 continue;
             }
 
-            if (!pCInfo->ScriptID)
-                error_db_log("SD2: DB table script_waypoint has waypoint for creature entry %u, but creature does not have ScriptName defined and then useless.", pTemp.uiCreatureEntry);
 
-            m_mPointMoveMap[uiEntry].push_back(pTemp);
+            if (AddWaypointFromExternal(uiEntry, pathId, pointId, pFields[2].GetFloat(), pFields[3].GetFloat(), pFields[4].GetFloat(), 100, delay))
+                m_pathInfo[uiEntry][pathId].lastWaypoint = pointId;
+
             ++uiNodeCount;
         }
         while (pResult->NextRow());

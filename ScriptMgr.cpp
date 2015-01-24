@@ -37,6 +37,17 @@ void LoadDatabase()
         outstring_log("SD2: ScriptDev2 database initialized.");
         outstring_log("");
 
+        // Extract DB-Name
+        std::string::size_type n = strSD2DBinfo.rfind(';');
+        std::string dbname;
+        if (n != std::string::npos && n + 1 != std::string::npos)
+            dbname = strSD2DBinfo.substr(n + 1);
+        else
+            dbname = "SD2_Database";
+        dbname.append(".script_waypoint");
+        SetExternalWaypointTable(dbname.c_str());
+
+        // Load content
         pSystemMgr.LoadVersion();
         pSystemMgr.LoadScriptTexts();
         pSystemMgr.LoadScriptTextsCustom();
