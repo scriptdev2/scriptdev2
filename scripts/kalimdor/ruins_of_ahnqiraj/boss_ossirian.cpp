@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Ossirian
-SD%Complete: 80%
-SDComment: Weather missing
+SD%Complete: 100%
+SDComment:
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
@@ -53,6 +53,8 @@ enum
     SPELL_WEAKNESS_SHADOW   = 25183,
 
     NPC_SAND_VORTEX         = 15428,                        // tornado npc
+
+    ZONE_ID_RUINS_AQ        = 3429,
 };
 
 static const float aSandVortexSpawnPos[2][4] =
@@ -101,6 +103,9 @@ struct boss_ossirianAI : public ScriptedAI
 
         for (uint8 i = 0; i < countof(aSandVortexSpawnPos); ++i)
             m_creature->SummonCreature(NPC_SAND_VORTEX, aSandVortexSpawnPos[i][0], aSandVortexSpawnPos[i][1], aSandVortexSpawnPos[i][2], aSandVortexSpawnPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
+
+        if (m_pInstance)
+            m_pInstance->instance->SetWeather(ZONE_ID_RUINS_AQ, WEATHER_TYPE_STORM, 1.0f, true);
     }
 
     void JustDied(Unit* /*pKiller*/) override
