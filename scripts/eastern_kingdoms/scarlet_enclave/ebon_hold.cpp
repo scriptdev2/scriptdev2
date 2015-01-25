@@ -1302,6 +1302,10 @@ struct npc_scarlet_ghoulAI : public ScriptedPetAI
         m_bDidInitText = false;
         m_uiUnsummonTimer = 0;
         DoCastSpellIfCan(m_creature, SPELL_GHOUL_SUMMONED);
+
+        if (m_creature->GetCharmInfo())
+            m_creature->GetCharmInfo()->SetReactState(REACT_DEFENSIVE);
+
         Reset();
     }
 
