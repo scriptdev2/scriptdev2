@@ -687,6 +687,16 @@ void instance_trial_of_the_champion::DoSendChampionsToExit()
     }
 }
 
+// Function that will set all the champions in combat with the target
+void instance_trial_of_the_champion::DoSetChamptionsInCombat(Unit* pTarget)
+{
+    for (uint8 i = 0; i < MAX_CHAMPIONS_ARENA; ++i)
+    {
+        if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
+            pChampion->AI()->AttackStart(pTarget);
+    }
+}
+
 void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)

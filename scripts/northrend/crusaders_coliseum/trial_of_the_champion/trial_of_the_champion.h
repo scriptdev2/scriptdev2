@@ -266,6 +266,7 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void MoveChampionToHome(Creature* pChampion);
         void InformChampionReachHome();
         void DoSendChampionsToExit();
+        void DoSetChamptionsInCombat(Unit* pTarget);
 
         uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
         bool IsArenaChallengeComplete(uint32 uiType);

@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: grand_champions
-SD%Complete: 40
-SDComment: No Combat support; only basic encounter setup
+SD%Complete: 70
+SDComment: No Vehicle Combat support
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -56,6 +56,7 @@ struct trial_companion_commonAI : public ScriptedAI
     uint32 m_uiShieldBreakerTimer;
     uint32 m_uiChargeTimer;
     uint32 m_uiDefeatedTimer;
+    uint32 m_uiResetThreatTimer;
 
     bool m_bDefeated;
 
@@ -77,16 +78,19 @@ struct trial_companion_commonAI : public ScriptedAI
         m_uiShieldBreakerTimer  = urand(3000, 5000);
         m_uiChargeTimer         = urand(1000, 3000);
         m_uiDefeatedTimer       = 0;
+        m_uiResetThreatTimer    = urand(5000, 15000);
 
         m_bDefeated             = false;
     }
 
-    void Aggro(Unit* /*pWho*/) override
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
         {
             if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
                 m_pInstance->SetData(TYPE_GRAND_CHAMPIONS, IN_PROGRESS);
+
+            m_pInstance->DoSetChamptionsInCombat(pWho);
         }
     }
 
@@ -308,6 +312,19 @@ struct trial_companion_commonAI : public ScriptedAI
             if (!UpdateChampionAI(uiDiff))
                 return;
 
+            // Change target
+            if (m_uiResetThreatTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                {
+                    DoResetThreat();
+                    AttackStart(pTarget);
+                    m_uiResetThreatTimer = urand(5000, 15000);
+                }
+            }
+            else
+                m_uiResetThreatTimer -= uiDiff;
+
             DoMeleeAttackIfReady();
         }
     }
@@ -316,6 +333,10 @@ struct trial_companion_commonAI : public ScriptedAI
 enum
 {
     // warrior spells
+    SPELL_INTERCEPT             = 67540,
+    SPELL_BLADESTORM            = 67541,
+    SPELL_MORTAL_STRIKE         = 67542,
+    SPELL_ROLLING_THROW         = 67546,
 };
 
 /*######
@@ -326,14 +347,62 @@ struct boss_champion_warriorAI : public trial_companion_commonAI
 {
     boss_champion_warriorAI(Creature* pCreature) : trial_companion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiStrikeTimer;
+    uint32 m_uiBladeStormTimer;
+    uint32 m_uiInterceptTimer;
+    uint32 m_uiThrowTimer;
+
     void Reset() override
     {
+        m_uiInterceptTimer      = 0;
+        m_uiStrikeTimer         = urand(5000, 8000);
+        m_uiBladeStormTimer     = urand(10000, 20000);
+        m_uiThrowTimer          = 30000;
+
         trial_companion_commonAI::Reset();
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)
     {
-        // ToDo:
+        if (m_uiInterceptTimer < uiDiff)
+        {
+            if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_INTERCEPT, SELECT_FLAG_NOT_IN_MELEE_RANGE | SELECT_FLAG_IN_LOS))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_INTERCEPT) == CAST_OK)
+                        m_uiInterceptTimer = 10000;
+                }
+            }
+            else
+                m_uiInterceptTimer = 2000;
+        }
+        else
+            m_uiInterceptTimer -= uiDiff;
+
+        if (m_uiBladeStormTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_BLADESTORM) == CAST_OK)
+                m_uiBladeStormTimer = urand(15000, 20000);
+        }
+        else
+            m_uiBladeStormTimer -= uiDiff;
+
+        if (m_uiThrowTimer < uiDiff)
+        {
+            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_ROLLING_THROW, true);
+            m_uiThrowTimer = urand(20000, 30000);
+        }
+        else
+            m_uiThrowTimer -= uiDiff;
+
+        if (m_uiStrikeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_MORTAL_STRIKE) == CAST_OK)
+                m_uiStrikeTimer = urand(8000, 12000);
+        }
+        else
+            m_uiStrikeTimer -= uiDiff;
 
         return true;
     }
@@ -347,6 +416,10 @@ CreatureAI* GetAI_boss_champion_warrior(Creature* pCreature)
 enum
 {
     // mage spells
+    SPELL_FIREBALL              = 66042,
+    SPELL_POLYMORPH             = 66043,
+    SPELL_BLAST_WAVE            = 66044,
+    SPELL_HASTE                 = 66045,
 };
 
 /*######
@@ -357,14 +430,81 @@ struct boss_champion_mageAI : public trial_companion_commonAI
 {
     boss_champion_mageAI(Creature* pCreature) : trial_companion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiFireballTimer;
+    uint32 m_uiBlastWaveTimer;
+    uint32 m_uiHasteTimer;
+    uint32 m_uiPolymorphTimer;
+
     void Reset() override
     {
+        m_uiFireballTimer       = 0;
+        m_uiBlastWaveTimer      = urand(10000, 20000);
+        m_uiHasteTimer          = 10000;
+        m_uiPolymorphTimer      = urand(5000, 10000);
+
         trial_companion_commonAI::Reset();
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        if (!m_pInstance)
+            return;
+
+        if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
+        {
+            if (m_creature->Attack(pWho, true))
+            {
+                m_creature->AddThreat(pWho);
+                m_creature->SetInCombatWith(pWho);
+                pWho->SetInCombatWith(m_creature);
+                DoStartMovement(pWho, 20.0f);
+            }
+        }
+        else
+            trial_companion_commonAI::AttackStart(pWho);
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)
     {
-        // ToDo:
+        if (m_uiFireballTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALL) == CAST_OK)
+                m_uiFireballTimer = urand(2000, 4000);
+        }
+        else
+            m_uiFireballTimer -= uiDiff;
+
+        if (m_uiBlastWaveTimer < uiDiff)
+        {
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_BLAST_WAVE, SELECT_FLAG_IN_MELEE_RANGE))
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE) == CAST_OK)
+                    m_uiBlastWaveTimer = urand(10000, 20000);
+            }
+            else
+                m_uiBlastWaveTimer = 5000;
+        }
+        else
+            m_uiBlastWaveTimer -= uiDiff;
+
+        if (m_uiHasteTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_HASTE) == CAST_OK)
+                m_uiHasteTimer = 20000;
+        }
+        else
+            m_uiHasteTimer -= uiDiff;
+
+        if (m_uiPolymorphTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_POLYMORPH) == CAST_OK)
+                    m_uiPolymorphTimer = urand(5000, 10000);
+            }
+        }
+        else
+            m_uiPolymorphTimer -= uiDiff;
 
         return true;
     }
@@ -378,6 +518,10 @@ CreatureAI* GetAI_boss_champion_mage(Creature* pCreature)
 enum
 {
     // shaman spells
+    SPELL_HEALING_WAVE          = 67528,
+    SPELL_CHAIN_LIGHTNING       = 67529,
+    SPELL_EARTH_SHIELD          = 67530,
+    SPELL_HEX_OF_MENDING        = 67534,
 };
 
 /*######
@@ -388,14 +532,59 @@ struct boss_champion_shamanAI : public trial_companion_commonAI
 {
     boss_champion_shamanAI(Creature* pCreature) : trial_companion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiHealingWaveTimer;
+    uint32 m_uiLightningTimer;
+    uint32 m_uiEarthShieldTimer;
+    uint32 m_uiHexTimer;
+
     void Reset() override
     {
+        m_uiLightningTimer          = 1000;
+        m_uiHealingWaveTimer        = 13000;
+        m_uiHexTimer                = 10000;
+        m_uiEarthShieldTimer        = 0;
+
         trial_companion_commonAI::Reset();
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)
     {
-        // ToDo:
+        if (m_uiLightningTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_CHAIN_LIGHTNING) == CAST_OK)
+                m_uiLightningTimer = urand(1000, 3000);
+        }
+        else
+            m_uiLightningTimer -= uiDiff;
+
+        if (m_uiHealingWaveTimer < uiDiff)
+        {
+            if (Unit* pTarget = DoSelectLowestHpFriendly(40.0f))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HEALING_WAVE) == CAST_OK)
+                    m_uiHealingWaveTimer = urand(8000, 13000);
+            }
+        }
+        else
+            m_uiHealingWaveTimer -= uiDiff;
+
+        if (m_uiEarthShieldTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_EARTH_SHIELD, CAST_AURA_NOT_PRESENT) == CAST_OK)
+                m_uiEarthShieldTimer = 30000;
+            else
+                m_uiEarthShieldTimer = 5000;
+        }
+        else
+            m_uiEarthShieldTimer -= uiDiff;
+
+        if (m_uiHexTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HEX_OF_MENDING) == CAST_OK)
+                m_uiHexTimer = urand(17000, 25000);
+        }
+        else
+            m_uiHexTimer -= uiDiff;
 
         return true;
     }
@@ -409,6 +598,11 @@ CreatureAI* GetAI_boss_champion_shaman(Creature* pCreature)
 enum
 {
     // hunter spells
+    SPELL_DISENGAGE             = 68340,                // trigger 68340
+    SPELL_LIGHTNING_ARROWS      = 66083,
+    SPELL_LIGHTNING_ARROWS_PROC = 66085,
+    SPELL_MULTI_SHOT            = 66081,
+    SPELL_SHOOT                 = 65868,
 };
 
 /*######
@@ -419,14 +613,94 @@ struct boss_champion_hunterAI : public trial_companion_commonAI
 {
     boss_champion_hunterAI(Creature* pCreature) : trial_companion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiDisengageTimer;
+    uint32 m_uiArrowsTimer;
+    uint32 m_uiArrowsProcTimer;
+    uint32 m_uiMultiShotTimer;
+    uint32 m_uiShootTimer;
+
     void Reset() override
     {
+        m_uiShootTimer              = 1000;
+        m_uiArrowsTimer             = urand(10000, 15000);
+        m_uiArrowsProcTimer         = 0;
+        m_uiMultiShotTimer          = urand(6000, 12000);
+        m_uiDisengageTimer          = 5000;
+
         trial_companion_commonAI::Reset();
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        if (!m_pInstance)
+            return;
+
+        if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
+        {
+            if (m_creature->Attack(pWho, true))
+            {
+                m_creature->AddThreat(pWho);
+                m_creature->SetInCombatWith(pWho);
+                pWho->SetInCombatWith(m_creature);
+                DoStartMovement(pWho, 20.0f);
+            }
+        }
+        else
+            trial_companion_commonAI::AttackStart(pWho);
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)
     {
-        // ToDo:
+        if (m_uiShootTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOOT) == CAST_OK)
+                m_uiShootTimer = urand(1000, 3000);
+        }
+        else
+            m_uiShootTimer -= uiDiff;
+
+        if (m_uiMultiShotTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MULTI_SHOT) == CAST_OK)
+                m_uiMultiShotTimer = urand(5000, 10000);
+        }
+        else
+            m_uiMultiShotTimer -= uiDiff;
+
+        if (m_uiDisengageTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_DISENGAGE, SELECT_FLAG_IN_MELEE_RANGE))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_DISENGAGE) == CAST_OK)
+                    m_uiDisengageTimer = urand(13000, 18000);
+            }
+            else
+                m_uiDisengageTimer = 5000;
+        }
+        else
+            m_uiDisengageTimer -= uiDiff;
+
+        if (m_uiArrowsTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_LIGHTNING_ARROWS) == CAST_OK)
+            {
+                m_uiArrowsTimer = urand(23000, 27000);
+                m_uiArrowsProcTimer = 3000;
+            }
+        }
+        else
+            m_uiArrowsTimer -= uiDiff;
+
+        if (m_uiArrowsProcTimer)
+        {
+            if (m_uiArrowsProcTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_LIGHTNING_ARROWS_PROC) == CAST_OK)
+                    m_uiArrowsProcTimer = 0;
+            }
+            else
+                m_uiArrowsProcTimer -= uiDiff;
+        }
 
         return true;
     }
@@ -440,6 +714,10 @@ CreatureAI* GetAI_boss_champion_hunter(Creature* pCreature)
 enum
 {
     // rogue spells
+    SPELL_POISON_BOTTLE         = 67701,
+    SPELL_FAN_OF_KNIVES         = 67706,
+    SPELL_EVISCERATE            = 67709,
+    SPELL_DEADLY_POISON         = 67710,
 };
 
 /*######
@@ -450,14 +728,54 @@ struct boss_champion_rogueAI : public trial_companion_commonAI
 {
     boss_champion_rogueAI(Creature* pCreature) : trial_companion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiPoisonBottleTimer;
+    uint32 m_uiFanKnivesTimer;
+    uint32 m_uiEviscerateTimer;
+    uint32 m_uiDeadlyPoisonTimer;
+
     void Reset() override
     {
+        m_uiDeadlyPoisonTimer       = 12000;
+        m_uiEviscerateTimer         = 7000;
+        m_uiFanKnivesTimer          = 10000;
+        m_uiPoisonBottleTimer       = 5000;
+
         trial_companion_commonAI::Reset();
     }
 
     bool UpdateCompanionAI(const uint32 uiDiff)
     {
-        // ToDo:
+        if (m_uiPoisonBottleTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_POISON_BOTTLE) == CAST_OK)
+                m_uiPoisonBottleTimer = urand(15000, 20000);
+        }
+        else
+            m_uiPoisonBottleTimer -= uiDiff;
+
+        if (m_uiDeadlyPoisonTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEADLY_POISON) == CAST_OK)
+                m_uiDeadlyPoisonTimer = urand(9000, 15000);
+        }
+        else
+            m_uiDeadlyPoisonTimer -= uiDiff;
+
+        if (m_uiEviscerateTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_EVISCERATE) == CAST_OK)
+                m_uiEviscerateTimer = 8000;
+        }
+        else
+            m_uiEviscerateTimer -= uiDiff;
+
+        if (m_uiFanKnivesTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FAN_OF_KNIVES) == CAST_OK)
+                m_uiFanKnivesTimer = urand(10000, 15000);
+        }
+        else
+            m_uiFanKnivesTimer -= uiDiff;
 
         return true;
     }
