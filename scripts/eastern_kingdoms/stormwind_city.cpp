@@ -468,6 +468,11 @@ enum
     SPELL_WINDSOR_DEATH         = 20465,
     SPELL_ONYXIA_DESPAWN        = 20466,
 
+    // combat spells
+    SPELL_HAMMER_OF_JUSTICE     = 10308,
+    SPELL_SHIELD_WALL           = 871,
+    SPELL_STRONG_CLEAVE         = 8255,
+
     NPC_GUARD_ROYAL             = 1756,
     NPC_GUARD_CITY              = 68,
     NPC_GUARD_PATROLLER         = 1976,
@@ -579,6 +584,9 @@ struct npc_reginald_windsorAI : public npc_escortAI, private DialogueHelper
     uint32 m_uiGuardCheckTimer;
     uint8 m_uiOnyxiaGuardCount;
 
+    uint32 m_uiHammerTimer;
+    uint32 m_uiCleaveTimer;
+
     bool m_bIsKeepReady;
     bool m_bCanGuardSalute;
 
@@ -593,6 +601,14 @@ struct npc_reginald_windsorAI : public npc_escortAI, private DialogueHelper
         m_uiGuardCheckTimer  = 0;
         m_bIsKeepReady       = false;
         m_bCanGuardSalute    = false;
+
+        m_uiHammerTimer      = urand(0, 1000);
+        m_uiCleaveTimer      = urand(1000, 3000);
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_SHIELD_WALL);
     }
 
     void MoveInLineOfSight(Unit* pWho) override
@@ -957,6 +973,27 @@ struct npc_reginald_windsorAI : public npc_escortAI, private DialogueHelper
             else
                 m_uiGuardCheckTimer -= uiDiff;
         }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiHammerTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE) == CAST_OK)
+                m_uiHammerTimer = 60000;
+        }
+        else
+            m_uiHammerTimer -= uiDiff;
+
+        if (m_uiCleaveTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_STRONG_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = urand(1000, 5000);
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
