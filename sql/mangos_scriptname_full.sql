@@ -491,6 +491,7 @@ UPDATE creature_template SET ScriptName='boss_champion_shaman' WHERE entry IN (3
 UPDATE creature_template SET ScriptName='boss_champion_hunter' WHERE entry IN (34657,35570);
 UPDATE creature_template SET ScriptName='boss_champion_rogue' WHERE entry IN (34703,35617);
 UPDATE creature_template SET ScriptName='npc_champion_mount' WHERE entry IN (35644,36559,35637,35633,35768,34658,35636,35638,35635,35640,35641,35634);
+UPDATE creature_template SET ScriptName='npc_trial_grand_champion' WHERE entry IN (35328,35331,35330,35332,35329,35314,35326,35325,35323,35327);
 
 /* TRIAL OF THE CRUSADER */
 UPDATE instance_template SET ScriptName='instance_trial_of_the_crusader' WHERE map=649;

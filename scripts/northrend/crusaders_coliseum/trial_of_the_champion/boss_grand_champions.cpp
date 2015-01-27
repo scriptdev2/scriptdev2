@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: grand_champions
-SD%Complete: 70
-SDComment: No Vehicle Combat support
+SD%Complete: 90
+SDComment: Encounter might require additional improvements.
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -28,11 +28,11 @@ EndScriptData */
 enum
 {
     // common spells
-    SPELL_DEFEND_DUMMY              = 64101,                        // triggers 63130, 63131 and 63132
-    SPELL_DEFEND                    = 62719,
+    SPELL_DEFEND_DUMMY              = 64101,                        // triggers 62719, 64192
 
     SPELL_SHIELD_BREAKER            = 68504,
-    SPELL_CHARGE                    = 68301,                        // triggers 68321 - unk mechanics
+    SPELL_CHARGE                    = 68301,                        // triggers 68307
+    SPELL_CHARGE_VEHICLE            = 68307,
     SPELL_FULL_HEAL                 = 43979,
     SPELL_RIDE_ARGENT_VEHICLE       = 69692,
 };
@@ -69,10 +69,7 @@ struct trial_companion_commonAI : public ScriptedAI
             if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             else
-            {
-                DoCastSpellIfCan(m_creature, SPELL_DEFEND, CAST_TRIGGERED);
                 DoCastSpellIfCan(m_creature, SPELL_DEFEND_DUMMY, CAST_TRIGGERED);
-            }
         }
 
         m_uiShieldBreakerTimer  = urand(3000, 5000);
@@ -230,6 +227,15 @@ struct trial_companion_commonAI : public ScriptedAI
         }
     }
 
+    void ReceiveAIEvent(AIEventType eventType, Creature* pSender, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_B)
+        {
+            m_uiShieldBreakerTimer = urand(1000, 2000);
+            m_uiChargeTimer = urand(2000, 4000);
+        }
+    }
+
     // function that will make the champion to use the nearby available mount
     void DoUseNearbyMountIfCan()
     {
@@ -292,18 +298,28 @@ struct trial_companion_commonAI : public ScriptedAI
             if (m_uiShieldBreakerTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHIELD_BREAKER) == CAST_OK)
-                    m_uiShieldBreakerTimer = urand(2000, 8000);
+                    m_uiShieldBreakerTimer = urand(2000, 4000);
             }
             else
                 m_uiShieldBreakerTimer -= uiDiff;
 
-            if (m_uiChargeTimer < uiDiff)
+            if (m_uiChargeTimer)
             {
-                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHARGE) == CAST_OK)
-                    m_uiChargeTimer = urand(4000, 10000);
+                if (m_uiChargeTimer <= uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHARGE) == CAST_OK)
+                    {
+                        if (m_creature->GetTransportInfo() && m_creature->GetTransportInfo()->IsOnVehicle())
+                        {
+                            if (Creature* pMount = (Creature*)m_creature->GetTransportInfo()->GetTransport())
+                                SendAIEvent(AI_EVENT_CUSTOM_A, m_creature->getVictim(), pMount);
+                        }
+                        m_uiChargeTimer = 0;
+                    }
+                }
+                else
+                    m_uiChargeTimer -= uiDiff;
             }
-            else
-                m_uiChargeTimer -= uiDiff;
         }
         // arena challenge complete - start normal battle
         else if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
@@ -787,13 +803,104 @@ CreatureAI* GetAI_boss_champion_rogue(Creature* pCreature)
 }
 
 /*######
-## npc_champion_mount
+## npc_trial_grand_champion
 ######*/
 
 enum
 {
-
+    SPELL_CHAMPION_CHARGE           = 63010,
+    SPELL_CHAMPION_DEFEND           = 64100,
 };
+
+struct npc_trial_grand_championAI : public ScriptedAI
+{
+    npc_trial_grand_championAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_trial_of_the_champion*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_trial_of_the_champion* m_pInstance;
+
+    uint32 m_uiChargeTimer;
+    uint32 m_uiBlockTimer;
+    uint32 m_uiChargeResetTimer;
+
+    void Reset() override
+    {
+        m_uiChargeTimer         = 1000;
+        m_uiBlockTimer          = 0;
+        m_uiChargeResetTimer    = 0;
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        if (m_creature->Attack(pWho, true))
+        {
+            m_creature->AddThreat(pWho);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
+            DoStartMovement(pWho, frand(10.0f, 20.0f));
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiBlockTimer < uiDiff)
+        {
+            if (!m_creature->HasAura(SPELL_CHAMPION_DEFEND))
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_CHAMPION_DEFEND) == CAST_OK)
+                    m_uiBlockTimer = 7000;
+            }
+            else
+                m_uiBlockTimer = 2000;
+        }
+        else
+            m_uiBlockTimer -= uiDiff;
+
+        if (m_uiChargeTimer)
+        {
+            if (m_uiChargeTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHAMPION_CHARGE) == CAST_OK)
+                {
+                    DoStartMovement(m_creature->getVictim());
+                    m_uiChargeResetTimer = urand(5000, 10000);
+                    m_uiChargeTimer = 0;
+                }
+            }
+            else
+                m_uiChargeTimer -= uiDiff;
+        }
+
+        if (m_uiChargeResetTimer)
+        {
+            if (m_uiChargeResetTimer <= uiDiff)
+            {
+                DoStartMovement(m_creature->getVictim(), frand(10.0f, 20.0f));
+                m_uiChargeResetTimer = 0;
+                m_uiChargeTimer = urand(2000, 4000);
+            }
+            else
+                m_uiChargeResetTimer -= uiDiff;
+        }
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_trial_grand_champion(Creature* pCreature)
+{
+    return new npc_trial_grand_championAI(pCreature);
+}
+
+/*######
+## npc_champion_mount
+######*/
 
 struct npc_champion_mountAI : public ScriptedAI
 {
@@ -805,7 +912,27 @@ struct npc_champion_mountAI : public ScriptedAI
 
     instance_trial_of_the_champion* m_pInstance;
 
-    void Reset() override { }
+    uint32 m_uiChargeResetTimer;
+
+    ObjectGuid m_ownerGuid;
+
+    void Reset() override
+    {
+        m_uiChargeResetTimer = 0;
+    }
+
+    void AttackStart(Unit* pWho) override
+    {
+        if (m_creature->Attack(pWho, true))
+        {
+            m_creature->AddThreat(pWho);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
+            DoStartMovement(pWho, frand(10.0f, 20.0f));
+        }
+    }
+
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
@@ -828,12 +955,35 @@ struct npc_champion_mountAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void ReceiveAIEvent(AIEventType eventType, Creature* pSender, Unit* pInvoker, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A)
+        {
+            DoCastSpellIfCan(pInvoker, SPELL_CHARGE_VEHICLE, CAST_TRIGGERED, pSender->GetObjectGuid());
+            DoStartMovement(pInvoker);
+            m_ownerGuid = pSender->GetObjectGuid();
+            m_uiChargeResetTimer = urand(5000, 10000);
+        }
+    }
 
     void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiChargeResetTimer)
+        {
+            if (m_uiChargeResetTimer <= uiDiff)
+            {
+                if (Creature* pOwner = m_creature->GetMap()->GetCreature(m_ownerGuid))
+                    SendAIEvent(AI_EVENT_CUSTOM_B, m_creature, pOwner);
+
+                DoStartMovement(m_creature->getVictim(), frand(10.0f, 20.0f));
+                m_uiChargeResetTimer = 0;
+            }
+            else
+                m_uiChargeResetTimer -= uiDiff;
+        }
     }
 };
 
@@ -869,6 +1019,11 @@ void AddSC_boss_grand_champions()
     pNewScript = new Script;
     pNewScript->Name = "boss_champion_rogue";
     pNewScript->GetAI = &GetAI_boss_champion_rogue;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_trial_grand_champion";
+    pNewScript->GetAI = &GetAI_npc_trial_grand_champion;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
