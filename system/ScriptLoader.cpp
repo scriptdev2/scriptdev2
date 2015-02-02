@@ -246,9 +246,11 @@ extern void AddSC_boss_anubarak();                          // azjol-nerub, azjo
 extern void AddSC_boss_hadronox();
 extern void AddSC_boss_krikthir();
 extern void AddSC_instance_azjol_nerub();
-extern void AddSC_trial_of_the_champion();                  // CC, trial_of_the_champion
+extern void AddSC_boss_argent_challenge();                  // CC, trial_of_the_champion
+extern void AddSC_boss_black_knight();
 extern void AddSC_boss_grand_champions();
 extern void AddSC_instance_trial_of_the_champion();
+extern void AddSC_trial_of_the_champion();
 extern void AddSC_boss_anubarak_trial();                    // CC, trial_of_the_crusader
 extern void AddSC_boss_faction_champions();
 extern void AddSC_boss_jaraxxus();
@@ -709,7 +711,9 @@ void AddScripts()
     AddSC_boss_hadronox();
     AddSC_boss_krikthir();
     AddSC_instance_azjol_nerub();
-    AddSC_boss_grand_champions();                           // CC, trial_of_the_champion
+    AddSC_boss_argent_challenge();                          // CC, trial_of_the_champion
+    AddSC_boss_black_knight();
+    AddSC_boss_grand_champions();
     AddSC_instance_trial_of_the_champion();
     AddSC_trial_of_the_champion();
     AddSC_boss_anubarak_trial();                            // CC, trial_of_the_crusader

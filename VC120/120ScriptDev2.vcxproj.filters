@@ -993,6 +993,12 @@
     <ClCompile Include="..\scripts\northrend\azjol-nerub\azjol-nerub\instance_azjol-nerub.cpp">
       <Filter>scripts\northrend\azjol-nerub\azjol-nerub</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\boss_argent_challenge.cpp">
+      <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\boss_black_knight.cpp">
+      <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\boss_grand_champions.cpp">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
     </ClCompile>
