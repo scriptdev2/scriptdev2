@@ -3598,8 +3598,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1601023,'Uunak-hissss tik-k-k-k-k!',14067,1,0,0,'anubarak SAY_LOCUST_3'),
 (-1601024,'Ahhh... RAAAAAGH! Never thought... I would be free of him...',14069,1,0,0,'anubarak SAY_DEATH'),
 
-(-1601025,'The gate has been breached! Quickly, divert forces to deal with these invaders!',0,1,0,0,'anub\'ar crusher SAY_AGGRO'),
-(-1601026,'There\'s no time left! All remaining forces, attack the invaders!',0,1,0,0,'anub\'ar crusher SAY_SPECIAL');
+(-1601025,'The gate has been breached! Quickly, divert forces to deal with these invaders!',13941,1,0,0,'anub\'ar crusher SAY_AGGRO'),
+(-1601026,'There\'s no time left! All remaining forces, attack the invaders!',13942,1,0,0,'anub\'ar crusher SAY_SPECIAL');
 
 -- -1 602 000 HALLS OF LIGHTNING
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
