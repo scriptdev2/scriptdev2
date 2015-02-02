@@ -855,6 +855,9 @@
     <ClCompile Include="..\scripts\kalimdor\onyxias_lair\instance_onyxias_lair.cpp">
       <Filter>scripts\kalimdor\onyxias_lair</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\razorfen_downs\instance_razorfen_downs.cpp">
+      <Filter>scripts\kalimdor\razorfen_downs</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp">
       <Filter>scripts\kalimdor\razorfen_downs</Filter>
     </ClCompile>
@@ -1757,6 +1760,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\kalimdor\onyxias_lair\onyxias_lair.h">
       <Filter>scripts\kalimdor\onyxias_lair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\kalimdor\razorfen_downs\razorfen_downs.h">
+      <Filter>scripts\kalimdor\razorfen_downs</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h">
       <Filter>scripts\kalimdor\razorfen_kraul</Filter>

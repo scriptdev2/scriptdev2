@@ -404,6 +404,7 @@
     <ClCompile Include="..\scripts\kalimdor\maraudon\boss_noxxion.cpp" />
     <ClCompile Include="..\scripts\kalimdor\onyxias_lair\boss_onyxia.cpp" />
     <ClCompile Include="..\scripts\kalimdor\onyxias_lair\instance_onyxias_lair.cpp" />
+    <ClCompile Include="..\scripts\kalimdor\razorfen_downs\instance_razorfen_downs.cpp" />
     <ClCompile Include="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp" />
     <ClCompile Include="..\scripts\kalimdor\razorfen_kraul\instance_razorfen_kraul.cpp" />
     <ClCompile Include="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.cpp" />
@@ -714,6 +715,7 @@
     <ClInclude Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.h" />
     <ClInclude Include="..\scripts\kalimdor\dire_maul\dire_maul.h" />
     <ClInclude Include="..\scripts\kalimdor\onyxias_lair\onyxias_lair.h" />
+    <ClInclude Include="..\scripts\kalimdor\razorfen_downs\razorfen_downs.h" />
     <ClInclude Include="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h" />
     <ClInclude Include="..\scripts\kalimdor\ruins_of_ahnqiraj\ruins_of_ahnqiraj.h" />
     <ClInclude Include="..\scripts\kalimdor\temple_of_ahnqiraj\temple_of_ahnqiraj.h" />
