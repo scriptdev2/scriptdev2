@@ -102,7 +102,7 @@ struct boss_skeramAI : public ScriptedAI
         }
         // Else despawn to avoid looting
         else
-            m_creature->ForcedDespawn();
+            m_creature->ForcedDespawn(1);
     }
 
     void Aggro(Unit* /*pWho*/) override
