@@ -995,7 +995,10 @@ UPDATE creature_template SET ScriptName='npc_thrall_warchief' WHERE entry=4949;
 /* RAGEFIRE CHASM */
 
 /* RAZORFEN DOWNS */
+UPDATE instance_template SET ScriptName='instance_razorfen_downs' WHERE map=129;
 UPDATE creature_template SET ScriptName='npc_belnistrasz' WHERE entry=8516;
+DELETE FROM scripted_event_id WHERE id=3130;
+INSERT INTO scripted_event_id VALUES (3130, 'event_go_tutenkash_gong');
 
 /* RAZORFEN KRAUL */
 UPDATE instance_template SET ScriptName='instance_razorfen_kraul' WHERE map=47;
