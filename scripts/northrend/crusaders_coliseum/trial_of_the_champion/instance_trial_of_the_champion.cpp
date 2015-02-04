@@ -87,6 +87,10 @@ enum
     // Arena event spells - not used for the moment
     // SPELL_SPECTATOR_FORCE_CHANT          = 66354,
     // SPELL_SPECTATOR_FX_CHANT             = 66677,
+    SPELL_SPECTATOR_FORCE_CHEER             = 66384,
+    SPELL_SPECTATOR_FORCE_CHEER_2           = 66385,
+
+    FACTION_CHAMPION_HOSTILE                = 16,
 };
 
 static const DialogueEntryTwoSide aTocDialogues[] =
@@ -100,6 +104,12 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     // Grand Champions complete
     {NPC_ARELAS_BRIGHTSTAR,         0,                   0, 0, 7000},
     {SAY_TIRION_ARGENT_CHAMPION,    NPC_TIRION_FORDRING, 0, 0, 0},
+    // Argent challenge intro
+    {TYPE_ARGENT_CHAMPION,          0,                   0, 0, 6000},
+    {NPC_JAEREN_SUNSWORN,           0,                   0, 0, 4000},
+    {NPC_EADRIC,                    0,                   0, 0, 6000},
+    {NPC_PALETRESS,                 0,                   0, 0, 17000},
+    {SAY_TIRION_ARGENT_CHAMPION_BEGIN, NPC_TIRION_FORDRING, 0, 0, 0},
     {0, 0, 0, 0, 0}
 };
 
@@ -235,6 +245,11 @@ void instance_trial_of_the_champion::OnCreatureCreate(Creature* pCreature)
         case NPC_BATTLEWORG_HORDE:
             m_lArenaMountsGuids.push_back(pCreature->GetObjectGuid());
             return;
+        case NPC_ARGENT_LIGHTWIELDER:
+        case NPC_ARGENT_MONK:
+        case NPC_ARGENT_PRIESTESS:
+            m_lArgentTrashGuids.push_back(pCreature->GetObjectGuid());
+            return;
         default:
             return;
     }
@@ -293,6 +308,7 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_ARGENT_CHAMPION:
             m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_NORTH_GATE);
             if (uiData == DONE)
             {
                 if (m_uiGrandChampionEntry == NPC_EADRIC)
@@ -413,6 +429,21 @@ void instance_trial_of_the_champion::OnCreatureDeath(Creature* pCreature)
                 {
                     ++m_uiArenaStage;
                     DoSendNextArenaWave();
+                }
+            }
+            break;
+        case NPC_ARGENT_LIGHTWIELDER:
+        case NPC_ARGENT_MONK:
+        case NPC_ARGENT_PRIESTESS:
+            m_lArgentTrashGuids.remove(pCreature->GetObjectGuid());
+
+            // when trash is cleaned, make the champion hostile
+            if (m_lArgentTrashGuids.empty())
+            {
+                if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+                {
+                    pChampion->SetFactionTemporary(FACTION_CHAMPION_HOSTILE, TEMPFACTION_NONE);
+                    pChampion->GetMotionMaster()->MovePoint(0, 746.630f, 636.570f, 411.572f);
                 }
             }
             break;
@@ -723,6 +754,59 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
         case NPC_TIRION_FORDRING:
             m_uiIntroStage = 0;
             m_uiIntroTimer = 1000;
+            break;
+
+        // start argent challenge
+        case TYPE_ARGENT_CHAMPION:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            {
+                if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                    pHerald->SetFacingToObject(pTirion);
+
+                DoScriptText(m_uiGrandChampionEntry == NPC_EADRIC ? SAY_HERALD_EADRIC : SAY_HERALD_PALETRESS, pHerald);
+
+                DoUseDoorOrButton(GO_MAIN_GATE);
+                m_uiGateResetTimer = 10000;             // ToDo: set this as door reset timer when fixed in core
+
+                // summon the selected champion
+                if (Creature* pChampion = pHerald->SummonCreature(m_uiGrandChampionEntry,  aArgentChallengeHelpers[9].fX, aArgentChallengeHelpers[9].fY, aArgentChallengeHelpers[9].fZ, aArgentChallengeHelpers[9].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    for (uint8 i = 0; i < MAX_ARGENT_TRASH; ++i)
+                    {
+                        if (Creature* pHelper = pChampion->SummonCreature(aArgentChallengeHelpers[i].uiEntry, aArgentChallengeHelpers[i].fX, aArgentChallengeHelpers[i].fY, aArgentChallengeHelpers[i].fZ, aArgentChallengeHelpers[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                            pHelper->GetMotionMaster()->MovePoint(POINT_ID_CENTER, aArgentChallengeHelpers[i].fTargetX, aArgentChallengeHelpers[i].fTargetY, aArgentChallengeHelpers[i].fTargetZ);
+                    }
+
+                    pChampion->CastSpell(pChampion, SPELL_SPECTATOR_FORCE_CHEER, true);
+                    pChampion->CastSpell(pChampion, SPELL_SPECTATOR_FORCE_CHEER_2, true);
+                }
+            }
+            break;
+        case NPC_JAEREN_SUNSWORN:
+            if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+                pChampion->GetMotionMaster()->MovePoint(POINT_ID_CENTER, aArgentChallengeHelpers[9].fTargetX, aArgentChallengeHelpers[9].fTargetY, aArgentChallengeHelpers[9].fTargetZ);
+            break;
+        case NPC_EADRIC:
+            if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+                DoScriptText(m_uiGrandChampionEntry == NPC_EADRIC ? SAY_EADRIC_INTRO : SAY_PALETRESS_INTRO_1, pChampion);
+
+            // move the herald to the gate
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[1][0], aHeraldPositions[1][1], aHeraldPositions[1][2]);
+            break;
+        case NPC_PALETRESS:
+            if (m_uiGrandChampionEntry == NPC_PALETRESS)
+            {
+                if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+                    DoScriptText(SAY_PALETRESS_INTRO_2, pChampion);
+            }
+            break;
+        case SAY_TIRION_ARGENT_CHAMPION_BEGIN:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            {
+                if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                    pHerald->SetFacingToObject(pTirion);
+            }
             break;
     }
 }

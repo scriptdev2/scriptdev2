@@ -80,7 +80,7 @@ bool GossipSelect_npc_toc_herald(Player* pPlayer, Creature* pCreature, uint32 /*
             pInstance->DoPrepareChampions(true);
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            pInstance->SetData(TYPE_ARGENT_CHAMPION, SPECIAL);
+            pInstance->DoPrepareArgentChallenge();
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pInstance->SetData(TYPE_BLACK_KNIGHT, SPECIAL);

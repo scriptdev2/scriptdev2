@@ -11,6 +11,7 @@ enum
     MAX_CHAMPIONS_AVAILABLE             = 5,
     MAX_CHAMPIONS_ARENA                 = 3,
     MAX_CHAMPIONS_MOUNTS                = 24,
+    MAX_ARGENT_TRASH                    = 9,
 
     TYPE_GRAND_CHAMPIONS                = 0,
     TYPE_ARGENT_CHAMPION                = 1,
@@ -240,6 +241,27 @@ static const ChampionsMountsData aTrialChampionsMounts[MAX_CHAMPIONS_MOUNTS] =
     {NPC_BATTLEWORG_ALLIANCE, NPC_BATTLEWORG_HORDE, 778.741f, 576.049f, 412.476f, 2.234f},
 };
 
+struct ArgentChallengeData
+{
+    uint32 uiEntry;
+    float fX, fY, fZ, fO;
+    float fTargetX, fTargetY, fTargetZ;
+};
+
+static const ArgentChallengeData aArgentChallengeHelpers[MAX_ARGENT_TRASH + 1] =
+{
+    { NPC_ARGENT_LIGHTWIELDER, 747.043f, 686.513f, 412.459f, 4.694f, 746.685f, 653.093f, 411.604f },
+    { NPC_ARGENT_LIGHTWIELDER, 755.377f, 685.247f, 412.445f, 4.683f, 777.107f, 649.010f, 411.930f },
+    { NPC_ARGENT_LIGHTWIELDER, 738.848f, 686.317f, 412.454f, 4.664f, 717.998f, 649.100f, 411.924f },
+    { NPC_ARGENT_MONK, 749.762f, 686.441f, 412.460f, 4.712f, 751.685f, 653.040f, 411.917f },
+    { NPC_ARGENT_MONK, 758.222f, 679.841f, 412.366f, 4.698f, 780.140f, 645.455f, 411.932f },
+    { NPC_ARGENT_MONK, 744.207f, 680.438f, 412.372f, 4.668f, 721.592f, 652.499f, 411.965f },
+    { NPC_ARGENT_PRIESTESS, 744.604f, 686.418f, 412.460f, 4.677f, 741.686f, 653.147f, 411.910f },
+    { NPC_ARGENT_PRIESTESS, 755.309f, 682.928f, 412.381f, 4.668f, 773.451f, 652.419f, 411.935f },
+    { NPC_ARGENT_PRIESTESS, 738.919f, 685.132f, 412.379f, 4.694f, 715.080f, 645.947f, 411.957f },
+    { TYPE_ARGENT_CHAMPION, 746.758f, 687.635f, 412.467f, 4.695f, 746.816f, 661.640f, 411.702f },
+};
+
 class instance_trial_of_the_champion : public ScriptedInstance, private DialogueHelper
 {
     public:
@@ -267,6 +289,8 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void InformChampionReachHome();
         void DoSendChampionsToExit();
         void DoSetChamptionsInCombat(Unit* pTarget);
+
+        void DoPrepareArgentChallenge() { StartNextDialogueText(TYPE_ARGENT_CHAMPION); }
 
         uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
         bool IsArenaChallengeComplete(uint32 uiType);
@@ -306,6 +330,7 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         GuidVector m_vHordeTriggersGuids;
 
         GuidList m_lArenaMountsGuids;
+        GuidList m_lArgentTrashGuids;
         GuidSet m_sArenaHelpersGuids[MAX_CHAMPIONS_ARENA];
 };
 

@@ -29,6 +29,7 @@ enum
 {
     // common spells
     SPELL_DEFEND_DUMMY              = 64101,                        // triggers 62719, 64192
+    SPELL_KILL_CREDIT               = 68572,                        // achiev check spell
 
     SPELL_SHIELD_BREAKER            = 68504,
     SPELL_CHARGE                    = 68301,                        // triggers 68307
@@ -135,6 +136,7 @@ struct trial_companion_commonAI : public ScriptedAI
                 // second part of the champions challenge
                 if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
                 {
+                    m_creature->InterruptNonMeleeSpells(false);
                     m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
                     m_creature->SetHealth(1);
 
