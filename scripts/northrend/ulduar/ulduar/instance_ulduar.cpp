@@ -871,6 +871,10 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                         pAlgalon->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pAlgalon, pAlgalon);
                 }
             }
+            else if (uiData == IN_PROGRESS)
+            {
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_OBSERVED, true);
+            }
             break;
         case TYPE_ALGALON_TIMER:
             m_auiEncounter[uiType] = uiData;
@@ -1300,7 +1304,10 @@ void instance_ulduar::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
 bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
 {
     switch (uiCriteriaId)
-    {
+    {   
+        case ACHIEV_CRIT_OBSERVED_N:
+        case ACHIEV_CRIT_OBSERVED_H:
+            return m_abAchievCriteria(TYPE_ACHIEV_OBSERVED);
         case ACHIEV_CRIT_SARONITE_N:
         case ACHIEV_CRIT_SARONITE_H:
             return GetData(TYPE_VEZAX_HARD) == DONE;
