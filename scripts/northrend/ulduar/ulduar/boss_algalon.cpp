@@ -262,8 +262,8 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
 
     void AttackStart(Unit* pWho) override
     {
-        // don't attack again after being defeated. Also don't attack, if speech aggro text.
-        if (m_bEventFinished && m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+        // don't attack has flag NOT_SELECTABLE.
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
             return;
 
         ScriptedAI::AttackStart(pWho);
@@ -421,6 +421,10 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
                 break;
             case NPC_ALGALON_FIGHT:
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                break;
+            case SAY_AGGRO:
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                break;
         }
     }
 
