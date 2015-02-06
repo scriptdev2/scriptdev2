@@ -733,7 +733,7 @@ struct npc_arthasAI : public npc_escortAI, private DialogueHelper
             case NPC_TOWNHALL_RESIDENT:
                 if (Creature* pCitizen = m_creature->GetMap()->GetCreature(m_thirdCitizenGuid))
                     pCitizen->HandleEmote(EMOTE_ONESHOT_LAUGH);
-                 break;
+                break;
             case TEXT_ID_TOWN_HALL_2:
                 if (Creature* pCitizen = m_creature->GetMap()->GetCreature(m_thirdCitizenGuid))
                     DoScriptText(SAY_CITIZEN_NO_UNDERSTAD, pCitizen);

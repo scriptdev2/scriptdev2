@@ -70,7 +70,7 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
 
         if (pWho->GetEntry() == NPC_BURNING_SPIRIT && pWho->isAlive() && m_sSpiritsGuidsSet.find(pWho->GetObjectGuid()) != m_sSpiritsGuidsSet.end() &&
-            pWho->IsWithinDistInMap(m_creature, 2 * CONTACT_DISTANCE))
+                pWho->IsWithinDistInMap(m_creature, 2 * CONTACT_DISTANCE))
         {
             pWho->CastSpell(m_creature, SPELL_BURNING_SPIRIT, true);
             m_sSpiritsGuidsSet.erase(pWho->GetObjectGuid());

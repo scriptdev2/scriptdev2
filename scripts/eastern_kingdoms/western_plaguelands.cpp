@@ -450,7 +450,7 @@ struct npc_taelan_fordringAI: public npc_escortAI, private DialogueHelper
         else if (eventType == AI_EVENT_CUSTOM_B && pInvoker->GetEntry() == NPC_ISILLIEN)
         {
             StartNextDialogueText(NPC_TIRION_FORDRING);
-            m_creature->SummonCreature(NPC_TIRION_FORDRING, 2620.273f, -1920.917f, 74.25f, 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
+            m_creature->SummonCreature(NPC_TIRION_FORDRING, 2620.273f, -1920.917f, 74.25f, 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
         }
     }
 
@@ -480,9 +480,9 @@ struct npc_taelan_fordringAI: public npc_escortAI, private DialogueHelper
                 // summon additional crimson elites
                 float fX, fY, fZ;
                 pSummoned->GetNearPoint(pSummoned, fX, fY, fZ, 0, 5.0f, M_PI_F * 1.25f);
-                pSummoned->SummonCreature(NPC_CRIMSON_ELITE, fX, fY, fZ, pSummoned->GetOrientation(), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
+                pSummoned->SummonCreature(NPC_CRIMSON_ELITE, fX, fY, fZ, pSummoned->GetOrientation(), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
                 pSummoned->GetNearPoint(pSummoned, fX, fY, fZ, 0, 5.0f, 0);
-                pSummoned->SummonCreature(NPC_CRIMSON_ELITE, fX, fY, fZ, pSummoned->GetOrientation(), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
+                pSummoned->SummonCreature(NPC_CRIMSON_ELITE, fX, fY, fZ, pSummoned->GetOrientation(), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
                 break;
             case NPC_TIRION_FORDRING:
                 m_tirionGuid = pSummoned->GetObjectGuid();
@@ -576,7 +576,7 @@ struct npc_taelan_fordringAI: public npc_escortAI, private DialogueHelper
                 break;
             case SAY_REACH_TOWER:
                 // start fight event
-                m_creature->SummonCreature(NPC_ISILLIEN, 2693.12f, -1943.04f, 72.04f, 2.11f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
+                m_creature->SummonCreature(NPC_ISILLIEN, 2693.12f, -1943.04f, 72.04f, 2.11f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
                 break;
             case SAY_ISILLIEN_2:
                 if (Creature* pIsillien = m_creature->GetMap()->GetCreature(m_isillenGuid))
@@ -585,9 +585,9 @@ struct npc_taelan_fordringAI: public npc_escortAI, private DialogueHelper
             case SPELL_CRUSADER_STRIKE:
             {
                 // spawn additioinal elites
-                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2711.32f, -1882.67f, 67.89f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
-                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2710.93f, -1878.90f, 67.97f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
-                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2710.53f, -1875.28f, 67.90f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15*MINUTE*IN_MILLISECONDS);
+                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2711.32f, -1882.67f, 67.89f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
+                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2710.93f, -1878.90f, 67.97f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
+                m_creature->SummonCreature(NPC_CRIMSON_ELITE, 2710.53f, -1875.28f, 67.90f, 3.2f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 15 * MINUTE * IN_MILLISECONDS);
 
                 std::list<Creature*> lElitesInRange;
                 Player* pPlayer = GetPlayerForEscort();
@@ -651,10 +651,10 @@ struct npc_taelan_fordringAI: public npc_escortAI, private DialogueHelper
                         pTirion->SetFacingToObject(pPlayer);
                     }
 
-                    pTirion->ForcedDespawn(3*MINUTE*IN_MILLISECONDS);
+                    pTirion->ForcedDespawn(3 * MINUTE * IN_MILLISECONDS);
                     pTirion->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
                 }
-                m_creature->ForcedDespawn(3*MINUTE*IN_MILLISECONDS);
+                m_creature->ForcedDespawn(3 * MINUTE * IN_MILLISECONDS);
                 break;
         }
     }

@@ -350,7 +350,7 @@ struct npc_infantryAI : public ScriptedAI
         if (m_bEscortActive)
         {
             if (Creature* pLeader = m_creature->GetMap()->GetCreature(m_squadLeaderGuid))
-                m_creature->GetMotionMaster()->MoveFollow(pLeader, m_creature->GetDistance(pLeader), M_PI_F/2 + m_creature->GetAngle(pLeader));
+                m_creature->GetMotionMaster()->MoveFollow(pLeader, m_creature->GetDistance(pLeader), M_PI_F / 2 + m_creature->GetAngle(pLeader));
         }
         else
             m_creature->GetMotionMaster()->MoveTargetedHome();
@@ -367,7 +367,7 @@ struct npc_infantryAI : public ScriptedAI
         if (eventType == AI_EVENT_CUSTOM_A && (pSender->GetEntry() == NPC_SKYBREAKER_SQUAD_LEADER || pSender->GetEntry() == NPC_KORKRON_SQUAD_LEADER))
         {
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-            m_creature->GetMotionMaster()->MoveFollow(pSender, m_creature->GetDistance(pSender), M_PI_F/2 + m_creature->GetAngle(pSender));
+            m_creature->GetMotionMaster()->MoveFollow(pSender, m_creature->GetDistance(pSender), M_PI_F / 2 + m_creature->GetAngle(pSender));
             m_squadLeaderGuid = pSender->GetObjectGuid();
             m_bEscortActive = true;
         }
@@ -548,7 +548,7 @@ CreatureAI* GetAI_npc_father_kamaros(Creature* pCreature)
 bool QuestAccept_npc_father_kamaros(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ID_NOT_DEAD_YET_A || pQuest->GetQuestId() == QUEST_ID_NOT_DEAD_YET_H ||
-        pQuest->GetQuestId() == QUEST_ID_GET_OUT_OF_HERE_A || pQuest->GetQuestId() == QUEST_ID_GET_OUT_OF_HERE_H)
+            pQuest->GetQuestId() == QUEST_ID_GET_OUT_OF_HERE_A || pQuest->GetQuestId() == QUEST_ID_GET_OUT_OF_HERE_H)
     {
         pCreature->AI()->SendAIEvent(AI_EVENT_START_ESCORT, pPlayer, pCreature, pQuest->GetQuestId());
         return true;
@@ -643,7 +643,7 @@ bool GossipSelect_npc_saronite_mine_slave(Player* pPlayer, Creature* pCreature, 
                 case 1:
                     pCreature->GetMotionMaster()->MovePoint(0, afPointSlaveSuicide2[0], afPointSlaveSuicide2[1], afPointSlaveSuicide2[2]);
                     break;
-                 case 2:
+                case 2:
                     pCreature->GetMotionMaster()->MovePoint(0, afPointSlaveSuicide3[0], afPointSlaveSuicide3[1], afPointSlaveSuicide3[2]);
                     break;
             }

@@ -592,7 +592,7 @@ struct npc_wildaAI : public npc_escortAI
         for (std::list<Creature*>::const_iterator itr = lSpiritsInRange.begin(); itr != lSpiritsInRange.end(); ++itr)
         {
             (*itr)->RemoveAurasDueToSpell(SPELL_WATER_BUBBLE);
-            (*itr)->GetMotionMaster()->MoveFollow(m_creature, m_creature->GetDistance(*itr) * 0.25f, M_PI_F/2 + m_creature->GetAngle(*itr));
+            (*itr)->GetMotionMaster()->MoveFollow(m_creature, m_creature->GetDistance(*itr) * 0.25f, M_PI_F / 2 + m_creature->GetAngle(*itr));
             (*itr)->SetLevitate(false);
         }
     }

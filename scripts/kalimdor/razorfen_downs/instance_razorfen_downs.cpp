@@ -37,7 +37,7 @@ void instance_razorfen_downs::Initialize()
 
 void instance_razorfen_downs::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_TOMB_FIEND:
         case NPC_TOMB_REAVER:

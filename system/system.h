@@ -34,7 +34,7 @@ class SystemMgr
 
         static SystemMgr& Instance();
 
-        typedef std::map<uint32 /*entry*/, std::map<int32 /*pathId*/, PathInformation> > EntryPathInfo;
+        typedef std::map < uint32 /*entry*/, std::map < int32 /*pathId*/, PathInformation > > EntryPathInfo;
 
         // Database
         void LoadVersion();
