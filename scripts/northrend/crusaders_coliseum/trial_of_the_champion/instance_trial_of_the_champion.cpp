@@ -75,18 +75,26 @@ enum
     SAY_VARIAN_OTHER_4                      = -1650050,
     SAY_VARIAN_OTHER_5                      = -1650051,
 
+    // sounds
+    SOUND_ID_CHALLENGE                      = 15852,
+
     // spells
     SPELL_ARGENT_GET_PLAYER_COUNT           = 66986,
     SPELL_ARGENT_SUMMON_CHAMPION_1          = 66654,
     SPELL_ARGENT_SUMMON_CHAMPION_2          = 66671,
     SPELL_ARGENT_SUMMON_CHAMPION_3          = 66673,
-    SPELL_ARGENT_SUMMON_CHAMPION_WAVE       = 67295,
     SPELL_ARGENT_SUMMON_BOSS_4              = 67396,
+
+    SPELL_HERALD_FACE_DARK_KNIGHT           = 67482,
+    SPELL_DEATHS_RESPITE                    = 66798,
+    SPELL_DEATHS_PUSH                       = 66797,
     SPELL_ARGENT_HERALD_FEIGN_DEATH         = 66804,
 
     // Arena event spells - not used for the moment
     // SPELL_SPECTATOR_FORCE_CHANT          = 66354,
     // SPELL_SPECTATOR_FX_CHANT             = 66677,
+    // SPELL_ARGENT_SUMMON_CHAMPION_WAVE    = 67295,                // cast by center npc 35016; play sound 8574
+    // SPELL_SPECTATOR_BUNNY_AURA           = 66812,                // play sound 15882
     SPELL_SPECTATOR_FORCE_CHEER             = 66384,
     SPELL_SPECTATOR_FORCE_CHEER_2           = 66385,
 
@@ -105,11 +113,16 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {NPC_ARELAS_BRIGHTSTAR,         0,                   0, 0, 7000},
     {SAY_TIRION_ARGENT_CHAMPION,    NPC_TIRION_FORDRING, 0, 0, 0},
     // Argent challenge intro
+    {NPC_ARGENT_MONK,               0,                   0, 0, 5000},
+    {SOUND_ID_CHALLENGE,            0,                   0, 0, 5000},
     {TYPE_ARGENT_CHAMPION,          0,                   0, 0, 6000},
     {NPC_JAEREN_SUNSWORN,           0,                   0, 0, 4000},
     {NPC_EADRIC,                    0,                   0, 0, 6000},
     {NPC_PALETRESS,                 0,                   0, 0, 17000},
     {SAY_TIRION_ARGENT_CHAMPION_BEGIN, NPC_TIRION_FORDRING, 0, 0, 0},
+    // Argetn challenge complete
+    {POINT_ID_MOUNT,                0,                   0, 0, 5000},
+    {POINT_ID_EXIT,                 0,                   0, 0, 0},
     {0, 0, 0, 0, 0}
 };
 
@@ -198,6 +211,8 @@ void instance_trial_of_the_champion::OnCreatureCreate(Creature* pCreature)
         case NPC_SPECTATOR_DRAENEI:
         case NPC_SPECTATOR_NIGHT_ELF:
         case NPC_SPECTATOR_GNOME:
+        case NPC_SPECTATOR_HORDE:
+        case NPC_SPECTATOR_ALLIANCE:
             break;
         case NPC_SPECTATOR_GENERIC:
             // alliance side
@@ -315,6 +330,17 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_EADRIC_LOOT : GO_EADRIC_LOOT_H, 30 * MINUTE);
                 else if (m_uiGrandChampionEntry == NPC_PALETRESS)
                     DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_PALETRESS_LOOT : GO_PALETRESS_LOOT_H, 30 * MINUTE);
+
+                // start event epilog
+                StartNextDialogueText(POINT_ID_MOUNT);
+
+                // move the herald back to center
+                if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                {
+                    pHerald->GetMotionMaster()->Clear();
+                    pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[2][0], aHeraldPositions[2][1], aHeraldPositions[2][2]);
+                    pHerald->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                }
             }
             break;
         case TYPE_BLACK_KNIGHT:
@@ -443,7 +469,8 @@ void instance_trial_of_the_champion::OnCreatureDeath(Creature* pCreature)
                 if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
                 {
                     pChampion->SetFactionTemporary(FACTION_CHAMPION_HOSTILE, TEMPFACTION_NONE);
-                    pChampion->GetMotionMaster()->MovePoint(0, 746.630f, 636.570f, 411.572f);
+                    pChampion->GetMotionMaster()->MovePoint(POINT_ID_CENTER, 746.630f, 636.570f, 411.572f);
+                    pChampion->SetRespawnCoord(746.630f, 636.570f, 411.572f, pChampion->GetOrientation());
                 }
             }
             break;
@@ -738,6 +765,9 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
             {
                 if (Creature* pTrigger = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER))
                     pHerald->GetMotionMaster()->MovePoint(0, pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ());
+
+                pHerald->CastSpell(pHerald, SPELL_ARGENT_GET_PLAYER_COUNT, true);
+                pHerald->PlayDirectSound(SOUND_ID_CHALLENGE);
             }
             break;
         case SAY_HERALD_ALLIANCE_CHALLENGE:
@@ -757,12 +787,21 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
             break;
 
         // start argent challenge
+        case NPC_ARGENT_MONK:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[0][0], aHeraldPositions[0][1], aHeraldPositions[0][2]);
+            break;
+        case SOUND_ID_CHALLENGE:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->PlayDirectSound(SOUND_ID_CHALLENGE);
+            break;
         case TYPE_ARGENT_CHAMPION:
             if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
             {
                 if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
                     pHerald->SetFacingToObject(pTirion);
 
+                pHerald->CastSpell(pHerald, SPELL_ARGENT_SUMMON_BOSS_4, true);
                 DoScriptText(m_uiGrandChampionEntry == NPC_EADRIC ? SAY_HERALD_EADRIC : SAY_HERALD_PALETRESS, pHerald);
 
                 DoUseDoorOrButton(GO_MAIN_GATE);
@@ -771,20 +810,31 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
                 // summon the selected champion
                 if (Creature* pChampion = pHerald->SummonCreature(m_uiGrandChampionEntry,  aArgentChallengeHelpers[9].fX, aArgentChallengeHelpers[9].fY, aArgentChallengeHelpers[9].fZ, aArgentChallengeHelpers[9].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
                 {
-                    for (uint8 i = 0; i < MAX_ARGENT_TRASH; ++i)
-                    {
-                        if (Creature* pHelper = pChampion->SummonCreature(aArgentChallengeHelpers[i].uiEntry, aArgentChallengeHelpers[i].fX, aArgentChallengeHelpers[i].fY, aArgentChallengeHelpers[i].fZ, aArgentChallengeHelpers[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
-                            pHelper->GetMotionMaster()->MovePoint(POINT_ID_CENTER, aArgentChallengeHelpers[i].fTargetX, aArgentChallengeHelpers[i].fTargetY, aArgentChallengeHelpers[i].fTargetZ);
-                    }
-
                     pChampion->CastSpell(pChampion, SPELL_SPECTATOR_FORCE_CHEER, true);
                     pChampion->CastSpell(pChampion, SPELL_SPECTATOR_FORCE_CHEER_2, true);
+
+                    if (Creature* pSpectator = GetSingleCreatureFromStorage(NPC_SPECTATOR_HORDE))
+                        DoScriptText(EMOTE_HORDE_ARGENT_CHAMPION, pSpectator, pChampion);
+                    if (Creature* pSpectator = GetSingleCreatureFromStorage(NPC_SPECTATOR_ALLIANCE))
+                        DoScriptText(EMOTE_ALLIANCE_ARGENT_CHAMPION, pSpectator, pChampion);
+                }
+
+                for (uint8 i = 0; i < MAX_ARGENT_TRASH; ++i)
+                {
+                    if (Creature* pHelper = pHerald->SummonCreature(aArgentChallengeHelpers[i].uiEntry, aArgentChallengeHelpers[i].fX, aArgentChallengeHelpers[i].fY, aArgentChallengeHelpers[i].fZ, aArgentChallengeHelpers[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                    {
+                        pHelper->GetMotionMaster()->MovePoint(POINT_ID_CENTER, aArgentChallengeHelpers[i].fTargetX, aArgentChallengeHelpers[i].fTargetY, aArgentChallengeHelpers[i].fTargetZ);
+                        pHelper->SetRespawnCoord(aArgentChallengeHelpers[i].fTargetX, aArgentChallengeHelpers[i].fTargetY, aArgentChallengeHelpers[i].fTargetZ, pHelper->GetOrientation());
+                    }
                 }
             }
             break;
         case NPC_JAEREN_SUNSWORN:
             if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+            {
                 pChampion->GetMotionMaster()->MovePoint(POINT_ID_CENTER, aArgentChallengeHelpers[9].fTargetX, aArgentChallengeHelpers[9].fTargetY, aArgentChallengeHelpers[9].fTargetZ);
+                pChampion->SetRespawnCoord(aArgentChallengeHelpers[9].fTargetX, aArgentChallengeHelpers[9].fTargetY, aArgentChallengeHelpers[9].fTargetZ, pChampion->GetOrientation());
+            }
             break;
         case NPC_EADRIC:
             if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
@@ -806,6 +856,14 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
             {
                 if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
                     pHerald->SetFacingToObject(pTirion);
+            }
+            break;
+        // argent challenge completed
+        case POINT_ID_EXIT:
+            if (Creature* pChampion = GetSingleCreatureFromStorage(m_uiGrandChampionEntry))
+            {
+                pChampion->GetMotionMaster()->MovePoint(0, aArgentChallengeHelpers[9].fTargetX, aArgentChallengeHelpers[9].fTargetY, aArgentChallengeHelpers[9].fTargetZ);
+                pChampion->ForcedDespawn(8000);
             }
             break;
     }
@@ -895,6 +953,13 @@ void instance_trial_of_the_champion::Update(uint32 uiDiff)
                             // text
                             DoScriptText(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].iYellEntry : aAllianceChampions[uiIndex].iYellEntry, pHerald);
                             pHerald->SetFacingToObject(pChampion);
+
+                            switch (m_uiIntroStage)
+                            {
+                                case 0: pHerald->CastSpell(pHerald, SPELL_ARGENT_SUMMON_CHAMPION_1, true); break;
+                                case 1: pHerald->CastSpell(pHerald, SPELL_ARGENT_SUMMON_CHAMPION_2, true); break;
+                                case 2: pHerald->CastSpell(pHerald, SPELL_ARGENT_SUMMON_CHAMPION_3, true); break;
+                            }
 
                             // handle emote
                             if (Creature* pStalker = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? aHordeChampions[uiIndex].uiCrowdStalker : aAllianceChampions[uiIndex].uiCrowdStalker))

@@ -157,6 +157,10 @@ enum
     POINT_ID_COMBAT                     = 3,
     POINT_ID_MOUNT                      = 4,
     POINT_ID_EXIT                       = 5,
+
+    // achievements
+    ACHIEV_CRIT_FACEROLLER              = 11858,                        // Eadric achiev 3803
+    ACHIEV_CRIT_HAD_WORSE               = 11789,                        // Black Knight achiev 3804
 };
 
 static const float aHeraldPositions[3][4] =
@@ -290,7 +294,7 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void DoSendChampionsToExit();
         void DoSetChamptionsInCombat(Unit* pTarget);
 
-        void DoPrepareArgentChallenge() { StartNextDialogueText(TYPE_ARGENT_CHAMPION); }
+        void DoPrepareArgentChallenge() { StartNextDialogueText(NPC_ARGENT_MONK); }
 
         uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
         bool IsArenaChallengeComplete(uint32 uiType);

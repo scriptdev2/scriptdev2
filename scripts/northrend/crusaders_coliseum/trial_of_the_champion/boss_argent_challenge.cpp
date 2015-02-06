@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: argent_challenge
-SD%Complete: 20
-SDComment: Basic support
+SD%Complete: 90
+SDComment: Achievement NYI.
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -39,6 +39,7 @@ struct argent_champion_commonAI : public ScriptedAI
     {
         m_pInstance = (instance_trial_of_the_champion*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_bDefeated = false;
         Reset();
     }
 
@@ -47,10 +48,7 @@ struct argent_champion_commonAI : public ScriptedAI
 
     bool m_bDefeated;
 
-    void Reset() override
-    {
-        m_bDefeated = false;
-    }
+    void Reset() override { }
 
     void Aggro(Unit* /*pWho*/) override
     {
@@ -60,7 +58,7 @@ struct argent_champion_commonAI : public ScriptedAI
 
     void JustReachedHome() override
     {
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_ARGENT_CHAMPION) != DONE)
             m_pInstance->SetData(TYPE_ARGENT_CHAMPION, FAIL);
     }
 
@@ -73,54 +71,40 @@ struct argent_champion_commonAI : public ScriptedAI
             if (m_bDefeated)
                 return;
 
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_ARGENT_CHAMPION, DONE);
+
             m_creature->SetFactionTemporary(FACTION_CHAMPION_FRIENDLY, TEMPFACTION_NONE);
             EnterEvadeMode();
 
-            // ToDo: start the encounter complete event
-
-            if (m_pInstance)
-                m_pInstance->SetData(TYPE_ARGENT_CHAMPION, DONE);
+            // Handle event completion
+            DoHandleEventEnd();
 
             m_bDefeated = true;
         }
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
-    {
-        if (uiMotionType != POINT_MOTION_TYPE || uiPointId != POINT_ID_CENTER)
-            return;
-
-        m_creature->SetRespawnCoord(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), m_creature->GetOrientation());
-    }
-
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
-    {
-        if (uiMotionType != POINT_MOTION_TYPE || uiPointId != POINT_ID_CENTER)
-            return;
-
-        pSummoned->SetRespawnCoord(pSummoned->GetPositionX(), pSummoned->GetPositionY(), pSummoned->GetPositionZ(), pSummoned->GetOrientation());
-    }
-
-    // Return true to handle shared timers and MeleeAttack
-    virtual bool UpdateChampionAI(const uint32 /*uiDiff*/) { return true; }
-
-    void UpdateAI(const uint32 uiDiff) override
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Call specific virtual function
-        if (!UpdateChampionAI(uiDiff))
-            return;
-
-        DoMeleeAttackIfReady();
-    }
+    // Function that handles personalized event completion
+    virtual void DoHandleEventEnd() {}
 };
 
 enum
 {
+    SAY_EADRIC_AGGRO                = -1650052,
+    SAY_EADRIC_HAMMER               = -1650053,
+    SAY_EADRIC_KILL_1               = -1650054,
+    SAY_EADRIC_KILL_2               = -1650055,
+    SAY_EADRIC_DEFEAT               = -1650056,
+    EMOTE_EADRIC_RADIANCE           = -1650057,
+    EMOTE_EADRIC_HAMMER             = -1650058,
+
     SPELL_KILL_CREDIT_EADRIC        = 68575,
+    SPELL_EADRIC_ACHIEVEMENT        = 68197,
+
+    SPELL_HAMMER_OF_JUSTICE         = 66863,
+    SPELL_HAMMER_OF_RIGHTEOUS       = 66867,
+    SPELL_RADIANCE                  = 66935,
+    SPELL_VENGEANCE                 = 66865,
 };
 
 /*######
@@ -131,14 +115,71 @@ struct boss_eadricAI : public argent_champion_commonAI
 {
     boss_eadricAI(Creature* pCreature) : argent_champion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiHammerTimer;
+    uint32 m_uiRadianceTimer;
+
     void Reset() override
     {
         argent_champion_commonAI::Reset();
+
+        m_uiHammerTimer = urand(30000, 35000);
+        m_uiRadianceTimer = urand(10000, 15000);
     }
 
-    bool UpdateCompanionAI(const uint32 uiDiff)
+    void Aggro(Unit* pWho) override
     {
-        return true;
+        DoScriptText(SAY_EADRIC_AGGRO, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_VENGEANCE, CAST_TRIGGERED);
+
+        argent_champion_commonAI::Aggro(pWho);
+    }
+
+    void KilledUnit(Unit* /*pVictim*/) override
+    {
+        DoScriptText(urand(0, 1) ? SAY_EADRIC_KILL_1 : SAY_EADRIC_KILL_2, m_creature);
+    }
+
+    void DoHandleEventEnd()
+    {
+        DoScriptText(SAY_EADRIC_DEFEAT, m_creature);
+
+        DoCastSpellIfCan(m_creature, SPELL_EADRIC_ACHIEVEMENT, CAST_TRIGGERED);
+        m_creature->CastSpell(m_creature, SPELL_KILL_CREDIT_EADRIC, true);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiHammerTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HAMMER_OF_RIGHTEOUS) == CAST_OK)
+                {
+                    DoCastSpellIfCan(m_creature, SPELL_HAMMER_OF_JUSTICE, CAST_TRIGGERED);
+
+                    DoScriptText(EMOTE_EADRIC_HAMMER, m_creature, pTarget);
+                    m_uiHammerTimer = 35000;
+                }
+            }
+        }
+        else
+            m_uiHammerTimer -= uiDiff;
+
+        if (m_uiRadianceTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_RADIANCE) == CAST_OK)
+            {
+                DoScriptText(EMOTE_EADRIC_RADIANCE, m_creature);
+                m_uiRadianceTimer = urand(30000, 35000);
+            }
+        }
+        else
+            m_uiRadianceTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -149,7 +190,27 @@ CreatureAI* GetAI_boss_eadric(Creature* pCreature)
 
 enum
 {
+    SAY_PALETRESS_AGGRO             = -1650059,
+    SAY_PALETRESS_MEMORY            = -1650060,
+    SAY_PALETRESS_MEMORY_DIES       = -1650061,
+    SAY_PALETRESS_KILL_1            = -1650062,
+    SAY_PALETRESS_KILL_2            = -1650063,
+    SAY_PALETRESS_DEFEAT            = -1650064,
+
     SPELL_KILL_CREDIT_PALETRESS     = 68574,
+    SPELL_CONFESSOR_ACHIEVEMENT     = 68206,
+
+    SPELL_CONFESS                   = 66547,
+    SPELL_CONFESS_AURA              = 66680,
+    SPELL_SUMMON_MEMORY             = 66545,
+    SPELL_REFLECTIVE_SHIELD         = 66515,
+
+    SPELL_HOLY_FIRE                 = 66538,
+    SPELL_HOLY_NOVA                 = 66546,
+    SPELL_HOLY_SMITE                = 66536,
+    SPELL_RENEW                     = 66537,
+
+    SPELL_MEMORY_SPAWN_EFFECT       = 66675,
 };
 
 /*######
@@ -160,14 +221,114 @@ struct boss_paletressAI : public argent_champion_commonAI
 {
     boss_paletressAI(Creature* pCreature) : argent_champion_commonAI(pCreature) { Reset(); }
 
+    uint32 m_uiHolySmiteTimer;
+    uint32 m_uiHolyFireTimer;
+    uint32 m_uiHolyNovaTimer;
+    uint32 m_uiRenewTimer;
+
+    bool m_bSummonedMemory;
+
     void Reset() override
     {
         argent_champion_commonAI::Reset();
+
+        m_uiHolySmiteTimer  = 0;
+        m_uiHolyFireTimer   = urand(7000, 12000);
+        m_uiHolyNovaTimer   = urand(20000, 25000);
+        m_uiRenewTimer      = urand(5000, 9000);
+
+        m_bSummonedMemory   = false;
     }
 
-    bool UpdateCompanionAI(const uint32 uiDiff)
+    void Aggro(Unit* pWho) override
     {
-        return true;
+        DoScriptText(SAY_PALETRESS_AGGRO, m_creature);
+
+        argent_champion_commonAI::Aggro(pWho);
+    }
+
+    void KilledUnit(Unit* /*pVictim*/) override
+    {
+        DoScriptText(urand(0, 1) ? SAY_PALETRESS_KILL_1 : SAY_PALETRESS_KILL_2, m_creature);
+    }
+
+    void DoHandleEventEnd()
+    {
+        DoScriptText(SAY_PALETRESS_DEFEAT, m_creature);
+
+        DoCastSpellIfCan(m_creature, SPELL_CONFESSOR_ACHIEVEMENT, CAST_TRIGGERED);
+        m_creature->CastSpell(m_creature, SPELL_KILL_CREDIT_PALETRESS, true);
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        pSummoned->CastSpell(pSummoned, SPELL_MEMORY_SPAWN_EFFECT, true);
+    }
+
+    void SummonedCreatureJustDied(Creature* /*pSummoned*/) override
+    {
+        DoScriptText(SAY_PALETRESS_MEMORY_DIES, m_creature);
+        m_creature->RemoveAurasDueToSpell(SPELL_REFLECTIVE_SHIELD);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (!m_bSummonedMemory && m_creature->GetHealthPercent() <= 25.0f)
+        {
+            DoScriptText(SAY_PALETRESS_MEMORY, m_creature);
+
+            DoCastSpellIfCan(m_creature, SPELL_CONFESS, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_CONFESS_AURA, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_MEMORY, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_REFLECTIVE_SHIELD, CAST_TRIGGERED);
+            m_bSummonedMemory = true;
+        }
+
+        if (m_uiHolySmiteTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HOLY_SMITE))
+                    m_uiHolySmiteTimer = urand(1000, 2000);
+            }
+        }
+        else
+            m_uiHolySmiteTimer -= uiDiff;
+
+        if (m_uiHolyFireTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HOLY_FIRE))
+                    m_uiHolyFireTimer = 25000;
+            }
+        }
+        else
+            m_uiHolyFireTimer -= uiDiff;
+
+        if (m_uiHolyNovaTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_HOLY_NOVA))
+                m_uiHolyNovaTimer = urand(30000, 40000);
+        }
+        else
+            m_uiHolyNovaTimer -= uiDiff;
+
+        if (m_uiRenewTimer < uiDiff)
+        {
+            if (Unit* pTarget = DoSelectLowestHpFriendly(60.0f))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_RENEW) == CAST_OK)
+                    m_uiRenewTimer = 20000;
+            }
+        }
+        else
+            m_uiRenewTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
