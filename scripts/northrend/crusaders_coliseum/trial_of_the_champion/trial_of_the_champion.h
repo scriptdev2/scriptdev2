@@ -163,11 +163,12 @@ enum
     ACHIEV_CRIT_HAD_WORSE               = 11789,                        // Black Knight achiev 3804
 };
 
-static const float aHeraldPositions[3][4] =
+static const float aHeraldPositions[4][4] =
 {
     {745.606f, 619.705f, 411.172f, 4.66003f},                           // Spawn position
     {732.524f, 663.007f, 412.393f, 0.0f},                               // Gate movement position
     {743.377f, 630.240f, 411.073f, 0.0f},                               // Near center position
+    {744.764f, 628.512f, 411.172f, 0.0f},                               // Black knight intro position
 };
 
 static const float aIntroPositions[4][4] =
@@ -183,6 +184,13 @@ static const float aChampsPositions[3][4] =                             // Champ
     {746.600f, 660.116f, 411.772f, 4.729f},
     {737.701f, 660.689f, 412.477f, 4.729f},
     {755.232f, 660.352f, 412.477f, 4.729f},
+};
+
+static const float aKnightPositions[3][4] =
+{
+    {774.283f, 665.505f, 463.484f, 4.310f},                             // Black Knight spawn position
+    {780.694f, 669.611f, 463.662f, 3.769f},                             // Gryphon spawn position
+    {747.788f, 632.487f, 411.414f, 4.744f},                             // Center position
 };
 
 // data that provides grand champion entry, vehicle mount, trash champions with the spawn locations as well as crowd stalker and emote entry
@@ -295,6 +303,7 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void DoSetChamptionsInCombat(Unit* pTarget);
 
         void DoPrepareArgentChallenge() { StartNextDialogueText(NPC_ARGENT_MONK); }
+        void DoPrepareBlackKnight() { StartNextDialogueText(TYPE_BLACK_KNIGHT); }
 
         uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
         bool IsArenaChallengeComplete(uint32 uiType);

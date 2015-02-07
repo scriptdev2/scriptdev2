@@ -83,7 +83,7 @@ bool GossipSelect_npc_toc_herald(Player* pPlayer, Creature* pCreature, uint32 /*
             pInstance->DoPrepareArgentChallenge();
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            pInstance->SetData(TYPE_BLACK_KNIGHT, SPECIAL);
+            pInstance->DoPrepareBlackKnight();
             break;
     }
 

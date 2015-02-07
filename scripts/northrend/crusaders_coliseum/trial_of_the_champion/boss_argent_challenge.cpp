@@ -211,6 +211,7 @@ enum
     SPELL_RENEW                     = 66537,
 
     SPELL_MEMORY_SPAWN_EFFECT       = 66675,
+    SPELL_SHADOWFORM                = 41408,
 };
 
 /*######
@@ -262,6 +263,7 @@ struct boss_paletressAI : public argent_champion_commonAI
 
     void JustSummoned(Creature* pSummoned) override
     {
+        pSummoned->CastSpell(pSummoned, SPELL_SHADOWFORM, true);
         pSummoned->CastSpell(pSummoned, SPELL_MEMORY_SPAWN_EFFECT, true);
     }
 

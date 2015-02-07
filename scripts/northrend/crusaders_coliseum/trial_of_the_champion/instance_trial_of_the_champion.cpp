@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: instance_trial_of_the_champion
-SD%Complete: 30
-SDComment: First encounter only
+SD%Complete: 90
+SDComment: Fireworks and various other fine details are not yet implemented.
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -86,8 +86,7 @@ enum
     SPELL_ARGENT_SUMMON_BOSS_4              = 67396,
 
     SPELL_HERALD_FACE_DARK_KNIGHT           = 67482,
-    SPELL_DEATHS_RESPITE                    = 66798,
-    SPELL_DEATHS_PUSH                       = 66797,
+    SPELL_DEATHS_RESPITE                    = 66798,                // triggers 66797
     SPELL_ARGENT_HERALD_FEIGN_DEATH         = 66804,
 
     // Arena event spells - not used for the moment
@@ -123,6 +122,23 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     // Argetn challenge complete
     {POINT_ID_MOUNT,                0,                   0, 0, 5000},
     {POINT_ID_EXIT,                 0,                   0, 0, 0},
+    // Black knight intro
+    {TYPE_BLACK_KNIGHT,             0,                   0, 0, 4000},
+    {SAY_TIRION_ARGENT_CHAMPION_COMPLETE, NPC_TIRION_FORDRING, 0, 0, 4000},
+    {SAY_HERALD_BLACK_KNIGHT_SPAWN, NPC_ARELAS_BRIGHTSTAR,  SAY_HERALD_BLACK_KNIGHT_SPAWN, NPC_JAEREN_SUNSWORN, 21000},
+    {NPC_BLACK_KNIGHT,              0,                   0, 0, 1000},
+    {SAY_BLACK_KNIGHT_INTRO_1,      NPC_BLACK_KNIGHT,    0, 0, 4000},
+    {SPELL_DEATHS_RESPITE,          0,                   0, 0, 3000},
+    {SAY_TIRION_BLACK_KNIGHT_INTRO_2, NPC_TIRION_FORDRING, 0, 0, 1000},
+    {NPC_BLACK_KNIGHT_GRYPHON,      0,                   0, 0, 2000},
+    {SAY_BLACK_KNIGHT_INTRO_3,      NPC_BLACK_KNIGHT,    0, 0, 15000},
+    {SAY_BLACK_KNIGHT_INTRO_4,      NPC_BLACK_KNIGHT,    0, 0, 4000},
+    {SPELL_ARGENT_HERALD_FEIGN_DEATH, 0,                 0, 0, 0},
+    // Black knight epilog
+    {SPELL_SPECTATOR_FORCE_CHEER,   0,                   0, 0, 5000},
+    {SAY_TIRION_EPILOG_1,           NPC_TIRION_FORDRING, 0, 0, 7000},
+    {SAY_TIRION_EPILOG_2,           NPC_TIRION_FORDRING, 0, 0, 6000},
+    {SAY_VARIAN_ALLIANCE_EPILOG_3,  NPC_VARIAN_WRYNN,    SAY_THRALL_HORDE_EPILOG_3, NPC_THRALL, 0},
     {0, 0, 0, 0, 0}
 };
 
@@ -213,6 +229,8 @@ void instance_trial_of_the_champion::OnCreatureCreate(Creature* pCreature)
         case NPC_SPECTATOR_GNOME:
         case NPC_SPECTATOR_HORDE:
         case NPC_SPECTATOR_ALLIANCE:
+        case NPC_BLACK_KNIGHT:
+        case NPC_BLACK_KNIGHT_GRYPHON:
             break;
         case NPC_SPECTATOR_GENERIC:
             // alliance side
@@ -344,6 +362,9 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_BLACK_KNIGHT:
+            DoUseDoorOrButton(GO_NORTH_GATE);
+            if (uiData == DONE)
+                StartNextDialogueText(SPELL_SPECTATOR_FORCE_CHEER);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ARENA_CHALLENGE:
@@ -864,6 +885,64 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
             {
                 pChampion->GetMotionMaster()->MovePoint(0, aArgentChallengeHelpers[9].fTargetX, aArgentChallengeHelpers[9].fTargetY, aArgentChallengeHelpers[9].fTargetZ);
                 pChampion->ForcedDespawn(8000);
+            }
+            break;
+
+            // start black knight intro
+        case TYPE_BLACK_KNIGHT:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->GetMotionMaster()->MovePoint(0, aHeraldPositions[3][0], aHeraldPositions[3][1], aHeraldPositions[3][2]);
+            break;
+        case SAY_TIRION_ARGENT_CHAMPION_COMPLETE:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+            {
+                if (Creature* pKnight = pHerald->SummonCreature(NPC_BLACK_KNIGHT, aKnightPositions[0][0], aKnightPositions[0][1], aKnightPositions[0][2], aKnightPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    if (Creature* pGryphon = pHerald->SummonCreature(NPC_BLACK_KNIGHT_GRYPHON, aKnightPositions[1][0], aKnightPositions[1][1], aKnightPositions[1][2], aKnightPositions[1][3], TEMPSUMMON_TIMED_DESPAWN, 75000))
+                    {
+                        pKnight->CastSpell(pGryphon, SPELL_RIDE_VEHICLE_HARDCODED, true);
+                        pGryphon->SetWalk(false);
+                        pGryphon->SetLevitate(true);
+                    }
+                }
+
+                if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                    pHerald->SetFacingToObject(pTirion);
+            }
+            break;
+        case SAY_HERALD_BLACK_KNIGHT_SPAWN:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->CastSpell(pHerald, SPELL_HERALD_FACE_DARK_KNIGHT, false);
+            if (Creature* pGryphon = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT_GRYPHON))
+                pGryphon->GetMotionMaster()->MoveWaypoint();
+            break;
+        case NPC_BLACK_KNIGHT:
+            if (Creature* pGryphon = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT_GRYPHON))
+                pGryphon->RemoveAurasDueToSpell(SPELL_RIDE_VEHICLE_HARDCODED);
+            break;
+        case SAY_BLACK_KNIGHT_INTRO_1:
+            if (Creature* pKnight = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT))
+            {
+                if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                {
+                    pHerald->SetFacingToObject(pKnight);
+                    pKnight->SetFacingToObject(pHerald);
+                }
+            }
+            break;
+        case SPELL_DEATHS_RESPITE:
+            if (Creature* pKnight = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT))
+                pKnight->CastSpell(pKnight, SPELL_DEATHS_RESPITE, false);
+            break;
+        case NPC_BLACK_KNIGHT_GRYPHON:
+            if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
+                pHerald->CastSpell(pHerald, SPELL_ARGENT_HERALD_FEIGN_DEATH, true);
+            break;
+        case SPELL_ARGENT_HERALD_FEIGN_DEATH:
+            if (Creature* pKnight = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT))
+            {
+                pKnight->SetRespawnCoord(aKnightPositions[2][0], aKnightPositions[2][1], aKnightPositions[2][2], aKnightPositions[2][3]);
+                pKnight->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             }
             break;
     }
