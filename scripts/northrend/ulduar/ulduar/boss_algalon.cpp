@@ -136,7 +136,8 @@ static const DialogueEntry aAlgalonDialogue[] =
     {SAY_INTRO_2,           NPC_ALGALON,        8000},
     {SAY_INTRO_3,           NPC_ALGALON,        0},
     {SAY_AGGRO,             NPC_ALGALON,        14000},
-    {SAY_ENGAGE,            NPC_ALGALON,        0},
+    {SAY_ENGAGE,            NPC_ALGALON,        12000},
+    {NPC_ALGALON_FIGHT,     0,                  0},
     {SPELL_ASCEND_HEAVENS,  0,                  3000},
     {SPELL_BERSERK,         0,                  0},
     {SAY_DESPAWN_1,         NPC_ALGALON,        15000},
@@ -261,8 +262,8 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
 
     void AttackStart(Unit* pWho) override
     {
-        // don't attack again after being defeated
-        if (m_bEventFinished)
+        // don't attack has flag NOT_SELECTABLE.
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
             return;
 
         ScriptedAI::AttackStart(pWho);
@@ -278,7 +279,8 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
             {
                 if (m_pInstance)
                     m_pInstance->SetData(TYPE_ALGALON, DONE);
-
+                
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->setFaction(FACTION_ID_FRIENDLY);
                 m_bEventFinished = true;
                 EnterEvadeMode();
@@ -299,6 +301,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
                 DoCastSpellIfCan(m_creature, SPELL_KILL_CREDIT, CAST_TRIGGERED);
                 DoCastSpellIfCan(m_creature, SPELL_SUPERMASSIVE_FAIL, CAST_TRIGGERED);
                 StartNextDialogueText(NPC_ALGALON);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
             else
                 StartNextDialogueText(SAY_DESPAWN_1);
@@ -406,7 +409,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
                 break;
             case SPELL_TELEPORT:
                 // despawn when time has run out
-                DoCastSpellIfCan(m_creature, SPELL_TELEPORT, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_TELEPORT);
                 m_creature->ForcedDespawn(2000);
                 break;
             case NPC_ALGALON:
@@ -415,6 +418,12 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
                 break;
             case SAY_OUTRO_1:
                 m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
+                break;
+            case NPC_ALGALON_FIGHT:
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                break;
+            case SAY_AGGRO:
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 break;
         }
     }
@@ -647,6 +656,7 @@ struct npc_living_constellationAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_BARRAGE : SPELL_ARCANE_BARRAGE_H) == CAST_OK)
                     m_uiArcaneBarrageTimer = urand(5000, 7000);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
             else
                 m_uiArcaneBarrageTimer -= uiDiff;
