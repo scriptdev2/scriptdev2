@@ -128,7 +128,7 @@ struct boss_black_knightAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_creature->SetDisplayId(m_creature->GetNativeDisplayId());
-        SetEquipmentSlots(false, EQUIP_ID_SWORD, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
+        SetEquipmentSlots(true);
     }
 
     void Aggro(Unit* /*pWho*/) override

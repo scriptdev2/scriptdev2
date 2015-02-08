@@ -94,6 +94,11 @@ struct boss_mr_smiteAI : public ScriptedAI
         }
     }
 
+    void JustReachedHome() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_NIBLE_REFLEXES, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+    }
+
     void MovementInform(uint32 uiMotionType, uint32 /*uiPointId*/) override
     {
         if (uiMotionType != POINT_MOTION_TYPE)
