@@ -79,6 +79,8 @@ struct trial_companion_commonAI : public ScriptedAI
         m_uiResetThreatTimer    = urand(5000, 15000);
 
         m_bDefeated             = false;
+
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void Aggro(Unit* pWho) override
@@ -131,44 +133,45 @@ struct trial_companion_commonAI : public ScriptedAI
             if (m_bDefeated)
                 return;
 
-            if (m_pInstance)
+            if (!m_pInstance)
+                return;
+
+            // second part of the champions challenge
+            if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
             {
-                // second part of the champions challenge
-                if (m_pInstance->GetData(TYPE_ARENA_CHALLENGE) == DONE)
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->InterruptNonMeleeSpells(false);
+                m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
+                m_creature->SetHealth(1);
+
+                // no movement
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveIdle();
+
+                // check if the other champions are wounded and set instance data
+                if (m_pInstance->IsArenaChallengeComplete(TYPE_GRAND_CHAMPIONS))
+                    m_pInstance->SetData(TYPE_GRAND_CHAMPIONS, DONE);
+            }
+            // first part of the champions challenge (arena encounter)
+            else
+            {
+                // unmount
+                if (Creature* pMount = (Creature*)m_creature->GetTransportInfo()->GetTransport())
                 {
-                    m_creature->InterruptNonMeleeSpells(false);
-                    m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
-                    m_creature->SetHealth(1);
-
-                    // no movement
-                    SetCombatMovement(false);
-                    m_creature->GetMotionMaster()->Clear();
-                    m_creature->GetMotionMaster()->MoveIdle();
-
-                    // check if the other champions are wounded and set instance data
-                    if (m_pInstance->IsArenaChallengeComplete(TYPE_GRAND_CHAMPIONS))
-                        m_pInstance->SetData(TYPE_GRAND_CHAMPIONS, DONE);
+                    pMount->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
+                    pMount->ForcedDespawn();
                 }
-                // first part of the champions challenge (arena encounter)
-                else
-                {
-                    // unmount
-                    if (Creature* pMount = (Creature*)m_creature->GetTransportInfo()->GetTransport())
-                    {
-                        pMount->RemoveSpellsCausingAura(SPELL_AURA_CONTROL_VEHICLE);
-                        pMount->ForcedDespawn();
-                    }
 
-                    m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-                    m_creature->SetHealth(1);
+                m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+                m_creature->SetHealth(1);
 
-                    // no movement
-                    SetCombatMovement(false);
-                    m_creature->GetMotionMaster()->Clear();
-                    m_creature->GetMotionMaster()->MoveIdle();
+                // no movement
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveIdle();
 
-                    m_uiDefeatedTimer = 15000;
-                }
+                m_uiDefeatedTimer = 15000;
             }
 
             m_bDefeated = true;
