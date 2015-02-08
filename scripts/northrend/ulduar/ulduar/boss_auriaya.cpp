@@ -265,7 +265,7 @@ struct boss_feral_defenderAI : public ScriptedAI
             return;
         }
 
-        if (uiDamage > m_creature->GetHealth())
+        if (uiDamage >= m_creature->GetHealth())
         {
             uiDamage = 0;
 

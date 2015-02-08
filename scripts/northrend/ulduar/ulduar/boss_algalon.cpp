@@ -149,7 +149,8 @@ static const DialogueEntry aAlgalonDialogue[] =
     {SAY_OUTRO_3,           NPC_ALGALON,        12000},
     {SAY_OUTRO_4,           NPC_ALGALON,        12000},
     {SAY_BRANN_OUTRO,       NPC_BRANN_ALGALON,  11000},
-    {SAY_OUTRO_5,           NPC_ALGALON,        0},
+    {SAY_OUTRO_5,           NPC_ALGALON,        15000},
+    {SPELL_TELEPORT,        0,                  0},
     {0, 0, 0},
 };
 
@@ -434,7 +435,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
     void DoStartIntroEvent()
     {
         m_creature->SetLevitate(true);
-        DoCastSpellIfCan(m_creature, SPELL_ARRIVAL, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_ARRIVAL);
         DoCastSpellIfCan(m_creature, SPELL_RIDE_LIGHTNING, CAST_TRIGGERED);
         m_creature->GetMotionMaster()->MovePoint(1, afAlgalonMovePos[0], afAlgalonMovePos[1], afAlgalonMovePos[2]);
     }
@@ -632,7 +633,10 @@ struct npc_living_constellationAI : public ScriptedAI
     {
         // start casting Arcane Barrage
         if (eventType == AI_EVENT_CUSTOM_A)
+        {
             m_uiArcaneBarrageTimer = urand(5000, 7000);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff) override
