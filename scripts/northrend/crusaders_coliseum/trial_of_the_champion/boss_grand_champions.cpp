@@ -29,7 +29,6 @@ enum
 {
     // common spells
     SPELL_DEFEND_DUMMY              = 64101,                        // triggers 62719, 64192
-    SPELL_KILL_CREDIT               = 68572,                        // achiev check spell
 
     SPELL_SHIELD_BREAKER            = 68504,
     SPELL_CHARGE                    = 68301,                        // triggers 68307

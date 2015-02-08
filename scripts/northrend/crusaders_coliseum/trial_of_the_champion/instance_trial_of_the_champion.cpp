@@ -87,6 +87,7 @@ enum
     SPELL_ARGENT_SUMMON_CHAMPION_2          = 66671,
     SPELL_ARGENT_SUMMON_CHAMPION_3          = 66673,
     SPELL_ARGENT_SUMMON_BOSS_4              = 67396,
+    SPELL_CHAMPION_KILL_CREDIT              = 68572,                // achiev check spell
 
     SPELL_HERALD_FACE_DARK_KNIGHT           = 67482,
     SPELL_DEATHS_RESPITE                    = 66798,                // triggers 66797
@@ -791,6 +792,10 @@ void instance_trial_of_the_champion::DoSendChampionsToExit()
     {
         if (Creature* pChampion = instance->GetCreature(m_ArenaChampionsGuids[i]))
         {
+            // kill credit spell on completion
+            if (GetData(TYPE_GRAND_CHAMPIONS) == DONE)
+                pChampion->CastSpell(pChampion, SPELL_CHAMPION_KILL_CREDIT, true);
+
             pChampion->SetWalk(true);
             pChampion->SetStandState(UNIT_STAND_STATE_STAND);
             pChampion->GetMotionMaster()->MovePoint(POINT_ID_EXIT, aChampsPositions[0][0], aChampsPositions[0][1], aChampsPositions[0][2]);
