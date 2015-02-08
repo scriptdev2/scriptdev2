@@ -158,7 +158,8 @@ instance_trial_of_the_champion::instance_trial_of_the_champion(Map* pMap) : Scri
     m_uiGateResetTimer(0),
     m_uiChampionsCount(0),
     m_uiChampionsTimer(0),
-    m_bSkipIntro(false)
+    m_bSkipIntro(false),
+    m_bHadWorseAchiev(false)
 {
     Initialize();
 }
@@ -371,6 +372,8 @@ void instance_trial_of_the_champion::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_NORTH_GATE);
             if (uiData == DONE)
                 StartNextDialogueText(SPELL_SPECTATOR_FORCE_CHEER);
+            else if (uiData == IN_PROGRESS)
+                m_bHadWorseAchiev = true;
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ARENA_CHALLENGE:
@@ -456,6 +459,20 @@ void instance_trial_of_the_champion::Load(const char* chrIn)
     }
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+bool instance_trial_of_the_champion::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscValue1 = 0*/) const
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_HAD_WORSE:
+            return m_bHadWorseAchiev;
+        //case ACHIEV_CRIT_FACEROLLER:
+        //    return m_bFacerollerAchiev;
+
+        default:
+            return false;
+    }
 }
 
 void instance_trial_of_the_champion::OnCreatureDeath(Creature* pCreature)

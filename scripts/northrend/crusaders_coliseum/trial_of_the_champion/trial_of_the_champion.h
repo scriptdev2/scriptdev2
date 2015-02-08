@@ -95,10 +95,6 @@ enum
     // black knight
     NPC_BLACK_KNIGHT                    = 35451,
     NPC_BLACK_KNIGHT_GRYPHON            = 35491,
-    // risen zombies
-    NPC_RISEN_JAEREN                    = 35545,
-    NPC_RISEN_ARELAS                    = 35564,
-    NPC_RISEN_CHAMPION                  = 35590,
 
     // doors
     GO_MAIN_GATE                        = 195647,
@@ -305,8 +301,12 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         void DoSendChampionsToExit();
         void DoSetChamptionsInCombat(Unit* pTarget);
 
+        void SetHadWorseAchievFailed() { m_bHadWorseAchiev = false; }
+
         void DoPrepareArgentChallenge() { StartNextDialogueText(NPC_ARGENT_MONK); }
         void DoPrepareBlackKnight() { StartNextDialogueText(TYPE_BLACK_KNIGHT); }
+
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) const override;
 
         uint32 GetMountEntryForChampion() { return m_uiTeam == ALLIANCE ? NPC_BATTLEWORG_ALLIANCE : NPC_WARHORSE_HORDE; }
         bool IsArenaChallengeComplete(uint32 uiType);
@@ -336,6 +336,7 @@ class instance_trial_of_the_champion : public ScriptedInstance, private Dialogue
         uint32 m_uiChampionsTimer;
 
         bool m_bSkipIntro;
+        bool m_bHadWorseAchiev;
 
         ObjectGuid m_ArenaChampionsGuids[MAX_CHAMPIONS_ARENA];
         ObjectGuid m_ArenaMountsGuids[MAX_CHAMPIONS_ARENA];

@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_black_knight
-SD%Complete: 90
-SDComment: Achievement NYI
+SD%Complete: 100
+SDComment:
 SDCategory: Crusader Coliseum, Trial of the Champion
 EndScriptData */
 
@@ -55,6 +55,16 @@ enum
     // phase 3
     SPELL_DEATHS_BITE               = 67808,
     SPELL_MARKED_FOR_DEATH          = 67823,
+
+    // ghoul spells
+    SPELL_CLAW                      = 67774,
+    SPELL_EXPLODE                   = 67729,
+    SPELL_LEAP                      = 67749,
+
+    // risen zombies
+    NPC_RISEN_JAEREN                = 35545,
+    NPC_RISEN_ARELAS                = 35564,
+    NPC_RISEN_CHAMPION              = 35590,
 
     // transform models
     MODEL_ID_SKELETON               = 29846,
@@ -97,6 +107,8 @@ struct boss_black_knightAI : public ScriptedAI
 
     uint32 m_uiDeathsBiteTimer;
     uint32 m_uiMarkedDeathTimer;
+
+    ObjectGuid m_ghoulGuid;
 
     void Reset() override
     {
@@ -160,6 +172,9 @@ struct boss_black_knightAI : public ScriptedAI
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
+
+        if (pSummoned->GetEntry() == NPC_RISEN_JAEREN || pSummoned->GetEntry() == NPC_RISEN_ARELAS)
+            m_ghoulGuid = pSummoned->GetObjectGuid();
     }
 
     void DamageTaken(Unit* /*pDealer*/, uint32& uiDamage) override
@@ -176,7 +191,16 @@ struct boss_black_knightAI : public ScriptedAI
 
             // start transition phase
             if (m_uiPhase == PHASE_DEATH_KNIGHT)
+            {
                 m_uiNextPhase = PHASE_SKELETON;
+
+                // ghould explodes at the end of the round
+                if (Creature* pGhoul = m_creature->GetMap()->GetCreature(m_ghoulGuid))
+                {
+                    pGhoul->InterruptNonMeleeSpells(true);
+                    pGhoul->CastSpell(pGhoul, SPELL_EXPLODE, false);
+                }
+            }
             else if (m_uiPhase == PHASE_SKELETON)
                 m_uiNextPhase = PHASE_GHOST;
 
@@ -209,6 +233,7 @@ struct boss_black_knightAI : public ScriptedAI
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+            DoResetThreat();
 
             m_uiPhase = m_uiNextPhase;
 
@@ -341,6 +366,76 @@ bool EffectDummyCreature_black_knight_res(Unit* pCaster, uint32 uiSpellId, Spell
 }
 
 /*######
+## npc_black_knight_ghoul
+######*/
+
+struct npc_black_knight_ghoulAI : public ScriptedAI
+{
+    npc_black_knight_ghoulAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_trial_of_the_champion*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_trial_of_the_champion* m_pInstance;
+
+    uint32 m_uiClawTimer;
+
+    bool m_bExploded;
+
+    void Reset() override
+    {
+        m_uiClawTimer = urand(3000, 6000);
+
+        m_bExploded   = false;
+    }
+
+    void Aggro(Unit* pWho) override
+    {
+        if (m_creature->GetEntry() == NPC_RISEN_ARELAS || m_creature->GetEntry() == NPC_RISEN_JAEREN)
+            DoCastSpellIfCan(pWho, SPELL_LEAP);
+    }
+
+    void SpellHitTarget(Unit* pUnit, const SpellEntry* pSpellEntry) override
+    {
+        if (pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        // set achiev failed
+        if (pSpellEntry->Id == SPELL_EXPLODE && m_pInstance)
+            m_pInstance->SetHadWorseAchievFailed();
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        // explode on low health
+        if (!m_bExploded && m_creature->GetHealthPercent() < 15.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_EXPLODE, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                m_bExploded = true;
+        }
+
+        if (m_uiClawTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLAW) == CAST_OK)
+                m_uiClawTimer = urand(7000, 14000);
+        }
+        else
+            m_uiClawTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_black_knight_ghoul(Creature* pCreature)
+{
+    return new npc_black_knight_ghoulAI(pCreature);
+}
+
+/*######
 ## npc_black_knight_gryphon
 ######*/
 
@@ -368,6 +463,11 @@ void AddSC_boss_black_knight()
     pNewScript->Name = "boss_black_knight";
     pNewScript->GetAI = &GetAI_boss_black_knight;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_black_knight_res;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_black_knight_ghoul";
+    pNewScript->GetAI = &GetAI_npc_black_knight_ghoul;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

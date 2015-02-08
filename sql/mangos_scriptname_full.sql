@@ -496,6 +496,7 @@ UPDATE creature_template SET ScriptName='boss_eadric' WHERE entry=35119;
 UPDATE creature_template SET ScriptName='boss_paletress' WHERE entry=34928;
 UPDATE creature_template SET ScriptName='boss_black_knight' WHERE entry=35451;
 UPDATE creature_template SET ScriptName='npc_black_knight_gryphon' WHERE entry=35491;
+UPDATE creature_template SET ScriptName='npc_black_knight_ghoul' WHERE entry IN (35545,35564,35590);
 
 /* TRIAL OF THE CRUSADER */
 UPDATE instance_template SET ScriptName='instance_trial_of_the_crusader' WHERE map=649;
