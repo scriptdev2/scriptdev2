@@ -62,6 +62,11 @@ enum
     SAY_BLACK_KNIGHT_INTRO_3                = -1650041,
     SAY_BLACK_KNIGHT_INTRO_4                = -1650042,
 
+    // black knight aggro
+    SAY_BLACK_KNIGHT_AGGRO                  = -1650065,
+    SAY_GARROSH_BLACK_KNIGHT                = -1650047,
+    SAY_VARIAN_BLACK_KNIGHT                 = -1650050,
+
     // event complete
     SAY_TIRION_EPILOG_1                     = -1650043,
     SAY_TIRION_EPILOG_2                     = -1650044,
@@ -69,10 +74,8 @@ enum
     SAY_THRALL_HORDE_EPILOG_3               = -1650046,
 
     // other texts
-    SAY_GARROSH_OTHER_1                     = -1650047,
     SAY_THRALL_OTHER_2                      = -1650048,
     SAY_GARROSH_OTHER_3                     = -1650049,
-    SAY_VARIAN_OTHER_4                      = -1650050,
     SAY_VARIAN_OTHER_5                      = -1650051,
 
     // sounds
@@ -139,6 +142,9 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_TIRION_EPILOG_1,           NPC_TIRION_FORDRING, 0, 0, 7000},
     {SAY_TIRION_EPILOG_2,           NPC_TIRION_FORDRING, 0, 0, 6000},
     {SAY_VARIAN_ALLIANCE_EPILOG_3,  NPC_VARIAN_WRYNN,    SAY_THRALL_HORDE_EPILOG_3, NPC_THRALL, 0},
+    // Black knight aggro
+    {SAY_BLACK_KNIGHT_AGGRO,        NPC_BLACK_KNIGHT,    0, 0, 5000},
+    {SAY_VARIAN_BLACK_KNIGHT,       NPC_VARIAN_WRYNN,    SAY_GARROSH_BLACK_KNIGHT, NPC_GARROSH, 0},
     {0, 0, 0, 0, 0}
 };
 
@@ -550,6 +556,15 @@ void instance_trial_of_the_champion::OnCreatureDespawn(Creature* pCreature)
     }
 }
 
+void instance_trial_of_the_champion::OnCreatureEnterCombat(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_BLACK_KNIGHT)
+    {
+        SetData(TYPE_BLACK_KNIGHT, IN_PROGRESS);
+        StartNextDialogueText(SAY_BLACK_KNIGHT_AGGRO);
+    }
+}
+
 // Function that returns the arena challenge status
 bool instance_trial_of_the_champion::IsArenaChallengeComplete(uint32 uiType)
 {
@@ -937,6 +952,13 @@ void instance_trial_of_the_champion::JustDidDialogueStep(int32 iEntry)
         case NPC_BLACK_KNIGHT_GRYPHON:
             if (Creature* pHerald = GetSingleCreatureFromStorage(m_uiHeraldEntry))
                 pHerald->CastSpell(pHerald, SPELL_ARGENT_HERALD_FEIGN_DEATH, true);
+            break;
+        case SAY_BLACK_KNIGHT_INTRO_3:
+            if (Creature* pKnight = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT))
+            {
+                if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_FORDRING))
+                    pKnight->SetFacingToObject(pTirion);
+            }
             break;
         case SPELL_ARGENT_HERALD_FEIGN_DEATH:
             if (Creature* pKnight = GetSingleCreatureFromStorage(NPC_BLACK_KNIGHT))
