@@ -53,6 +53,9 @@ enum
     SAY_ROOKERY_EVENT_START     = -1229020,
     NPC_ROOKERY_GUARDIAN        = 10258,
     NPC_ROOKERY_HATCHER         = 10683,
+
+    // Spells
+    SPELL_FINKLE_IS_EINHORN     = 16710,
 };
 
 /* Areatrigger
@@ -405,6 +408,12 @@ void instance_blackrock_spire::OnCreatureEnterCombat(Creature* pCreature)
             SetData(TYPE_EMBERSEER, IN_PROGRESS);
             break;
     }
+}
+
+void instance_blackrock_spire::OnCreatureDespawn(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_THE_BEAST)
+        pCreature->CastSpell(pCreature, SPELL_FINKLE_IS_EINHORN, true);
 }
 
 void instance_blackrock_spire::DoProcessEmberseerEvent()

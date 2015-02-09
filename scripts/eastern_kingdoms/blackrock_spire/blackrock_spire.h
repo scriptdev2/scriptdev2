@@ -26,6 +26,7 @@ enum
     NPC_LORD_VICTOR_NEFARIUS    = 10162,
     NPC_REND_BLACKHAND          = 10429,
     NPC_GYTH                    = 10339,
+    NPC_THE_BEAST               = 10430,
     NPC_DRAKKISATH              = 10363,
     NPC_CHROMATIC_WHELP         = 10442,                    // related to Gyth arena event
     NPC_CHROMATIC_DRAGON        = 10447,
@@ -106,8 +107,9 @@ class instance_blackrock_spire : public ScriptedInstance, private DialogueHelper
         void OnCreatureCreate(Creature* pCreature) override;
 
         void OnCreatureDeath(Creature* pCreature) override;
-        void OnCreatureEvade(Creature* pCreature);
+        void OnCreatureEvade(Creature* pCreature) override;
         void OnCreatureEnterCombat(Creature* pCreature) override;
+        void OnCreatureDespawn(Creature* pCreature) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
