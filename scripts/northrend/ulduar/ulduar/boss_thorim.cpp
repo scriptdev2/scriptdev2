@@ -264,7 +264,7 @@ struct boss_thorimAI : public ScriptedAI, private DialogueHelper
                 }
 
                 m_creature->CastSpell(m_creature, SPELL_THORIM_CREDIT, true);
-                m_creature->setFaction(FACTION_ID_FRIENDLY);
+                m_creature->SetFactionTemporary(FACTION_ID_FRIENDLY, TEMPFACTION_NONE);
                 m_bEventFinished = true;
                 EnterEvadeMode();
             }

@@ -79,6 +79,7 @@ struct trial_companion_commonAI : public ScriptedAI
 
         m_bDefeated             = false;
 
+        m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 

@@ -134,7 +134,8 @@ static const DialogueEntry aAlgalonDialogue[] =
     {SAY_INTRO_1,           NPC_ALGALON,        6000},
     {SPELL_SUMMON_AZEROTH,  0,                  5000},
     {SAY_INTRO_2,           NPC_ALGALON,        8000},
-    {SAY_INTRO_3,           NPC_ALGALON,        0},
+    {SAY_INTRO_3,           NPC_ALGALON,        12000},
+    {SPELL_SUPERMASSIVE_FAIL, 0,                0},
     {SAY_AGGRO,             NPC_ALGALON,        14000},
     {SAY_ENGAGE,            NPC_ALGALON,        0},
     {SPELL_ASCEND_HEAVENS,  0,                  3000},
@@ -302,6 +303,8 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
             }
             else
                 StartNextDialogueText(SAY_DESPAWN_1);
+
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
         else
             m_pInstance->SetData(TYPE_ALGALON, FAIL);
@@ -397,6 +400,9 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
             case SAY_INTRO_2:
                 DoCastSpellIfCan(m_creature, SPELL_REORIGINATION);
                 break;
+            case SPELL_SUPERMASSIVE_FAIL:
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                break;
             case SAY_ENGAGE:
                 // summon Living Constellations at this point
                 DoSpawnConstellations();
@@ -406,6 +412,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
                 break;
             case SPELL_TELEPORT:
                 // despawn when time has run out
+                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
                 DoCastSpellIfCan(m_creature, SPELL_TELEPORT, CAST_TRIGGERED);
                 m_creature->ForcedDespawn(2000);
                 break;
