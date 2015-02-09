@@ -31,6 +31,10 @@ enum
     NPC_SACROLASH               = 25165,
     NPC_MURU                    = 25741,
     NPC_ENTROPIUS               = 25840,
+    NPC_BERSERKER               = 25798,            // muru trash mobs - scripted in Acid
+    NPC_FURY_MAGE               = 25799,
+    NPC_DARK_FIEND              = 25744,
+    NPC_VOID_SENTINEL           = 25772,
     NPC_DECEIVER                = 25588,
     NPC_KILJAEDEN               = 25315,
     NPC_KILJAEDEN_CONTROLLER    = 25608,            // kiljaeden event controller
@@ -151,5 +155,6 @@ class instance_sunwell_plateau : public ScriptedInstance, private DialogueHelper
         GuidList m_lAllFlightTriggersList;
         GuidList m_lBackdoorTriggersList;
         GuidList m_lDeceiversGuidList;
+        GuidList m_lMuruTrashGuidList;
 };
 #endif

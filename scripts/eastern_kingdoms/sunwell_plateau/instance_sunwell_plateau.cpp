@@ -125,6 +125,12 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
             if (pCreature->GetPositionY() < 523.0f)
                 m_lBackdoorTriggersList.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_BERSERKER:
+        case NPC_FURY_MAGE:
+        case NPC_DARK_FIEND:
+        case NPC_VOID_SENTINEL:
+            m_lMuruTrashGuidList.push_back(pCreature->GetObjectGuid());
+            return;
     }
 }
 
@@ -233,6 +239,17 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_MURU_EXIT_GATE);
             else if (uiData == IN_PROGRESS)
                 m_uiMuruBerserkTimer = 10 * MINUTE * IN_MILLISECONDS;
+            if (uiData == FAIL || uiData == DONE)
+            {
+                // clear all the trash mobs
+                for (GuidList::const_iterator itr = m_lMuruTrashGuidList.begin(); itr != m_lMuruTrashGuidList.end(); ++itr)
+                {
+                    if (Creature* pTrash = instance->GetCreature(*itr))
+                        pTrash->ForcedDespawn();
+                }
+
+                m_lMuruTrashGuidList.clear();
+            }
             break;
         case TYPE_KILJAEDEN:
             m_auiEncounter[uiType] = uiData;

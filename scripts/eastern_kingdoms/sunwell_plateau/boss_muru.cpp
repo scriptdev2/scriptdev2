@@ -63,8 +63,6 @@ enum
 
     // Muru npcs
     NPC_VOID_SENTINEL_SUMMONER      = 25782,
-    NPC_VOID_SENTINEL               = 25772,    // scripted in Acid
-    NPC_DARK_FIEND                  = 25744,
 
     // darkness spells
     SPELL_VOID_ZONE_VISUAL          = 46265,
