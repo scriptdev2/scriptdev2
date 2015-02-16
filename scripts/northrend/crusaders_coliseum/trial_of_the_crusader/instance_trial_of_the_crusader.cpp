@@ -146,7 +146,8 @@ static const DialogueEntryTwoSide aTocDialogues[] =
 };
 
 instance_trial_of_the_crusader::instance_trial_of_the_crusader(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aTocDialogues),
-    m_uiTeam(TEAM_NONE)
+    m_uiTeam(TEAM_NONE),
+    m_uiGateResetTimer(0)
 {
     Initialize();
 }
@@ -428,6 +429,13 @@ void instance_trial_of_the_crusader::DoHandleEventEpilogue()
     }
 }
 
+// Function that will open and close the main gate
+void instance_trial_of_the_crusader::DoOpenMainGate()
+{
+    DoUseDoorOrButton(GO_MAIN_GATE);
+    m_uiGateResetTimer = 10000;
+}
+
 void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
@@ -443,7 +451,19 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             if (Player* pPlayer = GetPlayerInMap())
             {
                 if (Creature* pBeasts = pPlayer->SummonCreature(NPC_BEAST_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
-                    pBeasts->SummonCreature(NPC_GORMOK, aSpawnPositions[1][0], aSpawnPositions[1][1], aSpawnPositions[1][2], aSpawnPositions[1][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                {
+                    Creature* pGormok = pBeasts->SummonCreature(NPC_GORMOK, aSpawnPositions[1][0], aSpawnPositions[1][1], aSpawnPositions[1][2], aSpawnPositions[1][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                    if (!pGormok)
+                        return;
+
+                    // spawn the snobolds on his back
+                    uint8 uiMaxSnobolds = Is25ManDifficulty() ? 5 : 4;
+                    for (uint8 i = 0; i < uiMaxSnobolds; ++i)
+                    {
+                        if (Creature* pSnobold = pGormok->SummonCreature(NPC_SNOBOLD_VASSAL, pGormok->GetPositionX(), pGormok->GetPositionY(), pGormok->GetPositionZ(), 0, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 30000))
+                            pSnobold->CastSpell(pGormok, SPELL_RIDE_VEHICLE_HARDCODED, true);
+                    }
+                }
             }
             break;
         case NPC_FIZZLEBANG:
@@ -520,6 +540,23 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             if (Creature* pWorldTriggerLarge = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER_LARGE))
                 pWorldTriggerLarge->ForcedDespawn();
             break;
+    }
+}
+
+void instance_trial_of_the_crusader::Update(uint32 uiDiff)
+{
+    DialogueUpdate(uiDiff);
+
+    // ToDo: set this as door reset timer when fixed in core
+    if (m_uiGateResetTimer)
+    {
+        if (m_uiGateResetTimer <= uiDiff)
+        {
+            DoUseDoorOrButton(GO_MAIN_GATE);
+            m_uiGateResetTimer = 0;
+        }
+        else
+            m_uiGateResetTimer -= uiDiff;
     }
 }
 

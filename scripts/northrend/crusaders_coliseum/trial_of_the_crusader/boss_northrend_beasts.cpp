@@ -15,10 +15,10 @@
  */
 
 /* ScriptData
-SDName:
-SD%Complete: 0
-SDComment:
-SDCategory:
+SDName: trial_of_the_crusader
+SD%Complete: 40
+SDComment: Icehowl and twin worms combat abilities NYI
+SDCategory: Crusader Coliseum
 EndScriptData */
 
 #include "precompiled.h"
@@ -44,12 +44,13 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
 {
     npc_beast_combat_stalkerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_trial_of_the_crusader*)pCreature->GetInstanceData();
         Reset();
         m_creature->SetInCombatWithZone();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_trial_of_the_crusader* m_pInstance;
+
     ObjectGuid m_aSummonedBossGuid[4];
     bool m_bFirstWormDied;
     uint32 m_uiBerserkTimer;
@@ -119,7 +120,10 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         if (m_creature->GetMap()->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || m_creature->GetMap()->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
             m_uiNextBeastTimer = 150 * IN_MILLISECONDS;     // 2 min 30
 
-        m_uiAttackDelayTimer = 15000;                       // TODO, must be checked.
+        m_uiAttackDelayTimer = 10000;
+
+        if (m_pInstance)
+            m_pInstance->DoOpenMainGate();
     }
 
     // Only for Dreadscale and Icehowl
@@ -229,30 +233,140 @@ CreatureAI* GetAI_npc_beast_combat_stalker(Creature* pCreature)
 ## boss_gormok, vehicle driven by 34800 (multiple times)
 ######*/
 
+enum
+{
+    // gormok spells
+    SPELL_IMPALE                = 66331,
+    SPELL_STOMP                 = 66330,
+
+    // snobold spells
+    SPELL_JUMP_TO_HAND          = 66342,                // prepare snobold to jump
+    SPELL_RISING_ANGER          = 66636,
+    SPELL_SNOBOLLED             = 66406,                // throw snobold on players head
+};
+
 struct boss_gormokAI : public ScriptedAI
 {
     boss_gormokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_trial_of_the_crusader*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_trial_of_the_crusader* m_pInstance;
 
-    void Reset() override {}
+    uint32 m_uiStompTimer;
+    uint32 m_uiImpaleTimer;
+    uint32 m_uiJumpTimer;
+    uint32 m_uiSnoboldTimer;
 
-    void JustReachedHome() override
+    uint8 m_uiSnoboldsBoarded;
+
+    GuidVector m_vSnoboldGuidsVector;
+
+    void Reset() override
     {
+        m_uiStompTimer      = urand(20000, 25000);
+        m_uiImpaleTimer     = 10000;
+        m_uiJumpTimer       = 20000;
+        m_uiSnoboldTimer    = 0;
+
+        m_uiSnoboldsBoarded = 0;
     }
 
-    void Aggro(Unit* /*pWho*/) override
+    void JustDied(Unit* /*pKiller*/) override
     {
+        for (GuidVector::const_iterator itr = m_vSnoboldGuidsVector.begin(); itr != m_vSnoboldGuidsVector.end(); ++itr)
+        {
+            if (Creature* pSnobold = m_creature->GetMap()->GetCreature(*itr))
+            {
+                if (!pSnobold->isAlive())
+                    continue;
+
+                // ToDo: check if there is any player vehicle mounting involved
+                SendAIEvent(AI_EVENT_CUSTOM_EVENTAI_A, m_creature, pSnobold);
+            }
+        }
     }
 
-    void UpdateAI(const uint32 /*uiDiff*/) override
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_SNOBOLD_VASSAL)
+        {
+            m_vSnoboldGuidsVector.push_back(pSummoned->GetObjectGuid());
+            ++m_uiSnoboldsBoarded;
+        }
+    }
+
+    // get the current active snobold
+    Creature* GetActiveSnobold() { return m_creature->GetMap()->GetCreature(m_vSnoboldGuidsVector[m_uiSnoboldsBoarded - 1]); }
+
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        // snobold related spells
+        if (m_uiSnoboldsBoarded)
+        {
+            // snobold jumps from boss' back to boss' hand
+            if (m_uiJumpTimer < uiDiff)
+            {
+                if (Creature* pSnobold = GetActiveSnobold())
+                {
+                    m_creature->RemoveAurasByCasterSpell(SPELL_RIDE_VEHICLE_HARDCODED, pSnobold->GetObjectGuid());
+                    pSnobold->CastSpell(m_creature, SPELL_JUMP_TO_HAND, true);
+
+                    m_uiSnoboldTimer = 3000;
+                    m_uiJumpTimer = 20000;
+                }
+            }
+            else
+                m_uiJumpTimer -= uiDiff;
+        }
+
+        if (m_uiSnoboldTimer)
+        {
+            // snobold jumps from boss' hand to player's back
+            if (m_uiSnoboldTimer <= uiDiff)
+            {
+                if (Creature* pSnobold = GetActiveSnobold())
+                {
+                    pSnobold->CastSpell(m_creature, SPELL_RISING_ANGER, true);
+
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SNOBOLLED, SELECT_FLAG_PLAYER))
+                    {
+                        // ToDo: change this to setup the player vehicle for the snobold. It seems that the spell that will handle this is missing
+                        pSnobold->FixateTarget(pTarget);
+                        // pTarget->SetVehicleId(pSnobold->GetCreatureInfo()->VehicleTemplateId, pSnobold->GetEntry());
+                        // pTarget->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_PLAYER_VEHICLE);
+
+                        pSnobold->CastSpell(pTarget, SPELL_SNOBOLLED, true);
+                        SendAIEvent(AI_EVENT_CUSTOM_EVENTAI_A, m_creature, pSnobold);
+                        --m_uiSnoboldsBoarded;
+                    }
+                }
+                m_uiSnoboldTimer = 0;
+            }
+            else
+                m_uiSnoboldTimer -= uiDiff;
+        }
+
+        if (m_uiStompTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_STOMP) == CAST_OK)
+                m_uiStompTimer = 20000;
+        }
+        else
+            m_uiStompTimer -= uiDiff;
+
+        if (m_uiImpaleTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_IMPALE) == CAST_OK)
+                m_uiImpaleTimer = 10000;
+        }
+        else
+            m_uiImpaleTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

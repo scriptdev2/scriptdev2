@@ -36,6 +36,8 @@ enum
     NPC_EYDIS                   = 34496,
     NPC_ANUBARAK                = 34564,
 
+    NPC_SNOBOLD_VASSAL          = 34800,                    // used in Gormok encounter
+
     NPC_TIRION_A                = 34996,
     NPC_TIRION_B                = 36095,                    // Summoned after his text (Champions, you're alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade's mages to transport you to the surface!) is said..
     NPC_ARGENT_MAGE             = 36097,                    // Summoned along with Tirion B
@@ -150,7 +152,9 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
-        void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }
+        void DoOpenMainGate();
+
+        void Update(uint32 uiDiff) override;
 
     private:
         void DoSummonRamsey(uint32 uiEntry);
@@ -161,6 +165,8 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         std::string m_strInstData;
 
         Team m_uiTeam;
+
+        uint32 m_uiGateResetTimer;
 };
 
 #endif
