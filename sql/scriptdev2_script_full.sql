@@ -4720,7 +4720,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1649073,'%s emerges from the ground!',0,3,0,0,'anubarak EMOTE_EMERGE'),
 (-1649074,'%s unleashes a Leeching Swarm to heal himself!',0,3,0,0,'anubarak EMOTE_SWARM'),
 
-(-1649075,'Champions, you\'re alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas\' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade\'s mages to transport you to the surface!',0,0,0,1,'tirion SAY_EPILOGUE');
+(-1649075,'Champions, you\'re alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas\' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade\'s mages to transport you to the surface!',0,0,0,1,'tirion SAY_EPILOGUE'),
+
+(-1649076,'As its companion perishes, %s becomes enraged!',0,3,0,0,'twin jormungars EMOTE_JORMUNGAR_ENRAGE');
 
 -- -1 650 000 TRIAL OF THE CHAMPION
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

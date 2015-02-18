@@ -185,6 +185,8 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_WORLD_TRIGGER_LARGE:
         case NPC_THE_LICHKING:
         case NPC_THE_LICHKING_VISUAL:
+        case NPC_ACIDMAW:
+        case NPC_DREADSCALE:
             break;
         default:
             return;
