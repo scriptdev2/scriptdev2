@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: trial_of_the_crusader
-SD%Complete: 70
-SDComment: Icehowl combat abilities NYI
+SD%Complete: 90
+SDComment: Snobolds behavior can be improved
 SDCategory: Crusader Coliseum
 EndScriptData */
 
@@ -852,32 +852,233 @@ bool EffectDummyCreature_worm_emerge(Unit* pCaster, uint32 uiSpellId, SpellEffec
 enum
 {
     EMOTE_MASSIVE_CRASH                 = -1649039,
+    EMOTE_WALL_CRASH                    = -1649077,
+
+    // standard combat spells
+    SPELL_ARCTIC_BREATH                 = 66689,
+    SPELL_WHIRL                         = 67345,
+    SPELL_FEROCIOUS_BUTT                = 66770,
+
+    // trample spells
+    SPELL_MASSIVE_CRASH                 = 66683,
+    SPELL_SURGE_OF_ADRENALINE           = 68667,                    // buff for players - used only in non heroic
+    SPELL_ROAR                          = 66736,                    // turn to npc 35062
+    SPELL_JUMP_BACK                     = 66733,                    // jump back; dummy effect on npc 35062
+    SPELL_TRAMPLE                       = 66734,                    // cast when reached target 35062
+    SPELL_STAGGERED_DAZE                = 66758,                    // debuff on player miss during trample
+    SPELL_FROTHING_RAGE                 = 66759,                    // buff gained on player hit
+
+    NPC_FURIOUS_CHARGE_STALKER          = 35062,                    // summoned by missing spell 66729
+
+    POINT_ID_CHARGE_BEGIN               = 101,
+    POINT_ID_CHARGE_END                 = 102,
 };
 
 struct boss_icehowlAI : public ScriptedAI
 {
     boss_icehowlAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_trial_of_the_crusader*)pCreature->GetInstanceData();
+        m_fSpeedRate = m_creature->GetSpeedRate(MOVE_RUN);
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_trial_of_the_crusader* m_pInstance;
 
-    void Reset() override {}
+    uint32 m_uiFerociousButtTimer;
+    uint32 m_uiArticBreathTimer;
+    uint32 m_uiWhirlTimer;
+    uint32 m_uiMassiveCrashTimer;
 
-    void JustReachedHome() override
+    uint32 m_uiFuriosChargeTimer;
+    uint8 m_uiFuriousChargeStage;
+
+    bool m_bIsFuriousCharge;
+
+    float m_fSpeedRate;
+
+    ObjectGuid m_chargeStalkerGuid;
+
+    void Reset() override
     {
+        m_uiFerociousButtTimer  = 30000;
+        m_uiArticBreathTimer    = 20000;
+        m_uiWhirlTimer          = 15000;
+        m_uiMassiveCrashTimer   = 45000;
+
+        m_uiFuriosChargeTimer   = 0;
+        m_uiFuriousChargeStage  = 0;
+        m_bIsFuriousCharge      = false;
+
+        m_creature->SetSpeedRate(MOVE_RUN, m_fSpeedRate);
     }
 
-    void Aggro(Unit* /*pWho*/) override
+    void MoveInLineOfSight(Unit* pWho) override
     {
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE))
+            return;
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void UpdateAI(const uint32 /*uiDiff*/) override
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_FURIOUS_CHARGE_STALKER)
+            m_chargeStalkerGuid = pSummoned->GetObjectGuid();
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType == EFFECT_MOTION_TYPE && uiPointId == POINT_ID_CHARGE_BEGIN)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_MASSIVE_CRASH) == CAST_OK)
+                m_uiFuriosChargeTimer = 4000;
+        }
+        else if (uiType == POINT_MOTION_TYPE && uiPointId == POINT_ID_CHARGE_END)
+        {
+            // cast trample and try to hit a player
+            if (DoCastSpellIfCan(m_creature, SPELL_TRAMPLE, CAST_TRIGGERED) == CAST_OK)
+            {
+                SetCombatMovement(true);
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                m_bIsFuriousCharge = false;
+                m_creature->SetSpeedRate(MOVE_RUN, m_fSpeedRate);
+            }
+
+            // if player is missed then get the debuff
+            if (!m_creature->HasAura(SPELL_FROTHING_RAGE))
+            {
+                DoScriptText(EMOTE_WALL_CRASH, m_creature);
+                DoCastSpellIfCan(m_creature, SPELL_STAGGERED_DAZE, CAST_TRIGGERED);
+            }
+        }
+    }
+
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpellEntry) override
+    {
+        if (pTarget->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        // cast frothing rage on player hit
+        if (pSpellEntry->Id == SPELL_TRAMPLE)
+            DoCastSpellIfCan(m_creature, SPELL_FROTHING_RAGE, CAST_TRIGGERED);
+    }
+
+    // function that will apply the Surge of Adrenaline to all players
+    void DoApplySurgeOfAdrenaline()
+    {
+        Map::PlayerList const& PlayerList = m_creature->GetMap()->GetPlayers();
+
+        if (PlayerList.isEmpty())
+            return;
+
+        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+        {
+            if (i->getSource()->isAlive())
+                i->getSource()->CastSpell(i->getSource(), SPELL_SURGE_OF_ADRENALINE, true);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_bIsFuriousCharge)
+        {
+            if (m_uiFuriosChargeTimer < uiDiff)
+            {
+                switch (m_uiFuriousChargeStage)
+                {
+                    case 0:
+                        // pick a target
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_LOS))
+                        {
+                            DoScriptText(EMOTE_MASSIVE_CRASH, m_creature, pTarget);
+                            m_creature->SummonCreature(NPC_FURIOUS_CHARGE_STALKER, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 35000);
+                        }
+
+                        // apply surge of adrenaline
+                        if (m_pInstance && !m_pInstance->IsHeroicDifficulty())
+                            DoApplySurgeOfAdrenaline();
+
+                        m_uiFuriosChargeTimer = 1000;
+                        break;
+
+                    case 1:
+                        // roar at target
+                        if (Creature* pTarget = m_creature->GetMap()->GetCreature(m_chargeStalkerGuid))
+                            DoCastSpellIfCan(pTarget, SPELL_ROAR);
+
+                        m_uiFuriosChargeTimer = 2000;
+                        break;
+
+                    case 2:
+                        // jump back and prepare to charge
+                        if (Creature* pTarget = m_creature->GetMap()->GetCreature(m_chargeStalkerGuid))
+                            DoCastSpellIfCan(pTarget, SPELL_JUMP_BACK);
+
+                        m_uiFuriosChargeTimer = 2000;
+                        break;
+
+                    case 3:
+                        // charge to the target
+                        m_creature->SetSpeedRate(MOVE_RUN, m_fSpeedRate * 4);
+                        if (Creature* pTarget = m_creature->GetMap()->GetCreature(m_chargeStalkerGuid))
+                            m_creature->GetMotionMaster()->MovePoint(POINT_ID_CHARGE_END, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+
+                        m_uiFuriosChargeTimer = 99999;
+                        break;
+                }
+                ++m_uiFuriousChargeStage;
+            }
+            else
+                m_uiFuriosChargeTimer -= uiDiff;
+
+            // no other actions during charge
+            return;
+        }
+
+        if (m_uiMassiveCrashTimer < uiDiff)
+        {
+            SetCombatMovement(false);
+            m_creature->InterruptNonMeleeSpells(false);
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MoveJump(aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[1][2], 2 * m_creature->GetSpeed(MOVE_RUN), 10.0f, POINT_ID_CHARGE_BEGIN);
+
+            m_bIsFuriousCharge      = true;
+            m_uiFuriousChargeStage  = 0;
+            m_uiFuriosChargeTimer   = 99999;
+            m_uiMassiveCrashTimer   = urand(40000, 45000);
+        }
+        else
+            m_uiMassiveCrashTimer -= uiDiff;
+
+        if (m_uiWhirlTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_WHIRL) == CAST_OK)
+                m_uiWhirlTimer = urand(15000, 20000);
+        }
+        else
+            m_uiWhirlTimer -= uiDiff;
+
+        if (m_uiArticBreathTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCTIC_BREATH) == CAST_OK)
+                m_uiArticBreathTimer = urand(25000, 30000);
+        }
+        else
+            m_uiArticBreathTimer -= uiDiff;
+
+        if (m_uiFerociousButtTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FEROCIOUS_BUTT) == CAST_OK)
+                m_uiFerociousButtTimer = 15000;
+        }
+        else
+            m_uiFerociousButtTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
