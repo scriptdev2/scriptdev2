@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: trial_of_the_crusader
-SD%Complete: 75
-SDComment: Evade handling must be fixed, this is currently totally wrong. Some issues with emotes and texts, generic improvements related to spells can be missing
+SD%Complete: 90
+SDComment: Some issues with emotes and texts, generic improvements related to spells can be missing
 SDCategory: Crusader Coliseum
 EndScriptData */
 
@@ -51,6 +51,8 @@ enum
     SPELL_ERUPTION                      = 66252,            // spell casted by the volcano
     SPELL_NETHER_POWER                  = 67009,
     SPELL_BERSERK                       = 26662,
+
+    SPELL_ENSLAVE_JARAXXUS              = 67924,            // dummy aura that will hold the boss after evade
 
     // npcs
     NPC_INFERNAL_VOLCANO                = 34813,
@@ -90,6 +92,8 @@ struct boss_jaraxxusAI : public ScriptedAI
         m_bVolcanoSummon            = true;
 
         DoCastSpellIfCan(m_creature, SPELL_JARAXXUS_HITTIN_YA);
+
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     void JustReachedHome() override
@@ -97,7 +101,8 @@ struct boss_jaraxxusAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, FAIL);
 
-        m_creature->ForcedDespawn();
+        // ToDo: confirm if this is correct and if we are not missing something!
+        DoCastSpellIfCan(m_creature, SPELL_ENSLAVE_JARAXXUS);
     }
 
     void JustDied(Unit* /*pKiller*/) override
@@ -114,16 +119,26 @@ struct boss_jaraxxusAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, IN_PROGRESS);
 
+        m_creature->RemoveAurasDueToSpell(SPELL_ENSLAVE_JARAXXUS);
         DoCastSpellIfCan(m_creature, SPELL_NETHER_POWER);
-        m_creature->SetInCombatWithZone();
     }
 
     void EnterEvadeMode() override
     {
-        if (m_pInstance && m_pInstance->GetData(TYPE_JARAXXUS) != IN_PROGRESS)
+        if (!m_pInstance)
             return;
 
-        ScriptedAI::EnterEvadeMode();
+        // special evade mechanics when attacking Wilfred
+        if (m_pInstance->GetData(TYPE_JARAXXUS) != IN_PROGRESS)
+        {
+            m_creature->RemoveAllAurasOnEvade();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop(true);
+            m_creature->SetLootRecipient(NULL);
+            Reset();
+        }
+        else
+            ScriptedAI::EnterEvadeMode();
     }
 
     void KilledUnit(Unit* pVictim) override

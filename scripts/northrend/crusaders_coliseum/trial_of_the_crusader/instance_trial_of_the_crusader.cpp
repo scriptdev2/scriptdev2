@@ -110,6 +110,8 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {EVENT_KILL_FIZZLEBANG, 0, 0, 0,                        5000},  // Kill Fizzlebang
     {SAY_TIRION_JARAXXUS_INTRO_2,   NPC_TIRION_A, 0, 0,     6000},
     {EVENT_JARAXXUS_START_ATTACK, 0, 0, 0,                  0},
+    {EVENT_JARAXXUS_RESET_DELAY,  0, 0, 0,                  8000},
+    {EVENT_JARAXXUS_START_ATTACK, 0, 0, 0,                  0},
     // Jaruxxus (Outro)
     {SAY_JARAXXUS_DEATH,            NPC_JARAXXUS, 0, 0,     6000},  // Jaraxxus Death
     {SAY_TIRION_JARAXXUS_EXIT_1,    NPC_TIRION_A, 0, 0,     5000},
@@ -277,8 +279,8 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_JARAXXUS:
             if (uiData == SPECIAL)
-                // TODO - What happen in wipe case?
-                StartNextDialogueText(TYPE_JARAXXUS);
+                // TODO - Confirm if we are not missing something
+                StartNextDialogueText(m_auiEncounter[uiType] != FAIL ? TYPE_JARAXXUS : EVENT_JARAXXUS_RESET_DELAY);
             else if (uiData == FAIL)
             {
                 SetData(TYPE_WIPE_COUNT, m_auiEncounter[TYPE_WIPE_COUNT] + 1);

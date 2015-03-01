@@ -5156,7 +5156,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3649007,'That tough, huh?','barrett GOSSIP_ITEM_TWINS_INIT'),
 (-3649008,'Val\'kyr? We\'re ready for them','barrett GOSSIP_ITEM_TWINS_START'),
 (-3649009,'Your words of praise are appreciated, Coliseum Master.','barrett GOSSIP_ITEM_ANUB_INIT'),
-(-3649010,'That is strange...','barrett GOSSIP_ITEM_ANUB_START');
+(-3649010,'That is strange...','barrett GOSSIP_ITEM_ANUB_START'),
+(-3649011,'We\'re ready for the next challenge.','barrett GOSSIP_ITEM_JARAXXUS_START');
 
 -- -3 650 000 TRIAL OF THE CHAMPION
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
