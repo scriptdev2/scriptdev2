@@ -38,6 +38,9 @@ enum
     SPELL_BERSERK                       = 26662,
     SPELL_JORMUNGAR_ENRAGE              = 68335,
 
+    // NPC_MOBILE_BURROW_TARGET         = 35226,                // summoned by missing spell 66980 - purpose unk, related to jormungars event
+    // NPC_SESSILE_BURROW_TARGET        = 35227,                // summoned by missing spell 66981 - purpose unk, related to jormungars event
+
     PHASE_GORMOK                        = 0,
     PHASE_WORMS                         = 1,
     PHASE_ICEHOWL                       = 2,

@@ -116,6 +116,8 @@ struct boss_jaraxxusAI : public ScriptedAI
         if (pWho->GetEntry() == NPC_FIZZLEBANG)
             return;
 
+        DoScriptText(SAY_AGGRO, m_creature);
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, IN_PROGRESS);
 

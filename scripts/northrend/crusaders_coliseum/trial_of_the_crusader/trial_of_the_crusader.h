@@ -9,6 +9,10 @@ enum
 {
     MAX_ENCOUNTER               = 6,
     MAX_WIPES_ALLOWED           = 50,
+    MAX_CRUSADERS_10MAN         = 6,
+    MAX_CRUSADERS_25MAN         = 10,
+    MAX_CRUSADERS_HEALERS       = 4,
+    MAX_CRUSADERS_OTHER         = 6,
 
     TYPE_WIPE_COUNT             = 0,
     TYPE_NORTHREND_BEASTS       = 1,
@@ -26,8 +30,13 @@ enum
     EVENT_SUMMON_THE_LICHKING   = 12,
     EVENT_DESTROY_FLOOR         = 13,
     EVENT_JARAXXUS_RESET_DELAY  = 14,
+    EVENT_CHAMPIONS_ATTACK      = 15,
 
-    NPC_BEAST_COMBAT_STALKER    = 36549,
+    NPC_BEASTS_COMBAT_STALKER   = 36549,
+    NPC_BEASTS_CONTROLLER       = 35014,
+    NPC_CHAMPIONS_CONTROLLER    = 34781,
+    NPC_VALKYR_TWINS_CONTROLLER = 34743,
+
     NPC_GORMOK                  = 34796,
     NPC_ACIDMAW                 = 35144,
     NPC_DREADSCALE              = 34799,
@@ -38,6 +47,41 @@ enum
     NPC_ANUBARAK                = 34564,
 
     NPC_SNOBOLD_VASSAL          = 34800,                    // used in Gormok encounter
+    // NPC_JUMP_TARGET          = 35376,                    // used to mark the jump spot for the crusaders; currently not used
+
+    // NPC_BEASTS_TAPLIST       = 35820,
+    // NPC_CHAMPION_TAPLIST     = 35821,
+    // NPC_ANUBARAK_TAPLIST     = 36099,
+
+    NPC_ALLY_DEATH_KNIGHT       = 34461,                    // Tyrius Duskblade
+    NPC_ALLY_DRUID_BALANCE      = 34460,                    // Kavina Grovesong
+    NPC_ALLY_DRUID_RESTO        = 34469,                    // Melador Valestrider
+    NPC_ALLY_HUNTER             = 34467,                    // Alyssia Moonstalker
+    NPC_ALLY_MAGE               = 34468,                    // Noozle Whizzlestick
+    NPC_ALLY_PALADIN_HOLY       = 34465,                    // Velanaa
+    NPC_ALLY_PALADIN_RETRI      = 34471,                    // Baelnor Lightbearer
+    NPC_ALLY_PRIEST_DISC        = 34466,                    // Anthar Forgemender
+    NPC_ALLY_PRIEST_SHADOW      = 34473,                    // Brienna Nightfell
+    NPC_ALLY_ROGUE              = 34472,                    // Irieth Shadowstep
+    NPC_ALLY_SHAMAN_ENHA        = 34463,                    // Shaabad
+    NPC_ALLY_SHAMAN_RESTO       = 34470,                    // Saamul
+    NPC_ALLY_WARLOCK            = 34474,                    // Serissa Grimdabbler
+    NPC_ALLY_WARRIOR            = 34475,                    // Shocuul
+
+    NPC_HORDE_DEATH_KNIGHT      = 34458,                    // Gorgrim Shadowcleave
+    NPC_HORDE_DRUID_BALANCE     = 34451,                    // Birana Stormhoof
+    NPC_HORDE_DRUID_RESTO       = 34459,                    // Erin Misthoof
+    NPC_HORDE_HUNTER            = 34448,                    // Ruj'kah
+    NPC_HORDE_MAGE              = 34449,                    // Ginselle Blightslinger
+    NPC_HORDE_PALADIN_HOLY      = 34445,                    // Liandra Suncaller
+    NPC_HORDE_PALADIN_RETRI     = 34456,                    // Malithas Brightblade
+    NPC_HORDE_PRIEST_DISC       = 34447,                    // Caiphus the Stern
+    NPC_HORDE_PRIEST_SHADOW     = 34441,                    // Vivienne Blackwhisper
+    NPC_HORDE_ROGUE             = 34454,                    // Maz'dinah
+    NPC_HORDE_SHAMAN_ENHA       = 34455,                    // Broln Stouthorn
+    NPC_HORDE_SHAMAN_RESTO      = 34444,                    // Thrakgar
+    NPC_HORDE_WARLOCK           = 34450,                    // Harkzog
+    NPC_HORDE_WARRIOR           = 34453,                    // Narrhok Steelbreaker
 
     NPC_TIRION_A                = 34996,
     NPC_TIRION_B                = 36095,                    // Summoned after his text (Champions, you're alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade's mages to transport you to the surface!) is said..
@@ -86,6 +130,8 @@ enum
     SPELL_OPEN_PORTAL           = 67864,
     SPELL_FEL_LIGHTNING_KILL    = 67888,
     SPELL_WILFRED_PORTAL        = 68424,
+    // SPELL_LEAP               = 67382,                    // crusader jump inside the arena to the provided coords
+    SPELL_ANCHOR_HERE           = 45313,                    // change respawn coords to the current position
     SPELL_ARTHAS_PORTAL         = 51807,
     SPELL_FROSTNOVA             = 68198,
     SPELL_CORPSE_TELEPORT       = 69016, // NYI
@@ -96,6 +142,47 @@ enum
 
     WORLD_STATE_WIPES           = 4390,
     WORLD_STATE_WIPES_COUNT     = 4389,
+};
+
+static const uint32 aAllyHealerCrusaders[MAX_CRUSADERS_HEALERS] = { NPC_ALLY_DRUID_RESTO, NPC_ALLY_PALADIN_HOLY, NPC_ALLY_PRIEST_DISC, NPC_ALLY_SHAMAN_RESTO };
+static const uint32 aAllyReplacementCrusaders[MAX_CRUSADERS_HEALERS] = { NPC_ALLY_DRUID_BALANCE, NPC_ALLY_PALADIN_RETRI, NPC_ALLY_PRIEST_SHADOW, NPC_ALLY_SHAMAN_ENHA };
+static const uint32 aAllyOtherCrusaders[MAX_CRUSADERS_OTHER] = { NPC_ALLY_DEATH_KNIGHT, NPC_ALLY_HUNTER, NPC_ALLY_MAGE, NPC_ALLY_ROGUE, NPC_ALLY_WARLOCK, NPC_ALLY_WARRIOR };
+
+static const uint32 aHordeHealerCrusaders[MAX_CRUSADERS_HEALERS] = { NPC_HORDE_DRUID_RESTO, NPC_HORDE_PALADIN_HOLY, NPC_HORDE_PRIEST_DISC, NPC_HORDE_SHAMAN_RESTO };
+static const uint32 aHordeReplacementCrusaders[MAX_CRUSADERS_HEALERS] = { NPC_HORDE_DRUID_BALANCE, NPC_HORDE_PALADIN_RETRI, NPC_HORDE_PRIEST_SHADOW, NPC_HORDE_SHAMAN_ENHA };
+static const uint32 aHordeOtherCrusaders[MAX_CRUSADERS_OTHER] = { NPC_HORDE_DEATH_KNIGHT, NPC_HORDE_HUNTER, NPC_HORDE_MAGE, NPC_HORDE_ROGUE, NPC_HORDE_WARLOCK, NPC_HORDE_WARRIOR };
+
+struct CrusadersLocation
+{
+    float fSourceX, fSourceY, fSourceZ, fSourceO, fTargetX, fTargetY, fTargetZ;
+};
+
+static const CrusadersLocation aAllyCrusadersLoc[MAX_CRUSADERS_25MAN] =
+{
+    {615.649f, 108.371f, 418.317f, 2.617f, 597.998f, 130.116f, 394.729f},
+    {622.361f, 111.691f, 419.785f, 2.705f, 596.189f, 123.862f, 394.710f},
+    {619.104f, 101.331f, 421.621f, 2.548f, 594.369f, 118.033f, 394.677f},
+    {618.138f, 105.381f, 419.786f, 2.600f, 605.423f, 128.229f, 395.288f},
+    {622.956f, 107.000f, 421.619f, 2.652f, 603.840f, 122.100f, 394.832f},
+    {621.258f, 117.725f, 418.317f, 2.972f, 601.717f, 115.576f, 395.287f},
+    {628.161f, 117.369f, 421.607f, 2.809f, 599.921f, 135.934f, 394.742f},
+    {629.005f, 124.168f, 421.627f, 2.914f, 592.413f, 112.477f, 394.684f},
+    {622.175f, 123.810f, 418.315f, 2.879f, 607.020f, 134.541f, 394.836f},
+    {615.322f,  95.750f, 421.623f, 2.460f, 599.461f, 109.588f, 395.288f},
+};
+
+static const CrusadersLocation aHordeCrusadersLoc[MAX_CRUSADERS_25MAN] =
+{
+    {510.069f, 111.784f, 418.317f, 0.488f, 528.958f, 131.470f, 394.729f},
+    {510.208f, 103.791f, 419.787f, 0.593f, 531.399f, 125.630f, 394.708f},
+    {505.691f, 124.593f, 418.315f, 0.279f, 533.647f, 119.147f, 394.646f},
+    {501.770f, 121.961f, 419.778f, 0.296f, 521.901f, 128.487f, 394.832f},
+    {508.244f,  98.039f, 421.546f, 0.645f, 524.237f, 122.411f, 394.819f},
+    {497.338f, 124.774f, 421.595f, 0.244f, 526.309f, 116.666f, 394.833f},
+    {500.499f, 113.415f, 421.552f, 0.304f, 529.479f, 112.130f, 394.742f},               // the last 4 are guesswork, but they are pretty close
+    {504.869f, 112.231f, 419.710f, 0.426f, 536.588f, 114.176f, 394.533f},
+    {515.173f, 102.482f, 418.234f, 0.670f, 520.921f, 134.698f, 394.747f},
+    {513.624f,  98.620f, 419.703f, 0.642f, 527.289f, 136.818f, 394.654f},
 };
 
 static const float aRamsayPositions[2][4] =
@@ -150,6 +237,8 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
+        uint32 GetPlayerTeam() { return m_uiTeam; }
+
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
@@ -161,9 +250,14 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         void DoSummonRamsey(uint32 uiEntry);
         void JustDidDialogueStep(int32 iEntry) override;
         void DoHandleEventEpilogue();
+        void DoSelectCrusaders();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        std::vector<uint32> m_vCrusadersEntries;
+
+        GuidVector m_vCrusadersGuidsVector;
 
         Team m_uiTeam;
 

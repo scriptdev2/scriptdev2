@@ -124,7 +124,8 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_GARROSH_PVP_A_INTRO_1,     NPC_GARROSH,        SAY_VARIAN_PVP_H_INTRO_1,   NPC_VARIAN, 14000},
     {SAY_TIRION_PVP_INTRO_2,        NPC_TIRION_A, 0, 0,     1000},
     {TYPE_FACTION_CHAMPIONS, 0, 0, 0,                       5000},
-    {SAY_GARROSH_PVP_A_INTRO_2,     NPC_GARROSH,        SAY_VARIAN_PVP_H_INTRO_2,   NPC_VARIAN, 0},
+    {SAY_GARROSH_PVP_A_INTRO_2,     NPC_GARROSH,        SAY_VARIAN_PVP_H_INTRO_2,   NPC_VARIAN, 4000},
+    {EVENT_CHAMPIONS_ATTACK, 0, 0, 0,                       0},
     {SAY_VARIAN_PVP_A_WIN,          NPC_VARIAN,         SAY_GARROSH_PVP_H_WIN,      NPC_GARROSH, 4000},
     {SAY_TIRION_PVP_WIN,            NPC_TIRION_A, 0, 0,     27000},
     {NPC_RAMSEY_4, 0, 0, 0,                                 0},
@@ -235,6 +236,13 @@ void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
 
 void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
 {
+    // Show wipe world state on heroic difficulty
+    if (IsHeroicDifficulty())
+    {
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES, 1);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED >= GetData(TYPE_WIPE_COUNT) ? MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT) : 0);
+    }
+
     if (m_uiTeam)
         return;
 
@@ -242,13 +250,7 @@ void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
     SetDialogueSide(m_uiTeam == ALLIANCE);
 
     DoSummonRamsey(0);
-
-    // Show wipe world state on heroic difficulty
-    if (IsHeroicDifficulty())
-    {
-        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES, 1);
-        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED >= GetData(TYPE_WIPE_COUNT) ? MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT) : 0);
-    }
+    DoSelectCrusaders();
 }
 
 void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
@@ -440,6 +442,51 @@ void instance_trial_of_the_crusader::DoOpenMainGate()
     m_uiGateResetTimer = 10000;
 }
 
+// Function that will select the faction champions entries
+void instance_trial_of_the_crusader::DoSelectCrusaders()
+{
+    std::vector<uint32> vCrusaderHealers;
+    std::vector<uint32> vCrusaderOthers;
+
+    // add all the healers and dps crusaders to vector
+    for (uint8 i = 0; i < MAX_CRUSADERS_HEALERS; ++i)
+        vCrusaderHealers.push_back(m_uiTeam == ALLIANCE ? aHordeHealerCrusaders[i] : aAllyHealerCrusaders[i]);
+    for (uint8 i = 0; i < MAX_CRUSADERS_OTHER; ++i)
+        vCrusaderOthers.push_back(m_uiTeam == ALLIANCE ? aHordeOtherCrusaders[i] : aAllyOtherCrusaders[i]);
+
+    // replace random healers with corresponding dps
+    uint8 uiIndex = urand(0, vCrusaderHealers.size() - 1);
+    vCrusaderOthers.push_back(m_uiTeam == ALLIANCE ? aHordeReplacementCrusaders[uiIndex] : aAllyReplacementCrusaders[uiIndex]);
+    vCrusaderHealers.erase(vCrusaderHealers.begin() + uiIndex);
+
+    if (!Is25ManDifficulty())
+    {
+        // on 10 man we replace a second healer
+        uiIndex = urand(0, vCrusaderHealers.size() - 1);
+
+        uint32 uiCrusaderEntry = vCrusaderHealers[uiIndex];
+        for (uint8 i = 0; i < MAX_CRUSADERS_HEALERS; ++i)
+        {
+            if (uiCrusaderEntry == (m_uiTeam == ALLIANCE ? aHordeHealerCrusaders[i] : aAllyHealerCrusaders[i]))
+            {
+                vCrusaderOthers.push_back(m_uiTeam == ALLIANCE ? aHordeReplacementCrusaders[i] : aAllyReplacementCrusaders[i]);
+                break;
+            }
+        }
+        vCrusaderHealers.erase(vCrusaderHealers.begin() + uiIndex);
+
+        // remove 4 random dps crusaders
+        for (uint8 i = 0; i < MAX_CRUSADERS_HEALERS; ++i)
+            vCrusaderOthers.erase(vCrusaderOthers.begin() + urand(0, vCrusaderOthers.size() - 1));
+    }
+
+    // set the final list of crusaders
+    for (uint8 i = 0; i < vCrusaderHealers.size(); ++i)
+        m_vCrusadersEntries.push_back(vCrusaderHealers[i]);
+    for (uint8 i = 0; i < vCrusaderOthers.size(); ++i)
+        m_vCrusadersEntries.push_back(vCrusaderOthers[i]);
+}
+
 void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
@@ -454,7 +501,7 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
         case SAY_VARIAN_BEAST_1:
             if (Player* pPlayer = GetPlayerInMap())
             {
-                if (Creature* pBeasts = pPlayer->SummonCreature(NPC_BEAST_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                if (Creature* pBeasts = pPlayer->SummonCreature(NPC_BEASTS_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
                 {
                     Creature* pGormok = pBeasts->SummonCreature(NPC_GORMOK, aSpawnPositions[1][0], aSpawnPositions[1][1], aSpawnPositions[1][2], aSpawnPositions[1][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                     if (!pGormok)
@@ -504,6 +551,65 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             if (Creature* pJaraxxus = GetSingleCreatureFromStorage(NPC_JARAXXUS))
                 pJaraxxus->SetInCombatWithZone();
             break;
+        case SAY_TIRION_PVP_INTRO_1:
+            if (Player* pPlayer = GetPlayerInMap())
+            {
+                // safety check
+                uint8 uiMaxCrusaders = Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN;
+                if (m_vCrusadersEntries.empty() || m_vCrusadersEntries.size() < uiMaxCrusaders)
+                {
+                    script_error_log("Instance Trial of The Crusader: ERROR Crusaders entries are not properly selected. Please report this to the dev team!");
+                    return;
+                }
+
+                // summon the crusaders
+                m_vCrusadersGuidsVector.clear();
+                float fX, fY, fZ, fO;
+                for (uint8 i = 0; i < uiMaxCrusaders; ++i)
+                {
+                    fX = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fSourceX : aAllyCrusadersLoc[i].fSourceX;
+                    fY = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fSourceY : aAllyCrusadersLoc[i].fSourceY;
+                    fZ = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fSourceZ : aAllyCrusadersLoc[i].fSourceZ;
+                    fO = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fSourceO : aAllyCrusadersLoc[i].fSourceO;
+
+                    if (Creature* pCrusader = pPlayer->SummonCreature(m_vCrusadersEntries[i], fX, fY, fZ, fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                        m_vCrusadersGuidsVector.push_back(pCrusader->GetObjectGuid());
+                }
+            }
+            break;
+        case SAY_GARROSH_PVP_A_INTRO_2:
+        {
+            // make the champions jump
+            uint8 uiMaxCrusaders = Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN;
+
+            float fX, fY, fZ;
+            for (uint8 i = 0; i < uiMaxCrusaders; ++i)
+            {
+                fX = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fTargetX : aAllyCrusadersLoc[i].fTargetX;
+                fY = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fTargetY : aAllyCrusadersLoc[i].fTargetY;
+                fZ = m_uiTeam == ALLIANCE ? aHordeCrusadersLoc[i].fTargetZ : aAllyCrusadersLoc[i].fTargetZ;
+
+                // ToDo: use spell 67382 when proper implemented in the core
+                if (Creature* pCrusader = instance->GetCreature(m_vCrusadersGuidsVector[i]))
+                    pCrusader->GetMotionMaster()->MoveJump(fX, fY, fZ, pCrusader->GetDistance2d(fX, fY) * 10.0f / 15.0f, 15.0f);
+            }
+            break;
+        }
+        case EVENT_CHAMPIONS_ATTACK:
+        {
+            // start champions combat
+            uint8 uiMaxCrusaders = Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN;
+            for (uint8 i = 0; i < uiMaxCrusaders; ++i)
+            {
+                if (Creature* pCrusader = instance->GetCreature(m_vCrusadersGuidsVector[i]))
+                {
+                    pCrusader->CastSpell(pCrusader, SPELL_ANCHOR_HERE, true);
+                    pCrusader->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                    pCrusader->SetInCombatWithZone();
+                }
+            }
+            break;
+        }
         case EVENT_SUMMON_TWINS:
             if (Player* pPlayer = GetPlayerInMap())
             {
