@@ -37,7 +37,6 @@ enum
     SAY_VARIAN_PVP_H_SLAY_4             = -1649055,
 
     SPELL_PVP_TRINKET                   = 65547,
-    SPELL_ENCOUNTER_KILL_CREDIT         = 68184,
 };
 
 /*######
@@ -205,7 +204,7 @@ CreatureAI* GetAI_boss_crusader_druid_resto(Creature* pCreature)
 enum
 {
     // hunter spells
-    SPELL_CALL_PET                      = 67777,
+    SPELL_CALL_PET                  = 67777,
 };
 
 /*######
@@ -219,6 +218,12 @@ struct boss_crusader_hunterAI : public trial_crusader_commonAI
     void Reset() override
     {
         trial_crusader_commonAI::Reset();
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* /*pInvoker*/, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A)
+            DoCastSpellIfCan(m_creature, SPELL_CALL_PET);
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)
@@ -458,7 +463,7 @@ CreatureAI* GetAI_boss_crusader_shaman_resto(Creature* pCreature)
 enum
 {
     // warlock spells
-    SPELL_SUMMON_FELHUNTER              = 67514,
+    SPELL_SUMMON_FELHUNTER          = 67514,
 };
 
 /*######
@@ -472,6 +477,12 @@ struct boss_crusader_warlockAI : public trial_crusader_commonAI
     void Reset() override
     {
         trial_crusader_commonAI::Reset();
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* /*pInvoker*/, uint32 /*uiMiscValue*/) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A)
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_FELHUNTER);
     }
 
     bool UpdateChampionAI(const uint32 uiDiff)

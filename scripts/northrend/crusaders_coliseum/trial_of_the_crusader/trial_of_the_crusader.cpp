@@ -61,8 +61,8 @@ enum
 
     GOSSIP_ITEM_PVP_INIT                = -3649005,
     GOSSIP_ITEM_PVP_START               = -3649006,
-    GOSSIP_ITEM_PVP_WIPE_INIT           = -3000000,
-    GOSSIP_ITEM_PVP_WIPE_START          = -3000000,
+    GOSSIP_ITEM_PVP_WIPE_INIT           = -3649012,
+    GOSSIP_ITEM_PVP_WIPE_START          = -3649013,
 
     GOSSIP_ITEM_TWINS_INIT              = -3649007,
     GOSSIP_ITEM_TWINS_START             = -3649008,

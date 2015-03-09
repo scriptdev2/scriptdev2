@@ -218,7 +218,10 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
                 if (Creature* pBeast = m_creature->GetMap()->GetCreature(m_aSummonedBossGuid[m_uiPhase]))
                 {
                     pBeast->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                    pBeast->SetInCombatWithZone();
+
+                    // first boss doesn't automatically attack
+                    if (pBeast->GetEntry() != NPC_GORMOK)
+                        pBeast->SetInCombatWithZone();
                 }
 
                 m_uiAttackDelayTimer = 0;

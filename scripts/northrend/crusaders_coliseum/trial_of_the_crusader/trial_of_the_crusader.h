@@ -83,6 +83,9 @@ enum
     NPC_HORDE_WARLOCK           = 34450,                    // Harkzog
     NPC_HORDE_WARRIOR           = 34453,                    // Narrhok Steelbreaker
 
+    NPC_ZHAAGRYM                = 35465,
+    NPC_CAT                     = 35610,
+
     NPC_TIRION_A                = 34996,
     NPC_TIRION_B                = 36095,                    // Summoned after his text (Champions, you're alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade's mages to transport you to the surface!) is said..
     NPC_ARGENT_MAGE             = 36097,                    // Summoned along with Tirion B
@@ -132,6 +135,7 @@ enum
     SPELL_WILFRED_PORTAL        = 68424,
     // SPELL_LEAP               = 67382,                    // crusader jump inside the arena to the provided coords
     SPELL_ANCHOR_HERE           = 45313,                    // change respawn coords to the current position
+    SPELL_ENCOUNTER_KILL_CREDIT = 68184,                    // kill credit for faction champions
     SPELL_ARTHAS_PORTAL         = 51807,
     SPELL_FROSTNOVA             = 68198,
     SPELL_CORPSE_TELEPORT       = 69016, // NYI
@@ -228,6 +232,8 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
 
+        void OnCreatureDeath(Creature* pCreature) override;
+
         void OnPlayerEnter(Player* pPlayer) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
@@ -250,7 +256,9 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         void DoSummonRamsey(uint32 uiEntry);
         void JustDidDialogueStep(int32 iEntry) override;
         void DoHandleEventEpilogue();
+
         void DoSelectCrusaders();
+        void DoCleanupCrusaders();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
@@ -262,6 +270,9 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         Team m_uiTeam;
 
         uint32 m_uiGateResetTimer;
+        uint32 m_uiKilledCrusaders;
+
+        bool m_bCrusadersSummoned;
 };
 
 #endif

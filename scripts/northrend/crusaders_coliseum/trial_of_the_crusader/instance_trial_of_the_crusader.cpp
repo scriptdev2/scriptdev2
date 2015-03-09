@@ -150,7 +150,9 @@ static const DialogueEntryTwoSide aTocDialogues[] =
 
 instance_trial_of_the_crusader::instance_trial_of_the_crusader(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aTocDialogues),
     m_uiTeam(TEAM_NONE),
-    m_uiGateResetTimer(0)
+    m_uiGateResetTimer(0),
+    m_uiKilledCrusaders(0),
+    m_bCrusadersSummoned(false)
 {
     Initialize();
 }
@@ -190,6 +192,9 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_THE_LICHKING_VISUAL:
         case NPC_ACIDMAW:
         case NPC_DREADSCALE:
+        case NPC_ZHAAGRYM:
+        case NPC_CAT:
+        case NPC_CHAMPIONS_CONTROLLER:
             break;
         default:
             return;
@@ -299,11 +304,20 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             {
                 SetData(TYPE_WIPE_COUNT, m_auiEncounter[TYPE_WIPE_COUNT] + 1);
                 StartNextDialogueText(NPC_RAMSEY_3);
+
+                // cleanup and reset crusaders
+                DoCleanupCrusaders();
+                m_uiKilledCrusaders = 0;
+                m_bCrusadersSummoned = false;
             }
             else if (uiData == DONE)
             {
                 DoRespawnGameObject(GO_CRUSADERS_CACHE, 60 * MINUTE);
                 StartNextDialogueText(SAY_VARIAN_PVP_A_WIN);
+
+                // kill credit
+                if (Creature* pController = GetSingleCreatureFromStorage(NPC_CHAMPIONS_CONTROLLER))
+                    pController->CastSpell(pController, SPELL_ENCOUNTER_KILL_CREDIT, true);
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -382,6 +396,47 @@ void instance_trial_of_the_crusader::Load(const char* chrIn)
             m_auiEncounter[i] = NOT_STARTED;
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+void instance_trial_of_the_crusader::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_ALLY_DEATH_KNIGHT:
+        case NPC_ALLY_DRUID_BALANCE:
+        case NPC_ALLY_DRUID_RESTO:
+        case NPC_ALLY_HUNTER:
+        case NPC_ALLY_MAGE:
+        case NPC_ALLY_PALADIN_HOLY:
+        case NPC_ALLY_PALADIN_RETRI:
+        case NPC_ALLY_PRIEST_DISC:
+        case NPC_ALLY_PRIEST_SHADOW:
+        case NPC_ALLY_ROGUE:
+        case NPC_ALLY_SHAMAN_ENHA:
+        case NPC_ALLY_SHAMAN_RESTO:
+        case NPC_ALLY_WARLOCK:
+        case NPC_ALLY_WARRIOR:
+        case NPC_HORDE_DEATH_KNIGHT:
+        case NPC_HORDE_DRUID_BALANCE:
+        case NPC_HORDE_DRUID_RESTO:
+        case NPC_HORDE_HUNTER:
+        case NPC_HORDE_MAGE:
+        case NPC_HORDE_PALADIN_HOLY:
+        case NPC_HORDE_PALADIN_RETRI:
+        case NPC_HORDE_PRIEST_DISC:
+        case NPC_HORDE_PRIEST_SHADOW:
+        case NPC_HORDE_ROGUE:
+        case NPC_HORDE_SHAMAN_ENHA:
+        case NPC_HORDE_SHAMAN_RESTO:
+        case NPC_HORDE_WARLOCK:
+        case NPC_HORDE_WARRIOR:
+            ++m_uiKilledCrusaders;
+
+            // all crusaders are killed
+            if (m_uiKilledCrusaders == (Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN))
+                SetData(TYPE_FACTION_CHAMPIONS, DONE);
+            break;
+    }
 }
 
 void instance_trial_of_the_crusader::DoSummonRamsey(uint32 uiEntry)
@@ -487,6 +542,22 @@ void instance_trial_of_the_crusader::DoSelectCrusaders()
         m_vCrusadersEntries.push_back(vCrusaderOthers[i]);
 }
 
+// Function that will cleanup the crusaders
+void instance_trial_of_the_crusader::DoCleanupCrusaders()
+{
+    for (GuidVector::const_iterator itr = m_vCrusadersGuidsVector.begin(); itr != m_vCrusadersGuidsVector.end(); ++itr)
+    {
+        if (Creature* pCrusader = instance->GetCreature(*itr))
+            pCrusader->ForcedDespawn();
+    }
+
+    // despawn pets as well
+    if (Creature* pPet = GetSingleCreatureFromStorage(NPC_ZHAAGRYM, true))
+        pPet->ForcedDespawn();
+    if (Creature* pPet = GetSingleCreatureFromStorage(NPC_CAT, true))
+        pPet->ForcedDespawn();
+}
+
 void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
 {
     switch (iEntry)
@@ -549,9 +620,14 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             break;
         case EVENT_JARAXXUS_START_ATTACK:
             if (Creature* pJaraxxus = GetSingleCreatureFromStorage(NPC_JARAXXUS))
-                pJaraxxus->SetInCombatWithZone();
+                pJaraxxus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
             break;
         case SAY_TIRION_PVP_INTRO_1:
+        case TYPE_FACTION_CHAMPIONS:
+            // skip if already summoned
+            if (m_bCrusadersSummoned)
+                break;
+
             if (Player* pPlayer = GetPlayerInMap())
             {
                 // safety check
@@ -575,6 +651,8 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
                     if (Creature* pCrusader = pPlayer->SummonCreature(m_vCrusadersEntries[i], fX, fY, fZ, fO, TEMPSUMMON_DEAD_DESPAWN, 0))
                         m_vCrusadersGuidsVector.push_back(pCrusader->GetObjectGuid());
                 }
+
+                m_bCrusadersSummoned = true;
             }
             break;
         case SAY_GARROSH_PVP_A_INTRO_2:
@@ -597,7 +675,7 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
         }
         case EVENT_CHAMPIONS_ATTACK:
         {
-            // start champions combat
+            // prepare champions combat
             uint8 uiMaxCrusaders = Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN;
             for (uint8 i = 0; i < uiMaxCrusaders; ++i)
             {
@@ -605,7 +683,9 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
                 {
                     pCrusader->CastSpell(pCrusader, SPELL_ANCHOR_HERE, true);
                     pCrusader->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                    pCrusader->SetInCombatWithZone();
+
+                    // some crusaders have to summon their pet
+                    pCrusader->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pCrusader, pCrusader);
                 }
             }
             break;
