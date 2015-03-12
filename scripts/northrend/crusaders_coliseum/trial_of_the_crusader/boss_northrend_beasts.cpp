@@ -37,6 +37,7 @@ enum
 
     SPELL_BERSERK                       = 26662,
     SPELL_JORMUNGAR_ENRAGE              = 68335,
+    SPELL_JORMUNGAR_ACHIEV_CREDIT       = 68523,                // server side spell for achievs 3936, 3937
 
     // NPC_MOBILE_BURROW_TARGET         = 35226,                // summoned by missing spell 66980 - purpose unk, related to jormungars event
     // NPC_SESSILE_BURROW_TARGET        = 35227,                // summoned by missing spell 66981 - purpose unk, related to jormungars event
@@ -128,7 +129,7 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         m_uiAttackDelayTimer = 10000;
 
         if (m_pInstance)
-            m_pInstance->DoOpenMainGate();
+            m_pInstance->DoOpenMainGate(10000);
     }
 
     // Only for Dreadscale and Icehowl

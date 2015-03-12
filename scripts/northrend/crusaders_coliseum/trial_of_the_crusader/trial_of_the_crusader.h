@@ -31,11 +31,14 @@ enum
     EVENT_DESTROY_FLOOR         = 13,
     EVENT_JARAXXUS_RESET_DELAY  = 14,
     EVENT_CHAMPIONS_ATTACK      = 15,
+    EVENT_TWINS_ATTACK          = 16,
 
     NPC_BEASTS_COMBAT_STALKER   = 36549,
     NPC_BEASTS_CONTROLLER       = 35014,
     NPC_CHAMPIONS_CONTROLLER    = 34781,
     NPC_VALKYR_TWINS_CONTROLLER = 34743,
+    // NPC_VALKYR_STALKER_DARK  = 34704,                    // summons 34628 using 66107
+    // NPC_VALKYR_STALKER_LIGHT = 34720,                    // summons 34630 using 66078
 
     NPC_GORMOK                  = 34796,
     NPC_ACIDMAW                 = 35144,
@@ -48,6 +51,8 @@ enum
 
     NPC_SNOBOLD_VASSAL          = 34800,                    // used in Gormok encounter
     // NPC_JUMP_TARGET          = 35376,                    // used to mark the jump spot for the crusaders; currently not used
+    // NPC_DARK_ESSENCE         = 34567,                    // npc spell click for spell 65684
+    // NPC_LIGHT_ESSENCE        = 34568,                    // npc spell click for spell 65686
 
     // NPC_BEASTS_TAPLIST       = 35820,
     // NPC_CHAMPION_TAPLIST     = 35821,
@@ -146,6 +151,24 @@ enum
 
     WORLD_STATE_WIPES           = 4390,
     WORLD_STATE_WIPES_COUNT     = 4389,
+
+    ACHIEV_CRIT_UPPER_BACK_PAIN_10      = 11779,                // Icehowl achievs 3797, 3813
+    ACHIEV_CRIT_UPPER_BACK_PAIN_25      = 11780,
+    ACHIEV_CRIT_PAIN_SPIKE_10           = 11838,                // Jaraxxus achievs 3996, 3997
+    ACHIEV_CRIT_PAIN_SPIKE_25           = 11839,
+    ACHIEV_CRIT_SALT_PEPER_10           = 11778,                // Twin Valkyers achievs 3799, 3815
+    ACHIEV_CRIT_SALT_PEPER_25           = 11818,
+    ACHIEV_CRIT_RESILIENCE_FIX_10_1     = 11803,                // Faction Champions achievs 3798, 3814
+    ACHIEV_CRIT_RESILIENCE_FIX_10_2     = 11804,
+    // ToDo: missing achiev criterias for 25 men?
+    ACHIEV_CRIT_TWO_JORMUNGARS_10_1     = 12280,                // Twin Jormungars achievs 3936, 3937
+    ACHIEV_CRIT_TWO_JORMUNGARS_10_2     = 12281,
+    ACHIEV_CRIT_TWO_JORMUNGARS_25_1     = 12278,
+    ACHIEV_CRIT_TWO_JORMUNGARS_25_2     = 12279,
+    ACHIEV_CRIT_TRIBUTE_IMMORTALITY_H   = 12358,                // Overall 25 men achievs 4079, 4156
+    ACHIEV_CRIT_TRIBUTE_IMMORTALITY_A   = 12359,
+    // ToDo: missing achiev criterias for the rest of the achievs?
+
 };
 
 static const uint32 aAllyHealerCrusaders[MAX_CRUSADERS_HEALERS] = { NPC_ALLY_DRUID_RESTO, NPC_ALLY_PALADIN_HOLY, NPC_ALLY_PRIEST_DISC, NPC_ALLY_SHAMAN_RESTO };
@@ -248,7 +271,7 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
 
-        void DoOpenMainGate();
+        void DoOpenMainGate(uint32 uiResetTimer);
 
         void Update(uint32 uiDiff) override;
 

@@ -34,6 +34,9 @@ enum
     SAY_SLAY_2                          = -1649061,
     SAY_TO_BLACK                        = -1649062,
     SAY_TO_WHITE                        = -1649063,
+
+    SPELL_VALKYR_TWINS_HITTING_YA       = 66073,
+    SPELL_TWIN_EMPATHY                  = 66133,
 };
 
 /*######
@@ -42,15 +45,42 @@ enum
 
 struct boss_fjolaAI : public ScriptedAI
 {
-    boss_fjolaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_fjolaAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() override {}
+    void Reset() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_VALKYR_TWINS_HITTING_YA);
+    }
 
     void Aggro(Unit* /*pWho*/) override
     {
-        m_creature->SetInCombatWithZone();
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWIN_VALKYR, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWIN_VALKYR, DONE);
+    }
+
+    void EnterEvadeMode() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWIN_VALKYR, FAIL);
+
+        // cleanup handled by creature linking
+        m_creature->ForcedDespawn();
     }
 
     void UpdateAI(const uint32 /*uiDiff*/) override
@@ -75,11 +105,14 @@ struct boss_eydisAI : public ScriptedAI
 {
     boss_eydisAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() override {}
+    void Reset() override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_VALKYR_TWINS_HITTING_YA);
+    }
 
     void Aggro(Unit* /*pWho*/) override
     {
-        m_creature->SetInCombatWithZone();
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void UpdateAI(const uint32 /*uiDiff*/) override

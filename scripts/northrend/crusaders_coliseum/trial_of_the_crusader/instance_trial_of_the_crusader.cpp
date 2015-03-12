@@ -131,7 +131,8 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {NPC_RAMSEY_4, 0, 0, 0,                                 0},
     // Twin Valkyrs
     {TYPE_TWIN_VALKYR, 0, 0, 0,                             17000},
-    {EVENT_SUMMON_TWINS, 0, 0, 0,                           0},
+    {EVENT_SUMMON_TWINS, 0, 0, 0,                           18000},
+    {EVENT_TWINS_ATTACK, 0, 0, 0,                           0},
     {EVENT_TWINS_KILLED, 0, 0, 0,                           2000},
     {NPC_RAMSEY_5, 0, 0, 0,                                 4000},
     {SAY_VARIAN_TWINS_A_WIN,        NPC_VARIAN,         SAY_GARROSH_TWINS_H_WIN,    NPC_GARROSH, 1000},
@@ -186,6 +187,7 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_GARROSH:
         case NPC_JARAXXUS:
         case NPC_OPEN_PORTAL_TARGET:
+        case NPC_FJOLA:
         case NPC_EYDIS:
         case NPC_WORLD_TRIGGER_LARGE:
         case NPC_THE_LICHKING:
@@ -491,10 +493,10 @@ void instance_trial_of_the_crusader::DoHandleEventEpilogue()
 }
 
 // Function that will open and close the main gate
-void instance_trial_of_the_crusader::DoOpenMainGate()
+void instance_trial_of_the_crusader::DoOpenMainGate(uint32 uiResetTimer)
 {
     DoUseDoorOrButton(GO_MAIN_GATE);
-    m_uiGateResetTimer = 10000;
+    m_uiGateResetTimer = uiResetTimer;
 }
 
 // Function that will select the faction champions entries
@@ -693,9 +695,18 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
         case EVENT_SUMMON_TWINS:
             if (Player* pPlayer = GetPlayerInMap())
             {
+                // spawn the twin valkyrs; movement and the rest of spawns are handled in DB
+                DoOpenMainGate(15000);
+
                 pPlayer->SummonCreature(NPC_FJOLA, aSpawnPositions[7][0], aSpawnPositions[7][1], aSpawnPositions[7][2], aSpawnPositions[7][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                 pPlayer->SummonCreature(NPC_EYDIS, aSpawnPositions[8][0], aSpawnPositions[8][1], aSpawnPositions[8][2], aSpawnPositions[8][3], TEMPSUMMON_DEAD_DESPAWN, 0);
             }
+            break;
+        case EVENT_TWINS_ATTACK:
+            if (Creature* pTwin = GetSingleCreatureFromStorage(NPC_FJOLA))
+                pTwin->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
+            if (Creature* pTwin = GetSingleCreatureFromStorage(NPC_EYDIS))
+                pTwin->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
             break;
         case SAY_LKING_ANUB_INTRO_1:
             if (Player* pPlayer = GetPlayerInMap())

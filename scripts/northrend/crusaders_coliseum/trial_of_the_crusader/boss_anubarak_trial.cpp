@@ -53,6 +53,9 @@ enum
     SPELL_LEECHING_SWARM                = 66118,
     SPELL_BERSERK                       = 26662,
 
+    SPELL_SCARAB_ACHIEV_10              = 68186,            // used for achiev 3800
+    SPELL_SCARAB_ACHIEV_25              = 68515,            // used for achiev 3816
+
     // Pursuing Spikes
     SPELL_PURSUING_SPIKES_FAIL          = 66181,
     SPELL_PURSUING_SPIKES_DUMMY         = 67470,            // target selection spell
