@@ -70,6 +70,9 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SUMMON_RAGING_FLAMES : SPELL_SUMMON_RAGING_FLAMES_H);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SEPETHREA, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* /*pVictim*/) override
@@ -83,6 +86,12 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SEPETHREA, DONE);
+    }
+
+    void JustReachedHome() override
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SEPETHREA, FAIL);
     }
 
     void JustSummoned(Creature* pSummoned) override

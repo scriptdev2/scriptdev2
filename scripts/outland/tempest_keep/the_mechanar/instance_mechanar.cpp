@@ -70,11 +70,23 @@ void instance_mechanar::OnCreatureCreate(Creature* pCreature)
 
 void instance_mechanar::OnObjectCreate(GameObject* pGo)
 {
-    if (pGo->GetEntry() == GO_FACTORY_ELEVATOR)
+    switch (pGo->GetEntry())
     {
-        // ToDo: activate elevator if TYPE_GYRO_KILL && TYPE_IRON_HAND && TYPE_CAPACITUS are DONE
-        m_mGoEntryGuidStore[GO_FACTORY_ELEVATOR] = pGo->GetObjectGuid();
+        case GO_MOARG_DOOR_1:
+            if (m_auiEncounter[TYPE_GYRO_KILL] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_MOARG_DOOR_2:
+            if (m_auiEncounter[TYPE_IRON_HAND] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_NETHERMANCER_DOOR:
+            break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_mechanar::SetData(uint32 uiType, uint32 uiData)
@@ -82,15 +94,23 @@ void instance_mechanar::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_GYRO_KILL:
+            if (uiData == DONE)
+                DoUseDoorOrButton(GO_MOARG_DOOR_1);
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_IRON_HAND:
+            if (uiData == DONE)
+                DoUseDoorOrButton(GO_MOARG_DOOR_2);
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_CAPACITUS:
             m_auiEncounter[uiType] = uiData;
-            // ToDo: Activate the Elevator when all these 3 are done
             break;
         case TYPE_SEPETHREA:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 m_uiBridgeEventTimer = 10000;
+            DoUseDoorOrButton(GO_NETHERMANCER_DOOR);
             break;
         case TYPE_PATHALEON:
             m_auiEncounter[uiType] = uiData;
