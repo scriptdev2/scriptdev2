@@ -153,7 +153,9 @@ instance_trial_of_the_crusader::instance_trial_of_the_crusader(Map* pMap) : Scri
     m_uiTeam(TEAM_NONE),
     m_uiGateResetTimer(0),
     m_uiKilledCrusaders(0),
-    m_bCrusadersSummoned(false)
+    m_uiCrusadersAchievTimer(0),
+    m_bCrusadersSummoned(false),
+    m_bCrusadersAchievCheck(false)
 {
     Initialize();
 }
@@ -192,12 +194,16 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_WORLD_TRIGGER_LARGE:
         case NPC_THE_LICHKING:
         case NPC_THE_LICHKING_VISUAL:
+        case NPC_BEASTS_COMBAT_STALKER:
         case NPC_ACIDMAW:
         case NPC_DREADSCALE:
         case NPC_ZHAAGRYM:
         case NPC_CAT:
-        case NPC_CHAMPIONS_CONTROLLER:
             break;
+        case NPC_SNOBOLD_VASSAL:
+        case NPC_MISTRESS_OF_PAIN:
+            m_lSummonedGuidsList.push_back(pCreature->GetObjectGuid());
+            return;
         default:
             return;
     }
@@ -227,6 +233,8 @@ void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
         case GO_TRIBUTE_CHEST_25H_50:
         case GO_MAIN_GATE:
         case GO_WEB_DOOR:
+        case GO_WEST_GATE:
+        case GO_NORTH_GATE:
         case GO_PORTAL_DALARAN:
             break;
         case GO_CRUSADERS_CACHE:
@@ -260,6 +268,12 @@ void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
     DoSelectCrusaders();
 }
 
+void instance_trial_of_the_crusader::OnPlayerDeath(Player* /*pPlayer*/)
+{
+    if (IsEncounterInProgress())
+        SetData(TYPE_IMMORTALITY_FAILED, DONE);
+}
+
 void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
@@ -281,9 +295,16 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             {
                 SetData(TYPE_WIPE_COUNT, m_auiEncounter[TYPE_WIPE_COUNT] + 1);
                 StartNextDialogueText(SAY_TIRION_BEAST_WIPE);
+                m_lSummonedGuidsList.clear();
             }
             else if (uiData == DONE)
                 StartNextDialogueText(SAY_TIRION_BEAST_SLAY);
+            // combat doors
+            if (uiData != SPECIAL)
+            {
+                DoUseDoorOrButton(GO_WEST_GATE);
+                DoUseDoorOrButton(GO_NORTH_GATE);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_JARAXXUS:
@@ -297,6 +318,14 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == DONE)
                 StartNextDialogueText(SAY_JARAXXUS_DEATH);
+            else if (uiData == IN_PROGRESS)
+                m_lSummonedGuidsList.clear();
+            // combat doors
+            if (uiData != SPECIAL)
+            {
+                DoUseDoorOrButton(GO_WEST_GATE);
+                DoUseDoorOrButton(GO_NORTH_GATE);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_FACTION_CHAMPIONS:
@@ -310,16 +339,20 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 // cleanup and reset crusaders
                 DoCleanupCrusaders();
                 m_uiKilledCrusaders = 0;
+                m_uiCrusadersAchievTimer = 0;
                 m_bCrusadersSummoned = false;
+                m_bCrusadersAchievCheck = false;
             }
             else if (uiData == DONE)
             {
                 DoRespawnGameObject(GO_CRUSADERS_CACHE, 60 * MINUTE);
                 StartNextDialogueText(SAY_VARIAN_PVP_A_WIN);
-
-                // kill credit
-                if (Creature* pController = GetSingleCreatureFromStorage(NPC_CHAMPIONS_CONTROLLER))
-                    pController->CastSpell(pController, SPELL_ENCOUNTER_KILL_CREDIT, true);
+            }
+            // combat doors
+            if (uiData != SPECIAL)
+            {
+                DoUseDoorOrButton(GO_WEST_GATE);
+                DoUseDoorOrButton(GO_NORTH_GATE);
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -337,6 +370,14 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == DONE)
                 StartNextDialogueText(EVENT_TWINS_KILLED);
+            else if (uiData == IN_PROGRESS)
+                DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_VALKYRS_ID);
+            // combat doors
+            if (uiData != SPECIAL)
+            {
+                DoUseDoorOrButton(GO_WEST_GATE);
+                DoUseDoorOrButton(GO_NORTH_GATE);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ANUBARAK:
@@ -351,6 +392,9 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_WEB_DOOR);
             m_auiEncounter[uiType] = uiData;
             break;
+        case TYPE_IMMORTALITY_FAILED:
+            m_auiEncounter[uiType] = uiData;
+            break;
         default:
             script_error_log("Instance Trial of The Crusader: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
@@ -362,7 +406,8 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6];
 
         m_strInstData = saveStream.str();
 
@@ -391,7 +436,7 @@ void instance_trial_of_the_crusader::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-               >> m_auiEncounter[4] >> m_auiEncounter[5];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
     for (uint8 i = TYPE_NORTHREND_BEASTS; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)            // Do not load an encounter as "In Progress" - reset it instead.
@@ -434,11 +479,69 @@ void instance_trial_of_the_crusader::OnCreatureDeath(Creature* pCreature)
         case NPC_HORDE_WARRIOR:
             ++m_uiKilledCrusaders;
 
+            // start the Resilience will fix! it achiev
+            if (!m_bCrusadersAchievCheck)
+            {
+                m_uiCrusadersAchievTimer = 60000;
+                m_bCrusadersAchievCheck = true;
+            }
+
             // all crusaders are killed
             if (m_uiKilledCrusaders == (Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN))
+            {
                 SetData(TYPE_FACTION_CHAMPIONS, DONE);
+
+                // kill credit
+                pCreature->CastSpell(pCreature, SPELL_ENCOUNTER_KILL_CREDIT, true);
+
+                // cast the resilience fix credit
+                if (m_uiCrusadersAchievTimer)
+                    pCreature->CastSpell(pCreature, SPELL_RESILIENCE_FIX_CREDIT, true);
+            }
             break;
+        case NPC_SNOBOLD_VASSAL:
+        case NPC_MISTRESS_OF_PAIN:
+            m_lSummonedGuidsList.remove(pCreature->GetObjectGuid());
+            break;;
     }
+}
+
+bool instance_trial_of_the_crusader::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* /*pSource*/, Unit const* /*pTarget*/, uint32 /*uiMiscvalue1*/) const
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_UPPER_BACK_PAIN_10_N:
+        case ACHIEV_CRIT_UPPER_BACK_PAIN_10_H:
+            return m_lSummonedGuidsList.size() >= MIN_ACHIEV_SNOBOLDS_10;
+        case ACHIEV_CRIT_UPPER_BACK_PAIN_25_N:
+        case ACHIEV_CRIT_UPPER_BACK_PAIN_25_H:
+            return m_lSummonedGuidsList.size() >= MIN_ACHIEV_SNOBOLDS_25;
+        case ACHIEV_CRIT_PAIN_SPIKE_10_N:
+        case ACHIEV_CRIT_PAIN_SPIKE_10_H:
+        case ACHIEV_CRIT_PAIN_SPIKE_25_N:
+        case ACHIEV_CRIT_PAIN_SPIKE_25_H:
+            return m_lSummonedGuidsList.size() >= MIN_ACHIEV_MISTRESSES;
+        case ACHIEV_CRIT_TRIBUTE_IMMORTALITY_H:
+        case ACHIEV_CRIT_TRIBUTE_IMMORTALITY_A:
+            return GetData(TYPE_IMMORTALITY_FAILED) != DONE;
+        case ACHIEV_CRIT_TRIBUTE_INSANITY_10:
+        case ACHIEV_CRIT_TRIBUTE_INSANITY_25:
+            return GetData(TYPE_WIPE_COUNT) == 0;
+        case ACHIEV_CRIT_TRIBUTE_MAD_SKILL_10_1:
+        case ACHIEV_CRIT_TRIBUTE_MAD_SKILL_10_2:
+        case ACHIEV_CRIT_TRIBUTE_MAD_SKILL_25_1:
+        case ACHIEV_CRIT_TRIBUTE_MAD_SKILL_25_2:
+            return GetData(TYPE_WIPE_COUNT) <= 5;
+        case ACHIEV_CRIT_TRIBUTE_SKILL_10_1:
+        case ACHIEV_CRIT_TRIBUTE_SKILL_10_2:
+        case ACHIEV_CRIT_TRIBUTE_SKILL_10_3:
+        case ACHIEV_CRIT_TRIBUTE_SKILL_25_1:
+        case ACHIEV_CRIT_TRIBUTE_SKILL_25_2:
+        case ACHIEV_CRIT_TRIBUTE_SKILL_25_3:
+            return GetData(TYPE_WIPE_COUNT) <= 25;
+    }
+
+    return false;
 }
 
 void instance_trial_of_the_crusader::DoSummonRamsey(uint32 uiEntry)
@@ -747,6 +850,14 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
 void instance_trial_of_the_crusader::Update(uint32 uiDiff)
 {
     DialogueUpdate(uiDiff);
+
+    if (m_uiCrusadersAchievTimer)
+    {
+        if (m_uiCrusadersAchievTimer <= uiDiff)
+            m_uiCrusadersAchievTimer = 0;
+        else
+            m_uiCrusadersAchievTimer -= uiDiff;
+    }
 
     // ToDo: set this as door reset timer when fixed in core
     if (m_uiGateResetTimer)

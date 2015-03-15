@@ -53,7 +53,6 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
     {
         m_pInstance = (instance_trial_of_the_crusader*)pCreature->GetInstanceData();
         Reset();
-        m_creature->SetInCombatWithZone();
     }
 
     instance_trial_of_the_crusader* m_pInstance;
@@ -67,6 +66,7 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
 
     uint32 m_uiWormPhaseTimer;
     uint8 m_uiWormPhaseStage;
+    uint32 m_uiWormAchievTimer;
 
     void Reset() override
     {
@@ -74,6 +74,7 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         m_uiWormPhaseStage   = 0;
         m_uiAttackDelayTimer = 0;
         m_uiNextBeastTimer   = 0;
+        m_uiWormAchievTimer  = 0;
         m_bFirstWormDied     = false;
         m_uiPhase            = PHASE_GORMOK;
 
@@ -103,6 +104,8 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_NORTHREND_BEASTS, IN_PROGRESS);
     }
 
+    void AttackStart(Unit* /*pWho*/) override { }
+
     void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
@@ -120,7 +123,7 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         m_aSummonedBossGuid[m_uiPhase] = pSummoned->GetObjectGuid();
 
         pSummoned->SetWalk(false);
-        pSummoned->GetMotionMaster()->MovePoint(m_uiPhase, aMovePositions[m_uiPhase][0], aMovePositions[m_uiPhase][1], aMovePositions[m_uiPhase][2]);
+        pSummoned->GetMotionMaster()->MovePoint(m_uiPhase, aMovePositions[m_uiPhase][0], aMovePositions[m_uiPhase][1], aMovePositions[m_uiPhase][2], false);
 
         // Next beasts are summoned only for heroic modes
         if (m_creature->GetMap()->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || m_creature->GetMap()->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
@@ -166,7 +169,16 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
             case NPC_DREADSCALE:
             case NPC_ACIDMAW:
                 if (m_bFirstWormDied && m_uiPhase == PHASE_WORMS)
+                {
                     DoSummonNextBeast(NPC_ICEHOWL);
+
+                    // cast achiev spell if timer is still running
+                    if (m_uiWormAchievTimer)
+                    {
+                        m_creature->CastSpell(m_creature, SPELL_JORMUNGAR_ACHIEV_CREDIT, true);
+                        m_uiWormAchievTimer = 0;
+                    }
+                }
                 else
                 {
                     m_bFirstWormDied = true;
@@ -176,6 +188,7 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
                     {
                         pWorm->CastSpell(pWorm, SPELL_JORMUNGAR_ENRAGE, true);
                         DoScriptText(EMOTE_JORMUNGAR_ENRAGE, pWorm);
+                        m_uiWormAchievTimer = 10000;
                     }
                 }
                 break;
@@ -319,6 +332,15 @@ struct npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
                 m_uiWormPhaseTimer -= uiDiff;
         }
 
+        // jormungars achiev timer
+        if (m_uiWormAchievTimer)
+        {
+            if (m_uiWormAchievTimer <= uiDiff)
+                m_uiWormAchievTimer = 0;
+            else
+                m_uiWormAchievTimer -= uiDiff;
+        }
+
         m_creature->SelectHostileTarget();
     }
 };
@@ -371,6 +393,16 @@ struct boss_gormokAI : public ScriptedAI
         m_uiSnoboldTimer    = 0;
 
         m_uiSnoboldsBoarded = 0;
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        // trigger the controller combat
+        if (m_pInstance)
+        {
+            if (Creature* pStalker = m_pInstance->GetSingleCreatureFromStorage(NPC_BEASTS_COMBAT_STALKER))
+                pStalker->SetInCombatWithZone();
+        }
     }
 
     void JustDied(Unit* /*pKiller*/) override

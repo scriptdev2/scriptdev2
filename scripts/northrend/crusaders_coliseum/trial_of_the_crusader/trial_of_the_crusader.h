@@ -7,12 +7,16 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 6,
+    MAX_ENCOUNTER               = 7,
     MAX_WIPES_ALLOWED           = 50,
     MAX_CRUSADERS_10MAN         = 6,
     MAX_CRUSADERS_25MAN         = 10,
     MAX_CRUSADERS_HEALERS       = 4,
     MAX_CRUSADERS_OTHER         = 6,
+
+    MIN_ACHIEV_MISTRESSES       = 2,
+    MIN_ACHIEV_SNOBOLDS_10      = 2,
+    MIN_ACHIEV_SNOBOLDS_25      = 4,
 
     TYPE_WIPE_COUNT             = 0,
     TYPE_NORTHREND_BEASTS       = 1,
@@ -20,6 +24,7 @@ enum
     TYPE_FACTION_CHAMPIONS      = 3,
     TYPE_TWIN_VALKYR            = 4,
     TYPE_ANUBARAK               = 5,
+    TYPE_IMMORTALITY_FAILED     = 6,                       // Achievements A Tribute to Immortality, needs to be saved to database
 
     EVENT_OPEN_PORTAL           = 6,
     EVENT_KILL_FIZZLEBANG       = 7,
@@ -50,6 +55,7 @@ enum
     NPC_ANUBARAK                = 34564,
 
     NPC_SNOBOLD_VASSAL          = 34800,                    // used in Gormok encounter
+    NPC_MISTRESS_OF_PAIN        = 34826,                    // used in Jaraxxus encounter
     // NPC_JUMP_TARGET          = 35376,                    // used to mark the jump spot for the crusaders; currently not used
     // NPC_DARK_ESSENCE         = 34567,                    // npc spell click for spell 65684
     // NPC_LIGHT_ESSENCE        = 34568,                    // npc spell click for spell 65686
@@ -114,8 +120,8 @@ enum
 
     GO_MAIN_GATE                = 195647,
     GO_WEST_GATE                = 195648,                   // entrance gate
-    GO_SOUTH_GATE               = 195649,                   // south and north doors are used to allow the Champions to enter the arena
-    GO_NORTH_GATE               = 195650,
+    // GO_SOUTH_GATE            = 195649,                   // not used
+    GO_NORTH_GATE               = 195650,                   // dummy entrance; used in Trial of the Champion
     GO_COLISEUM_FLOOR           = 195527,
     GO_WEB_DOOR                 = 195485,
     GO_PORTAL_DALARAN           = 195682,
@@ -141,6 +147,7 @@ enum
     // SPELL_LEAP               = 67382,                    // crusader jump inside the arena to the provided coords
     SPELL_ANCHOR_HERE           = 45313,                    // change respawn coords to the current position
     SPELL_ENCOUNTER_KILL_CREDIT = 68184,                    // kill credit for faction champions
+    SPELL_RESILIENCE_FIX_CREDIT = 68620,                    // server side spell for achievs 3798, 3814
     SPELL_ARTHAS_PORTAL         = 51807,
     SPELL_FROSTNOVA             = 68198,
     SPELL_CORPSE_TELEPORT       = 69016, // NYI
@@ -152,20 +159,41 @@ enum
     WORLD_STATE_WIPES           = 4390,
     WORLD_STATE_WIPES_COUNT     = 4389,
 
-    ACHIEV_CRIT_UPPER_BACK_PAIN_10      = 11779,                // Icehowl achievs 3797, 3813
-    ACHIEV_CRIT_UPPER_BACK_PAIN_25      = 11780,
-    ACHIEV_CRIT_PAIN_SPIKE_10           = 11838,                // Jaraxxus achievs 3996, 3997
-    ACHIEV_CRIT_PAIN_SPIKE_25           = 11839,
-    ACHIEV_CRIT_SALT_PEPER_10           = 11778,                // Twin Valkyers achievs 3799, 3815
-    ACHIEV_CRIT_SALT_PEPER_25           = 11818,
-    ACHIEV_CRIT_RESILIENCE_FIX_10_1     = 11803,                // Faction Champions achievs 3798, 3814
-    ACHIEV_CRIT_RESILIENCE_FIX_10_2     = 11804,
-    // ToDo: missing achiev criterias for 25 men?
-    ACHIEV_CRIT_TWO_JORMUNGARS_10_1     = 12280,                // Twin Jormungars achievs 3936, 3937
-    ACHIEV_CRIT_TWO_JORMUNGARS_10_2     = 12281,
-    ACHIEV_CRIT_TWO_JORMUNGARS_25_1     = 12278,
-    ACHIEV_CRIT_TWO_JORMUNGARS_25_2     = 12279,
-    ACHIEV_CRIT_TRIBUTE_IMMORTALITY_H   = 12358,                // Overall 25 men achievs 4079, 4156
+    ACHIEV_START_VALKYRS_ID             = 21853,                // Twin Valkyers achievs 3799, 3815
+    ACHIEV_START_ANUBARAK_10_ID         = 68186,                // Anub timed achievs 3800, 3816
+    ACHIEV_START_ANUBARAK_25_ID         = 68515,
+
+    ACHIEV_CRIT_UPPER_BACK_PAIN_10_N    = 11779,                // Icehowl achievs 3797, 3813
+    ACHIEV_CRIT_UPPER_BACK_PAIN_10_H    = 11802,
+    ACHIEV_CRIT_UPPER_BACK_PAIN_25_N    = 11780,
+    ACHIEV_CRIT_UPPER_BACK_PAIN_25_H    = 11801,
+    ACHIEV_CRIT_PAIN_SPIKE_10_N         = 11838,                // Jaraxxus achievs 3996, 3997
+    ACHIEV_CRIT_PAIN_SPIKE_10_H         = 11861,
+    ACHIEV_CRIT_PAIN_SPIKE_25_N         = 11839,
+    ACHIEV_CRIT_PAIN_SPIKE_25_H         = 11862,
+    // ACHIEV_CRIT_RESILIENCE_FIX_10_N  = 11803,                // Faction Champions achievs 3798, 3814
+    // ACHIEV_CRIT_RESILIENCE_FIX_10_H  = 11804,
+    // ACHIEV_CRIT_RESILIENCE_FIX_25_N  = 11799,
+    // ACHIEV_CRIT_RESILIENCE_FIX_25_H  = 11800,
+    // ACHIEV_CRIT_TWO_JORMUNGARS_10_N  = 12280,                // Twin Jormungars achievs 3936, 3937
+    // ACHIEV_CRIT_TWO_JORMUNGARS_10_H  = 12281,
+    // ACHIEV_CRIT_TWO_JORMUNGARS_25_N  = 12278,
+    // ACHIEV_CRIT_TWO_JORMUNGARS_25_H  = 12279,
+
+    ACHIEV_CRIT_TRIBUTE_SKILL_10_1      = 12344,                // Tribute chest achievs 3808, 3817
+    ACHIEV_CRIT_TRIBUTE_SKILL_10_2      = 12345,
+    ACHIEV_CRIT_TRIBUTE_SKILL_10_3      = 12346,
+    ACHIEV_CRIT_TRIBUTE_SKILL_25_1      = 12338,
+    ACHIEV_CRIT_TRIBUTE_SKILL_25_2      = 12339,
+    ACHIEV_CRIT_TRIBUTE_SKILL_25_3      = 12340,
+    ACHIEV_CRIT_TRIBUTE_MAD_SKILL_10_1  = 12347,                // Tribute chest achievs 3809, 3818
+    ACHIEV_CRIT_TRIBUTE_MAD_SKILL_10_2  = 12348,
+    ACHIEV_CRIT_TRIBUTE_MAD_SKILL_25_1  = 12341,
+    ACHIEV_CRIT_TRIBUTE_MAD_SKILL_25_2  = 12342,
+    ACHIEV_CRIT_TRIBUTE_INSANITY_10     = 12349,                // Tribute chest achievs 3810, 3819
+    ACHIEV_CRIT_TRIBUTE_INSANITY_25     = 12343,
+    ACHIEV_CRIT_TRUBUTE_INSANITY_D      = 12360,                // Tribute chest achiev 4080
+    ACHIEV_CRIT_TRIBUTE_IMMORTALITY_H   = 12358,                // Overall 25 heroic achievs 4079, 4156
     ACHIEV_CRIT_TRIBUTE_IMMORTALITY_A   = 12359,
     // ToDo: missing achiev criterias for the rest of the achievs?
 
@@ -258,6 +286,7 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         void OnCreatureDeath(Creature* pCreature) override;
 
         void OnPlayerEnter(Player* pPlayer) override;
+        void OnPlayerDeath(Player* pPlayer) override;
 
         void SetData(uint32 uiType, uint32 uiData) override;
         uint32 GetData(uint32 uiType) const override;
@@ -270,6 +299,8 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
+
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget = NULL, uint32 uiMiscvalue1 = 0) const override;
 
         void DoOpenMainGate(uint32 uiResetTimer);
 
@@ -289,13 +320,16 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         std::vector<uint32> m_vCrusadersEntries;
 
         GuidVector m_vCrusadersGuidsVector;
+        GuidList m_lSummonedGuidsList;
 
         Team m_uiTeam;
 
         uint32 m_uiGateResetTimer;
         uint32 m_uiKilledCrusaders;
+        uint32 m_uiCrusadersAchievTimer;
 
         bool m_bCrusadersSummoned;
+        bool m_bCrusadersAchievCheck;
 };
 
 #endif

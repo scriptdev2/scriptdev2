@@ -74,11 +74,11 @@ struct argent_champion_commonAI : public ScriptedAI
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_ARGENT_CHAMPION, DONE);
 
-            m_creature->SetFactionTemporary(FACTION_CHAMPION_FRIENDLY, TEMPFACTION_NONE);
-            EnterEvadeMode();
-
             // Handle event completion
             DoHandleEventEnd();
+
+            m_creature->SetFactionTemporary(FACTION_CHAMPION_FRIENDLY, TEMPFACTION_NONE);
+            EnterEvadeMode();
 
             m_bDefeated = true;
         }
@@ -99,7 +99,7 @@ enum
     EMOTE_EADRIC_HAMMER             = -1650058,
 
     SPELL_KILL_CREDIT_EADRIC        = 68575,
-    SPELL_EADRIC_ACHIEVEMENT        = 68197,
+    SPELL_EADRIC_ACHIEVEMENT        = 68197,                        // required for achiev 3803
 
     SPELL_HAMMER_OF_JUSTICE         = 66863,
     SPELL_HAMMER_OF_RIGHTEOUS       = 66867,
@@ -143,7 +143,8 @@ struct boss_eadricAI : public argent_champion_commonAI
     {
         DoScriptText(SAY_EADRIC_DEFEAT, m_creature);
 
-        DoCastSpellIfCan(m_creature, SPELL_EADRIC_ACHIEVEMENT, CAST_TRIGGERED);
+        // ToDo: implement the mechanics for this achiev
+        //DoCastSpellIfCan(m_creature, SPELL_EADRIC_ACHIEVEMENT, CAST_TRIGGERED);
         m_creature->CastSpell(m_creature, SPELL_KILL_CREDIT_EADRIC, true);
     }
 
@@ -198,7 +199,7 @@ enum
     SAY_PALETRESS_DEFEAT            = -1650064,
 
     SPELL_KILL_CREDIT_PALETRESS     = 68574,
-    SPELL_CONFESSOR_ACHIEVEMENT     = 68206,
+    SPELL_CONFESSOR_ACHIEVEMENT     = 68206,                        // required for achiev 3802
 
     SPELL_CONFESS                   = 66547,
     SPELL_CONFESS_AURA              = 66680,
@@ -257,7 +258,6 @@ struct boss_paletressAI : public argent_champion_commonAI
     {
         DoScriptText(SAY_PALETRESS_DEFEAT, m_creature);
 
-        DoCastSpellIfCan(m_creature, SPELL_CONFESSOR_ACHIEVEMENT, CAST_TRIGGERED);
         m_creature->CastSpell(m_creature, SPELL_KILL_CREDIT_PALETRESS, true);
     }
 
@@ -267,9 +267,10 @@ struct boss_paletressAI : public argent_champion_commonAI
         pSummoned->CastSpell(pSummoned, SPELL_MEMORY_SPAWN_EFFECT, true);
     }
 
-    void SummonedCreatureJustDied(Creature* /*pSummoned*/) override
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         DoScriptText(SAY_PALETRESS_MEMORY_DIES, m_creature);
+        pSummoned->CastSpell(pSummoned, SPELL_CONFESSOR_ACHIEVEMENT, true);
         m_creature->RemoveAurasDueToSpell(SPELL_REFLECTIVE_SHIELD);
     }
 

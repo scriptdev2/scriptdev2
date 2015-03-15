@@ -62,7 +62,7 @@ struct boss_fjolaAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_TWIN_VALKYR) != IN_PROGRESS)
             m_pInstance->SetData(TYPE_TWIN_VALKYR, IN_PROGRESS);
     }
 
@@ -70,13 +70,13 @@ struct boss_fjolaAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_TWIN_VALKYR) != DONE)
             m_pInstance->SetData(TYPE_TWIN_VALKYR, DONE);
     }
 
     void EnterEvadeMode() override
     {
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_TWIN_VALKYR) != FAIL)
             m_pInstance->SetData(TYPE_TWIN_VALKYR, FAIL);
 
         // cleanup handled by creature linking
