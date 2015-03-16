@@ -1,4 +1,4 @@
-DELETE FROM gossip-texts WHERE entry IN (-3649014,-3649015,-3649016,-3649017);
+DELETE FROM gossip_texts WHERE entry IN (-3649014,-3649015,-3649016,-3649017);
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3649014,'We\'re ready. This time things will be different.','barrett GOSSIP_ITEM_BEAST_WIPE_START'),
 (-3649015,'Now.','barrett GOSSIP_ITEM_JARAXXUS_WIPE_START'),
