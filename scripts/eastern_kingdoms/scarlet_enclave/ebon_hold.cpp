@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ebon_Hold
 SD%Complete: 95
-SDComment: Quest support: 12641, 12687, 12698, 12733, 12739(and 12742 to 12750), 12801, 12848
+SDComment: Quest support: 12641, 12687, 12698, 12733, 12739(and 12742 to 12750), 12754, 12801, 12848
 SDCategory: Ebon Hold
 EndScriptData */
 
@@ -32,12 +32,14 @@ npc_scarlet_ghoul
 npc_highlord_darion_mograine
 npc_fellow_death_knight
 npc_acherus_deathcharger
+npc_scarlet_courier
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
 #include "world_map_ebon_hold.h"
 #include "pet_ai.h"
+#include "TemporarySummon.h"
 
 /*######
 ## npc_a_special_surprise
@@ -2822,6 +2824,130 @@ bool EffectDummyCreature_npc_acherus_deathcharger(Unit* /*pCaster*/, uint32 uiSp
     return false;
 }
 
+/*######
+## npc_scarlet_courier
+######*/
+
+enum
+{
+    SAY_TREE_1          = -1609079,
+    SAY_TREE_2          = -1609080,
+
+    GO_TREE             = 191144,
+};
+
+struct npc_scarlet_courierAI : public ScriptedAI
+{
+    npc_scarlet_courierAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiInitTimer;
+    uint32 m_uiCombatTimer;
+    uint8 m_uiCombatStage;
+
+    void Reset() override
+    {
+        m_uiInitTimer   = 2000;
+        m_uiCombatTimer = 0;
+        m_uiCombatStage = 0;
+    }
+
+    void AttackedBy(Unit* /*pAttacker*/) override
+    {
+        m_creature->Unmount();
+    }
+
+    void JustReachedHome() override
+    {
+        m_creature->ForcedDespawn();
+        DoDespawnTree();
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        DoDespawnTree();
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        m_uiCombatTimer = 5000;
+    }
+
+    // Wrapper function that despawns the tree
+    void DoDespawnTree()
+    {
+        if (GameObject* pTree = GetClosestGameObjectWithEntry(m_creature, GO_TREE, 30.0f))
+            pTree->SetLootState(GO_JUST_DEACTIVATED);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        // walk to the tree
+        if (m_uiInitTimer)
+        {
+            if (m_uiInitTimer <= uiDiff)
+            {
+                DoScriptText(SAY_TREE_1, m_creature);
+
+                float fX, fY, fZ;
+                if (GameObject* pTree = GetClosestGameObjectWithEntry(m_creature, GO_TREE, 30.0f))
+                {
+                    pTree->GetContactPoint(m_creature, fX, fY, fZ);
+                    m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                }
+
+                m_uiInitTimer = 0;
+            }
+            else
+                m_uiInitTimer -= uiDiff;
+        }
+
+        // despawn tree and start combat
+        if (m_uiCombatTimer)
+        {
+            if (m_uiCombatTimer <= uiDiff)
+            {
+                switch (m_uiCombatStage)
+                {
+                    case 0:
+                        DoScriptText(SAY_TREE_2, m_creature);
+                        m_creature->Unmount();
+                        DoDespawnTree();
+
+                        m_uiCombatTimer = 3000;
+                        break;
+                    case 1:
+                        if (m_creature->IsTemporarySummon())
+                        {
+                            TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                            if (Player* pSummoner = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                                m_creature->AI()->AttackStart(pSummoner);
+                        }
+
+                        m_uiCombatTimer = 0;
+                        break;
+                }
+                ++m_uiCombatStage;
+            }
+            else
+                 m_uiCombatTimer -= uiDiff;
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_scarlet_courier(Creature* pCreature)
+{
+    return new npc_scarlet_courierAI(pCreature);
+}
+
 void AddSC_ebon_hold()
 {
     Script* pNewScript;
@@ -2886,5 +3012,10 @@ void AddSC_ebon_hold()
     pNewScript->Name = "npc_acherus_deathcharger";
     pNewScript->GetAI = &GetAI_npc_acherus_deathcharger;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_acherus_deathcharger;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_scarlet_courier";
+    pNewScript->GetAI = &GetAI_npc_scarlet_courier;
     pNewScript->RegisterSelf();
 }

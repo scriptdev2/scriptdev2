@@ -4138,7 +4138,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609077,'Do it, $N! Put me out of my misery!',0,0,0,1,'special_surprise SAY_EXEC_WAITING'),
 (-1609078,'%s dies from his wounds.',0,2,0,0,'special_surprise EMOTE_DIES'),
 
--- PLEASE RE-USE -1609079 to -1609088
+(-1609079,'Hrm, what a strange tree. I must investigate.',0,0,0,1,'scarlet courier SAY_TREE_1'),
+(-1609080,'What\'s this!? This isn\'t a tree at all! Guards! Guards!',0,0,0,5,'scarlet courier SAY_TREE_2'),
+
+-- PLEASE RE-USE -1609081 to -1609088
 
 (-1609089,'The Eye of Acherus launches towards its destination',0,3,0,0,'eye of acherus EMOTE_DESTIANTION'),
 (-1609090,'The Eye of Acherus is in your control',0,3,0,0,'eye of acherus EMOTE_CONTROL'),
