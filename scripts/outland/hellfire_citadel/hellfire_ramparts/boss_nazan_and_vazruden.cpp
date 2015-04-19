@@ -193,7 +193,7 @@ struct boss_vazruden_heraldAI : public ScriptedAI
     void DoMoveToCenter()
     {
         DoScriptText(SAY_INTRO, m_creature);
-        m_creature->GetMotionMaster()->MovePoint(POINT_ID_CENTER, afCenterPos[0], afCenterPos[1], afCenterPos[2]);
+        m_creature->GetMotionMaster()->MovePoint(POINT_ID_CENTER, afCenterPos[0], afCenterPos[1], afCenterPos[2], false);
     }
 
     void DoSplit()
@@ -217,7 +217,7 @@ struct boss_vazruden_heraldAI : public ScriptedAI
         if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == IDLE_MOTION_TYPE)
             m_creature->GetMotionMaster()->MovementExpired(false);
 
-        m_creature->GetMotionMaster()->MovePoint(POINT_ID_FLYING, fX, fY, fZ);
+        m_creature->GetMotionMaster()->MovePoint(POINT_ID_FLYING, fX, fY, fZ, false);
     }
 
     void DoMoveToCombat()
@@ -228,7 +228,7 @@ struct boss_vazruden_heraldAI : public ScriptedAI
         m_bIsDescending = true;
 
         m_creature->SetWalk(false);
-        m_creature->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
+        m_creature->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2], false);
         DoScriptText(EMOTE_DESCEND, m_creature);
     }
 
