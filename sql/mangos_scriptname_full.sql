@@ -596,7 +596,6 @@ UPDATE creature_template SET ScriptName='npc_unworthy_initiate_anchor' WHERE ent
 UPDATE creature_template SET ScriptName='npc_unworthy_initiate' WHERE entry IN (29519,29520,29565,29566,29567);
 UPDATE gameobject_template SET ScriptName='go_acherus_soul_prison' WHERE entry IN (191577,191580,191581,191582,191583,191584,191585,191586,191587,191588,191589,191590);
 UPDATE creature_template SET ScriptName='npc_a_special_surprise' WHERE entry IN (29032,29061,29065,29067,29068,29070,29074,29072,29073,29071);
-UPDATE creature_template SET ScriptName='npc_koltira_deathweaver' WHERE entry=28912;
 UPDATE creature_template SET ScriptName='npc_eye_of_acherus' WHERE entry=28511;
 UPDATE creature_template SET ScriptName='npc_scarlet_ghoul' WHERE entry=28845;
 UPDATE creature_template SET ScriptName='npc_highlord_darion_mograine' WHERE entry=29173;

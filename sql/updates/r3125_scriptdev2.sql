@@ -1,0 +1,2 @@
+DELETE FROM script_waypoint WHERE entry=28912;
+DELETE FROM script_texts WHERE entry BETWEEN -1609088 AND -1609079;

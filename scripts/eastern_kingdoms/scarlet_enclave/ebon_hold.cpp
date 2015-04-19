@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ebon_Hold
 SD%Complete: 95
-SDComment: Quest support: 12641, 12687, 12698, 12727, 12733, 12739(and 12742 to 12750), 12801, 12848
+SDComment: Quest support: 12641, 12687, 12698, 12733, 12739(and 12742 to 12750), 12801, 12848
 SDCategory: Ebon Hold
 EndScriptData */
 
@@ -745,189 +745,7 @@ bool EffectDummyCreature_npc_death_knight_initiate(Unit* pCaster, uint32 uiSpell
 }
 
 /*######
-## npc_koltira_deathweaver
-######*/
-
-enum eKoltira
-{
-    SAY_BREAKOUT1                   = -1609079,
-    SAY_BREAKOUT2                   = -1609080,
-    SAY_BREAKOUT3                   = -1609081,
-    SAY_BREAKOUT4                   = -1609082,
-    SAY_BREAKOUT5                   = -1609083,
-    SAY_BREAKOUT6                   = -1609084,
-    SAY_BREAKOUT7                   = -1609085,
-    SAY_BREAKOUT8                   = -1609086,
-    SAY_BREAKOUT9                   = -1609087,
-    SAY_BREAKOUT10                  = -1609088,
-
-    SPELL_KOLTIRA_TRANSFORM         = 52899,
-    SPELL_ANTI_MAGIC_ZONE           = 52894,
-
-    QUEST_BREAKOUT                  = 12727,
-
-    NPC_CRIMSON_ACOLYTE             = 29007,
-    NPC_HIGH_INQUISITOR_VALROTH     = 29001,
-    NPC_KOLTIRA_ALT                 = 28447,
-
-    // not sure about this id
-    // NPC_DEATH_KNIGHT_MOUNT          = 29201,
-    MODEL_DEATH_KNIGHT_MOUNT        = 25278
-};
-
-struct npc_koltira_deathweaverAI : public npc_escortAI
-{
-    npc_koltira_deathweaverAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
-
-    uint32 m_uiWave;
-    uint32 m_uiWave_Timer;
-    ObjectGuid m_valrothGuid;
-
-    void Reset() override
-    {
-        if (!HasEscortState(STATE_ESCORT_ESCORTING))
-        {
-            m_uiWave = 0;
-            m_uiWave_Timer = 3000;
-            m_valrothGuid.Clear();
-        }
-    }
-
-    void WaypointReached(uint32 uiPointId) override
-    {
-        switch (uiPointId)
-        {
-            case 0:
-                DoScriptText(SAY_BREAKOUT1, m_creature);
-                break;
-            case 1:
-                m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
-                break;
-            case 2:
-                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                // m_creature->UpdateEntry(NPC_KOLTIRA_ALT);// unclear if we must update or not
-                DoCastSpellIfCan(m_creature, SPELL_KOLTIRA_TRANSFORM);
-                break;
-            case 3:
-                SetEscortPaused(true);
-                m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
-                DoScriptText(SAY_BREAKOUT2, m_creature);
-                DoCastSpellIfCan(m_creature, SPELL_ANTI_MAGIC_ZONE);  // cast again that makes bubble up
-                break;
-            case 4:
-                SetRun(true);
-                break;
-            case 9:
-                m_creature->Mount(MODEL_DEATH_KNIGHT_MOUNT);
-                break;
-            case 10:
-                m_creature->Unmount();
-                break;
-        }
-    }
-
-    void JustSummoned(Creature* pSummoned) override
-    {
-        if (Player* pPlayer = GetPlayerForEscort())
-            pSummoned->AI()->AttackStart(pPlayer);
-
-        if (pSummoned->GetEntry() == NPC_HIGH_INQUISITOR_VALROTH)
-            m_valrothGuid = pSummoned->GetObjectGuid();
-    }
-
-    void SummonAcolyte(uint32 uiAmount)
-    {
-        for (uint32 i = 0; i < uiAmount; ++i)
-            m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 5000);
-    }
-
-    void UpdateEscortAI(const uint32 uiDiff) override
-    {
-        if (HasEscortState(STATE_ESCORT_PAUSED))
-        {
-            if (m_uiWave_Timer < uiDiff)
-            {
-                switch (m_uiWave)
-                {
-                    case 0:
-                        DoScriptText(SAY_BREAKOUT3, m_creature);
-                        SummonAcolyte(3);
-                        m_uiWave_Timer = 20000;
-                        break;
-                    case 1:
-                        DoScriptText(SAY_BREAKOUT4, m_creature);
-                        SummonAcolyte(3);
-                        m_uiWave_Timer = 20000;
-                        break;
-                    case 2:
-                        DoScriptText(SAY_BREAKOUT5, m_creature);
-                        SummonAcolyte(4);
-                        m_uiWave_Timer = 20000;
-                        break;
-                    case 3:
-                        DoScriptText(SAY_BREAKOUT6, m_creature);
-                        m_creature->SummonCreature(NPC_HIGH_INQUISITOR_VALROTH, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_OOC_DESPAWN, 1000);
-                        m_uiWave_Timer = 1000;
-                        break;
-                    case 4:
-                    {
-                        Creature* pTemp = m_creature->GetMap()->GetCreature(m_valrothGuid);
-
-                        if (!pTemp || !pTemp->isAlive())
-                        {
-                            DoScriptText(SAY_BREAKOUT8, m_creature);
-                            m_uiWave_Timer = 5000;
-                        }
-                        else
-                        {
-                            m_uiWave_Timer = 2500;
-                            return;                         // return, we don't want m_uiWave to increment now
-                        }
-                        break;
-                    }
-                    case 5:
-                        DoScriptText(SAY_BREAKOUT9, m_creature);
-                        m_creature->RemoveAurasDueToSpell(SPELL_ANTI_MAGIC_ZONE);
-                        m_uiWave_Timer = 2500;
-                        break;
-                    case 6:
-                        DoScriptText(SAY_BREAKOUT10, m_creature);
-                        SetEscortPaused(false);
-                        break;
-                }
-
-                ++m_uiWave;
-            }
-            else
-                m_uiWave_Timer -= uiDiff;
-        }
-
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_npc_koltira_deathweaver(Creature* pCreature)
-{
-    return new npc_koltira_deathweaverAI(pCreature);
-}
-
-bool QuestAccept_npc_koltira_deathweaver(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_BREAKOUT)
-    {
-        pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-
-        if (npc_koltira_deathweaverAI* pEscortAI = dynamic_cast<npc_koltira_deathweaverAI*>(pCreature->AI()))
-            pEscortAI->Start(false, pPlayer, pQuest);
-    }
-    return true;
-}
-
-/*######
-##
+## npc_unworthy_initiate_anchor
 ######*/
 
 enum
@@ -948,10 +766,6 @@ enum
     PHASE_DRESSUP                   = 1,
     PHASE_ACTIVATE                  = 2
 };
-
-/*######
-## npc_unworthy_initiate_anchor
-######*/
 
 struct npc_unworthy_initiate_anchorAI : public ScriptedAI
 {
@@ -3023,12 +2837,6 @@ void AddSC_ebon_hold()
     pNewScript->pGossipHello = &GossipHello_npc_death_knight_initiate;
     pNewScript->pGossipSelect = &GossipSelect_npc_death_knight_initiate;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_death_knight_initiate;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_koltira_deathweaver";
-    pNewScript->GetAI = &GetAI_npc_koltira_deathweaver;
-    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_koltira_deathweaver;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
