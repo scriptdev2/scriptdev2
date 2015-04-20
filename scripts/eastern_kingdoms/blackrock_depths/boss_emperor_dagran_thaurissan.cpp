@@ -44,15 +44,13 @@ struct boss_emperor_dagran_thaurissanAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiHandOfThaurissan_Timer;
-    uint32 m_uiAvatarOfFlame_Timer;
-    // uint32 m_uiCounter;
+    uint32 m_uiHandOfThaurissanTimer;
+    uint32 m_uiAvatarOfFlameTimer;
 
     void Reset() override
     {
-        m_uiHandOfThaurissan_Timer = 4000;
-        m_uiAvatarOfFlame_Timer = 25000;
-        // m_uiCounter = 0;
+        m_uiHandOfThaurissanTimer = 4000;
+        m_uiAvatarOfFlameTimer    = 25000;
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -68,6 +66,10 @@ struct boss_emperor_dagran_thaurissanAI : public ScriptedAI
 
         if (Creature* pPrincess = m_pInstance->GetSingleCreatureFromStorage(NPC_PRINCESS))
         {
+            // check if we didn't update the entry
+            if (pPrincess->GetEntry() != NPC_PRINCESS)
+                return;
+
             if (pPrincess->isAlive())
             {
                 pPrincess->SetFactionTemporary(FACTION_NEUTRAL, TEMPFACTION_NONE);
@@ -86,34 +88,25 @@ struct boss_emperor_dagran_thaurissanAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiHandOfThaurissan_Timer < uiDiff)
+        if (m_uiHandOfThaurissanTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_HANDOFTHAURISSAN);
-
-            // 3 Hands of Thaurissan will be casted
-            // if (m_uiCounter < 3)
-            //{
-            //    m_uiHandOfThaurissan_Timer = 1000;
-            //    ++m_uiCounter;
-            //}
-            // else
-            //{
-            m_uiHandOfThaurissan_Timer = 5000;
-            // m_uiCounter = 0;
-            //}
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HANDOFTHAURISSAN) == CAST_OK)
+                    m_uiHandOfThaurissanTimer = 5000;
+            }
         }
         else
-            m_uiHandOfThaurissan_Timer -= uiDiff;
+            m_uiHandOfThaurissanTimer -= uiDiff;
 
         // AvatarOfFlame_Timer
-        if (m_uiAvatarOfFlame_Timer < uiDiff)
+        if (m_uiAvatarOfFlameTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AVATAROFFLAME);
-            m_uiAvatarOfFlame_Timer = 18000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_AVATAROFFLAME) == CAST_OK)
+                m_uiAvatarOfFlameTimer = 18000;
         }
         else
-            m_uiAvatarOfFlame_Timer -= uiDiff;
+            m_uiAvatarOfFlameTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -150,17 +143,17 @@ struct boss_moira_bronzebeardAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiHeal_Timer;
-    uint32 m_uiMindBlast_Timer;
-    uint32 m_uiShadowWordPain_Timer;
-    uint32 m_uiSmite_Timer;
+    uint32 m_uiHealTimer;
+    uint32 m_uiMindBlastTimer;
+    uint32 m_uiShadowWordPainTimer;
+    uint32 m_uiSmiteTimer;
 
     void Reset() override
     {
-        m_uiHeal_Timer = 12000;                             // These times are probably wrong
-        m_uiMindBlast_Timer = 16000;
-        m_uiShadowWordPain_Timer = 2000;
-        m_uiSmite_Timer = 8000;
+        m_uiHealTimer           = 12000;                             // These times are probably wrong
+        m_uiMindBlastTimer      = 16000;
+        m_uiShadowWordPainTimer = 2000;
+        m_uiSmiteTimer          = 8000;
     }
 
     void AttackStart(Unit* pWho) override
@@ -183,7 +176,7 @@ struct boss_moira_bronzebeardAI : public ScriptedAI
             {
                 // if evade, then check if he is alive. If not, start make portal
                 if (!pEmperor->isAlive())
-                    m_creature->CastSpell(m_creature, SPELL_OPEN_PORTAL, false);
+                    DoCastSpellIfCan(m_creature, SPELL_OPEN_PORTAL);
             }
         }
     }
@@ -195,45 +188,46 @@ struct boss_moira_bronzebeardAI : public ScriptedAI
             return;
 
         // MindBlast_Timer
-        if (m_uiMindBlast_Timer < uiDiff)
+        if (m_uiMindBlastTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDBLAST);
-            m_uiMindBlast_Timer = 14000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDBLAST) == CAST_OK)
+                m_uiMindBlastTimer = 14000;
         }
         else
-            m_uiMindBlast_Timer -= uiDiff;
+            m_uiMindBlastTimer -= uiDiff;
 
         // ShadowWordPain_Timer
-        if (m_uiShadowWordPain_Timer < uiDiff)
+        if (m_uiShadowWordPainTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWWORDPAIN);
-            m_uiShadowWordPain_Timer = 18000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWWORDPAIN) == CAST_OK)
+                m_uiShadowWordPainTimer = 18000;
         }
         else
-            m_uiShadowWordPain_Timer -= uiDiff;
+            m_uiShadowWordPainTimer -= uiDiff;
 
         // Smite_Timer
-        if (m_uiSmite_Timer < uiDiff)
+        if (m_uiSmiteTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SMITE);
-            m_uiSmite_Timer = 10000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SMITE) == CAST_OK)
+                m_uiSmiteTimer = 10000;
         }
         else
-            m_uiSmite_Timer -= uiDiff;
+            m_uiSmiteTimer -= uiDiff;
 
         // Heal_Timer
-        if (m_uiHeal_Timer < uiDiff)
+        if (m_uiHealTimer < uiDiff)
         {
             if (Creature* pEmperor = m_pInstance->GetSingleCreatureFromStorage(NPC_EMPEROR))
             {
                 if (pEmperor->isAlive() && pEmperor->GetHealthPercent() != 100.0f)
-                    DoCastSpellIfCan(pEmperor, SPELL_HEAL);
+                {
+                    if (DoCastSpellIfCan(pEmperor, SPELL_HEAL) == CAST_OK)
+                        m_uiHealTimer = 10000;
+                }
             }
-
-            m_uiHeal_Timer = 10000;
         }
         else
-            m_uiHeal_Timer -= uiDiff;
+            m_uiHealTimer -= uiDiff;
 
         // No meele?
     }

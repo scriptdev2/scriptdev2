@@ -23,6 +23,7 @@ enum
 
     NPC_EMPEROR             = 9019,
     NPC_PRINCESS            = 8929,
+    NPC_PRIESTESS           = 10076,
     NPC_PHALANX             = 9502,
     NPC_HATEREL             = 9034,
     NPC_ANGERREL            = 9035,
@@ -79,6 +80,9 @@ enum
     GO_DWARFRUNE_E01        = 170582,
     GO_DWARFRUNE_F01        = 170583,
     GO_DWARFRUNE_G01        = 170584,
+
+    QUEST_ROYAL_RESCUE      = 4003,                         // horde quest
+    QUEST_FATE_KINGDOM      = 4362,                         // alliance quest
 
     SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
 
@@ -157,6 +161,7 @@ class instance_blackrock_depths : public ScriptedInstance
 
     private:
         void DoCallNextDwarf();
+        bool CanReplacePrincess();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;

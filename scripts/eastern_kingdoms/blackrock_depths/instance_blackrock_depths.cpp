@@ -46,8 +46,12 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_EMPEROR:
         case NPC_PRINCESS:
+            // replace the princess if required
+            if (CanReplacePrincess())
+                pCreature->UpdateEntry(NPC_PRIESTESS);
+            // no break;
+        case NPC_EMPEROR:
         case NPC_PHALANX:
         case NPC_HATEREL:
         case NPC_ANGERREL:
@@ -398,6 +402,27 @@ void instance_blackrock_depths::DoCallNextDwarf()
     }
     m_uiDwarfFightTimer = 30000;
     ++m_uiDwarfRound;
+}
+
+// function that replaces the princess if requirements are met
+bool instance_blackrock_depths::CanReplacePrincess()
+{
+    Map::PlayerList const& players = instance->GetPlayers();
+    if (players.isEmpty())
+        return false;
+
+    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+    {
+        if (Player* pPlayer = itr->getSource())
+        {
+            // if at least one player didn't complete the quest, return false
+            if ((pPlayer->GetTeam() == ALLIANCE && !pPlayer->GetQuestRewardStatus(QUEST_FATE_KINGDOM))
+                    || (pPlayer->GetTeam() == HORDE && !pPlayer->GetQuestRewardStatus(QUEST_ROYAL_RESCUE)))
+                return false;
+        }
+    }
+
+    return true;
 }
 
 void instance_blackrock_depths::Update(uint32 uiDiff)
