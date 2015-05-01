@@ -797,6 +797,7 @@ UPDATE creature_template SET ScriptName='npc_squad_leader' WHERE entry IN (31737
 UPDATE creature_template SET ScriptName='npc_infantry' WHERE entry IN (31701,31832);
 UPDATE creature_template SET ScriptName='npc_father_kamaros' WHERE entry IN (31279,32800);
 UPDATE creature_template SET ScriptName='npc_saronite_mine_slave' WHERE entry=31397;
+UPDATE creature_template SET ScriptName='npc_grand_admiral_westwind' WHERE entry=29621;
 
 /* IRONFORGE */
 

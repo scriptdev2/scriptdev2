@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Icecrown
 SD%Complete: 100
-SDComment: Quest support: 13221, 13229, 13284, 13300, 13301, 13302, 13481, 13482.
+SDComment: Quest support: 12852, 13221, 13229, 13284, 13300, 13301, 13302, 13481, 13482.
 SDCategory: Icecrown
 EndScriptData */
 
@@ -26,6 +26,7 @@ npc_squad_leader
 npc_infantry
 npc_father_kamaros
 npc_saronite_mine_slave
+npc_grand_admiral_westwind
 EndContentData */
 
 #include "precompiled.h"
@@ -654,6 +655,286 @@ bool GossipSelect_npc_saronite_mine_slave(Player* pPlayer, Creature* pCreature, 
     return true;
 }
 
+/*######
+## npc_grand_admiral_westwind
+######*/
+
+enum
+{
+    SAY_AGGRO                   = -1001184,
+    SAY_SPHERE                  = -1001185,
+    SAY_NO_MATTER               = -1001186,
+    SAY_TRANSFORM               = -1001187,
+    SAY_20_HP                   = -1001188,
+    SAY_DEFEATED                = -1001189,
+    SAY_ESCAPE                  = -1001190,
+
+    // admiral spells
+    SPELL_WHIRLWIND             = 49807,
+    SPELL_HEROIC_STRIKE_ADMIRAL = 57846,
+    SPELL_CLEAVE_ADMIRAL        = 15284,
+    SPELL_PROTECTION_SPHERE     = 50161,
+    SPELL_NULLIFIER             = 31699,
+
+    // malganis spells
+    SPELL_SLEEP                 = 53045,
+    SPELL_MIND_BLAST            = 60500,
+    SPELL_VAMPIRIC_TOUCH        = 60501,
+    SPELL_CARRION_SWARM         = 60502,
+
+    SPELL_ADMIRAL_PORTAL        = 27731,
+    SPELL_TELEPORT              = 35502,
+
+    MODEL_ID_MALGANIS           = 26582,
+    NPC_WESTWIND_CREDIT_BUNNY   = 29627,
+};
+
+static const float afPortalSpawnLoc[4] = {7494.89f, 4871.53f, -12.65f, 1.37f};
+static const float afExitLocation[3] = {7494.78f, 4872.56f, -12.72f};
+
+struct npc_grand_admiral_westwindAI : public ScriptedAI
+{
+    npc_grand_admiral_westwindAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiWhirlwindTimer;
+    uint32 m_uiHeroicStrikeTimer;
+    uint32 m_uiCleaveTimer;
+    bool   m_bIsShield;
+    bool   m_bIsTransform;
+
+    uint32 m_uiSleepTimer;
+    uint32 m_uiBlastTimer;
+    uint32 m_uiCarrionTimer;
+    uint32 m_uiEscapeTimer;
+
+    bool   m_bIsYell;
+    bool   m_bIsDefeated;
+
+    ObjectGuid m_playerGuid;
+
+    void Reset() override
+    {
+        m_uiWhirlwindTimer      = 15000;
+        m_uiHeroicStrikeTimer   = 6000;
+        m_uiCleaveTimer         = 13000;
+
+        m_uiSleepTimer          = 15000;
+        m_uiBlastTimer          = 6000;
+        m_uiCarrionTimer        = 13000;
+        m_uiEscapeTimer         = 0;
+
+        m_bIsYell               = false;
+        m_bIsShield             = false;
+        m_bIsTransform          = false;
+        m_bIsDefeated           = false;
+
+        m_creature->SetDisplayId(m_creature->GetNativeDisplayId());
+        SetEquipmentSlots(true);
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
+
+    void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
+    {
+        if (eventType == AI_EVENT_CUSTOM_A && pInvoker->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoScriptText(SAY_NO_MATTER, m_creature);
+            m_playerGuid = pInvoker->GetObjectGuid();
+            m_creature->RemoveAurasDueToSpell(SPELL_PROTECTION_SPHERE);
+        }
+    }
+
+    void EnterEvadeMode() override
+    {
+        m_creature->RemoveAllAurasOnEvade();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+
+        if (m_bIsDefeated)
+            m_creature->GetMotionMaster()->MoveIdle();
+        else
+        {
+            if (m_creature->isAlive())
+                m_creature->GetMotionMaster()->MoveTargetedHome();
+
+            m_creature->SetLootRecipient(NULL);
+
+            Reset();
+        }
+    }
+
+    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage) override
+    {
+        if (uiDamage >= m_creature->GetHealth())
+        {
+            uiDamage = 0;
+
+            if (!m_bIsDefeated)
+            {
+                m_bIsDefeated = true;
+                m_uiEscapeTimer = 5000;
+
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+                EnterEvadeMode();
+
+                // Note: the portal entry is guesswork!
+                m_creature->SummonCreature(NPC_WESTWIND_CREDIT_BUNNY, afPortalSpawnLoc[0], afPortalSpawnLoc[1], afPortalSpawnLoc[2], afPortalSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 20000);
+                DoScriptText(SAY_DEFEATED, m_creature);
+
+                // kill credit
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+                    pPlayer->RewardPlayerAndGroupAtEvent(NPC_WESTWIND_CREDIT_BUNNY, m_creature);
+            }
+        }
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        DoScriptText(SAY_ESCAPE, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_TELEPORT);
+        m_creature->ForcedDespawn(10000);
+
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+            m_creature->SetFacingToObject(pPlayer);
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_WESTWIND_CREDIT_BUNNY)
+            pSummoned->CastSpell(pSummoned, SPELL_ADMIRAL_PORTAL, true);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiEscapeTimer)
+        {
+            if (m_uiEscapeTimer <= uiDiff)
+            {
+                m_creature->SetWalk(true);
+                m_creature->GetMotionMaster()->MovePoint(1, afExitLocation[0], afExitLocation[1], afExitLocation[2]);
+                m_uiEscapeTimer = 0;
+            }
+            else
+                m_uiEscapeTimer -= uiDiff;
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (!m_bIsTransform)
+        {
+            if (m_uiWhirlwindTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
+                    m_uiWhirlwindTimer = urand(15000, 16000);
+            }
+            else
+                m_uiWhirlwindTimer -= uiDiff;
+
+            if (m_uiHeroicStrikeTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HEROIC_STRIKE_ADMIRAL) == CAST_OK)
+                    m_uiHeroicStrikeTimer = urand(6000, 7000);
+            }
+            else
+                m_uiHeroicStrikeTimer -= uiDiff;
+
+            if (m_uiCleaveTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE_ADMIRAL) == CAST_OK)
+                    m_uiCleaveTimer = urand(6000, 7000);
+            }
+            else
+                m_uiCleaveTimer -= uiDiff;
+
+            if (!m_bIsShield && m_creature->GetHealthPercent() <= 50.0f)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_PROTECTION_SPHERE) == CAST_OK)
+                {
+                    DoScriptText(SAY_SPHERE, m_creature);
+                    m_bIsShield = true;
+                }
+            }
+
+            if (m_creature->GetHealthPercent() <= 30.0f)
+            {
+                DoScriptText(SAY_TRANSFORM, m_creature);
+                m_creature->SetDisplayId(MODEL_ID_MALGANIS);
+                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
+                m_bIsTransform = true;
+            }
+        }
+        else
+        {
+            if (m_uiSleepTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_SLEEP) == CAST_OK)
+                        m_uiSleepTimer = urand(15000, 16000);
+                }
+            }
+            else
+                m_uiSleepTimer -= uiDiff;
+
+            if (m_uiBlastTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_MIND_BLAST) == CAST_OK)
+                        m_uiBlastTimer = urand(8000, 9000);
+                }
+            }
+            else
+                m_uiBlastTimer -= uiDiff;
+
+            if (m_uiCarrionTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CARRION_SWARM) == CAST_OK)
+                    m_uiCarrionTimer = urand(6000, 7000);
+            }
+            else
+                m_uiCarrionTimer -= uiDiff;
+
+            if (!m_bIsYell && m_creature->GetHealthPercent() <= 20.0f)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_VAMPIRIC_TOUCH) == CAST_OK)
+                {
+                    DoScriptText(SAY_20_HP, m_creature);
+                    m_bIsYell = true;
+                }
+            }
+        }
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_grand_admiral_westwind(Creature* pCreature)
+{
+    return new npc_grand_admiral_westwindAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_grand_admiral_westwind(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    if (uiSpellId == SPELL_NULLIFIER && uiEffIndex == EFFECT_INDEX_0 && pCaster->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (!pCreatureTarget->HasAura(SPELL_PROTECTION_SPHERE))
+            return true;
+
+        pCreatureTarget->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pCaster, pCreatureTarget);
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_icecrown()
 {
     Script* pNewScript;
@@ -679,5 +960,11 @@ void AddSC_icecrown()
     pNewScript->Name = "npc_saronite_mine_slave";
     pNewScript->pGossipHello = &GossipHello_npc_saronite_mine_slave;
     pNewScript->pGossipSelect = &GossipSelect_npc_saronite_mine_slave;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_grand_admiral_westwind";
+    pNewScript->GetAI = &GetAI_npc_grand_admiral_westwind;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_grand_admiral_westwind;
     pNewScript->RegisterSelf();
 }

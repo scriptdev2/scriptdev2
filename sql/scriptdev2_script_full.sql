@@ -1285,7 +1285,15 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1001180,'Don\'t go toward the light, Mr. Floppy!',0,0,0,0,'emily SAY_FLOPPY_ALMOST_DEAD'),
 (-1001181,'Mr. Floppy, you\'re ok! Thank you so much for saving Mr. Floppy!',0,0,0,0,'emily SAY_SECOND_WOLF_DEFEAT'),
 (-1001182,'I think I see the camp! We\'re almost home, Mr. Floppy! Let\'s go!',0,0,0,0,'emily SAY_RESUME_ESCORT'),
-(-1001183,'Thank you for helping me to get back to the camp. Go tell Walter that I\'m safe now!',0,0,0,0,'emily SAY_ESCORT_COMPLETE');
+(-1001183,'Thank you for helping me to get back to the camp. Go tell Walter that I\'m safe now!',0,0,0,0,'emily SAY_ESCORT_COMPLETE'),
+
+(-1001184,'How did you find me? Did Landgren tell?',14201,0,0,0,'admiral_westwind SAY_AGGRO'),
+(-1001185,'You thought I would just let you kill me?',14205,0,0,0,'admiral_westwind SAY_SPHERE'),
+(-1001186,'WHAT?! No matter. Even without my sphere, I will crush you! Behold my true identity and despair!',14207,1,0,0,'admiral_westwind SAY_NO_MATTER'),
+(-1001187,'Gah! I spent too much time in that weak little shell.',14426,1,0,0,'malganis_icecrown SAY_TRANSFORM'),
+(-1001188,'Kirel narak! I am Mal\'Ganis. I AM ETERNAL!',14427,1,0,0,'malganis_icecrown SAY_20_HP'),
+(-1001189,'ENOUGH! I waste my time here. I must gather my strength on the homeworld.',14428,1,0,0,'malganis_icecrown SAY_DEFEATED'),
+(-1001190,'You\'ll never defeat the Lich King without my forces. I\'ll have my revenge... on him AND you!',14429,1,0,0,'malganis_icecrown SAY_ESCAPE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
