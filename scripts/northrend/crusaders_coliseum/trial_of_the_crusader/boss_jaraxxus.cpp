@@ -52,8 +52,6 @@ enum
     SPELL_NETHER_POWER                  = 67009,
     SPELL_BERSERK                       = 26662,
 
-    SPELL_ENSLAVE_JARAXXUS              = 67924,            // dummy aura that will hold the boss after evade
-
     // npcs
     NPC_INFERNAL_VOLCANO                = 34813,
     NPC_NETHER_PORTAL                   = 34825
@@ -121,7 +119,6 @@ struct boss_jaraxxusAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, IN_PROGRESS);
 
-        m_creature->RemoveAurasDueToSpell(SPELL_ENSLAVE_JARAXXUS);
         DoCastSpellIfCan(m_creature, SPELL_NETHER_POWER);
     }
 

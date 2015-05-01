@@ -595,6 +595,17 @@ void instance_trial_of_the_crusader::DoHandleEventEpilogue()
     }
 }
 
+// Function that will set all the crusaders in combat with the target
+void instance_trial_of_the_crusader::DoSetCrusadersInCombat(Unit* pTarget)
+{
+    uint8 uiMaxCrusaders = Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN;
+    for (uint8 i = 0; i < uiMaxCrusaders; ++i)
+    {
+        if (Creature* pCrusader = instance->GetCreature(m_vCrusadersGuidsVector[i]))
+            pCrusader->AI()->AttackStart(pTarget);
+    }
+}
+
 // Function that will open and close the main gate
 void instance_trial_of_the_crusader::DoOpenMainGate(uint32 uiResetTimer)
 {
@@ -725,7 +736,10 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             break;
         case EVENT_JARAXXUS_START_ATTACK:
             if (Creature* pJaraxxus = GetSingleCreatureFromStorage(NPC_JARAXXUS))
+            {
                 pJaraxxus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
+                pJaraxxus->RemoveAurasDueToSpell(SPELL_ENSLAVE_JARAXXUS);
+            }
             break;
         case SAY_TIRION_PVP_INTRO_1:
         case TYPE_FACTION_CHAMPIONS:

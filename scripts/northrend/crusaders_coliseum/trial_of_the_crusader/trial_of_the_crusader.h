@@ -144,6 +144,7 @@ enum
     SPELL_OPEN_PORTAL           = 67864,
     SPELL_FEL_LIGHTNING_KILL    = 67888,
     SPELL_WILFRED_PORTAL        = 68424,
+    SPELL_ENSLAVE_JARAXXUS      = 67924,                    // dummy aura that will hold the boss after evade
     // SPELL_LEAP               = 67382,                    // crusader jump inside the arena to the provided coords
     SPELL_ANCHOR_HERE           = 45313,                    // change respawn coords to the current position
     SPELL_ENCOUNTER_KILL_CREDIT = 68184,                    // kill credit for faction champions
@@ -302,6 +303,7 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget = NULL, uint32 uiMiscvalue1 = 0) const override;
 
+        void DoSetCrusadersInCombat(Unit* pTarget);
         void DoOpenMainGate(uint32 uiResetTimer);
 
         void Update(uint32 uiDiff) override;
