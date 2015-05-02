@@ -523,14 +523,6 @@ struct blood_prince_council_baseAI : public ScriptedAI
         // Damage is shared by the Blood Orb Control npc
         if (!m_uiEmpowermentTimer)
             uiDamage = 0;
-
-        // ##### Workaround for missing aura 300 - Remove when this is implemented in core #####
-        if (!m_pInstance || !uiDamage)
-            return;
-
-        if (Creature* pOrb = m_pInstance->GetSingleCreatureFromStorage(NPC_BLOOD_ORB_CONTROL))
-            pOrb->DealDamage(pOrb, uiDamage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        // ##### End of workaround #####
     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
