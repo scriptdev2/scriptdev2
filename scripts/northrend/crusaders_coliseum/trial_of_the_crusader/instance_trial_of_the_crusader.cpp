@@ -204,6 +204,10 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_MISTRESS_OF_PAIN:
             m_lSummonedGuidsList.push_back(pCreature->GetObjectGuid());
             return;
+        case NPC_VALKYR_STALKER_DARK:
+        case NPC_VALKYR_STALKER_LIGHT:
+            m_vStalkersGuidsVector.push_back(pCreature->GetObjectGuid());
+            return;
         default:
             return;
     }
@@ -604,6 +608,11 @@ void instance_trial_of_the_crusader::DoSetCrusadersInCombat(Unit* pTarget)
         if (Creature* pCrusader = instance->GetCreature(m_vCrusadersGuidsVector[i]))
             pCrusader->AI()->AttackStart(pTarget);
     }
+
+    if (Creature* pPet = GetSingleCreatureFromStorage(NPC_ZHAAGRYM, true))
+        pPet->AI()->AttackStart(pTarget);
+    if (Creature* pPet = GetSingleCreatureFromStorage(NPC_CAT, true))
+        pPet->AI()->AttackStart(pTarget);
 }
 
 // Function that will open and close the main gate
@@ -821,9 +830,15 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             break;
         case EVENT_TWINS_ATTACK:
             if (Creature* pTwin = GetSingleCreatureFromStorage(NPC_FJOLA))
+            {
                 pTwin->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
+                pTwin->CastSpell(pTwin, SPELL_TWIN_EMPATHY_LIGHT, true);
+            }
             if (Creature* pTwin = GetSingleCreatureFromStorage(NPC_EYDIS))
+            {
                 pTwin->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
+                pTwin->CastSpell(pTwin, SPELL_TWIN_EMPATHY_DARK, true);
+            }
             break;
         case SAY_LKING_ANUB_INTRO_1:
             if (Player* pPlayer = GetPlayerInMap())

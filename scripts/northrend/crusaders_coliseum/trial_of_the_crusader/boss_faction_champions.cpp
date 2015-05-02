@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: faction_champions
-SD%Complete: 30
-SDComment: Basic script only
+SD%Complete: 90
+SDComment: AI might require some tweaks and improvements
 SDCategory: Crusader Coliseum
 EndScriptData */
 

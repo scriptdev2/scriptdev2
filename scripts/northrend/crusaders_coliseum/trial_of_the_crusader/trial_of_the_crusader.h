@@ -42,8 +42,8 @@ enum
     NPC_BEASTS_CONTROLLER       = 35014,
     NPC_CHAMPIONS_CONTROLLER    = 34781,
     NPC_VALKYR_TWINS_CONTROLLER = 34743,
-    // NPC_VALKYR_STALKER_DARK  = 34704,                    // summons 34628 using 66107
-    // NPC_VALKYR_STALKER_LIGHT = 34720,                    // summons 34630 using 66078
+    NPC_VALKYR_STALKER_DARK     = 34704,                    // summons 34628 using 66107
+    NPC_VALKYR_STALKER_LIGHT    = 34720,                    // summons 34630 using 66078
 
     NPC_GORMOK                  = 34796,
     NPC_ACIDMAW                 = 35144,
@@ -149,6 +149,8 @@ enum
     SPELL_ANCHOR_HERE           = 45313,                    // change respawn coords to the current position
     SPELL_ENCOUNTER_KILL_CREDIT = 68184,                    // kill credit for faction champions
     SPELL_RESILIENCE_FIX_CREDIT = 68620,                    // server side spell for achievs 3798, 3814
+    SPELL_TWIN_EMPATHY_LIGHT    = 66132,                    // damage share aura; targets dark twin (Eydis)
+    SPELL_TWIN_EMPATHY_DARK     = 66133,                    // damage share aura; targets light twin (Fjola)
     SPELL_ARTHAS_PORTAL         = 51807,
     SPELL_FROSTNOVA             = 68198,
     SPELL_CORPSE_TELEPORT       = 69016, // NYI
@@ -297,6 +299,7 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
         uint32 GetPlayerTeam() { return m_uiTeam; }
+        void GetStalkersGUIDVector(GuidVector& vVector) { vVector = m_vStalkersGuidsVector; }
 
         const char* Save() const override { return m_strInstData.c_str(); }
         void Load(const char* chrIn) override;
@@ -322,6 +325,7 @@ class instance_trial_of_the_crusader : public ScriptedInstance, private Dialogue
         std::vector<uint32> m_vCrusadersEntries;
 
         GuidVector m_vCrusadersGuidsVector;
+        GuidVector m_vStalkersGuidsVector;
         GuidList m_lSummonedGuidsList;
 
         Team m_uiTeam;
