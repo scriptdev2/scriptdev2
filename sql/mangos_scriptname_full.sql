@@ -778,6 +778,7 @@ UPDATE creature_template SET ScriptName='boss_devourer_of_souls' WHERE entry=365
 UPDATE instance_template SET ScriptName='instance_forge_of_souls' WHERE map=632;
 
 /* HALLS OF REFLECTION */
+UPDATE instance_template SET ScriptName='instance_halls_of_reflection' WHERE map=668;
 
 /* PIT OF SARON */
 UPDATE instance_template SET ScriptName='instance_pit_of_saron' WHERE map=658;
