@@ -90,6 +90,7 @@ enum
     GO_DUST_COVERED_CHEST           = 185119,
     GO_MASTERS_TERRACE_DOOR_1       = 184274,
     GO_MASTERS_TERRACE_DOOR_2       = 184280,
+    GO_BLACKENED_URN                = 194092,
 
     // Opera event stage decoration
     GO_OZ_BACKDROP                  = 183442,
@@ -180,6 +181,7 @@ class instance_karazhan : public ScriptedInstance
         uint32 m_uiOzDeathCount;
         uint32 m_uiTeam;                                    // Team of first entered player, used for the Chess event
         uint32 m_uiChessResetTimer;
+        uint32 m_uiNightbaneResetTimer;
 
         uint8 m_uiAllianceStalkerCount;
         uint8 m_uiHordeStalkerCount;

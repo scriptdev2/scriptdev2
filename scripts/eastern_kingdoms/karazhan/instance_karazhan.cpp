@@ -43,6 +43,7 @@ instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
     m_uiOzDeathCount(0),
     m_uiTeam(0),
     m_uiChessResetTimer(0),
+    m_uiNightbaneResetTimer(0),
     m_uiAllianceStalkerCount(0),
     m_uiHordeStalkerCount(0),
     m_bFriendlyGame(false)
@@ -165,6 +166,7 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
         case GO_DUST_COVERED_CHEST:
         case GO_MASTERS_TERRACE_DOOR_1:
         case GO_MASTERS_TERRACE_DOOR_2:
+        case GO_BLACKENED_URN:
             break;
 
             // Opera event backgrounds
@@ -303,6 +305,10 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_1);
             DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_2);
+
+            // reset event on timer
+            if (uiData == FAIL)
+                m_uiNightbaneResetTimer = 30000;
             break;
             // Store the event type for the Opera
         case TYPE_OPERA_PERFORMANCE:
@@ -600,6 +606,23 @@ void instance_karazhan::Update(uint32 uiDiff)
         }
         else
             m_uiChessResetTimer -= uiDiff;
+    }
+
+    // reset Nightbane encounter
+    if (m_uiNightbaneResetTimer)
+    {
+        if (m_uiNightbaneResetTimer <= uiDiff)
+        {
+            if (Creature* pNightbane = GetSingleCreatureFromStorage(NPC_NIGHTBANE))
+                pNightbane->Respawn();
+
+            if (GameObject* pUrn = GetSingleGameObjectFromStorage(GO_BLACKENED_URN))
+                pUrn->ResetDoorOrButton();
+
+            m_uiNightbaneResetTimer = 0;
+        }
+        else
+            m_uiNightbaneResetTimer -= uiDiff;
     }
 }
 
