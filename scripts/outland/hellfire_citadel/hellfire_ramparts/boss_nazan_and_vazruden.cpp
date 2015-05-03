@@ -43,13 +43,12 @@ enum
     SPELL_REVENGE_H         = 40392,
 
     // nazan
-    SPELL_FIREBALL          = 30691,                        // This and the next while flying (dmg values will change in cata)
-    SPELL_FIREBALL_B        = 33793,
-    SPELL_FIREBALL_H        = 32491,
-    SPELL_FIREBALL_B_H      = 33794,
-    SPELL_FIREBALL_LAND     = 34653,                        // While landed
-    SPELL_FIREBALL_LAND_H   = 36920,
-
+    //SPELL_FIREBALL_H      = 32491,                        // purpose unk; not sure if they are related to this encounter
+    //SPELL_FIREBALL_B_H    = 33794,
+    SPELL_FIREBALL          = 34653,
+    SPELL_FIREBALL_H        = 36920,
+    //SPELL_FIREBALL_LAND   = 30691,                        // cast while on land?
+    //SPELL_FIREBALL_LAND_H = 33793,
     SPELL_CONE_OF_FIRE      = 30926,
     SPELL_CONE_OF_FIRE_H    = 36921,
 
@@ -86,7 +85,6 @@ struct boss_vazruden_heraldAI : public ScriptedAI
     bool m_bIsDescending;
     uint32 m_uiMovementTimer;
     uint32 m_uiFireballTimer;
-    uint32 m_uiFireballBTimer;
     uint32 m_uiConeOfFireTimer;
     uint32 m_uiBellowingRoarTimer;
 
@@ -106,7 +104,6 @@ struct boss_vazruden_heraldAI : public ScriptedAI
         m_lastSeenPlayerGuid.Clear();
         m_vazrudenGuid.Clear();
         m_uiFireballTimer = 0;
-        m_uiFireballBTimer = 2100;
         m_uiConeOfFireTimer = urand(8100, 19700);
         m_uiBellowingRoarTimer = 100;                       // TODO Guesswork, though such an AoE fear soon after landing seems fitting
 
@@ -294,20 +291,6 @@ struct boss_vazruden_heraldAI : public ScriptedAI
                 }
                 else
                     m_uiFireballTimer -= uiDiff;
-
-                if (m_uiFireballBTimer < uiDiff)
-                {
-                    if (Creature* pVazruden = m_creature->GetMap()->GetCreature(m_vazrudenGuid))
-                    {
-                        if (Unit* pEnemy = pVazruden->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                        {
-                            if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL_B : SPELL_FIREBALL_B_H, 0, pVazruden->GetObjectGuid()) == CAST_OK)
-                                m_uiFireballBTimer = 15700;
-                        }
-                    }
-                }
-                else
-                    m_uiFireballBTimer -= uiDiff;
             }
 
             if (m_creature->GetHealthPercent() < 20.0f)
@@ -321,7 +304,7 @@ struct boss_vazruden_heraldAI : public ScriptedAI
         {
             if (Unit* pEnemy = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL_LAND : SPELL_FIREBALL_LAND_H) == CAST_OK)
+                if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H) == CAST_OK)
                     m_uiFireballTimer = urand(7300, 13200);
             }
         }
