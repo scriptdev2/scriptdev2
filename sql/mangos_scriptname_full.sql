@@ -511,6 +511,8 @@ UPDATE creature_template SET ScriptName='boss_jaraxxus' WHERE entry=34780;
 UPDATE creature_template SET ScriptName='boss_anubarak_trial' WHERE entry=34564;
 UPDATE creature_template SET ScriptName='boss_fjola' WHERE entry=34497;
 UPDATE creature_template SET ScriptName='boss_eydis' WHERE entry=34496;
+UPDATE creature_template SET ScriptName='npc_concentrated_bullet' WHERE entry IN (34628,34630);
+UPDATE creature_template SET ScriptName='npc_valkyr_stalker' WHERE entry IN (34628,34630);
 UPDATE creature_template SET ScriptName='npc_anubarak_spike' WHERE entry=34660;
 UPDATE creature_template SET ScriptName='npc_frost_sphere' WHERE entry=34606;
 UPDATE creature_template SET ScriptName='npc_nerubian_borrow' WHERE entry=34862;
@@ -776,6 +778,7 @@ UPDATE creature_template SET ScriptName='boss_devourer_of_souls' WHERE entry=365
 UPDATE instance_template SET ScriptName='instance_forge_of_souls' WHERE map=632;
 
 /* HALLS OF REFLECTION */
+UPDATE instance_template SET ScriptName='instance_halls_of_reflection' WHERE map=668;
 
 /* PIT OF SARON */
 UPDATE instance_template SET ScriptName='instance_pit_of_saron' WHERE map=658;
@@ -797,6 +800,7 @@ UPDATE creature_template SET ScriptName='npc_squad_leader' WHERE entry IN (31737
 UPDATE creature_template SET ScriptName='npc_infantry' WHERE entry IN (31701,31832);
 UPDATE creature_template SET ScriptName='npc_father_kamaros' WHERE entry IN (31279,32800);
 UPDATE creature_template SET ScriptName='npc_saronite_mine_slave' WHERE entry=31397;
+UPDATE creature_template SET ScriptName='npc_grand_admiral_westwind' WHERE entry=29621;
 
 /* IRONFORGE */
 

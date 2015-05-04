@@ -81,10 +81,13 @@ struct boss_nightbaneAI : public npc_escortAI
     uint32 m_uiSmokingBlastTimer;
     uint32 m_uiFireballBarrageTimer;
 
+    bool m_bCombatStarted;
+
     void Reset() override
     {
         m_uiPhase                   = PHASE_GROUND;
         m_uiFlightPhase             = 1;
+        m_bCombatStarted            = false;
 
         m_uiBellowingRoarTimer      = urand(20000, 30000);
         m_uiCharredEarthTimer       = urand(10000, 15000);
@@ -116,19 +119,13 @@ struct boss_nightbaneAI : public npc_escortAI
             m_pInstance->SetData(TYPE_NIGHTBANE, DONE);
     }
 
-    void JustReachedHome() override
+    void EnterEvadeMode() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NIGHTBANE, FAIL);
 
-        // Reset escort waypoints
-        npc_escortAI::JustRespawned();
-    }
-
-    void EnterEvadeMode() override
-    {
-        // Use standard AI evade, in order to reset position
-        ScriptedAI::EnterEvadeMode();
+        // reset boss on evade
+        m_creature->ForcedDespawn();
     }
 
     void WaypointReached(uint32 uiPointId) override
@@ -141,19 +138,21 @@ struct boss_nightbaneAI : public npc_escortAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_FLY_ANIM);
 
+            m_bCombatStarted = true;
             m_creature->SetInCombatWithZone();
         }
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
-        if (uiMotionType != POINT_MOTION_TYPE)
-            return;
-
-        if (!m_creature->getVictim())
+        // avoid overlapping of escort and combat movement
+        if (!m_bCombatStarted)
             npc_escortAI::MovementInform(uiMotionType, uiPointId);
         else
         {
+            if (uiMotionType != POINT_MOTION_TYPE)
+                return;
+
             switch (uiPointId)
             {
                 case POINT_ID_AIR:
