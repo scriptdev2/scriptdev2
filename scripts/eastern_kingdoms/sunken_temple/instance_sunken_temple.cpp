@@ -87,6 +87,7 @@ void instance_sunken_temple::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_JAMMALAN:
         case NPC_ATALARION:
+        case NPC_SHADE_OF_ERANIKUS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -102,6 +103,10 @@ void instance_sunken_temple::OnCreatureEvade(Creature* pCreature)
         case NPC_SUPPRESSOR:
         case NPC_AVATAR_OF_HAKKAR:
             SetData(TYPE_AVATAR, FAIL);
+            break;
+            // Shade of Eranikus: prevent it to become unattackable after a wipe
+        case NPC_SHADE_OF_ERANIKUS:
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             break;
     }
 }
@@ -153,6 +158,11 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_JAMMALAN:
+            if (uiData == DONE)
+            {
+                if (Creature* pEranikus = GetSingleCreatureFromStorage(NPC_SHADE_OF_ERANIKUS))
+                    pEranikus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_AVATAR:
