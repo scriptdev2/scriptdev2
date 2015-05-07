@@ -190,6 +190,7 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
         m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         InitializeDialogueHelper(m_pInstance);
+        m_creature->SetActiveObjectState(true);
         m_bEventFinished = false;
         Reset();
 
@@ -307,7 +308,10 @@ struct boss_algalonAI : public ScriptedAI, private DialogueHelper
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
         else
+        {
             m_pInstance->SetData(TYPE_ALGALON, FAIL);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        }
 
         // despawn everything
         for (GuidList::const_iterator itr = m_lSummonedGuids.begin(); itr != m_lSummonedGuids.end(); ++itr)
