@@ -184,6 +184,7 @@ struct boss_fjolaAI : public ScriptedAI
         {
             uiSpell = m_bIsLightTwin ? SPELL_LIGHT_VORTEX : SPELL_DARK_VORTEX;
             pCaster->CastSpell(pCaster, uiSpell, false);
+            DoScriptText(m_bIsLightTwin ? SAY_TO_WHITE : SAY_TO_BLACK, pCaster);
         }
         else
         {
@@ -191,6 +192,7 @@ struct boss_fjolaAI : public ScriptedAI
             uiShieldSpell = m_bIsLightTwin ? SPELL_SHIELD_OF_LIGHTS : SPELL_SHIELD_OF_DARKNESS;
             pCaster->CastSpell(pCaster, uiSpell, false);
             pCaster->CastSpell(pCaster, uiShieldSpell, true);
+            DoScriptText(SAY_COLORSWITCH, pCaster);
         }
 
         m_bIsVortex = urand(0, 1) ? true : false;
@@ -232,8 +234,13 @@ struct boss_fjolaAI : public ScriptedAI
                     if (m_pInstance)
                     {
                         if (Creature* pEydis = m_pInstance->GetSingleCreatureFromStorage(NPC_EYDIS))
+                        {
                             pEydis->CastSpell(pEydis, SPELL_BERSERK, true);
+                            DoScriptText(SAY_BERSERK, pEydis);
+                        }
                     }
+
+                    DoScriptText(SAY_BERSERK, m_creature);
                     m_uiBerserkTimer = 0;
                 }
             }

@@ -72,10 +72,13 @@ void instance_halls_of_reflection::OnObjectCreate(GameObject* pGo)
 {
     switch (pGo->GetEntry())
     {
+        case GO_IMPENETRABLE_DOOR:
+            if (m_auiEncounter[TYPE_MARWYN] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
         case GO_FROSTMOURNE:
         case GO_FROSTMOURNE_ALTAR:
         case GO_ICECROWN_DOOR_ENTRANCE:
-        case GO_IMPENETRABLE_DOOR:
         case GO_ICECROWN_DOOR_LK_ENTRANCE:
         case GO_ICECROWN_DOOR_LK_EXIT:
         case GO_CAVE_IN:

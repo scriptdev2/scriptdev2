@@ -15,7 +15,8 @@ enum
 
     NPC_FALRIC                      = 38112,
     NPC_MARWYN                      = 38113,
-    NPC_LICH_KING                   = 37226,
+    NPC_LICH_KING                   = 36954,
+    NPC_FROSTSWORN_GENERAL          = 36723,                    // miniboss between Marwyn and Lich King
 
     NPC_JAINA_PART1                 = 37221,
     NPC_JAINA_PART2                 = 36955,
@@ -28,16 +29,16 @@ enum
 
     // intro related npcs
     NPC_UTHER                       = 37225,
-    NPC_LICH_KING_INTRO             = 36954,
+    NPC_LICH_KING_INTRO             = 37226,
     NPC_FROSTMOURNE_ALTER_BUNNY     = 37704,                    // dummy trigger for Quel'Delar
     NPC_QUEL_DELAR                  = 37158,
 
     // spirit event creatures
-    NPC_SPECTRAL_FOOTMAN            = 38173,
-    NPC_SHADOWY_MERCENARY           = 38177,
     NPC_PHANTOM_MAGE                = 38172,
+    NPC_SPECTRAL_FOOTMAN            = 38173,
     NPC_GHOSTLY_PRIEST              = 38175,
     NPC_TORTURED_RIFLEMAN           = 38176,
+    NPC_SHADOWY_MERCENARY           = 38177,
 
     // escape event creatures
     NPC_RAGING_GHOUL                = 36940,
@@ -67,6 +68,10 @@ enum
     // world states
     WORLD_STATE_SPIRIT_WAVES        = 4884,
     WORLD_STATE_SPIRIT_WAVES_COUNT  = 4882,
+
+    // area triggers
+    AREATRIGGER_FROSTMOURNE_ALTAR   = 5697,
+    AREATRIGGER_LICH_KING_ROOM      = 5605,
 };
 
 struct EventNpcLocations
