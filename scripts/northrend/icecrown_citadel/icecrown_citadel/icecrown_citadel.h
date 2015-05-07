@@ -43,7 +43,7 @@ enum
     NPC_OVERLORD_SAURFANG           = 37187,
     NPC_KORKRON_REAVER              = 37920,
     NPC_MURADIN_BRONZEBEARD         = 37200,        // Saurfang's encounter and at the instance entrance
-    NPC_SKYBREAKER_MARINE           = 37380,
+    NPC_SKYBREAKER_MARINE           = 37830,
     NPC_ALLIANCE_MARINE             = 37830,
     NPC_BLOOD_ORB_CONTROL           = 38008,
     NPC_LANATHEL_INTRO              = 38004,

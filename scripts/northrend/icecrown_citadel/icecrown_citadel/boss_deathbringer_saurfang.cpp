@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_deathbringer_saurfang
-SD%Complete: 60%
-SDComment: Blood Power and all the related spells require core support; Intro and Outro event NYI.
+SD%Complete: 80%
+SDComment: Intro and Outro event NYI.
 SDCategory: Icecrown Citadel
 EndScriptData */
 
@@ -73,21 +73,21 @@ enum
     SAY_OUTRO_HORDE_4           = -1631069,
 
     // intro event related
-    // SPELL_GRIP_OF_AGONY       = 70572,
-    // SPELL_VEHICLE_HARDCODED   = 46598,
+    SPELL_GRIP_OF_AGONY         = 70572,
+    SPELL_VEHICLE_HARDCODED     = 46598,
+
+    // aggro spells
+    SPELL_BLOOD_LINK            = 72178,
+    SPELL_MARK_FALLEN_DAMAGE    = 72256,            // procs 72255 on Saurfang melee attack
+    SPELL_RUNE_OF_BLOOD_PROC    = 72408,            // procs 72409 on Saurfang melee attack
 
     // combat spells
-    SPELL_BLOOD_POWER           = 72371,
-    // SPELL_BLOOD_POWER_SCALE   = 72370,            // included in creature_template_addon
-    // SPELL_ZERO_POWER          = 72242,            // included in creature_template_addon
+    SPELL_BLOOD_POWER           = 72371,            // triggered by 72195
+    // SPELL_BLOOD_POWER_SCALE   = 72370,           // purpose unk
+    // SPELL_ZERO_POWER          = 72242,           // included in creature_template_addon
 
-    // SPELL_MARK_FALLEN_DAMAGE  = 72256,            // procs on Saurfang melee attack - 72255 - included in creature_template_addon
-    SPELL_MARK_FALLEN_CHAMPION  = 72293,            // procs on target death - 72260
-    SPELL_REMOVE_MARKS          = 72257,
-
-    // SPELL_RUNE_OF_BLOOD_PROC  = 72408,            // procs on Saurfang mele attack - 72409 - included in creature_template_addon
+    SPELL_MARK_FALLEN_CHAMPION  = 72254,            // triggers 72293 which procs 72260 on target death
     SPELL_RUNE_OF_BLOOD         = 72410,
-
     SPELL_BLOOD_NOVA            = 72378,
     SPELL_BOILING_BLOOD         = 72385,
 
@@ -101,6 +101,10 @@ enum
     SPELL_BERSERK               = 26662,
     SPELL_FRENZY                = 72737,
 
+    // evade / death spells
+    SPELL_REMOVE_MARKS          = 72257,
+    SPELL_ACHIEVEMENT           = 72928,
+
     // Summoned spells
     SPELL_RESISTANT_SKIN        = 72723,
     SPELL_BLOOD_LINK_BEAST      = 72176,
@@ -108,7 +112,6 @@ enum
     FACTION_ID_UNDEAD           = 974,
 
     POINT_ID_INTRO              = 1,
-    POINT_ID_EVADE              = 2,
 };
 
 static const float fIntroPosition[4] = { -491.30f, 2211.35f, 541.11f, 3.16f};
@@ -118,7 +121,6 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
     boss_deathbringer_saurfangAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
-        m_powerBloodPower = m_creature->GetPowerType();
         m_bIsIntroDone = false;
         Reset();
     }
@@ -135,8 +137,6 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
     bool m_bIsFrenzied;
     bool m_bIsIntroDone;
 
-    Powers m_powerBloodPower;
-
     void Reset() override
     {
         m_uiRuneOfBloodTimer    = 25000;
@@ -150,14 +150,15 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
             m_uiBerserkTimer    = 6 * MINUTE * IN_MILLISECONDS;
 
         m_bIsFrenzied           = false;
-
-        m_creature->SetPower(m_powerBloodPower, 0);
     }
 
     void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature, SPELL_BLOOD_POWER, CAST_TRIGGERED);
+
+        DoCastSpellIfCan(m_creature, SPELL_BLOOD_LINK, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_MARK_FALLEN_DAMAGE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_RUNE_OF_BLOOD_PROC, CAST_TRIGGERED);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, IN_PROGRESS);
@@ -189,6 +190,7 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_MARKS, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_ACHIEVEMENT, CAST_TRIGGERED);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, DONE);
@@ -198,21 +200,9 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, FAIL);
-    }
 
-    void EnterEvadeMode() override
-    {
-        m_creature->RemoveAllAurasOnEvade();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(true);
-
-        // Boss needs to evade to the point in front of the door
-        if (m_creature->isAlive())
-            m_creature->GetMotionMaster()->MovePoint(POINT_ID_EVADE, fIntroPosition[0], fIntroPosition[1], fIntroPosition[2]);
-
-        m_creature->SetLootRecipient(NULL);
-
-        Reset();
+        DoCastSpellIfCan(m_creature, SPELL_REMOVE_MARKS, CAST_TRIGGERED);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
@@ -220,14 +210,7 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
 
-        if (uiPointId == POINT_ID_EVADE)
-        {
-            m_creature->SetFacingTo(fIntroPosition[3]);
-
-            if (m_pInstance)
-                m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, FAIL);
-        }
-        else if (uiPointId == POINT_ID_INTRO)
+        if (uiPointId == POINT_ID_INTRO)
         {
             if (m_pInstance)
                 m_pInstance->DoUseDoorOrButton(GO_SAURFANG_DOOR);
@@ -235,9 +218,9 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
             // Note: this should be done only after the intro event is finished
             // ToDo: move this to the proper place after the intro will be implemented
             // Also the faction needs to be checked if it should be handled in database
-            m_creature->setFaction(FACTION_ID_UNDEAD);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PASSIVE);
-            m_creature->SetInCombatWithZone();
+            m_creature->SetFactionTemporary(FACTION_ID_UNDEAD, TEMPFACTION_NONE);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PASSIVE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            m_creature->SetRespawnCoord(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), m_creature->GetOrientation());
         }
     }
 
@@ -251,46 +234,21 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    // Wrapper to help get a random player for the Mark of the Fallen Champion
-    Unit* SelectRandomPlayerForMark()
-    {
-        // Search only for players which are not within 18 yards of the boss
-        std::vector<Unit*> suitableTargets;
-        ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
-
-        for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
-        {
-            if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
-            {
-                if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget != m_creature->getVictim() && !pTarget->HasAura(SPELL_MARK_FALLEN_CHAMPION))
-                    suitableTargets.push_back(pTarget);
-            }
-        }
-
-        if (suitableTargets.empty())
-            return m_creature->getVictim();
-        else
-            return suitableTargets[urand(0, suitableTargets.size() - 1)];
-    }
-
     void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Mark of the Fallen Champion
-        // ToDo: enable this when blood power is fully supported by the core
-        /*if (m_creature->GetPower(m_powerBloodPower) >= 100)
+        if (m_creature->GetPower(m_creature->GetPowerType()) == 100)
         {
-            if (Unit* pTarget = SelectRandomPlayerForMark())
+            if (DoCastSpellIfCan(m_creature, SPELL_MARK_FALLEN_CHAMPION) == CAST_OK)
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_MARK_FALLEN_CHAMPION) == CAST_OK)
-                {
-                    DoScriptText(SAY_FALLENCHAMPION, m_creature);
-                    m_creature->SetPower(m_powerBloodPower, 0);
-                }
+                DoScriptText(SAY_FALLENCHAMPION, m_creature);
+                m_creature->RemoveAurasDueToSpell(SPELL_BLOOD_POWER);
+                m_creature->SetPower(m_creature->GetPowerType(), 0);
             }
-        }*/
+        }
 
         // Frenzy (soft enrage)
         if (!m_bIsFrenzied)
@@ -308,7 +266,7 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
         // Berserk (hard enrage)
         if (m_uiBerserkTimer)
         {
-            if (m_uiBerserkTimer < uiDiff)
+            if (m_uiBerserkTimer <= uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
                 {

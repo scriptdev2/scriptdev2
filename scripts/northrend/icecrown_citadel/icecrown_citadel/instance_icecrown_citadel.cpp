@@ -317,7 +317,10 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
         case TYPE_GUNSHIP_BATTLE:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
+            {
                 DoRespawnGameObject(m_uiTeam == ALLIANCE ? GO_GUNSHIP_ARMORY_A : GO_GUNSHIP_ARMORY_H, 60 * MINUTE);
+                DoToggleGameObjectFlags(m_uiTeam == ALLIANCE ? GO_GUNSHIP_ARMORY_A : GO_GUNSHIP_ARMORY_H, GO_FLAG_NO_INTERACT, false);
+            }
             break;
         case TYPE_DEATHBRINGER_SAURFANG:
             m_auiEncounter[uiType] = uiData;
@@ -325,6 +328,7 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_SAURFANG_DOOR);
                 DoRespawnGameObject(GO_SAURFANG_CACHE, 60 * MINUTE);
+                DoToggleGameObjectFlags(GO_SAURFANG_CACHE, GO_FLAG_NO_INTERACT, false);
 
                 // Note: these doors may not be correct. In theory the doors should be already opened
                 DoUseDoorOrButton(GO_SCIENTIST_DOOR);
@@ -400,6 +404,7 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_GREEN_DRAGON_EXIT);
                 DoUseDoorOrButton(GO_SINDRAGOSA_ENTRANCE);
                 DoRespawnGameObject(GO_DREAMWALKER_CACHE, 60 * MINUTE);
+                DoToggleGameObjectFlags(GO_DREAMWALKER_CACHE, GO_FLAG_NO_INTERACT, false);
             }
             if (uiData == DONE || uiData == FAIL)
             {
