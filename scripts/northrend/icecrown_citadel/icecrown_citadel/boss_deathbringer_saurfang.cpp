@@ -150,6 +150,8 @@ struct boss_deathbringer_saurfangAI : public ScriptedAI
             m_uiBerserkTimer    = 6 * MINUTE * IN_MILLISECONDS;
 
         m_bIsFrenzied           = false;
+
+        m_creature->SetPower(m_creature->GetPowerType(), 0);
     }
 
     void Aggro(Unit* /*pWho*/) override

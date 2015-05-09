@@ -16,13 +16,14 @@
 
 /* ScriptData
 SDName: boss_lord_marrowgar
-SD%Complete: 75%
-SDComment: Bone Spike Spell requires vehicle support
+SD%Complete: 90%
+SDComment: Achiev NYI.
 SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
 #include "icecrown_citadel.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -42,15 +43,17 @@ enum
     SPELL_BONE_STORM            = 69076,
     SPELL_COLDFLAME             = 69140,
     SPELL_COLDFLAME_STORM       = 72705,
-    SPELL_BONE_SPIKE            = 69057,
-    SPELL_BONE_SPIKE_STORM      = 73142,
+    SPELL_BONE_SPIKE            = 69057,                    // triggers spell 69062
+    SPELL_BONE_SPIKE_STORM      = 73142,                    // triggers spell 69062 / 72669 / 72670
 
     // summoned spells
     SPELL_COLDFLAME_AURA        = 69145,
     SPELL_IMPALED               = 69065,
 
     // npcs
-    NPC_BONE_SPIKE              = 38711,
+    NPC_BONE_SPIKE_1            = 36619,                    // summoned by spell 69062
+    NPC_BONE_SPIKE_2            = 38711,                    // summoned by spell 72670
+    NPC_BONE_SPIKE_3            = 38712,                    // summoned by spell 72669
     NPC_COLDFLAME               = 36672,
 
     // phases and max cold flame charges
@@ -256,8 +259,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
         }
 
         // Bone spike - different spells for the normal phase or storm phase
-        // ToDo: uncommnet this when vehicles and the Bone spike spells are properly supported by core
-        /*if (m_pInstance && (m_pInstance->IsHeroicDifficulty() || m_uiPhase == PHASE_NORMAL))
+        if (m_pInstance && (m_pInstance->IsHeroicDifficulty() || m_uiPhase == PHASE_NORMAL))
         {
             if (m_uiBoneSpikeTimer < uiDiff)
             {
@@ -274,7 +276,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
             }
             else
                 m_uiBoneSpikeTimer -= uiDiff;
-        }*/
+        }
 
         // Berserk
         if (m_uiBerserkTimer)
@@ -298,6 +300,87 @@ CreatureAI* GetAI_boss_lord_marrowgar(Creature* pCreature)
     return new boss_lord_marrowgarAI(pCreature);
 }
 
+/*######
+## npc_bone_spike
+######*/
+
+struct npc_bone_spikeAI : public Scripted_NoMovementAI
+{
+    npc_bone_spikeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_bHasImpaled = false;
+        Reset();
+    }
+
+    bool m_bHasImpaled;
+
+    void Reset() override { }
+
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
+    void KilledUnit(Unit* pVictim) override
+    {
+        // remove the aura as it's death persistent (I wonder why...)
+        pVictim->RemoveAurasDueToSpell(SPELL_IMPALED);
+        m_creature->ForcedDespawn();
+    }
+
+    void JustDied(Unit* /*pKiller*/) override
+    {
+        if (m_creature->IsTemporarySummon())
+        {
+            TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+            // remove impale on death
+            if (Player* pSummoner = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                pSummoner->RemoveAurasDueToSpell(SPELL_IMPALED);
+        }
+    }
+
+    void UpdateAI(const uint32 /*uiDiff*/) override
+    {
+        if (!m_bHasImpaled)
+        {
+            if (m_creature->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                // Impale player
+                if (Player* pSummoner = m_creature->GetMap()->GetPlayer(pTemporary->GetSummonerGuid()))
+                    DoCastSpellIfCan(pSummoner, SPELL_IMPALED);
+            }
+
+            m_bHasImpaled = true;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_bone_spike(Creature* pCreature)
+{
+    return new npc_bone_spikeAI(pCreature);
+}
+
+/*######
+## npc_coldflame
+######*/
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct npc_coldflameAI : public ScriptedAI
+{
+    npc_coldflameAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void Reset() override { }
+    void AttackStart(Unit* /*pWho*/) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override { }
+    void UpdateAI(const uint32 /*uiDiff*/) override { }
+};
+
+CreatureAI* GetAI_npc_coldflame(Creature* pCreature)
+{
+    return new npc_coldflameAI(pCreature);
+}
+
 void AddSC_boss_lord_marrowgar()
 {
     Script* pNewScript;
@@ -305,5 +388,15 @@ void AddSC_boss_lord_marrowgar()
     pNewScript = new Script;
     pNewScript->Name = "boss_lord_marrowgar";
     pNewScript->GetAI = &GetAI_boss_lord_marrowgar;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_bone_spike";
+    pNewScript->GetAI = &GetAI_npc_bone_spike;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_coldflame";
+    pNewScript->GetAI = &GetAI_npc_coldflame;
     pNewScript->RegisterSelf();
 }
