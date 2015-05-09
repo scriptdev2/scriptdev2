@@ -188,6 +188,7 @@ struct boss_hodirAI : public ScriptedAI
                 }
 
                 m_uiEpilogueTimer = 10000;
+                m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
                 m_creature->SetFactionTemporary(FACTION_ID_FRIENDLY, TEMPFACTION_NONE);
                 m_bEventFinished = true;
                 EnterEvadeMode();
@@ -226,7 +227,6 @@ struct boss_hodirAI : public ScriptedAI
                             m_pInstance->SetData(TYPE_HODIR, DONE);
 
                         DoScriptText(SAY_EPILOGUE, m_creature);
-                        m_creature->CastSpell(m_creature, SPELL_HODIR_CREDIT, true);
                         m_uiEpilogueTimer = 10000;
                         break;
                     case 1:
