@@ -422,13 +422,14 @@ enum
     SAY_TREY_ATTACK                 = -1001157,
     SAY_ESCORT_COMPLETE             = -1001158,
 
-    SPELL_STRENGHT_ARKONARIN        = 18163,
+    SPELL_STRENGTH_ARKONARIN        = 18163,
     SPELL_MORTAL_STRIKE             = 16856,
     SPELL_CLEAVE                    = 15496,
 
     QUEST_ID_RESCUE_JAEDENAR        = 5203,
     NPC_JAEDENAR_LEGIONNAIRE        = 9862,
     NPC_SPIRT_TREY                  = 11141,
+    NPC_ARKONARIN                   = 11018,
     GO_ARKONARIN_CHEST              = 176225,
     GO_ARKONARIN_CAGE               = 176306,
 };
@@ -506,14 +507,14 @@ struct npc_captured_arkonarinAI : public npc_escortAI
                 m_creature->HandleEmote(EMOTE_ONESHOT_KNEEL);
                 break;
             case 39:
-                DoCastSpellIfCan(m_creature, SPELL_STRENGHT_ARKONARIN);
+                DoCastSpellIfCan(m_creature, SPELL_STRENGTH_ARKONARIN);
                 break;
             case 40:
+                m_creature->UpdateEntry(NPC_ARKONARIN);
                 if (Player* pPlayer = GetPlayerForEscort())
                     m_creature->SetFacingToObject(pPlayer);
                 m_bCanAttack = true;
                 DoScriptText(SAY_FOUND_EQUIPMENT, m_creature);
-                // ToDo: change equipment!
                 break;
             case 41:
                 DoScriptText(SAY_ESCAPE_DEMONS, m_creature);
