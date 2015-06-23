@@ -88,6 +88,7 @@ enum
     GO_ELUNE_FIRE               = 177417,
     GO_ELUNE_GEM                = 177414,       // is respawned in script
     GO_ELUNE_LIGHT              = 177415,       // are respawned in script
+    GO_ELUNE_AURA               = 177416,       // is respawned in script
 
     QUEST_GUARDIANS_ALTAR       = 4901,
 };
@@ -301,7 +302,7 @@ struct npc_ranshallaAI : public npc_escortAI, private DialogueHelper
                 SetEscortPaused(false);
                 break;
             case SAY_PRIESTESS_ALTAR_8:
-                // make the gem respawn
+                // make the gem and its aura respawn
                 if (GameObject* pGem = GetClosestGameObjectWithEntry(m_creature, GO_ELUNE_GEM, 10.0f))
                 {
                     if (pGem->isSpawned())
@@ -309,6 +310,14 @@ struct npc_ranshallaAI : public npc_escortAI, private DialogueHelper
 
                     pGem->SetRespawnTime(90);
                     pGem->Refresh();
+                }
+                if (GameObject* pAura = GetClosestGameObjectWithEntry(m_creature, GO_ELUNE_AURA, 10.0f))
+                {
+                    if (pAura->isSpawned())
+                        break;
+
+                    pAura->SetRespawnTime(90);
+                    pAura->Refresh();
                 }
                 break;
             case SAY_PRIESTESS_ALTAR_9:
