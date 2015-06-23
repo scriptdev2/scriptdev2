@@ -78,6 +78,21 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
         case NPC_WATCHER_DOOMGRIP:
             m_sVaultNpcGuids.insert(pCreature->GetObjectGuid());
             break;
+            // Arena crowd
+        case NPC_ARENA_SPECTATOR:
+        case NPC_SHADOWFORGE_PEASANT:
+        case NPC_SHADOWFORGE_CITIZEN:
+        case NPC_SHADOWFORGE_SENATOR:
+        case NPC_ANVILRAGE_SOLDIER:
+        case NPC_ANVILRAGE_MEDIC:
+        case NPC_ANVILRAGE_OFFICER:
+            if (pCreature->GetPositionZ() < aArenaCrowdVolume->m_fCenterZ || pCreature->GetPositionZ() > aArenaCrowdVolume->m_fCenterZ + aArenaCrowdVolume->m_uiHeight ||
+                    !pCreature->IsWithinDist2d(aArenaCrowdVolume->m_fCenterX, aArenaCrowdVolume->m_fCenterY, aArenaCrowdVolume->m_uiRadius))
+                break;
+            m_sArenaCrowdNpcGuids.insert(pCreature->GetObjectGuid());
+            if (m_auiEncounter[0] == DONE)
+                pCreature->SetFactionTemporary(FACTION_ARENA_NEUTRAL, TEMPFACTION_RESTORE_RESPAWN);
+            break;
     }
 }
 
@@ -132,6 +147,14 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             // If finished the arena event after theldren fight
             if (uiData == DONE && m_auiEncounter[0] == SPECIAL)
                 DoRespawnGameObject(GO_ARENA_SPOILS, HOUR);
+            else if (uiData == DONE)
+            {
+                for (GuidSet::const_iterator itr = m_sArenaCrowdNpcGuids.begin(); itr != m_sArenaCrowdNpcGuids.end(); ++itr)
+                {
+                    if (Creature* pSpectator = instance->GetCreature(*itr))
+                        pSpectator->SetFactionTemporary(FACTION_ARENA_NEUTRAL, TEMPFACTION_RESTORE_RESPAWN);
+                }
+            }
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_VAULT:
