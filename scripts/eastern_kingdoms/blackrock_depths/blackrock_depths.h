@@ -96,7 +96,7 @@ enum
     SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
 
     FACTION_DWARF_HOSTILE   = 754,                          // Hostile faction for the Tomb of the Seven dwarfs
-    FACTION_ARENA_NEUTRAL   = 674,                          // Neutral faction for NPC in top of Arena after event complete
+    FACTION_ARENA_NEUTRAL   = 15,                           // Neutral faction for NPC in top of Arena after event complete
 };
 
 struct ArenaCylinder
@@ -179,6 +179,7 @@ class instance_blackrock_depths : public ScriptedInstance
         // Arena Event
         void SetArenaCenterCoords(float fX, float fY, float fZ) { m_fArenaCenterX = fX; m_fArenaCenterY = fY; m_fArenaCenterZ = fZ; }
         void GetArenaCenterCoords(float& fX, float& fY, float& fZ) { fX = m_fArenaCenterX; fY = m_fArenaCenterY; fZ = m_fArenaCenterZ; }
+        GuidSet GetArenaCrowdGuid() { return m_sArenaCrowdNpcGuids; }
 
     private:
         void DoCallNextDwarf();

@@ -98,13 +98,14 @@ enum
     MAX_POSSIBLE_THELDREN_ADDS      = 8,
 
     SPELL_SUMMON_THELRIN_DND        = 27517,
-    /* Other spells used by Grimstone
-    SPELL_ASHCROMBES_TELEPORT_A     = 15742
+    // Other spells used by Grimstone
+    SPELL_ASHCROMBES_TELEPORT_A     = 15742,
     SPELL_ASHCROMBES_TELEPORT_B     = 6422,
     SPELL_ARENA_FLASH_A             = 15737,
     SPELL_ARENA_FLASH_B             = 15739,
-    */
-
+    SPELL_ARENA_FLASH_C             = 15740,
+    SPELL_ARENA_FLASH_D             = 15741,
+    
     QUEST_THE_CHALLENGE             = 9015,
     NPC_THELDREN_QUEST_CREDIT       = 16166,
 };
@@ -191,6 +192,7 @@ struct npc_grimstoneAI : public npc_escortAI
     uint32 m_uiGladiatorId[MAX_THELDREN_ADDS];
 
     GuidList m_lSummonedGUIDList;
+    GuidSet m_lArenaCrowd;
 
     void Reset() override
     {
@@ -275,7 +277,7 @@ struct npc_grimstoneAI : public npc_escortAI
         switch (uiPointId)
         {
             case 0:                                         // Middle reached first time
-                DoScriptText(urand(0, 1) ? SAY_START_1 : SAY_START_2, m_creature);
+                DoScriptText(SAY_START_1, m_creature);
                 SetEscortPaused(true);
                 m_uiEventTimer = 5000;
                 break;
@@ -288,7 +290,7 @@ struct npc_grimstoneAI : public npc_escortAI
                 SetEscortPaused(true);
                 break;
             case 3:                                         // Middle reached second time
-                DoScriptText(urand(0, 1) ? SAY_SUMMON_BOSS_1 : SAY_SUMMON_BOSS_2, m_creature);
+                DoScriptText(SAY_SUMMON_BOSS_1, m_creature);
                 break;
             case 4:                                         // Reached North Gate
                 DoScriptText(SAY_OPEN_NORTH_GATE, m_creature);
@@ -313,7 +315,7 @@ struct npc_grimstoneAI : public npc_escortAI
         if (m_pInstance->GetData(TYPE_RING_OF_LAW) == FAIL)
         {
             // Reset Doors
-            if (m_uiEventPhase >= 9)                        // North Gate is opened
+            if (m_uiEventPhase >= 10)                       // North Gate is opened
             {
                 m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
                 m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
@@ -345,8 +347,20 @@ struct npc_grimstoneAI : public npc_escortAI
                 {
                     case 0:
                         // Shortly after spawn, start walking
-                        // DoScriptText(-1000000, m_creature); // no more text on spawn
+                        m_creature->CastSpell(m_creature, SPELL_ASHCROMBES_TELEPORT_A, true);
+                        DoScriptText(SAY_START_2, m_creature);
                         m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
+                        // Some of the NPCs in the crowd do cheer emote at event start
+                        // we randomly select 25% of the NPCs to do this
+                        m_lArenaCrowd = m_pInstance->GetArenaCrowdGuid();
+                        for (GuidSet::const_iterator itr = m_lArenaCrowd.begin(); itr != m_lArenaCrowd.end(); ++itr)
+                        {
+                            if (Creature* pSpectator = m_creature->GetMap()->GetCreature(*itr))
+                            {
+                                if (urand(0, 1) < 0.25)
+                                    pSpectator->HandleEmote(EMOTE_ONESHOT_CHEER);
+                            }
+                        }
                         Start(false);
                         SetEscortPaused(false);
                         m_uiEventTimer = 0;
@@ -361,41 +375,56 @@ struct npc_grimstoneAI : public npc_escortAI
                         break;
                     case 3:
                         // Open East Gate
+                        m_creature->CastSpell(m_creature, SPELL_ARENA_FLASH_A, true);
+                        m_creature->CastSpell(m_creature, SPELL_ARENA_FLASH_B, true);
                         m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
                         m_uiEventTimer = 3000;
                         break;
                     case 4:
-                        SetEscortPaused(false);
-                        m_creature->SetVisibility(VISIBILITY_OFF);
-                        // Summon Ring Mob(s)
-                        SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
-                        m_uiEventTimer = 8000;
+                        // timer for teleport out spell which has 2000 ms cast time
+                        m_creature->CastSpell(m_creature, SPELL_ASHCROMBES_TELEPORT_B, true);
+                        m_uiEventTimer = 2500;
                         break;
                     case 5:
+                        m_creature->SetVisibility(VISIBILITY_OFF);
+                        SetEscortPaused(false);
                         // Summon Ring Mob(s)
-                        SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
                         SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
                         m_uiEventTimer = 8000;
                         break;
                     case 6:
                         // Summon Ring Mob(s)
                         SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
-                        m_uiEventTimer = 0;
+                        SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
+                        m_uiEventTimer = 8000;
                         break;
                     case 7:
-                        // Summoned Mobs are dead, continue event
-                        m_creature->SetVisibility(VISIBILITY_ON);
-                        m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
-                        // DoScriptText(-1000000, m_creature); // after killed the mobs, no say here
-                        SetEscortPaused(false);
+                        // Summon Ring Mob(s)
+                        SummonRingMob(aRingMob[m_uiMobSpawnId], POS_EAST);
                         m_uiEventTimer = 0;
                         break;
                     case 8:
+                        // Summoned Mobs are dead, continue event
+                        DoScriptText(SAY_SUMMON_BOSS_2, m_creature);
+                        m_creature->SetVisibility(VISIBILITY_ON);
+                        m_creature->CastSpell(m_creature, SPELL_ASHCROMBES_TELEPORT_A, true);
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
+                        SetEscortPaused(false);
+                        m_uiEventTimer = 0;
+                        break;
+                    case 9:
                         // Open North Gate
+                        m_creature->CastSpell(m_creature, SPELL_ARENA_FLASH_C, true);
+                        m_creature->CastSpell(m_creature, SPELL_ARENA_FLASH_D, true);
                         m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
                         m_uiEventTimer = 5000;
                         break;
-                    case 9:
+                    case 10:
+                        // timer for teleport out spell which has 2000 ms cast time
+                        m_creature->CastSpell(m_creature, SPELL_ASHCROMBES_TELEPORT_B, true);
+                        m_uiEventTimer = 2500;
+                        break;
+                    case 11:
                         // Summon Boss
                         m_creature->SetVisibility(VISIBILITY_OFF);
                         // If banner summoned after start, then summon Thelden after the creatures are dead
@@ -413,7 +442,7 @@ struct npc_grimstoneAI : public npc_escortAI
                         }
                         m_uiEventTimer = 0;
                         break;
-                    case 10:
+                    case 12:
                         // Boss dead
                         m_lSummonedGUIDList.clear();
                         m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
