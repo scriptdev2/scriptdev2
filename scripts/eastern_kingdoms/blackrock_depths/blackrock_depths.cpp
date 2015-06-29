@@ -352,7 +352,7 @@ struct npc_grimstoneAI : public npc_escortAI
                         m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
                         // Some of the NPCs in the crowd do cheer emote at event start
                         // we randomly select 25% of the NPCs to do this
-                        m_lArenaCrowd = m_pInstance->GetArenaCrowdGuid();
+                        m_pInstance->GetArenaCrowdGuid(m_lArenaCrowd);
                         for (GuidSet::const_iterator itr = m_lArenaCrowd.begin(); itr != m_lArenaCrowd.end(); ++itr)
                         {
                             if (Creature* pSpectator = m_creature->GetMap()->GetCreature(*itr))

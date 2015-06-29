@@ -179,7 +179,7 @@ class instance_blackrock_depths : public ScriptedInstance
         // Arena Event
         void SetArenaCenterCoords(float fX, float fY, float fZ) { m_fArenaCenterX = fX; m_fArenaCenterY = fY; m_fArenaCenterZ = fZ; }
         void GetArenaCenterCoords(float& fX, float& fY, float& fZ) { fX = m_fArenaCenterX; fY = m_fArenaCenterY; fZ = m_fArenaCenterZ; }
-        GuidSet GetArenaCrowdGuid() { return m_sArenaCrowdNpcGuids; }
+        void GetArenaCrowdGuid(GuidSet& sCrowdSet) { sCrowdSet = m_sArenaCrowdNpcGuids; }
 
     private:
         void DoCallNextDwarf();
