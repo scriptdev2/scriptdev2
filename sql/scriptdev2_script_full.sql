@@ -1545,12 +1545,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY'),
 (-1230003,'You have challenged the Seven, and now you will die!',0,0,0,0,'doomrel SAY_DOOMREL_START_EVENT'),
 
-(-1230004,'The Sons of Thaurissan shall watch you perish in the Ring of the Law!',0,1,0,0,'grimstone SAY_START_1'),
-(-1230005,'You have been sentenced to death for crimes against the Dark Iron Nation!',0,1,0,0,'grimstone SAY_START_2'),
-(-1230006,'Unleash the fury and let it be done!',0,1,0,0,'grimstone SAY_OPEN_EAST_GATE'),
-(-1230007,'But your real punishment lies ahead.',0,1,0,0,'grimstone SAY_SUMMON_BOSS_1'),
-(-1230008,'Haha! I bet you thought you were done!',0,1,0,0,'grimstone SAY_SUMMON_BOSS_2'),
-(-1230009,'Good Riddance!',0,1,0,0,'grimstone SAY_OPEN_NORTH_GATE'),
+(-1230004,'The Sons of Thaurissan shall watch you perish in the Ring of the Law!',0,1,0,5,'grimstone SAY_START_1'),
+(-1230005,'You have been sentenced to death for crimes against the Dark Iron Nation!',0,1,0,25,'grimstone SAY_START_2'),
+(-1230006,'Unleash the fury and let it be done!',0,1,0,15,'grimstone SAY_OPEN_EAST_GATE'),
+(-1230007,'But your real punishment lies ahead.',0,1,0,1,'grimstone SAY_SUMMON_BOSS_1'),
+(-1230008,'Haha! I bet you thought you were done!',0,1,0,153,'grimstone SAY_SUMMON_BOSS_2'),
+(-1230009,'Good Riddance!',0,1,0,5,'grimstone SAY_OPEN_NORTH_GATE'),
 
 (-1230010,'Thank you, $N! I\'m free!!!',0,0,0,0,'dughal SAY_FREE'),
 (-1230011,'You locked up the wrong Marshal, $N. Prepare to be destroyed!',0,0,0,0,'windsor SAY_AGGRO_1'),
