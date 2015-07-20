@@ -87,7 +87,7 @@ struct boss_gehennasAI : public ScriptedAI
         else
             m_uiRainOfFireTimer -= uiDiff;
 
-        // Curse_of_Gehennas-Timer
+        // Gehennas_Curse-Timer
         if (m_uiGehennasCurseTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_GEHENNAS_CURSE) == CAST_OK)
