@@ -1540,7 +1540,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 230 000 BLACKROCK DEPTHS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1230000,'Ah, hits the spot!',0,0,0,0,'rocknot SAY_GOT_BEER'),
+(-1230000,'Ah, hits the spot!',0,0,0,5,'rocknot SAY_GOT_BEER'),
 (-1230001,'Come to aid the Throne!',0,1,0,0,'dagran SAY_AGGRO'),
 (-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY'),
 (-1230003,'You have challenged the Seven, and now you will die!',0,0,0,0,'doomrel SAY_DOOMREL_START_EVENT'),
@@ -1579,7 +1579,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1230034,'You\'ll pay for this insult, $c!',0,0,0,15,'coren direbrew SAY_AGGRO'),
 
-(-1230035,'You can\'t hide from us. Prepare to burn!',0,1,0,0,'anvilrage guardsman SAY_GUARD_AGGRO');
+(-1230035,'You can\'t hide from us. Prepare to burn!',0,1,0,0,'anvilrage guardsman SAY_GUARD_AGGRO'),
+
+(-1230036,'I want more ale! Give me more ale!',0,0,0,0,'rocknot SAY_MORE_BEER'),
+(-1230037,'You\'ll pay for that!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_1'),
+(-1230038,'No!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_2'),
+(-1230039,'Oh! Now I\'m pissed!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_3'),
+(-1230040,'Violence! Property damage! None shall pass!!',0,1,0,0,'Phalanx YELL_PHALANX_AGGRO');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -5758,6 +5764,11 @@ INSERT INTO script_waypoint VALUES
 (7807, 35, -4416.71, 2209.76, 7.36, 0, ''),
 (7807, 36, -4405.25, 2231.77, 5.94, 0, ''),
 (7807, 37, -4377.61, 2265.45, 06.71, 15000, 'complete quest SAY_END');
+
+DELETE FROM script_waypoint WHERE entry=9502;
+INSERT INTO script_waypoint VALUES
+(9502, 0,847.848, -230.067, -43.614, 0, ''),
+(9502, 1,868.122, -223.884, -43.695, 0, 'YELL_PHALANX_AGGRO');
 
 DELETE FROM script_waypoint WHERE entry=9503;
 INSERT INTO script_waypoint VALUES
