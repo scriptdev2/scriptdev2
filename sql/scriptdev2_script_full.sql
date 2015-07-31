@@ -1585,7 +1585,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1230037,'You\'ll pay for that!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_1'),
 (-1230038,'No!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_2'),
 (-1230039,'Oh! Now I\'m pissed!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_3'),
-(-1230040,'Violence! Property damage! None shall pass!!',0,1,0,0,'Phalanx YELL_PHALANX_AGGRO');
+(-1230040,'Violence! Property damage! None shall pass!!',0,1,0,0,'Phalanx YELL_PHALANX_AGGRO'),
+(-1230041,'Get away from those kegs!',0,1,0,0,'Hurley Blackbreath YELL_HURLEY_SPAWN'),
+(-1230042,'You\'ll pay for that!',0,0,0,0,'Hurley Blackbreath SAY_HURLEY_AGGRO');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -5780,6 +5782,15 @@ INSERT INTO script_waypoint VALUES
 (9503, 5, 851.878906, -196.928131, -43.703655, 15000,'b5'),
 (9503, 6, 877.035217, -187.048080, -43.703655, 0,''),
 (9503, 7, 891.198000, -197.924000, -43.620400, 0,'home');
+
+DELETE FROM script_waypoint WHERE entry=9537;
+INSERT INTO script_waypoint VALUES
+(9537, 0, 854.9774, -150.3077, -49.671, 0, ''),
+(9537, 1, 855.8161, -149.763, -49.671, 0, 'YELL_HURLEY_SPAWN'),
+(9537, 2, 882.6298, -148.1658, -49.75969, 0, ''),
+(9537, 3, 883.9604, -148.0866, -49.76004, 0, ''),
+(9537, 4, 896.846, -147.319, -49.75753, 0, ''),
+(9537, 5, 896.846, -147.319, -49.75753, 0, '');
 
 DELETE FROM script_waypoint WHERE entry=9623;
 INSERT INTO script_waypoint VALUES
