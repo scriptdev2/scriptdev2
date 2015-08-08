@@ -71,6 +71,7 @@ class instance_temple_of_ahnqiraj : public ScriptedInstance
 {
     public:
         instance_temple_of_ahnqiraj(Map* pMap);
+        ~instance_temple_of_ahnqiraj() {}
 
         void Initialize() override;
 

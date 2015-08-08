@@ -491,7 +491,7 @@ void instance_trial_of_the_crusader::OnCreatureDeath(Creature* pCreature)
             }
 
             // all crusaders are killed
-            if (m_uiKilledCrusaders == (Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN))
+            if (m_uiKilledCrusaders == uint32(Is25ManDifficulty() ? MAX_CRUSADERS_25MAN : MAX_CRUSADERS_10MAN))
             {
                 SetData(TYPE_FACTION_CHAMPIONS, DONE);
 

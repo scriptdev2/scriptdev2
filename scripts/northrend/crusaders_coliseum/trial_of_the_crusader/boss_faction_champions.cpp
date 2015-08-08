@@ -1181,8 +1181,6 @@ struct boss_crusader_death_knightAI : public trial_crusader_commonAI
     void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 /*uiMiscValue*/) override
     {
         uint8 uiIndex = 99;
-        uint32 uiSpellEntry = 0;
-        uint32 uiSpellTimer = 0;
 
         switch (eventType)
         {

@@ -193,7 +193,7 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " "
                    << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6] << " " << m_auiEncounter[7] << " "
-                   << m_auiEncounter[8] << " " << m_auiEncounter[9];
+                   << m_auiEncounter[8];
 
         m_strInstData = saveStream.str();
 
@@ -215,7 +215,7 @@ void instance_temple_of_ahnqiraj::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
                >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-               >> m_auiEncounter[8] >> m_auiEncounter[9];
+               >> m_auiEncounter[8];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
