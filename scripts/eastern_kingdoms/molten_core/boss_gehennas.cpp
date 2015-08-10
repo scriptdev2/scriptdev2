@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Gehennas
-SD%Complete: 90
-SDComment:
+SD%Complete: 100
+SDComment: -
 SDCategory: Molten Core
 EndScriptData */
 
@@ -26,9 +26,10 @@ EndScriptData */
 
 enum
 {
-    SPELL_SHADOW_BOLT           = 19728,                    // 19729 exists too, but can be reflected
+    SPELL_GEHENNAS_CURSE        = 19716,
     SPELL_RAIN_OF_FIRE          = 19717,
-    SPELL_GEHENNAS_CURSE        = 19716
+    SPELL_SHADOW_BOLT_RANDOM    = 19728,
+    SPELL_SHADOW_BOLT_TARGET    = 19729,
 };
 
 struct boss_gehennasAI : public ScriptedAI
@@ -41,15 +42,17 @@ struct boss_gehennasAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiShadowBoltTimer;
-    uint32 m_uiRainOfFireTimer;
     uint32 m_uiGehennasCurseTimer;
+    uint32 m_uiRainOfFireTimer;
+    uint32 m_uiShadowBoltRandomTimer;
+    uint32 m_uiShadowBoltTargetTimer;
 
     void Reset() override
     {
-        m_uiShadowBoltTimer = 6000;
-        m_uiRainOfFireTimer = 10000;
-        m_uiGehennasCurseTimer = 12000;
+        m_uiGehennasCurseTimer    = urand(5 * IN_MILLISECONDS, 10 * IN_MILLISECONDS);
+        m_uiRainOfFireTimer       = urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS);
+        m_uiShadowBoltRandomTimer = urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS);
+        m_uiShadowBoltTargetTimer = urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS);
     }
 
     void Aggro(Unit* /*pwho*/) override
@@ -75,40 +78,41 @@ struct boss_gehennasAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        // ShadowBolt Timer
-        if (m_uiShadowBoltTimer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
-            {
-                if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_BOLT) == CAST_OK)
-                    m_uiShadowBoltTimer = 7000;
-            }
-            else                                            // In case someone attempts soloing, we don't need to scan for targets every tick
-                m_uiShadowBoltTimer = 7000;
-        }
-        else
-            m_uiShadowBoltTimer -= uiDiff;
-
-        // Rain of Fire Timer
+        // Rain_of_Fire-Timer
         if (m_uiRainOfFireTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            {
-                if (DoCastSpellIfCan(pTarget, SPELL_RAIN_OF_FIRE) == CAST_OK)
-                    m_uiRainOfFireTimer = urand(4000, 12000);
-            }
+            if (DoCastSpellIfCan(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), SPELL_RAIN_OF_FIRE) == CAST_OK)
+                m_uiRainOfFireTimer = urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS);
         }
         else
             m_uiRainOfFireTimer -= uiDiff;
 
-        // GehennasCurse Timer
+        // Gehennas_Curse-Timer
         if (m_uiGehennasCurseTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_GEHENNAS_CURSE) == CAST_OK)
-                m_uiGehennasCurseTimer = 30000;
+                m_uiGehennasCurseTimer = urand(25 * IN_MILLISECONDS, 30 * IN_MILLISECONDS);
         }
         else
             m_uiGehennasCurseTimer -= uiDiff;
+
+        // Shadow_Bolt_Random-Timer
+        if (m_uiShadowBoltRandomTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), SPELL_SHADOW_BOLT_RANDOM) == CAST_OK)
+                m_uiShadowBoltRandomTimer = urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS);
+        }
+        else
+            m_uiShadowBoltRandomTimer -= uiDiff;
+
+        // Shadow_Bolt_Target-Timer
+        if (m_uiShadowBoltTargetTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_BOLT_TARGET) == CAST_OK)
+                m_uiShadowBoltTargetTimer = urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS);
+        }
+        else
+            m_uiShadowBoltTargetTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
