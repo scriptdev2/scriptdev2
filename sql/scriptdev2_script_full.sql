@@ -1540,7 +1540,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 230 000 BLACKROCK DEPTHS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1230000,'Ah, hits the spot!',0,0,0,0,'rocknot SAY_GOT_BEER'),
+(-1230000,'Ah, hits the spot!',0,0,0,5,'rocknot SAY_GOT_BEER'),
 (-1230001,'Come to aid the Throne!',0,1,0,0,'dagran SAY_AGGRO'),
 (-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY'),
 (-1230003,'You have challenged the Seven, and now you will die!',0,0,0,0,'doomrel SAY_DOOMREL_START_EVENT'),
@@ -1577,7 +1577,17 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1230032,'Thank you! I will run for safety immediately!',0,0,0,0,'tobias SAY_TOBIAS_FREE_1'),
 (-1230033,'Finally!! I can leave this dump.',0,0,0,0,'tobias SAY_TOBIAS_FREE_2'),
 
-(-1230034,'You\'ll pay for this insult, $c!',0,0,0,15,'coren direbrew SAY_AGGRO');
+(-1230034,'You\'ll pay for this insult, $c!',0,0,0,15,'coren direbrew SAY_AGGRO'),
+
+(-1230035,'You can\'t hide from us. Prepare to burn!',0,1,0,0,'anvilrage guardsman SAY_GUARD_AGGRO'),
+
+(-1230036,'I want more ale! Give me more ale!',0,0,0,0,'rocknot SAY_MORE_BEER'),
+(-1230037,'You\'ll pay for that!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_1'),
+(-1230038,'No!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_2'),
+(-1230039,'Oh! Now I\'m pissed!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_3'),
+(-1230040,'Violence! Property damage! None shall pass!!',0,1,0,0,'Phalanx YELL_PHALANX_AGGRO'),
+(-1230041,'Get away from those kegs!',0,1,0,0,'Hurley Blackbreath YELL_HURLEY_SPAWN'),
+(-1230042,'You\'ll pay for that!',0,0,0,0,'Hurley Blackbreath SAY_HURLEY_AGGRO');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -5757,6 +5767,11 @@ INSERT INTO script_waypoint VALUES
 (7807, 36, -4405.25, 2231.77, 5.94, 0, ''),
 (7807, 37, -4377.61, 2265.45, 06.71, 15000, 'complete quest SAY_END');
 
+DELETE FROM script_waypoint WHERE entry=9502;
+INSERT INTO script_waypoint VALUES
+(9502, 0,847.848, -230.067, -43.614, 0, ''),
+(9502, 1,868.122, -223.884, -43.695, 0, 'YELL_PHALANX_AGGRO');
+
 DELETE FROM script_waypoint WHERE entry=9503;
 INSERT INTO script_waypoint VALUES
 (9503, 0, 883.294861, -188.926300, -43.703655, 0,''),
@@ -5767,6 +5782,15 @@ INSERT INTO script_waypoint VALUES
 (9503, 5, 851.878906, -196.928131, -43.703655, 15000,'b5'),
 (9503, 6, 877.035217, -187.048080, -43.703655, 0,''),
 (9503, 7, 891.198000, -197.924000, -43.620400, 0,'home');
+
+DELETE FROM script_waypoint WHERE entry=9537;
+INSERT INTO script_waypoint VALUES
+(9537, 0, 854.9774, -150.3077, -49.671, 0, ''),
+(9537, 1, 855.8161, -149.763, -49.671, 0, 'YELL_HURLEY_SPAWN'),
+(9537, 2, 882.6298, -148.1658, -49.75969, 0, ''),
+(9537, 3, 883.9604, -148.0866, -49.76004, 0, ''),
+(9537, 4, 896.846, -147.319, -49.75753, 0, ''),
+(9537, 5, 896.846, -147.319, -49.75753, 0, '');
 
 DELETE FROM script_waypoint WHERE entry=9623;
 INSERT INTO script_waypoint VALUES

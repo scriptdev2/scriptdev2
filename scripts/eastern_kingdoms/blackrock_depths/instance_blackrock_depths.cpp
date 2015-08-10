@@ -26,13 +26,17 @@ EndScriptData */
 
 instance_blackrock_depths::instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap),
     m_uiBarAleCount(0),
+    m_uiBrokenKegs(0),
     m_uiCofferDoorsOpened(0),
     m_uiDwarfRound(0),
     m_uiDwarfFightTimer(0),
+    m_uiPatronEmoteTimer(2000),
 
     m_fArenaCenterX(0.0f),
     m_fArenaCenterY(0.0f),
-    m_fArenaCenterZ(0.0f)
+    m_fArenaCenterZ(0.0f),
+    m_bIsBridgeEventDone(false),
+    m_bIsBarDoorOpen(false)
 {
     Initialize();
 }
@@ -53,6 +57,7 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
             // no break;
         case NPC_EMPEROR:
         case NPC_PHALANX:
+        case NPC_PLUGGER_SPAZZRING:
         case NPC_HATEREL:
         case NPC_ANGERREL:
         case NPC_VILEREL:
@@ -65,6 +70,7 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
         case NPC_JAZ:
         case NPC_TOBIAS:
         case NPC_DUGHAL:
+        case NPC_LOREGRAIN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
@@ -92,6 +98,12 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
             m_sArenaCrowdNpcGuids.insert(pCreature->GetObjectGuid());
             if (m_auiEncounter[0] == DONE)
                 pCreature->SetFactionTemporary(FACTION_ARENA_NEUTRAL, TEMPFACTION_RESTORE_RESPAWN);
+            break;
+            // Grim Guzzler bar crowd
+        case NPC_GRIM_PATRON:
+        case NPC_GUZZLING_PATRON:
+        case NPC_HAMMERED_PATRON:
+            m_sBarPatronNpcGuids.insert(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -192,11 +204,18 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             }
             m_auiEncounter[1] = uiData;
             break;
-        case TYPE_BAR:
+        case TYPE_ROCKNOT:
             if (uiData == SPECIAL)
                 ++m_uiBarAleCount;
             else
+            {
+                if (uiData == DONE)
+                {
+                    HandleBarPatrons(PATRON_PISSED);
+                    SetBarDoorIsOpen();
+                }
                 m_auiEncounter[2] = uiData;
+            }
             break;
         case TYPE_TOMB_OF_SEVEN:
             // Don't set the same data twice
@@ -263,6 +282,42 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             for (int i = 0; i < MAX_DWARF_RUNES; ++i)
                 DoUseDoorOrButton(GO_DWARFRUNE_A01 + i);
             return;
+        case TYPE_HURLEY:
+            if (uiData == SPECIAL)
+            {
+                ++m_uiBrokenKegs;
+
+                if (m_uiBrokenKegs == 3)
+                {
+                    if (Creature* pPlugger = GetSingleCreatureFromStorage(NPC_PLUGGER_SPAZZRING))
+                    {
+                        // Summon Hurley Blackbreath
+                        Creature* pHurley = pPlugger->SummonCreature(NPC_HURLEY_BLACKBREATH, aHurleyPositions[0], aHurleyPositions[1], aHurleyPositions[2], aHurleyPositions[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+
+                        if (!pHurley)
+                            return;
+
+                        // Summon cronies around Hurley
+                        for (uint8 i = 0; i < MAX_CRONIES; ++i)
+                        {
+                            float fX, fY, fZ;
+                            pPlugger->GetRandomPoint(aHurleyPositions[0], aHurleyPositions[1], aHurleyPositions[2], 2.0f, fX, fY, fZ);
+                            Creature* pSummoned = pPlugger->SummonCreature(NPC_BLACKBREATH_CRONY, fX, fY, fZ, aHurleyPositions[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                            pSummoned->SetWalk(false);
+                            // The cronies should not engage anyone until their boss does so
+							// the linking is done by DB
+							pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+						    // The movement toward the kegs is handled by Hurley EscortAI
+							// and we want the cronies to follow him there
+                            pSummoned->GetMotionMaster()->MoveFollow(pHurley, 1.0f, 0);
+                        }
+                        SetData(TYPE_HURLEY, IN_PROGRESS);
+                    }
+                }
+            }
+            else
+                m_auiEncounter[8] = uiData;
+            break;
     }
 
     if (uiData == DONE)
@@ -272,7 +327,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
                    << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-                   << m_auiEncounter[6] << " " << m_auiEncounter[7];
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
 
         m_strInstData = saveStream.str();
 
@@ -289,7 +344,7 @@ uint32 instance_blackrock_depths::GetData(uint32 uiType) const
             return m_auiEncounter[0];
         case TYPE_VAULT:
             return m_auiEncounter[1];
-        case TYPE_BAR:
+        case TYPE_ROCKNOT:
             if (m_auiEncounter[2] == IN_PROGRESS && m_uiBarAleCount == 3)
                 return SPECIAL;
             else
@@ -304,6 +359,8 @@ uint32 instance_blackrock_depths::GetData(uint32 uiType) const
             return m_auiEncounter[6];
         case TYPE_FLAMELASH:
             return m_auiEncounter[7];
+        case TYPE_HURLEY:
+            return m_auiEncounter[8];
         default:
             return 0;
     }
@@ -321,7 +378,8 @@ void instance_blackrock_depths::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+               >> m_auiEncounter[8];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
@@ -410,6 +468,9 @@ void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
         case NPC_MAGMUS:
             SetData(TYPE_IRON_HALL, DONE);
             break;
+        case NPC_HURLEY_BLACKBREATH:
+            SetData(TYPE_HURLEY, DONE);
+            break;
     }
 }
 
@@ -448,6 +509,62 @@ bool instance_blackrock_depths::CanReplacePrincess()
     return true;
 }
 
+void instance_blackrock_depths::HandleBarPatrons(uint8 uiEventType)
+{
+    switch (uiEventType)
+    {
+        // case for periodical handle of random emotes
+        case PATRON_EMOTE:
+            for (GuidSet::const_iterator itr = m_sBarPatronNpcGuids.begin(); itr != m_sBarPatronNpcGuids.end(); ++itr)
+            {
+                 // About 5% of patrons do emote at a given time
+                // So avoid executing follow up code for the 95% others
+                if (urand(0, 100) < 6)
+                {
+                    // Only three emotes are seen in data: laugh, cheer and exclamation
+                    // the last one appearing the least and the first one appearing the most
+                    // emotes are stored in a table and frequency is handled there
+                    if (Creature* pPatron = instance->GetCreature(*itr))
+                       pPatron->HandleEmote(aPatronsEmotes[urand(0, 5)]);
+                }
+            }
+            return;
+        // case for Rocknot event when breaking the barrel
+        case PATRON_PISSED:
+            // Three texts are said, one less often than the two others
+            // Only by patrons near the broken barrel react to Rocknot's rampage
+            if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_BAR_KEG_SHOT))
+            {
+                for (GuidSet::const_iterator itr = m_sBarPatronNpcGuids.begin(); itr != m_sBarPatronNpcGuids.end(); ++itr)
+                {
+                    if (Creature* pPatron = instance->GetCreature(*itr))
+                    {
+                        if (pPatron->GetPositionZ() > pGo->GetPositionZ() - 1 && pPatron->IsWithinDist2d(pGo->GetPositionX(), pGo->GetPositionY(), 18.0f))
+                        {
+                            uint32 uiTextId = 0;
+                            switch (urand(0, 4))
+                            {
+                                case 0: uiTextId = SAY_PISSED_PATRON_3; break;
+                                case 1:  // case is double to give this text twice the chance of the previous one do be displayed
+                                case 2: uiTextId = SAY_PISSED_PATRON_2; break;
+                                // covers the two remaining cases
+                                default: uiTextId = SAY_PISSED_PATRON_1; break;
+                            }
+                            DoScriptText(uiTextId, pPatron);
+                        }
+                    }
+                }
+            }
+            return;
+        // case when Plugger is aggroed/pickpocketed
+        case PATRON_HOSTILE:
+            // Placeholder
+            return;
+        default:
+            return;
+    }
+}
+
 void instance_blackrock_depths::Update(uint32 uiDiff)
 {
     if (m_uiDwarfFightTimer)
@@ -464,6 +581,18 @@ void instance_blackrock_depths::Update(uint32 uiDiff)
         }
         else
             m_uiDwarfFightTimer -= uiDiff;
+    }
+
+    // Every second some of the patrons will do one random emote if they are not hostile (i.e. Plugger event is not done/in progress)
+    if (m_uiPatronEmoteTimer)
+    {
+        if (m_uiPatronEmoteTimer <= uiDiff)
+        {
+            HandleBarPatrons(PATRON_EMOTE);
+            m_uiPatronEmoteTimer = 1000;
+        }
+        else
+            m_uiPatronEmoteTimer -= uiDiff;
     }
 }
 

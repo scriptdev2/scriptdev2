@@ -326,6 +326,8 @@ UPDATE gameobject_template SET ScriptName='go_fathom_stone' WHERE entry=177964;
 /* BLACKROCK DEPTHS */
 DELETE FROM scripted_areatrigger WHERE entry=1526;
 INSERT INTO scripted_areatrigger VALUES (1526,'at_ring_of_law');
+DELETE FROM scripted_areatrigger WHERE entry = 1786;
+INSERT INTO scripted_areatrigger VALUES (1786,'at_shadowforge_bridge');
 UPDATE instance_template SET ScriptName='instance_blackrock_depths' WHERE map =230;
 UPDATE creature_template SET ScriptName='boss_emperor_dagran_thaurissan' WHERE entry=9019;
 UPDATE creature_template SET ScriptName='boss_moira_bronzebeard' WHERE entry=8929;
@@ -337,10 +339,12 @@ UPDATE creature_template SET ScriptName='boss_coren_direbrew' WHERE entry=23872;
 UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
 UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
+UPDATE creature_template SET ScriptName='npc_phalanx' WHERE entry=9502;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
 UPDATE creature_template SET ScriptName='npc_marshal_windsor' WHERE entry=9023;
 UPDATE creature_template SET ScriptName='npc_dughal_stormwing' WHERE entry=9022;
 UPDATE creature_template SET ScriptName='npc_tobias_seecher' WHERE entry=9679;
+UPDATE creature_template SET ScriptName='npc_hurley_blackbreath' WHERE entry=9537;
 UPDATE gameobject_template SET ScriptName='go_shadowforge_brazier' WHERE entry IN (174744, 174745);
 UPDATE gameobject_template SET ScriptName='go_relic_coffer_door' WHERE entry IN (174554, 174555, 174556, 174557, 174558, 174559, 174560, 174561, 174562, 174563, 174564, 174566);
 

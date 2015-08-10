@@ -7,24 +7,25 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 8,
+    MAX_ENCOUNTER           = 9,
     MAX_RELIC_DOORS         = 12,
     MAX_DWARFS              = 7,
     MAX_DWARF_RUNES         = 7,
+    MAX_CRONIES             = 3,
 
     TYPE_RING_OF_LAW        = 1,
     TYPE_VAULT              = 2,
-    TYPE_BAR                = 3,
+    TYPE_ROCKNOT            = 3,
     TYPE_TOMB_OF_SEVEN      = 4,
     TYPE_LYCEUM             = 5,
     TYPE_IRON_HALL          = 6,
     TYPE_QUEST_JAIL_BREAK   = 7,
     TYPE_FLAMELASH          = 8,
+    TYPE_HURLEY             = 9,
 
     NPC_EMPEROR             = 9019,
     NPC_PRINCESS            = 8929,
     NPC_PRIESTESS           = 10076,
-    NPC_PHALANX             = 9502,
     NPC_HATEREL             = 9034,
     NPC_ANGERREL            = 9035,
     NPC_VILEREL             = 9036,
@@ -35,6 +36,7 @@ enum
     NPC_MAGMUS              = 9938,
     NPC_WATCHER_DOOMGRIP    = 9476,
     NPC_WARBRINGER_CONST    = 8905,                         // Four of them in Relict Vault are related to Doomgrip summon event
+    NPC_LOREGRAIN           = 9024,
 
     // Jail Break event related
     NPC_OGRABISI            = 9677,
@@ -52,6 +54,18 @@ enum
     NPC_ANVILRAGE_SOLDIER   = 8893,
     NPC_ANVILRAGE_MEDIC     = 8894,
     NPC_ANVILRAGE_OFFICER   = 8895,
+
+    // Spawned on Shadowforge bridge
+    NPC_ANVILRAGE_GUARDMAN  = 8891,
+
+    // Grim Guzzler bar events
+    NPC_PHALANX             = 9502,
+    NPC_GRIM_PATRON         = 9545,
+    NPC_GUZZLING_PATRON     = 9547,
+    NPC_HAMMERED_PATRON     = 9554,
+    NPC_HURLEY_BLACKBREATH  = 9537,
+    NPC_BLACKBREATH_CRONY   = 9541,
+    NPC_PLUGGER_SPAZZRING   = 9499,
 
     GO_ARENA_1              = 161525,
     GO_ARENA_2              = 161522,
@@ -97,6 +111,21 @@ enum
 
     FACTION_DWARF_HOSTILE   = 754,                          // Hostile faction for the Tomb of the Seven dwarfs
     FACTION_ARENA_NEUTRAL   = 15,                           // Neutral faction for NPC in top of Arena after event complete
+
+    // enum used to handle the various Grim Guzzler  bar patron's reaction
+    // depending on the actions and events triggered by players
+    PATRON_EMOTE            = 0,
+    PATRON_PISSED           = 1,
+    PATRON_HOSTILE          = 2,
+    SAY_PISSED_PATRON_1     = -1230037,
+    SAY_PISSED_PATRON_2     = -1230038,
+    SAY_PISSED_PATRON_3     = -1230039
+};
+
+// Random emotes for Grim Guzzler patrons
+static const uint32 aPatronsEmotes[] =
+{
+    EMOTE_ONESHOT_EXCLAMATION, EMOTE_ONESHOT_CHEER, EMOTE_ONESHOT_CHEER, EMOTE_ONESHOT_LAUGH, EMOTE_ONESHOT_LAUGH, EMOTE_ONESHOT_LAUGH
 };
 
 struct ArenaCylinder
@@ -151,6 +180,9 @@ static const uint32 aArenaNPCs[] =
 // Used to summon Watcher Doomgrip
 static const float aVaultPositions[4] = {821.905f, -338.382f, -50.134f, 3.78736f};
 
+// Used to summon Hurley Blackbreath
+static const float aHurleyPositions[4] = {856.0867f, -149.7469f, -49.6719f, 0.05949629f};
+
 // Tomb of the Seven dwarfs
 static const uint32 aTombDwarfes[MAX_DWARFS] = {NPC_ANGERREL, NPC_SEETHREL, NPC_DOPEREL, NPC_GLOOMREL, NPC_VILEREL, NPC_HATEREL, NPC_DOOMREL};
 
@@ -181,6 +213,12 @@ class instance_blackrock_depths : public ScriptedInstance
         void GetArenaCenterCoords(float& fX, float& fY, float& fZ) { fX = m_fArenaCenterX; fY = m_fArenaCenterY; fZ = m_fArenaCenterZ; }
         void GetArenaCrowdGuid(GuidSet& sCrowdSet) { sCrowdSet = m_sArenaCrowdNpcGuids; }
 
+        bool m_bIsBridgeEventDone;
+
+        // Bar events
+        void SetBarDoorIsOpen() { m_bIsBarDoorOpen = true; }
+        bool GetBarDoorIsOpen() { return m_bIsBarDoorOpen; }
+
     private:
         void DoCallNextDwarf();
         bool CanReplacePrincess();
@@ -188,7 +226,13 @@ class instance_blackrock_depths : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
+        // Grim Guzzler bar events
+        bool  m_bIsBarDoorOpen;
         uint32 m_uiBarAleCount;
+        uint32 m_uiPatronEmoteTimer;
+        void HandleBarPatrons(uint8 uiEventType);
+        uint8 m_uiBrokenKegs;
+
         uint8 m_uiCofferDoorsOpened;
 
         uint8 m_uiDwarfRound;
@@ -198,6 +242,7 @@ class instance_blackrock_depths : public ScriptedInstance
 
         GuidSet m_sVaultNpcGuids;
         GuidSet m_sArenaCrowdNpcGuids;
+        GuidSet m_sBarPatronNpcGuids;
 };
 
 #endif
