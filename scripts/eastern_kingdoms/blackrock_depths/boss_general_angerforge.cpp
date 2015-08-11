@@ -25,44 +25,51 @@ EndScriptData */
 
 enum
 {
-    SPELL_MIGHTYBLOW            = 14099,
-    SPELL_HAMSTRING             = 9080,
-    SPELL_CLEAVE                = 20691,
+    EMOTE_ALARM                 = -1230035,
 
-    NPC_ANVILRAGE_RESERVIST     = 8901,
+    SPELL_FLURRY                = 15088,
+    SPELL_ENRAGE                = 15097,
+    SPELL_SUNDER_ARMOR          = 15572,
+
     NPC_ANVILRAGE_MEDIC         = 8894,
+    NPC_ANVILRAGE_RESERVIST     = 8901,
+
+    NPC_ELITE_AMOUNT            = 2,
+    NPC_NORMAL_AMOUNT           = 8,
 };
+
+static const float aAlarmPoint[4] = {717.343f, 22.116f, -45.4321f, 3.1415f};
 
 struct boss_general_angerforgeAI : public ScriptedAI
 {
     boss_general_angerforgeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 m_uiMightyBlowTimer;
-    uint32 m_uiHamStringTimer;
-    uint32 m_uiCleaveTimer;
-    uint32 m_uiAddsTimer;
-    bool m_bSummonedMedics;
+    uint32 m_uiSunderArmorTimer;
+    uint32 m_uiAlarmTimer;
 
     void Reset() override
     {
-        m_uiMightyBlowTimer = 8000;
-        m_uiHamStringTimer = 12000;
-        m_uiCleaveTimer = 16000;
-        m_uiAddsTimer = 0;
-        m_bSummonedMedics = false;
+        m_uiSunderArmorTimer = urand(5 * IN_MILLISECONDS, 10 * IN_MILLISECONDS);
+        m_uiAlarmTimer = 0;
+    }
+
+    void Aggro(Unit* /*pWho*/) override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_FLURRY, CAST_AURA_NOT_PRESENT | CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_AURA_NOT_PRESENT | CAST_TRIGGERED);
     }
 
     void SummonAdd(uint32 uiEntry)
     {
         float fX, fY, fZ;
-        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
-        m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 60000);
+        m_creature->GetRandomPoint(aAlarmPoint[0], aAlarmPoint[1], aAlarmPoint[2], 1.0f, fX, fY, fZ);
+        m_creature->SummonCreature(uiEntry, fX, fY, fZ, aAlarmPoint[3], TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 30 * IN_MILLISECONDS);
     }
 
     void JustSummoned(Creature* pSummoned) override
     {
-        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            pSummoned->AI()->AttackStart(pTarget);
+        if (m_creature->getVictim())
+            pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -71,55 +78,31 @@ struct boss_general_angerforgeAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        // MightyBlow_Timer
-        if (m_uiMightyBlowTimer < uiDiff)
+        // Sunder_Armor-Timer
+        if (m_uiSunderArmorTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTYBLOW);
-            m_uiMightyBlowTimer = 18000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUNDER_ARMOR) == CAST_OK)
+                m_uiSunderArmorTimer = urand(5 * IN_MILLISECONDS, 15 * IN_MILLISECONDS);
         }
         else
-            m_uiMightyBlowTimer -= uiDiff;
+            m_uiSunderArmorTimer -= uiDiff;
 
-        // HamString_Timer
-        if (m_uiHamStringTimer < uiDiff)
+        // Alarm-Timer
+        if (m_creature->GetHealthPercent() < 40.0f)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMSTRING);
-            m_uiHamStringTimer = 15000;
-        }
-        else
-            m_uiHamStringTimer -= uiDiff;
-
-        // Cleave_Timer
-        if (m_uiCleaveTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
-            m_uiCleaveTimer = 9000;
-        }
-        else
-            m_uiCleaveTimer -= uiDiff;
-
-        // Adds_Timer
-        if (m_creature->GetHealthPercent() < 21.0f)
-        {
-            if (m_uiAddsTimer < uiDiff)
+            if (m_uiAlarmTimer < uiDiff)
             {
-                // summon 3 Adds every 25s
-                SummonAdd(NPC_ANVILRAGE_RESERVIST);
-                SummonAdd(NPC_ANVILRAGE_RESERVIST);
-                SummonAdd(NPC_ANVILRAGE_RESERVIST);
+                DoScriptText(EMOTE_ALARM, m_creature);
 
-                m_uiAddsTimer = 25000;
+                for (int i = 0; i < NPC_NORMAL_AMOUNT; i++)
+                    SummonAdd(NPC_ANVILRAGE_RESERVIST);
+                for (int i = 0; i < NPC_ELITE_AMOUNT; i++)
+                    SummonAdd(NPC_ANVILRAGE_MEDIC);
+
+                m_uiAlarmTimer = 3 * MINUTE * IN_MILLISECONDS;
             }
             else
-                m_uiAddsTimer -= uiDiff;
-        }
-
-        // Summon Medics
-        if (!m_bSummonedMedics && m_creature->GetHealthPercent() < 21.0f)
-        {
-            SummonAdd(NPC_ANVILRAGE_MEDIC);
-            SummonAdd(NPC_ANVILRAGE_MEDIC);
-            m_bSummonedMedics = true;
+                m_uiAlarmTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
