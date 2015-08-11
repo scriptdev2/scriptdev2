@@ -42,7 +42,8 @@ enum
     SPELL_SUMMON_OURO_MOUND = 26058,                        // summons 5 dirt mounds
     SPELL_SUMMON_TRIGGER    = 26284,
 
-    SPELL_SUMMON_OURO       = 26642,
+    // SPELL_SUMMON_OURO_TRIGG = 26642,
+    SPELL_SUMMON_OURO       = 26061,                        // used by the script to summon the boss directly
     SPELL_QUAKE             = 26093,
 
     // other spells - not used
@@ -266,16 +267,13 @@ struct npc_ouro_spawnerAI : public Scripted_NoMovementAI
         m_bHasSummoned = false;
     }
 
-    void MoveInLineOfSight(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
-        // Spawn Ouro on LoS check
-        if (!m_bHasSummoned && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, 50.0f))
+        if (!m_bHasSummoned)
         {
-            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_OURO) == CAST_OK)
-                m_bHasSummoned = true;
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_OURO, CAST_TRIGGERED);
+            m_bHasSummoned = true;
         }
-
-        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void JustSummoned(Creature* pSummoned) override
@@ -291,16 +289,14 @@ struct npc_ouro_spawnerAI : public Scripted_NoMovementAI
 
     void UpdateAI(const uint32 uiDiff) override
     {
-        if (m_bHasSummoned)
+        // triggered by missing spell 26092
+        if (m_uiQuakeTimer < uiDiff)
         {
-            if (m_uiQuakeTimer < uiDiff)
-            {
-                if (DoCastSpellIfCan(m_creature, SPELL_QUAKE) == CAST_OK)
-                    m_uiQuakeTimer = 1000;
-            }
-            else
-                m_uiQuakeTimer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_QUAKE) == CAST_OK)
+                m_uiQuakeTimer = 1000;
         }
+        else
+            m_uiQuakeTimer -= uiDiff;
     }
 };
 
