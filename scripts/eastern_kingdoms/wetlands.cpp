@@ -40,7 +40,7 @@ enum
     SAY_FRIEND_DEFEAT           = -1000979,
     SAY_SLIM_NOTES              = -1000980,
 
-    QUEST_MISSING_DIPLO_PT11    = 1249,
+    QUEST_MISSING_DIPLOMAT11    = 1249,
     FACTION_ENEMY               = 168,                      // ToDo: faction needs to be confirmed!
 
     SPELL_STEALTH               = 1785,
@@ -54,7 +54,7 @@ static const DialogueEntry aDiplomatDialogue[] =
 {
     {SAY_SLIM_DEFEAT,           NPC_TAPOKE_SLIM_JAHN,   4000},
     {SAY_SLIM_NOTES,            NPC_TAPOKE_SLIM_JAHN,   7000},
-    {QUEST_MISSING_DIPLO_PT11,  0,                      0},
+    {QUEST_MISSING_DIPLOMAT11,  0,                      0},
     {0, 0, 0},
 };
 
@@ -75,6 +75,18 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI, private DialogueHelper
         {
             m_bFriendSummoned = false;
             m_bEventComplete = false;
+        }
+    }
+
+    void JustReachedHome() override
+    {
+        // after the npc is defeated, start the dialog right after it reaches the evade point
+        if (m_bEventComplete)
+        {
+            if (Player* pPlayer = GetPlayerForEscort())
+                m_creature->SetFacingToObject(pPlayer);
+
+            StartNextDialogueText(SAY_SLIM_DEFEAT);
         }
     }
 
@@ -137,23 +149,6 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
-    {
-        if (uiMoveType != POINT_MOTION_TYPE || !HasEscortState(STATE_ESCORT_ESCORTING))
-            return;
-
-        npc_escortAI::MovementInform(uiMoveType, uiPointId);
-
-        // after the npc is defeated, start the dialog right after it reaches the evade point
-        if (m_bEventComplete)
-        {
-            if (Player* pPlayer = GetPlayerForEscort())
-                m_creature->SetFacingToObject(pPlayer);
-
-            StartNextDialogueText(SAY_SLIM_DEFEAT);
-        }
-    }
-
     void ReceiveAIEvent(AIEventType eventType, Creature* /*pSender*/, Unit* pInvoker, uint32 uiMiscValue) override
     {
         // start escort
@@ -163,11 +158,11 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI, private DialogueHelper
 
     void JustDidDialogueStep(int32 iEntry) override
     {
-        if (iEntry == QUEST_MISSING_DIPLO_PT11)
+        if (iEntry == QUEST_MISSING_DIPLOMAT11)
         {
             // complete quest
             if (Player* pPlayer = GetPlayerForEscort())
-                pPlayer->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, m_creature);
+                pPlayer->GroupEventHappens(QUEST_MISSING_DIPLOMAT11, m_creature);
 
             // despawn and respawn at inn
             m_creature->ForcedDespawn(1000);
@@ -205,7 +200,7 @@ CreatureAI* GetAI_npc_tapoke_slim_jahn(Creature* pCreature)
 
 bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
+    if (pQuest->GetQuestId() == QUEST_MISSING_DIPLOMAT11)
     {
         Creature* pSlim = GetClosestCreatureWithEntry(pCreature, NPC_TAPOKE_SLIM_JAHN, 25.0f);
         if (!pSlim)

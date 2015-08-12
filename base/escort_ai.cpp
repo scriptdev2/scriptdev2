@@ -227,9 +227,15 @@ void npc_escortAI::UpdateEscortAI(const uint32 /*uiDiff*/)
     DoMeleeAttackIfReady();
 }
 
+/// Helper function for transition between old Escort Movment and using WaypointMMGen
+bool npc_escortAI::IsSD2EscortMovement(uint32 uiMoveType) const
+{
+    return uiMoveType >= EXTERNAL_WAYPOINT_MOVE;
+}
+
 void npc_escortAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
 {
-    if (uiMoveType < EXTERNAL_WAYPOINT_MOVE || !HasEscortState(STATE_ESCORT_ESCORTING))
+    if (!IsSD2EscortMovement(uiMoveType) || !HasEscortState(STATE_ESCORT_ESCORTING))
         return;
 
     //uint32 pathId = uiMoveType & 0xFF;

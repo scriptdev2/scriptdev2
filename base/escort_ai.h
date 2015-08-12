@@ -57,6 +57,7 @@ struct npc_escortAI : public ScriptedAI
 
     protected:
         Player* GetPlayerForEscort() { return m_creature->GetMap()->GetPlayer(m_playerGuid); }
+        bool IsSD2EscortMovement(uint32 uiMoveType) const;
         virtual void JustStartedEscort() {}
 
     private:
