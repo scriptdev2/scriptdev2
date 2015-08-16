@@ -103,6 +103,11 @@ struct mob_mature_netherwing_drakeAI : public ScriptedAI
         }
     }
 
+    void JustReachedHome() override
+    {
+        m_creature->GetMotionMaster()->Clear();
+    }
+
     void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiEatTimer)
@@ -119,6 +124,7 @@ struct mob_mature_netherwing_drakeAI : public ScriptedAI
                     float fX, fY, fZ;
                     pGo->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
 
+                    m_creature->SetWalk(false);
                     m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                 }
                 m_uiEatTimer = 0;
@@ -142,7 +148,7 @@ struct mob_mature_netherwing_drakeAI : public ScriptedAI
                 Reset();
                 m_creature->SetLevitate(true);
                 m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_FLY_ANIM);
-                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveTargetedHome();
                 m_uiCreditTimer = 0;
             }
             else
