@@ -124,8 +124,8 @@ UPDATE gameobject_template SET ScriptName='go_lab_work_reagents' WHERE entry IN 
 
 /* GUARD */
 UPDATE creature_template SET ScriptName='guard_azuremyst' WHERE entry=18038;
-UPDATE creature_template SET ScriptName='guard_orgrimmar' WHERE entry=3296;
-UPDATE creature_template SET ScriptName='guard_stormwind' WHERE entry IN (68,1976);
+UPDATE creature_template SET ScriptName='guard_orgrimmar' WHERE entry IN (3296,14304);
+UPDATE creature_template SET ScriptName='guard_stormwind' WHERE entry IN (68,1756,1976);
 UPDATE creature_template SET ScriptName='guard_contested' WHERE entry IN (9460,4624,3502,11190,15184);
 UPDATE creature_template SET ScriptName='guard_elwynnforest' WHERE entry=1423;
 UPDATE creature_template SET ScriptName='guard_eversong' WHERE entry=16221;

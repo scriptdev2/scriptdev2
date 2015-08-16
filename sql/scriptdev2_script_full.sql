@@ -4151,7 +4151,14 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609079,'Hrm, what a strange tree. I must investigate.',0,0,0,1,'scarlet courier SAY_TREE_1'),
 (-1609080,'What\'s this!? This isn\'t a tree at all! Guards! Guards!',0,0,0,5,'scarlet courier SAY_TREE_2'),
 
--- PLEASE RE-USE -1609081 to -1609088
+(-1609081,'%s throws rotten apple on $N.',0,2,0,0,'city guard EMOTE_APPLE'),
+(-1609082,'%s throws rotten banana on $N.',0,2,0,0,'city guard EMOTE_BANANA'),
+(-1609083,'%s spits on $N.',0,2,0,0,'city guard EMOTE_SPIT'),
+(-1609084,'Monster!',0,0,0,14,'city guard SAY_RANDOM_1'),
+(-1609085,'Murderer!',0,0,0,14,'city guard SAY_RANDOM_2'),
+(-1609086,'GET A ROPE!',0,0,0,25,'city guard SAY_RANDOM_3'),
+(-1609087,'How dare you set foot in our city!',0,0,0,25,'city guard SAY_RANDOM_4'),
+(-1609088,'You disgust me.',0,0,0,14,'city guard SAY_RANDOM_5'),
 
 (-1609089,'The Eye of Acherus launches towards its destination',0,3,0,0,'eye of acherus EMOTE_DESTIANTION'),
 (-1609090,'The Eye of Acherus is in your control',0,3,0,0,'eye of acherus EMOTE_CONTROL'),
@@ -4251,7 +4258,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609283,'%s collapses.',0,2,0,0,'Highlord Darion Mograine'),
 (-1609284,'%s charges towards the Lich King, Ashbringer in hand and strikes the Lich King.',0,2,0,0,'Highlord Tirion Fordring'),
 (-1609285,'%s disappears. Tirion walks over to where Darion lay',0,2,0,0,'The Lich King'),
-(-1609286,'Light washes over the chapel -- the Light of Dawn is uncovered.',0,2,0,0,'');
+(-1609286,'Light washes over the chapel -- the Light of Dawn is uncovered.',0,2,0,0,''),
+
+(-1609287,'Looks like we\'re going to have ourselves an execution.',0,0,0,25,'city guard SAY_RANDOM_6'),
+(-1609288,'Traitorous dog.',0,0,0,14,'city guard SAY_RANDOM_7'),
+(-1609289,'My family was wiped out by the Scourge! MONSTER!',0,0,0,25,'city guard SAY_RANDOM_8');
 
 -- -1 615 000 OBSIDIAN SANCTUM
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

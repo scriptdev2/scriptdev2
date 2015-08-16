@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Guards
 SD%Complete: 100
-SDComment: CombatAI should be organized better for future.
+SDComment: CombatAI should be organized better for future. Quest support 13188 / 13189.
 SDCategory: Guards
 EndScriptData */
 
@@ -271,6 +271,69 @@ CreatureAI* GetAI_guard_undercity(Creature* pCreature)
     return new guardAI(pCreature);
 }
 
+/*******************************************************
+ * quests 13188 / 13189
+ *******************************************************/
+
+enum
+{
+    SPELL_RETURN_ORGRIMMAR          = 58552,
+    SPELL_RETURN_STORMWIND          = 58533,
+
+    SPELL_TOSS_APPLE                = 58509,
+    SPELL_TOSS_BANANA               = 58513,
+    SPELL_SPIT                      = 58520,
+
+    EMOTE_APPLE                     = -1609081,
+    EMOTE_BANANA                    = -1609082,
+    EMOTE_SPIT                      = -1609083,
+    SAY_RANDOM_1                    = -1609084,
+    SAY_RANDOM_2                    = -1609085,
+    SAY_RANDOM_3                    = -1609086,
+    SAY_RANDOM_4                    = -1609087,
+    SAY_RANDOM_5                    = -1609088,
+    SAY_RANDOM_6                    = -1609287,
+    SAY_RANDOM_7                    = -1609288,
+    SAY_RANDOM_8                    = -1609289,
+};
+
+bool EffectDummyCreature_npc_city_guard(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget, ObjectGuid /*originalCasterGuid*/)
+{
+    // check spell ids; creature ids are defined in script target
+    if ((uiSpellId == SPELL_RETURN_ORGRIMMAR || uiSpellId == SPELL_RETURN_STORMWIND) && uiEffIndex == EFFECT_INDEX_0)
+    {
+        // random action
+        switch (urand(0, 10))
+        {
+            case 0:
+                pCreatureTarget->CastSpell(pCaster, SPELL_TOSS_APPLE, true);
+                DoScriptText(EMOTE_APPLE, pCreatureTarget, pCaster);
+                break;
+            case 1:
+                pCreatureTarget->CastSpell(pCaster, SPELL_TOSS_BANANA, true);
+                DoScriptText(EMOTE_BANANA, pCreatureTarget, pCaster);
+                break;
+            case 2:
+                pCreatureTarget->CastSpell(pCaster, SPELL_SPIT, true);
+                DoScriptText(EMOTE_SPIT, pCreatureTarget, pCaster);
+                break;
+            case 3: DoScriptText(SAY_RANDOM_1, pCreatureTarget, pCaster); break;
+            case 4: DoScriptText(SAY_RANDOM_2, pCreatureTarget, pCaster); break;
+            case 5: DoScriptText(SAY_RANDOM_3, pCreatureTarget, pCaster); break;
+            case 6: DoScriptText(SAY_RANDOM_4, pCreatureTarget, pCaster); break;
+            case 7: DoScriptText(SAY_RANDOM_5, pCreatureTarget, pCaster); break;
+            case 8: DoScriptText(SAY_RANDOM_6, pCreatureTarget, pCaster); break;
+            case 9: DoScriptText(SAY_RANDOM_7, pCreatureTarget, pCaster); break;
+            case 10: DoScriptText(SAY_RANDOM_8, pCreatureTarget, pCaster); break;
+        }
+
+        // return true as we don't need further script handling in DB
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_guards()
 {
     Script* pNewScript;
@@ -333,6 +396,7 @@ void AddSC_guards()
     pNewScript = new Script;
     pNewScript->Name = "guard_orgrimmar";
     pNewScript->GetAI = &GetAI_guard_orgrimmar;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_city_guard;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -358,6 +422,7 @@ void AddSC_guards()
     pNewScript = new Script;
     pNewScript->Name = "guard_stormwind";
     pNewScript->GetAI = &GetAI_guard_stormwind;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_city_guard;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
