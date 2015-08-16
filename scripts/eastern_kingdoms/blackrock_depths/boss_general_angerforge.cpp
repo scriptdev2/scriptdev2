@@ -88,7 +88,7 @@ struct boss_general_angerforgeAI : public ScriptedAI
             m_uiSunderArmorTimer -= uiDiff;
 
         // Alarm-Timer
-        if (m_creature->GetHealthPercent() < 40.0f)
+        if (m_creature->GetHealthPercent() < 30.0f)
         {
             if (m_uiAlarmTimer < uiDiff)
             {
