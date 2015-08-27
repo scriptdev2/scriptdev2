@@ -1579,7 +1579,6 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1230034,'You\'ll pay for this insult, $c!',0,0,0,15,'coren direbrew SAY_AGGRO'),
 
-(-1230035,'You can\'t hide from us. Prepare to burn!',0,1,0,0,'anvilrage guardsman SAY_GUARD_AGGRO'),
 
 (-1230036,'I want more ale! Give me more ale!',0,0,0,0,'rocknot SAY_MORE_BEER'),
 (-1230037,'You\'ll pay for that!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_1'),
@@ -1587,7 +1586,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1230039,'Oh! Now I\'m pissed!',0,0,0,0,'Grim Patron SAY_PISSED_PATRON_3'),
 (-1230040,'Violence! Property damage! None shall pass!!',0,1,0,0,'Phalanx YELL_PHALANX_AGGRO'),
 (-1230041,'Get away from those kegs!',0,1,0,0,'Hurley Blackbreath YELL_HURLEY_SPAWN'),
-(-1230042,'You\'ll pay for that!',0,0,0,0,'Hurley Blackbreath SAY_HURLEY_AGGRO');
+(-1230042,'You\'ll pay for that!',0,0,0,0,'Hurley Blackbreath SAY_HURLEY_AGGRO'),
+(-1230043,'You can\'t hide from us. Prepare to burn!',0,1,0,0,'anvilrage guardsman SAY_GUARD_AGGRO'),
+(-1230044,'That one\'s empty!!',0,0,0,60,'rocknot SAY_BARREL_1'),
+(-1230045,'Ah, empty again!',0,0,0,35,'rocknot SAY_BARREL_2'),
+(-1230046,'ALE!',0,0,0,60,'rocknot SAY_BARREL_3');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
