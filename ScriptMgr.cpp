@@ -253,12 +253,6 @@ void Script::RegisterSelf(bool bReportError)
 //*** Functions to be Exported ***
 
 MANGOS_DLL_EXPORT
-char const* GetScriptLibraryVersion()
-{
-    return strSD2Version.c_str();
-}
-
-MANGOS_DLL_EXPORT
 bool GossipHello(Player* pPlayer, Creature* pCreature)
 {
     Script* pTempScript = m_scripts[pCreature->GetScriptId()];
