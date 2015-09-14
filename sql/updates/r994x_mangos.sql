@@ -1,0 +1,1 @@
+UPDATE creature_template SET scriptname='npc_ironhand_guardian' WHERE entry=8982;
