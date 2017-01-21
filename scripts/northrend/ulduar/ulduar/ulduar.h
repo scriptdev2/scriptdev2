@@ -203,7 +203,7 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 20,
+    MAX_SPECIAL_ACHIEV_CRITS    = 21,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
@@ -225,6 +225,7 @@ enum
     TYPE_ACHIEV_BACK_NATURE     = 17,
     TYPE_ACHIEV_DRIVE_CRAZY     = 18,
     TYPE_ACHIEV_SHADOWDODGER    = 19,
+    TYPE_ACHIEV_OBSERVED        = 20,
 
     // Loot chests
     // Kologarn
@@ -354,7 +355,9 @@ enum
     ACHIEV_START_LUMBERJACKED   = 21686,                    // Ulduar elder kill timed achievs 2979, 3118; triggered by missing spell 65296
     ACHIEV_START_NERF_BOTS      = 65037,                    // XT-002 gauntlet timed achievs 2933, 2935; triggered by missing spell 65037
     ACHIEV_START_SUPERMASSIVE   = 21697,                    // Black hole timed achievs 3003, 3002
-
+    
+    ACHIEV_CRIT_OBSERVED_N      = 10567,                    // Algalon, achievs 3036, 3037
+    ACHIEV_CRIT_OBSERVED_H      = 10569,
     ACHIEV_CRIT_SARONITE_N      = 10451,                    // General Vezax, achievs 3181, 3188
     ACHIEV_CRIT_SARONITE_H      = 10462,
     ACHIEV_CRIT_SHADOWDODGER_N  = 10173,                    // General Vezax, achievs 2996, 2997
